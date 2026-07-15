@@ -65,6 +65,17 @@ const QUESTION_COUNTS = SEED_QUESTIONS.reduce<Record<string, number>>(
   {},
 );
 
+const GENERIC_EXPLANATION =
+  "Det er den centrale sammenhæng, spørgsmålet tester.";
+
+function hasUsefulExplanation(explanation: string) {
+  return !explanation.includes(GENERIC_EXPLANATION);
+}
+
+function hasPublicSource(sourceLabel?: string) {
+  return Boolean(sourceLabel && sourceLabel !== "KVIZY redaktionel seedbank");
+}
+
 type View =
   | "home"
   | "setup"
@@ -737,7 +748,9 @@ function Setup({
                   >
                     <span>{c.emoji}</span>
                     <b>{c.name}</b>
-                    <small>{QUESTION_COUNTS[c.id] ?? 0} spørgsmål</small>
+                    <small>
+                      {QUESTION_COUNTS[c.id] ?? 0} unikke spørgsmål
+                    </small>
                   </button>
                   <button
                     className={`fav ${fav ? "active" : ""}`}
@@ -988,22 +1001,24 @@ function Play({
               {given.points > 0 ? "+" : ""}
               {given.points.toLocaleString("da-DK")} point
             </b>
-            <p>{q.explanation}</p>
-            <small>
-              Kilde:{" "}
-              {q.sourceUrl ? (
-                <a
-                  className="underline"
-                  href={q.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {q.sourceLabel}
-                </a>
-              ) : (
-                q.sourceLabel
-              )}
-            </small>
+            {hasUsefulExplanation(q.explanation) && <p>{q.explanation}</p>}
+            {hasPublicSource(q.sourceLabel) && (
+              <small>
+                Kilde:{" "}
+                {q.sourceUrl ? (
+                  <a
+                    className="underline"
+                    href={q.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {q.sourceLabel}
+                  </a>
+                ) : (
+                  q.sourceLabel
+                )}
+              </small>
+            )}
           </div>
           <Button size="lg" onClick={next}>
             Videre
@@ -1095,9 +1110,11 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                   </Badge>
                 </div>
                 <h3 className="mt-3 font-bold">{q.prompt}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {q.explanation}
-                </p>
+                {hasUsefulExplanation(q.explanation) && (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {q.explanation}
+                  </p>
+                )}
               </CardContent>
             </Card>
           );
