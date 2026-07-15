@@ -1,0 +1,6 @@
+import type { Category } from "./types";
+
+const names = ["General paratviden","Danmark","Dansk politik","International politik","Historie","Geografi","Naturvidenskab","Rummet","Teknologi","Internettet","Filosofi","Psykologi","Psykologisk teori","Livets store spørgsmål","Skønlitteratur","Dansk litteratur","Film","Danske film","TV-serier","Danske TV-serier","Musik","Dansk musik","Musikproduktion","Gaming","Sport","Dansk sport","Fodbold","Dyr","Dyr fra Norden","Naturen i Norden","Græsk mytologi","Nordisk mytologi","Harry Potter","Kendte brands","Logoer og virksomheder","Kultur","Kunst","Sprog og ord","Opfindelser","Kendte personer","Nordisk mad","International mad","Bagning","Alkohol og cocktails","Hvad kom først?","Hvilken passer ikke ind?","Sandt eller falsk","Mærkelige fakta","1980’erne","1990’erne","2000’erne","2010’erne","Nutiden"];
+const emojis = ["🧠","🇩🇰","🏛️","🌍","⌛","🗺️","🔬","🚀","💻","🌐","💭","🧩","📚","✨","📖","✒️","🎬","🎞️","📺","📡","🎵","🎤","🎚️","🎮","🏅","🥇","⚽","🐾","🫎","🌲","🏺","⚡","🪄","™️","🏢","🎭","🎨","💬","💡","👤","🥘","🍜","🥐","🍸","⏱️","🔍","✅","🤯","📼","💿","📱","📲","🗞️"];
+export const CATEGORIES: Category[] = names.map((name,i)=>({id:`cat-${i+1}`,name,emoji:emojis[i]??"❔",color:["#ff6b35","#35c2a6","#7c6cff","#e6b84b"][i%4]}));
+export const categoryById = (id:string)=>CATEGORIES.find(c=>c.id===id);

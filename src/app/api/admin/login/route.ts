@@ -1,0 +1,3 @@
+import { NextResponse } from "next/server";
+import { ADMIN_COOKIE,token,validPassword } from "@/lib/admin-auth";
+export async function POST(request:Request){const type=request.headers.get("content-type")??"";const value=type.includes("json")?(await request.json() as {secret?:string}).secret:String((await request.formData()).get("secret")??"");if(!value||!validPassword(value))return NextResponse.json({error:"Forkert admin-hemmelighed"},{status:401});const response=NextResponse.redirect(new URL("/admin",request.url),303);response.cookies.set(ADMIN_COOKIE,token(),{httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"strict",maxAge:60*60*8,path:"/"});return response}
