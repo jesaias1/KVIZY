@@ -43,7 +43,7 @@ export function isNearDuplicate(a: Question, b: Question) {
     similarity(
       `${a.prompt} ${a.options.find((o) => o.id === a.correctOptionId)?.text}`,
       `${b.prompt} ${b.options.find((o) => o.id === b.correctOptionId)?.text}`,
-    ) > 0.78
+    ) > 0.9
   );
 }
 export function shuffle<T>(items: T[], random = Math.random) {
@@ -65,14 +65,14 @@ export function difficultyFor(
   mode: GameSetup["difficultyMode"],
 ) {
   if (mode === "mixed")
-    return Math.max(0, Math.min(10, base + ((index % 5) - 2)));
+    return Math.max(1, Math.min(5, base + ((index % 3) - 1)));
   if (mode === "rising")
     return Math.max(
-      0,
+      1,
       Math.min(
-        10,
+        5,
         Math.round(
-          Math.max(0, base - 2) + (index / Math.max(1, total - 1)) * 4,
+          Math.max(1, base - 1) + (index / Math.max(1, total - 1)) * 2,
         ),
       ),
     );
@@ -148,7 +148,7 @@ export function selectQuestions(
   }
   return picked.map((q, i) =>
     setup.finale && i >= Math.max(0, picked.length - 3)
-      ? { ...q, type: "finale", difficulty: Math.min(10, q.difficulty + 1) }
+      ? { ...q, type: "finale", difficulty: Math.min(5, q.difficulty + 1) }
       : q,
   );
 }

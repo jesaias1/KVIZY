@@ -6,7 +6,7 @@
 
 1. Vælg Alle mod alle, Holdkamp, Solo, Hurtig quiz, Risiko eller Mystery Mix.
 2. Tilføj 1–12 spillere eller 2–6 hold, og vælg 53 søgbare kategorier.
-3. Indstil 3–100 spørgsmål, niveau 0–10, fast/blandet/stigende sværhedsgrad, timer, minuspoint og finale.
+3. Indstil 3–100 spørgsmål, niveau 1–5, fast/blandet/stigende sværhedsgrad, timer, minuspoint og finale.
 4. Giv enheden videre. Svar låses, forklaring og point vises, og spillet gemmes løbende.
 5. Se vinder, scoreboard, svarprocent, streaks, gennemgang, historik og revanche.
 
@@ -14,7 +14,7 @@
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 318 indbyggede, kuraterede spørgsmål; offline kernespil og PWA-service worker
+- 1.534 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
 - localStorage til aktivt spil, historik, indstillinger og set-historik
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
 - Vercel AI SDK 6 `generateText` + `Output.object()` + Zod til validerede AI-batches
@@ -54,7 +54,7 @@ Drizzle-skemaet modellerer kategorier, spørgsmål, spil, runder, spillere, hold
 
 ## Spørgsmålsbank og import/eksport
 
-Seedbanken ligger datadrevet i `src/data/seed-spec.ts`: 53 kategorier × 6 unikke kernefakta = 318 spørgsmål. Nye kategorier tilføjes i `src/lib/categories.ts` og får et matchende seed-spec.
+Seedbanken kombinerer 318 redaktionelle spørgsmål fra `src/data/seed-spec.ts` med 1.216 lokalt gemte landespørgsmål baseret på Wikidata CC0. De eksterne fakta ligger i `src/data/wikidata-countries.generated.json` og kan opdateres med `npm run questions:update-wikidata`. Distraktorer vælges inden for samme faktatype: eksempelvis hovedstæder mod hovedstæder og valutaer mod valutaer. Nye kategorier tilføjes i `src/lib/categories.ts`.
 
 ```bash
 npm run questions:export -- eksport.json
@@ -93,7 +93,7 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 318 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.534 seedspørgsmål stadig.
 
 ## Projektstruktur
 

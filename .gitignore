@@ -27,6 +27,7 @@ debug.log
 # misc
 .DS_Store
 *.pem
+/.codex-remote-attachments/
 
 # debug
 npm-debug.log*

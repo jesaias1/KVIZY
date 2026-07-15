@@ -57,6 +57,14 @@ import type {
 } from "@/lib/types";
 import { SEED_QUESTIONS } from "@/data/questions";
 
+const QUESTION_COUNTS = SEED_QUESTIONS.reduce<Record<string, number>>(
+  (counts, question) => {
+    counts[question.categoryId] = (counts[question.categoryId] ?? 0) + 1;
+    return counts;
+  },
+  {},
+);
+
 type View =
   | "home"
   | "setup"
@@ -105,7 +113,7 @@ const emptySetup = (): GameSetup => ({
   mode: "classic",
   players: [newPlayer("Spiller 1", 0), newPlayer("Spiller 2", 1)],
   questionCount: 10,
-  difficulty: 5,
+  difficulty: 3,
   difficultyMode: "mixed",
   categoryIds: CATEGORIES.map((c) => c.id),
   favorites: [],
@@ -452,7 +460,8 @@ function Home({
     <div className="home-grid">
       <section className="py-10 sm:py-20">
         <Badge className="mb-5" variant="secondary">
-          <Sparkles /> 318 kuraterede spørgsmål
+          <Sparkles /> {SEED_QUESTIONS.length.toLocaleString("da-DK")}{" "}
+          kvalitetssikrede spørgsmål
         </Badge>
         <h1 className="max-w-2xl text-5xl font-black leading-[.95] tracking-[-.055em] sm:text-7xl">
           Quiz-aftenen starter <span className="text-primary">her.</span>
@@ -728,7 +737,7 @@ function Setup({
                   >
                     <span>{c.emoji}</span>
                     <b>{c.name}</b>
-                    <small>6 spørgsmål</small>
+                    <small>{QUESTION_COUNTS[c.id] ?? 0} spørgsmål</small>
                   </button>
                   <button
                     className={`fav ${fav ? "active" : ""}`}
@@ -798,8 +807,8 @@ function Setup({
                 </span>
               </div>
               <Slider
-                min={0}
-                max={10}
+                min={1}
+                max={5}
                 step={1}
                 value={[setup.difficulty]}
                 onValueChange={([n]) => setSetup({ ...setup, difficulty: n })}
@@ -980,7 +989,21 @@ function Play({
               {given.points.toLocaleString("da-DK")} point
             </b>
             <p>{q.explanation}</p>
-            <small>Kilde: {q.sourceLabel}</small>
+            <small>
+              Kilde:{" "}
+              {q.sourceUrl ? (
+                <a
+                  className="underline"
+                  href={q.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {q.sourceLabel}
+                </a>
+              ) : (
+                q.sourceLabel
+              )}
+            </small>
           </div>
           <Button size="lg" onClick={next}>
             Videre

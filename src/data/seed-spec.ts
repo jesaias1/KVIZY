@@ -1,5 +1,5 @@
-// Seks selvstændige, kuraterede kernefakta pr. kategori. Byggeren tilføjer plausible
-// distraktorer fra samme emne og komplet metadata uden at kopiere kernefakta.
+// Seks selvstændige, redaktionelle kernefakta pr. kategori. Byggeren matcher
+// distraktorer efter svar- og spørgsmålstype og tilføjer komplet metadata.
 export const seedSpecs: { categoryId:string; items:[string,string,string?][] }[] = [
 {categoryId:"cat-1",items:[
 ["Hvilket grundstof har det kemiske symbol Au?","Guld"],["Hvor mange sider har en regulær sekskant?","6"],["Hvad kaldes verdens største ocean?","Stillehavet"],["Hvilket organ pumper blod rundt i kroppen?","Hjertet"],["Hvad er hovedstaden i Canada?","Ottawa"],["Hvilken farve får man ved at blande blå og gul?","Grøn"]]},

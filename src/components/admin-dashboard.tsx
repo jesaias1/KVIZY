@@ -43,7 +43,7 @@ export function AdminDashboard() {
       body: JSON.stringify({
         categoryId: c.id,
         categoryName: c.name,
-        difficulty: 5,
+        difficulty: 3,
         count: 3,
         type: "multiple_choice" satisfies QuestionType,
       }),

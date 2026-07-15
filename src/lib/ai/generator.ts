@@ -10,7 +10,7 @@ const generated = z.object({
         prompt: z.string().min(12).max(240),
         type: z.enum(questionTypes),
         secondaryCategoryIds: z.array(z.string()).max(3),
-        difficulty: z.number().int().min(0).max(10),
+        difficulty: z.number().int().min(1).max(5),
         options: z.array(z.string().min(1).max(90)).min(2).max(4),
         correctAnswer: z.string().min(1).max(90),
         explanation: z.string().min(15).max(400),
@@ -27,7 +27,7 @@ export const generationRequestSchema = z.object({
   categoryId: z.string().regex(/^cat-\d+$/),
   categoryName: z.string().min(2),
   secondaryCategory: z.string().optional(),
-  difficulty: z.number().int().min(0).max(10),
+  difficulty: z.number().int().min(1).max(5),
   count: z.number().int().min(1).max(20),
   type: z.enum(questionTypes),
 });
@@ -38,7 +38,7 @@ export async function generateQuestions(
   const { output } = await generateText({
     model,
     output: Output.object({ schema: generated }),
-    prompt: `Generér ${input.count} originale danske quizspørgsmål. Kategori: ${input.categoryName}. Sekundær kategori: ${input.secondaryCategory ?? "ingen"}. Sværhedsgrad: ${input.difficulty}/10. Type: ${input.type}. Fire grammatisk parallelle, plausible svar undtagen sandt/falsk. Ét entydigt korrekt svar. Holdbar fakta; tidsfølsomt stof skal dateres og have kilde. Ingen alle/ingen ovenstående. Undgå disse fingerprints: ${SEED_QUESTIONS.slice(
+    prompt: `Generér ${input.count} originale danske quizspørgsmål. Kategori: ${input.categoryName}. Sekundær kategori: ${input.secondaryCategory ?? "ingen"}. Sværhedsgrad: ${input.difficulty}/5. Type: ${input.type}. Fire grammatisk parallelle, plausible svar undtagen sandt/falsk. Ét entydigt korrekt svar. Holdbar fakta; tidsfølsomt stof skal dateres og have kilde. Ingen alle/ingen ovenstående. Undgå disse fingerprints: ${SEED_QUESTIONS.slice(
       0,
       80,
     )
