@@ -11,7 +11,7 @@ import {
   stableHash,
 } from "./engine";
 import { SEED_QUESTIONS } from "@/data/questions";
-import { CATEGORIES } from "./categories";
+import { CATEGORIES, DEFAULT_CATEGORIES } from "./categories";
 import { questionSchema } from "./types";
 const setup = {
   mode: "classic" as const,
@@ -82,6 +82,18 @@ describe("seedbank og Zod", () => {
       x.prompt.includes("regulær sekskant"),
     )!;
     expect(q.options.map((o) => o.text)).toEqual(["6", "5", "7", "8"]);
+  });
+  it("holder nichekategorier ude af standard- og tilfældigpuljen", () => {
+    expect(CATEGORIES.find((category) => category.id === "cat-23")?.niche).toBe(
+      true,
+    );
+    expect(
+      DEFAULT_CATEGORIES.some((category) => category.id === "cat-23"),
+    ).toBe(false);
+    expect(
+      SEED_QUESTIONS.filter((question) => question.categoryId === "cat-23")
+        .length,
+    ).toBeGreaterThanOrEqual(60);
   });
 });
 describe("adaptiv udvælgelse", () => {

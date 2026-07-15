@@ -74,6 +74,7 @@ export type Category = {
   name: string;
   emoji: string;
   color: string;
+  niche?: boolean;
 };
 export type GameMode =
   "classic" | "teams" | "solo" | "quick" | "risk" | "mystery";

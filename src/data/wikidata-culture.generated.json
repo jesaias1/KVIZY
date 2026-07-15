@@ -1,0 +1,2522 @@
+[
+  {
+    "workQid": "Q32228",
+    "work": "Jerry som den skøre professor",
+    "answerQid": "Q294927",
+    "answer": "Jerry Lewis",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q32303",
+    "work": "Jagten",
+    "answerQid": "Q314287",
+    "answer": "Thomas Vinterberg",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q45386",
+    "work": "Stjålne kroppe",
+    "answerQid": "Q358322",
+    "answer": "Don Siegel",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q45388",
+    "work": "Coogan's Bluff",
+    "answerQid": "Q358322",
+    "answer": "Don Siegel",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q45394",
+    "work": "The Cabin in the Woods",
+    "answerQid": "Q922368",
+    "answer": "Drew Goddard",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q24075",
+    "work": "Godzilla",
+    "answerQid": "Q60100",
+    "answer": "Roland Emmerich",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q32433",
+    "work": "Lincoln",
+    "answerQid": "Q8877",
+    "answer": "Steven Spielberg",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q2201",
+    "work": "Kick-Ass",
+    "answerQid": "Q2593",
+    "answer": "Matthew Vaughn",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q2345",
+    "work": "Tolv vrede mænd",
+    "answerQid": "Q51559",
+    "answer": "Sidney Lumet",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q32910",
+    "work": "Domino",
+    "answerQid": "Q193648",
+    "answer": "Tony Scott",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q45602",
+    "work": "Moderne tider",
+    "answerQid": "Q882",
+    "answer": "Charlie Chaplin",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q24871",
+    "work": "Avatar",
+    "answerQid": "Q42574",
+    "answer": "James Cameron",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q45692",
+    "work": "Hjemsøgt - The Haunting in Connecticut",
+    "answerQid": "Q7173394",
+    "answer": "Peter Cornwell",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q33189",
+    "work": "Volkodav iz roda Serykh Psov",
+    "answerQid": "Q3341663",
+    "answer": "Nikolaj Igorevitj Lebedev",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q34414",
+    "work": "Skjulte øjne",
+    "answerQid": "Q7374",
+    "answer": "Alfred Hitchcock",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q30931",
+    "work": "Die Another Day",
+    "answerQid": "Q449104",
+    "answer": "Lee Tamahori",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q24340",
+    "work": "Anna Karamazoff",
+    "answerQid": "Q24583",
+    "answer": "Rustam Khamdamov",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q24732",
+    "work": "Den itubrudte Mønt",
+    "answerQid": "Q1361838",
+    "answer": "Francis Ford",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q24815",
+    "work": "Citizen Kane",
+    "answerQid": "Q24829",
+    "answer": "Orson Welles",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q35738",
+    "work": "Frida",
+    "answerQid": "Q240490",
+    "answer": "Julie Taymor",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q3998",
+    "work": "Adhisaya Manithan",
+    "answerQid": "Q16734684",
+    "answer": "Velu Prabhakaran",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q4430",
+    "work": "Cleopatra",
+    "answerQid": "Q51583",
+    "answer": "Joseph L. Mankiewicz",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q19405",
+    "work": "The Ninth Gate",
+    "answerQid": "Q51552",
+    "answer": "Roman Polanski",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q20456",
+    "work": "Danser med ulve",
+    "answerQid": "Q11930",
+    "answer": "Kevin Costner",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q22432",
+    "work": "Signs",
+    "answerQid": "Q51489",
+    "answer": "M. Night Shyamalan",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q23395",
+    "work": "Fear and Loathing in Las Vegas",
+    "answerQid": "Q25078",
+    "answer": "Terry Gilliam",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q39005",
+    "work": "The Pleasure Garden",
+    "answerQid": "Q7374",
+    "answer": "Alfred Hitchcock",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q39571",
+    "work": "Min nabo Totoro",
+    "answerQid": "Q55400",
+    "answer": "Hayao Miyazaki",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q73803",
+    "work": "Smagen af rust og ben",
+    "answerQid": "Q382389",
+    "answer": "Jacques Audiard",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q74014",
+    "work": "Ginger Snaps Back: The Beginning",
+    "answerQid": "Q16196488",
+    "answer": "Grant Harvey",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q39970",
+    "work": "Buffy - vampyrernes skræk",
+    "answerQid": "Q2526865",
+    "answer": "Fran Rubel Kuzui",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q24953",
+    "work": "Life of Brian",
+    "answerQid": "Q166159",
+    "answer": "Terry Jones",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q24980",
+    "work": "Monty Python - the Meaning of Life",
+    "answerQid": "Q166159",
+    "answer": "Terry Jones",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q19355",
+    "work": "Livet er smukt",
+    "answerQid": "Q23301",
+    "answer": "Roberto Benigni",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q46551",
+    "work": "The Prestige",
+    "answerQid": "Q25191",
+    "answer": "Christopher Nolan",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q40115",
+    "work": "Chasing Amy",
+    "answerQid": "Q489831",
+    "answer": "Kevin Smith",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q25057",
+    "work": "Brazil",
+    "answerQid": "Q25078",
+    "answer": "Terry Gilliam",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q5890",
+    "work": "V for Vendetta",
+    "answerQid": "Q456008",
+    "answer": "James McTeigue",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q74568",
+    "work": "Sadko søger lykken",
+    "answerQid": "Q465640",
+    "answer": "Aleksandr Ptusjko",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q6074",
+    "work": "Star Wars: The Force Awakens",
+    "answerQid": "Q188137",
+    "answer": "J. J. Abrams",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q4536",
+    "work": "Matchstick Men",
+    "answerQid": "Q56005",
+    "answer": "Ridley Scott",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q4744",
+    "work": "Das wandernde Bild",
+    "answerQid": "Q19504",
+    "answer": "Fritz Lang",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q4941",
+    "work": "Skyfall",
+    "answerQid": "Q223233",
+    "answer": "Sam Mendes",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q46717",
+    "work": "Pirates of the Caribbean: Den sorte forbandelse",
+    "answerQid": "Q295463",
+    "answer": "Gore Verbinski",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q25139",
+    "work": "American Beauty",
+    "answerQid": "Q223233",
+    "answer": "Sam Mendes",
+    "key": "film-director",
+    "categoryId": "cat-17",
+    "prompt": "Hvem instruerede filmen {work}?"
+  },
+  {
+    "workQid": "Q11632",
+    "work": "The Freewheelin' Bob Dylan",
+    "answerQid": "Q392",
+    "answer": "Bob Dylan",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q8360",
+    "work": "(What's the Story) Morning Glory?",
+    "answerQid": "Q382890",
+    "answer": "Oasis",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q8364",
+    "work": "( )",
+    "answerQid": "Q483828",
+    "answer": "Sigur Rós",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q151657",
+    "work": "Death Magnetic",
+    "answerQid": "Q15920",
+    "answer": "Metallica",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q151714",
+    "work": "American Idiot",
+    "answerQid": "Q47871",
+    "answer": "Green Day",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q151880",
+    "work": "Confessions on a Dance Floor",
+    "answerQid": "Q1744",
+    "answer": "Madonna",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q153475",
+    "work": "By The Way",
+    "answerQid": "Q10708",
+    "answer": "Red Hot Chili Peppers",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q27166",
+    "work": "In the Zone",
+    "answerQid": "Q11975",
+    "answer": "Britney Spears",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q27568",
+    "work": "Through the Past, Darkly (Big Hits Vol. 2)",
+    "answerQid": "Q11036",
+    "answer": "The Rolling Stones",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q152605",
+    "work": "Stadium Arcadium",
+    "answerQid": "Q10708",
+    "answer": "Red Hot Chili Peppers",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q152873",
+    "work": "The Joshua Tree",
+    "answerQid": "Q396",
+    "answer": "U2",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q152999",
+    "work": "Oops!… I Did It Again",
+    "answerQid": "Q11975",
+    "answer": "Britney Spears",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q13171",
+    "work": "A Thousand Suns",
+    "answerQid": "Q261",
+    "answer": "Linkin Park",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q13172",
+    "work": "Living Things",
+    "answerQid": "Q261",
+    "answer": "Linkin Park",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q284724",
+    "work": "Clayman",
+    "answerQid": "Q258546",
+    "answer": "In Flames",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q284854",
+    "work": "Out of Time",
+    "answerQid": "Q134969",
+    "answer": "R.E.M.",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q285120",
+    "work": "xx",
+    "answerQid": "Q869367",
+    "answer": "The xx",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q285553",
+    "work": "Drukqs",
+    "answerQid": "Q223161",
+    "answer": "Aphex Twin",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q285905",
+    "work": "Flick of the Switch",
+    "answerQid": "Q27593",
+    "answer": "AC/DC",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q285929",
+    "work": "Highway to Hell",
+    "answerQid": "Q27593",
+    "answer": "AC/DC",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q286672",
+    "work": "ABBA",
+    "answerQid": "Q18233",
+    "answer": "ABBA",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q286675",
+    "work": "ABBA Gold: Greatest Hits",
+    "answerQid": "Q18233",
+    "answer": "ABBA",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q287262",
+    "work": "De-Loused in the Comatorium",
+    "answerQid": "Q484993",
+    "answer": "The Mars Volta",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q153607",
+    "work": "The Marshall Mathers LP",
+    "answerQid": "Q5608",
+    "answer": "Eminem",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q154111",
+    "work": "St. Anger",
+    "answerQid": "Q15920",
+    "answer": "Metallica",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q154601",
+    "work": "Mutter",
+    "answerQid": "Q25177",
+    "answer": "Rammstein",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q155169",
+    "work": "21",
+    "answerQid": "Q23215",
+    "answer": "Adele",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q155342",
+    "work": "Liebe ist für alle da",
+    "answerQid": "Q25177",
+    "answer": "Rammstein",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q155339",
+    "work": "The Eminem Show",
+    "answerQid": "Q5608",
+    "answer": "Eminem",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q155747",
+    "work": "Playing the Angel",
+    "answerQid": "Q482964",
+    "answer": "Depeche Mode",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q156710",
+    "work": "Fever",
+    "answerQid": "Q11998",
+    "answer": "Kylie Minogue",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q155715",
+    "work": "Back in Black",
+    "answerQid": "Q27593",
+    "answer": "AC/DC",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q157534",
+    "work": "Black Ice",
+    "answerQid": "Q27593",
+    "answer": "AC/DC",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q157546",
+    "work": "Virgin Killer",
+    "answerQid": "Q124147",
+    "answer": "Scorpions",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q158326",
+    "work": "The E.N.D.",
+    "answerQid": "Q134541",
+    "answer": "Black Eyed Peas",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q158740",
+    "work": "Viva la Vida or Death and All His Friends",
+    "answerQid": "Q45188",
+    "answer": "Coldplay",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q159164",
+    "work": "I'm Not Dead",
+    "answerQid": "Q160009",
+    "answer": "Pink",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q290949",
+    "work": "No Line on the Horizon",
+    "answerQid": "Q396",
+    "answer": "U2",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q161194",
+    "work": "Love at First Sting",
+    "answerQid": "Q124147",
+    "answer": "Scorpions",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q158738",
+    "work": "X&Y",
+    "answerQid": "Q45188",
+    "answer": "Coldplay",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q15661",
+    "work": "Oxygene",
+    "answerQid": "Q104326",
+    "answer": "Jean-Michel Jarre",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q128017",
+    "work": "In My Lifetime, Vol. 1",
+    "answerQid": "Q62766",
+    "answer": "Jay-Z",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q17444",
+    "work": "Nevermind",
+    "answerQid": "Q11649",
+    "answer": "Nirvana",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q18609",
+    "work": "Orchid",
+    "answerQid": "Q18557",
+    "answer": "Opeth",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q18611",
+    "work": "Morningrise",
+    "answerQid": "Q18557",
+    "answer": "Opeth",
+    "key": "album-artist",
+    "categoryId": "cat-21",
+    "prompt": "Hvilken kunstner eller gruppe udgav albummet {work}?"
+  },
+  {
+    "workQid": "Q12384",
+    "work": "Donkey Kong",
+    "answerQid": "Q8093",
+    "answer": "Nintendo",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q301555",
+    "work": "New Super Mario Bros.",
+    "answerQid": "Q8093",
+    "answer": "Nintendo",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q610968",
+    "work": "Mario Bros.",
+    "answerQid": "Q8093",
+    "answer": "Nintendo",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q933524",
+    "work": "Pilotwings 64",
+    "answerQid": "Q8093",
+    "answer": "Nintendo",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q579477",
+    "work": "Rise to Honour",
+    "answerQid": "Q18594",
+    "answer": "Sony Interactive Entertainment",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q608954",
+    "work": "Killzone 2",
+    "answerQid": "Q18594",
+    "answer": "Sony Interactive Entertainment",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1129775",
+    "work": "Killzone",
+    "answerQid": "Q18594",
+    "answer": "Sony Interactive Entertainment",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q275950",
+    "work": "Resident Evil 4",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q474798",
+    "work": "The Legend of Zelda: The Minish Cap",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q601050",
+    "work": "Resident Evil 5",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q739784",
+    "work": "Resident Evil 3: Nemesis",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q914286",
+    "work": "Street Fighter IV",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1054901",
+    "work": "Ōkamiden",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1138864",
+    "work": "Resident Evil: Revelations",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1145336",
+    "work": "Dead Rising",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1152909",
+    "work": "Resident Evil: The Darkside Chronicles",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1248594",
+    "work": "Resident Evil",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q28129061",
+    "work": "Splatoon 2",
+    "answerQid": "Q8093",
+    "answer": "Nintendo",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q28234671",
+    "work": "Super Mario Odyssey",
+    "answerQid": "Q8093",
+    "answer": "Nintendo",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q2078596",
+    "work": "The Legend of Zelda: Oracle of Ages",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q3503171",
+    "work": "Suikoden III",
+    "answerQid": "Q45700",
+    "answer": "Konami",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q49740",
+    "work": "Minecraft",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q2399220",
+    "work": "Adventures in the Magic Kingdom",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q2467423",
+    "work": "Street Fighter III",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q6341335",
+    "work": "The Legend of Zelda: Oracle of Seasons",
+    "answerQid": "Q14428",
+    "answer": "Capcom",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q866349",
+    "work": "Dungeon Siege",
+    "answerQid": "Q26222",
+    "answer": "Wargaming Seattle",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q918061",
+    "work": "F1 2010",
+    "answerQid": "Q23901",
+    "answer": "Codemasters",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q54865",
+    "work": "Star Wars: Battlefront II",
+    "answerQid": "Q28299",
+    "answer": "Pandemic Studios",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q6552947",
+    "work": "Metal Gear",
+    "answerQid": "Q45700",
+    "answer": "Konami",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q6582527",
+    "work": "Metal Gear Solid",
+    "answerQid": "Q45700",
+    "answer": "Konami",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q15588417",
+    "work": "Project 575",
+    "answerQid": "Q122741",
+    "answer": "Sega",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q843456",
+    "work": "Forza 3",
+    "answerQid": "Q130729",
+    "answer": "Turn 10 Studios",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q150294",
+    "work": "Mortal Kombat",
+    "answerQid": "Q149947",
+    "answer": "Midway Games",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1071278",
+    "work": "Doom 64",
+    "answerQid": "Q149947",
+    "answer": "Midway Games",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q753164",
+    "work": "Silent Hill",
+    "answerQid": "Q45700",
+    "answer": "Konami",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q907253",
+    "work": "Special Force",
+    "answerQid": "Q41053",
+    "answer": "Hizbollah",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1764451",
+    "work": "Pro Evolution Soccer 2008",
+    "answerQid": "Q45700",
+    "answer": "Konami",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q11168",
+    "work": "Super Mario Bros.",
+    "answerQid": "Q170420",
+    "answer": "Nintendo Entertainment Analysis and Development",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q1075246",
+    "work": "WarioWare: Smooth Moves",
+    "answerQid": "Q150001",
+    "answer": "Intelligent Systems",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q953229",
+    "work": "Advance Wars",
+    "answerQid": "Q150001",
+    "answer": "Intelligent Systems",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q71910",
+    "work": "Tetris",
+    "answerQid": "Q92600",
+    "answer": "Alexey Pajitnov",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q2340376",
+    "work": "Advance Wars: Dual Strike",
+    "answerQid": "Q150001",
+    "answer": "Intelligent Systems",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q44373",
+    "work": "Nintendo Land",
+    "answerQid": "Q170420",
+    "answer": "Nintendo Entertainment Analysis and Development",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q71936",
+    "work": "Wii Sports",
+    "answerQid": "Q170420",
+    "answer": "Nintendo Entertainment Analysis and Development",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q170489",
+    "work": "Super Mario Galaxy",
+    "answerQid": "Q170420",
+    "answer": "Nintendo Entertainment Analysis and Development",
+    "key": "game-developer",
+    "categoryId": "cat-24",
+    "prompt": "Hvilket firma udviklede spillet {work}?"
+  },
+  {
+    "workQid": "Q10467459",
+    "work": "De hvide strømper",
+    "answerQid": "Q34618",
+    "answer": "Gustave Courbet",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q104180756",
+    "work": "Pelikanportrættet",
+    "answerQid": "Q318114",
+    "answer": "Nicholas Hilliard",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1061035",
+    "work": "Billedernes bedrag",
+    "answerQid": "Q7836",
+    "answer": "René Magritte",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1065493",
+    "work": "Ophelia",
+    "answerQid": "Q159606",
+    "answer": "John Everett Millais",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q106522623",
+    "work": "Kvinde med en vifte",
+    "answerQid": "Q34661",
+    "answer": "Gustav Klimt",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q107484305",
+    "work": "Portræt af  Marie Triepcke",
+    "answerQid": "Q827752",
+    "answer": "Bertha Wegmann",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1091086",
+    "work": "Den tredje maj 1808",
+    "answerQid": "Q5432",
+    "answer": "Francisco Goya",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1142058",
+    "work": "Madonna Benois",
+    "answerQid": "Q762",
+    "answer": "Leonardo da Vinci",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1169395",
+    "work": "Koncerten",
+    "answerQid": "Q41264",
+    "answer": "Johannes Vermeer",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1170165",
+    "work": "Vennernes møde",
+    "answerQid": "Q154842",
+    "answer": "Max Ernst",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1170315",
+    "work": "Sort kvadrat",
+    "answerQid": "Q130777",
+    "answer": "Kasimir Malevitj",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q116313221",
+    "work": "Prometheus' Befrielse (final version)",
+    "answerQid": "Q547055",
+    "answer": "Carl Bloch",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1167178",
+    "work": "Malerens atelier",
+    "answerQid": "Q34618",
+    "answer": "Gustave Courbet",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q118469029",
+    "work": "Interiør. Musikværelset, Strandgade 30",
+    "answerQid": "Q380706",
+    "answer": "Vilhelm Hammershøi",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12011341",
+    "work": "Industriens mænd",
+    "answerQid": "Q365068",
+    "answer": "P.S. Krøyer",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1199503",
+    "work": "Den røde Kristus",
+    "answerQid": "Q157610",
+    "answer": "Lovis Corinth",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12302715",
+    "work": "Bach på Fænø",
+    "answerQid": "Q12321666",
+    "answer": "Ken Denning",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1219263",
+    "work": "Den sovende sigøjner",
+    "answerQid": "Q156386",
+    "answer": "Henri Rousseau",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12307081",
+    "work": "Damen med flaskerne",
+    "answerQid": "Q30036497",
+    "answer": "Lars Helweg",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12310033",
+    "work": "En agitator",
+    "answerQid": "Q1338170",
+    "answer": "Erik Henningsen",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12325863",
+    "work": "Man rejser sig fra bordet (Aftenselskab hos familien Moresco)",
+    "answerQid": "Q976826",
+    "answer": "Laurits Tuxen",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12328237",
+    "work": "Nadverbilledet i Haderslev Domkirke",
+    "answerQid": "Q315803",
+    "answer": "Peter Candid",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12332504",
+    "work": "Præsentation for en kender",
+    "answerQid": "Q708543",
+    "answer": "Julius Exner",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12334558",
+    "work": "Sankt Hansblus",
+    "answerQid": "Q365068",
+    "answer": "P.S. Krøyer",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1239950",
+    "work": "Absint",
+    "answerQid": "Q46373",
+    "answer": "Edgar Degas",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q126279484",
+    "work": "Kunstnerens selvportræt i hvid skjorte og blåt halsbånd, blå vest og jakke med guldknapper",
+    "answerQid": "Q981441",
+    "answer": "Wilhelm Bendz",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q12418",
+    "work": "Mona Lisa",
+    "answerQid": "Q762",
+    "answer": "Leonardo da Vinci",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1293985",
+    "work": "Piger ved Seinens bred",
+    "answerQid": "Q34618",
+    "answer": "Gustave Courbet",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q124356656",
+    "work": "Portræt af frøken Lieser",
+    "answerQid": "Q34661",
+    "answer": "Gustav Klimt",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1245388",
+    "work": "Madonna med nellike",
+    "answerQid": "Q5597",
+    "answer": "Raffaello Santi",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1328065",
+    "work": "Portræt af Eleanor af Toledo og hendes søn Giovanni de' Medici",
+    "answerQid": "Q7803",
+    "answer": "Bronzino",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q131154306",
+    "work": "Samtalen 1918–2024",
+    "answerQid": "Q131154297",
+    "answer": "Mie Mørkeberg",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q14918073",
+    "work": "Den Mecklenburgske Anetavle",
+    "answerQid": "Q22925442",
+    "answer": "Antonius Clement",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q14951231",
+    "work": "Arrestbygningen ved råd- og domhuset",
+    "answerQid": "Q979541",
+    "answer": "Martinus Rørbye",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q152509",
+    "work": "Frokost i det grønne",
+    "answerQid": "Q40599",
+    "answer": "Édouard Manet",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q15410558",
+    "work": "Saying Grace",
+    "answerQid": "Q271884",
+    "answer": "Norman Rockwell",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q151047",
+    "work": "Venus' fødsel",
+    "answerQid": "Q5669",
+    "answer": "Sandro Botticelli",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q152867",
+    "work": "Den nøgne Maja",
+    "answerQid": "Q5432",
+    "answer": "Francisco Goya",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q15392270",
+    "work": "Ved frokostbordet og morgenaviserne",
+    "answerQid": "Q2199553",
+    "answer": "L.A. Ring",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1659469",
+    "work": "Om sommeren",
+    "answerQid": "Q39931",
+    "answer": "Pierre-Auguste Renoir",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q16324087",
+    "work": "Lykkens Tempel",
+    "answerQid": "Q319854",
+    "answer": "Nicolai Abildgaard",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q16333797",
+    "work": "Vertumnus",
+    "answerQid": "Q7751",
+    "answer": "Giuseppe Arcimboldo",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q167605",
+    "work": "Mælkepigen",
+    "answerQid": "Q41264",
+    "answer": "Johannes Vermeer",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q16965482",
+    "work": "Fra et romersk osteria",
+    "answerQid": "Q547055",
+    "answer": "Carl Bloch",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q175036",
+    "work": "Guernica",
+    "answerQid": "Q5593",
+    "answer": "Pablo Picasso",
+    "key": "painting-artist",
+    "categoryId": "cat-37",
+    "prompt": "Hvem skabte maleriet {work}?"
+  },
+  {
+    "workQid": "Q1077",
+    "work": "Star Trek: The Original Series",
+    "answerQid": "Q191716",
+    "answer": "Gene Roddenberry",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q723",
+    "work": "Rookie Blue",
+    "answerQid": "Q7687640",
+    "answer": "Tassie Cameron",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q216792",
+    "work": "The L Word",
+    "answerQid": "Q259520",
+    "answer": "Ilene Chaiken",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q216919",
+    "work": "Six Feet Under",
+    "answerQid": "Q1752144",
+    "answer": "Alan Ball",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q217246",
+    "work": "Zack og Codys Søde Hotelliv",
+    "answerQid": "Q2270002",
+    "answer": "Danny Kallis",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q217276",
+    "work": "Jonas L.A.",
+    "answerQid": "Q4992114",
+    "answer": "Michael Curtis",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q1079",
+    "work": "Breaking Bad",
+    "answerQid": "Q4500",
+    "answer": "Vince Gilligan",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q218281",
+    "work": "Zoey 101",
+    "answerQid": "Q444366",
+    "answer": "Dan Schneider",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q2744",
+    "work": "X-Files",
+    "answerQid": "Q437267",
+    "answer": "Chris Carter",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q219650",
+    "work": "V",
+    "answerQid": "Q2572548",
+    "answer": "Kenneth Johnson",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q219942",
+    "work": "Sonnys chance",
+    "answerQid": "Q7613266",
+    "answer": "Steve Marmel",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q221230",
+    "work": "Nip/Tuck",
+    "answerQid": "Q316844",
+    "answer": "Ryan Murphy",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q223977",
+    "work": "Mad Men",
+    "answerQid": "Q924283",
+    "answer": "Matthew Weiner",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q172230",
+    "work": "Jordmoderen",
+    "answerQid": "Q5698972",
+    "answer": "Heidi Thomas",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q232737",
+    "work": "The Walking Dead",
+    "answerQid": "Q295445",
+    "answer": "Frank Darabont",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q35023",
+    "work": "Min barnepige er en vampyr",
+    "answerQid": "Q1249881",
+    "answer": "Bruce McDonald",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q3013",
+    "work": "iCarly",
+    "answerQid": "Q444366",
+    "answer": "Dan Schneider",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q35791",
+    "work": "Sex and the City",
+    "answerQid": "Q452063",
+    "answer": "Darren Star",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q38497",
+    "work": "Xena: Warrior Princess",
+    "answerQid": "Q3182438",
+    "answer": "John Schulian",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q183513",
+    "work": "Buffy - Vampyrernes Skræk",
+    "answerQid": "Q298025",
+    "answer": "Joss Whedon",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q184342",
+    "work": "Magi på Waverly Place",
+    "answerQid": "Q3081160",
+    "answer": "Todd J. Greenwald",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q186219",
+    "work": "True Blood",
+    "answerQid": "Q1752144",
+    "answer": "Alan Ball",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q242596",
+    "work": "Malcolm i midten",
+    "answerQid": "Q1307121",
+    "answer": "Linwood Boomer",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q244803",
+    "work": "Ally McBeal",
+    "answerQid": "Q504720",
+    "answer": "David E. Kelley",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q189350",
+    "work": "30 Rock",
+    "answerQid": "Q14540",
+    "answer": "Tina Fey",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q117590",
+    "work": "Beverly Hills 90210",
+    "answerQid": "Q452063",
+    "answer": "Darren Star",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q189068",
+    "work": "Detektiv Monk",
+    "answerQid": "Q525458",
+    "answer": "Andy Breckman",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q247643",
+    "work": "Elementary",
+    "answerQid": "Q16241423",
+    "answer": "Robert Doherty",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q247869",
+    "work": "60 Minutes",
+    "answerQid": "Q561963",
+    "answer": "Don Hewitt",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q253205",
+    "work": "Entourage",
+    "answerQid": "Q934691",
+    "answer": "Doug Ellin",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q193462",
+    "work": "Gilmore Girls",
+    "answerQid": "Q436780",
+    "answer": "Amy Sherman-Palladino",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q130615",
+    "work": "H2O",
+    "answerQid": "Q179877",
+    "answer": "Jonathan M. Shiff",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q130838",
+    "work": "Today",
+    "answerQid": "Q3247520",
+    "answer": "Sylvester Weaver",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q130585",
+    "work": "Supernatural",
+    "answerQid": "Q336075",
+    "answer": "Eric Kripke",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q6084",
+    "work": "NCIS Los Angeles",
+    "answerQid": "Q2276824",
+    "answer": "Shane Brennan",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q4533",
+    "work": "Victorious",
+    "answerQid": "Q444366",
+    "answer": "Dan Schneider",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q5902",
+    "work": "Red Dwarf",
+    "answerQid": "Q1543194",
+    "answer": "Grant Naylor Productions",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q131758",
+    "work": "Desperate Housewives",
+    "answerQid": "Q526173",
+    "answer": "Marc Cherry",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q256527",
+    "work": "Spin City",
+    "answerQid": "Q932508",
+    "answer": "Gary David Goldberg",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q259494",
+    "work": "María la del Barrio",
+    "answerQid": "Q4395687",
+    "answer": "Inés Rodena",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q11622",
+    "work": "Firefly",
+    "answerQid": "Q298025",
+    "answer": "Joss Whedon",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q71897",
+    "work": "Hotel 13",
+    "answerQid": "Q1515364",
+    "answer": "Gert Verhulst",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q194427",
+    "work": "Orange County",
+    "answerQid": "Q728217",
+    "answer": "Josh Schwartz",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q196226",
+    "work": "Starsky and Hutch",
+    "answerQid": "Q3568440",
+    "answer": "William Blinn",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q197867",
+    "work": "20/20",
+    "answerQid": "Q3128961",
+    "answer": "Roone Arledge",
+    "key": "series-creator",
+    "categoryId": "cat-19",
+    "prompt": "Hvem skabte TV-serien {work}?"
+  },
+  {
+    "workQid": "Q490264",
+    "work": "LAN-server",
+    "answerQid": "Q37156",
+    "answer": "IBM",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q522563",
+    "work": "Windows Live Admin Center",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q580318",
+    "work": "ELIZA",
+    "answerQid": "Q75778",
+    "answer": "Joseph Weizenbaum",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q904533",
+    "work": "Microsoft Dynamics NAV",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q8029",
+    "work": "BibTeX",
+    "answerQid": "Q93068",
+    "answer": "Oren Patashnik",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q40984",
+    "work": "Skype",
+    "answerQid": "Q246125",
+    "answer": "Skype Technologies",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q79608",
+    "work": "Google Toolbar",
+    "answerQid": "Q95",
+    "answer": "Google",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q346434",
+    "work": "ADABAS",
+    "answerQid": "Q567371",
+    "answer": "Software AG",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q596031",
+    "work": "Bearshare",
+    "answerQid": "Q123116380",
+    "answer": "Vinnie Falco",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q402799",
+    "work": "Boot Camp",
+    "answerQid": "Q312",
+    "answer": "Apple Inc.",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1035519",
+    "work": "Carbon (programmering)",
+    "answerQid": "Q312",
+    "answer": "Apple Inc.",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q181233",
+    "work": "Windows Installer",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q780442",
+    "work": "Uber",
+    "answerQid": "Q780442",
+    "answer": "Uber",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q183480",
+    "work": "Google AdSense",
+    "answerQid": "Q95",
+    "answer": "Google",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q202861",
+    "work": "MOM",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q213602",
+    "work": "Google Street View",
+    "answerQid": "Q95",
+    "answer": "Google",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q675860",
+    "work": "Microsoft Dynamics AX",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q679874",
+    "work": "LightScribe",
+    "answerQid": "Q80978",
+    "answer": "Hewlett-Packard",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q855381",
+    "work": "Windows Genuine Advantage",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q218924",
+    "work": "Adobe InDesign",
+    "answerQid": "Q11463",
+    "answer": "Adobe",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q219885",
+    "work": "Google Video",
+    "answerQid": "Q95",
+    "answer": "Google",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q229851",
+    "work": "Zune",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q3267706",
+    "work": "SAP Business One",
+    "answerQid": "Q552581",
+    "answer": "SAP SE",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q890255",
+    "work": "WiMP",
+    "answerQid": "Q10420389",
+    "answer": "Aspiro",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q904150",
+    "work": "Microsoft BizTalk Server",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1100860",
+    "work": "Cleverbot",
+    "answerQid": "Q92837",
+    "answer": "Rollo Carpenter",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1133580",
+    "work": "MathCAD",
+    "answerQid": "Q4043809",
+    "answer": "MathSoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1140711",
+    "work": "SyncToy",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1423430",
+    "work": "Spaces",
+    "answerQid": "Q312",
+    "answer": "Apple Inc.",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1710059",
+    "work": "Rich Communication Services",
+    "answerQid": "Q795901",
+    "answer": "GSM Association",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1738539",
+    "work": "TI InterActive!",
+    "answerQid": "Q193412",
+    "answer": "Texas Instruments",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q1760409",
+    "work": "LDraw",
+    "answerQid": "Q10305087",
+    "answer": "James Jessiman",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q6840121",
+    "work": "Microsoft Dynamics C5",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q2436588",
+    "work": "DraftSight",
+    "answerQid": "Q1172038",
+    "answer": "Dassault Systèmes",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q3287097",
+    "work": "Lotus Manuscript",
+    "answerQid": "Q909169",
+    "answer": "Lotus Software",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q7276397",
+    "work": "RETScreen",
+    "answerQid": "Q422404",
+    "answer": "Canadas føderale regering",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q12317884",
+    "work": "IBM Omni-Find Yahoo",
+    "answerQid": "Q37156",
+    "answer": "IBM",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q16324144",
+    "work": "MobilePay",
+    "answerQid": "Q1636974",
+    "answer": "Danske Bank",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q17355735",
+    "work": "ProtonMail",
+    "answerQid": "Q30537036",
+    "answer": "Proton AG",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q6167956",
+    "work": "WAT",
+    "answerQid": "Q2283",
+    "answer": "Microsoft",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q6685131",
+    "work": "Lotus Agenda",
+    "answerQid": "Q909169",
+    "answer": "Lotus Software",
+    "key": "software-developer",
+    "categoryId": "cat-9",
+    "prompt": "Hvilket firma eller projekt udviklede softwaren {work}?"
+  },
+  {
+    "workQid": "Q13302",
+    "work": "sorbet",
+    "answerQid": "Q83311",
+    "answer": "Persien",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q2495784",
+    "work": "Kajkage",
+    "answerQid": "Q408",
+    "answer": "Australien",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q167692",
+    "work": "Monjayaki",
+    "answerQid": "Q17",
+    "answer": "Japan",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q203925",
+    "work": "fish and chips",
+    "answerQid": "Q21",
+    "answer": "England",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q275621",
+    "work": "smørrebrød",
+    "answerQid": "Q35",
+    "answer": "Danmark",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q3695900",
+    "work": "flæskesvær",
+    "answerQid": "Q148",
+    "answer": "Kina",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q493749",
+    "work": "rødgrød",
+    "answerQid": "Q35",
+    "answer": "Danmark",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q599548",
+    "work": "Manjuu",
+    "answerQid": "Q17",
+    "answer": "Japan",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q817282",
+    "work": "Beni shouga",
+    "answerQid": "Q17",
+    "answer": "Japan",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q836538",
+    "work": "tzatziki",
+    "answerQid": "Q41",
+    "answer": "Grækenland",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q920940",
+    "work": "Dosa",
+    "answerQid": "Q668",
+    "answer": "Indien",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q1061856",
+    "work": "Shabu shabu",
+    "answerQid": "Q17",
+    "answer": "Japan",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q16834113",
+    "work": "durumrulle",
+    "answerQid": "Q43",
+    "answer": "Tyrkiet",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  },
+  {
+    "workQid": "Q85772622",
+    "work": "jødekage",
+    "answerQid": "Q35",
+    "answer": "Danmark",
+    "key": "food-origin",
+    "categoryId": "cat-42",
+    "prompt": "Hvilket land forbindes {work} med som oprindelsesland?"
+  }
+]

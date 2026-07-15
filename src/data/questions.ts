@@ -2,6 +2,8 @@ import { CATEGORIES } from "@/lib/categories";
 import { fingerprint } from "@/lib/engine";
 import type { Question, QuestionType } from "@/lib/types";
 import { COUNTRY_QUESTIONS } from "./country-questions";
+import { MUSIC_PRODUCTION_QUESTIONS } from "./music-production-questions";
+import { WIKIDATA_CULTURE_QUESTIONS } from "./wikidata-culture-questions";
 import { seedSpecs } from "./seed-spec";
 
 const created = "2026-07-15T00:00:00.000Z";
@@ -35,12 +37,18 @@ const overrides: Record<string, string[]> = {
 };
 
 const explanationOverrides: Record<string, string> = {
-  "Hvilket grundstof har det kemiske symbol Au?": "Au kommer af det latinske navn aurum. Guld er et ædelmetal, som næsten ikke reagerer med luft eller vand.",
-  "Hvor mange sider har en regulær sekskant?": "En regulær sekskant har seks lige lange sider og seks lige store vinkler på 120 grader.",
-  "Hvad kaldes verdens største ocean?": "Stillehavet er større end alle Jordens landområder tilsammen og dækker omkring en tredjedel af planetens overflade.",
-  "Hvilket organ pumper blod rundt i kroppen?": "Hjertet er en muskelpumpe med fire kamre, der sender blod gennem både lunge- og kropskredsløbet.",
-  "Hvad er hovedstaden i Canada?": "Ottawa blev valgt som Canadas hovedstad i 1857; Toronto er landets største by, men ikke hovedstaden.",
-  "Hvilken farve får man ved at blande blå og gul?": "I traditionel farveblanding giver blå og gul grøn, fordi pigmenterne tilsammen absorberer andre dele af lyset.",
+  "Hvilket grundstof har det kemiske symbol Au?":
+    "Au kommer af det latinske navn aurum. Guld er et ædelmetal, som næsten ikke reagerer med luft eller vand.",
+  "Hvor mange sider har en regulær sekskant?":
+    "En regulær sekskant har seks lige lange sider og seks lige store vinkler på 120 grader.",
+  "Hvad kaldes verdens største ocean?":
+    "Stillehavet er større end alle Jordens landområder tilsammen og dækker omkring en tredjedel af planetens overflade.",
+  "Hvilket organ pumper blod rundt i kroppen?":
+    "Hjertet er en muskelpumpe med fire kamre, der sender blod gennem både lunge- og kropskredsløbet.",
+  "Hvad er hovedstaden i Canada?":
+    "Ottawa blev valgt som Canadas hovedstad i 1857; Toronto er landets største by, men ikke hovedstaden.",
+  "Hvilken farve får man ved at blande blå og gul?":
+    "I traditionel farveblanding giver blå og gul grøn, fordi pigmenterne tilsammen absorberer andre dele af lyset.",
 };
 
 function semanticKey(prompt: string, categoryId: string, answer: string) {
@@ -164,7 +172,8 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
       options,
       correctOptionId: `o${correctIndex + 1}`,
       explanation:
-        detail ?? explanationOverrides[prompt] ??
+        detail ??
+        explanationOverrides[prompt] ??
         `Det korrekte svar er ${correct}. Det er den centrale sammenhæng, spørgsmålet tester.`,
       sourceLabel: "KVIZY redaktionel seedbank",
       tags: [
@@ -189,4 +198,6 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
 export const SEED_QUESTIONS: Question[] = [
   ...CURATED_QUESTIONS,
   ...COUNTRY_QUESTIONS,
+  ...MUSIC_PRODUCTION_QUESTIONS,
+  ...WIKIDATA_CULTURE_QUESTIONS,
 ];

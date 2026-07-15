@@ -19,7 +19,6 @@ import {
   Shuffle,
   Volume2 as Sound2,
   VolumeX as SoundOff,
-  Sparkles,
   Trophy,
   X,
 } from "lucide-react";
@@ -39,7 +38,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { APP_CONFIG, DIFFICULTY_LABELS } from "@/lib/config";
-import { CATEGORIES, categoryById } from "@/lib/categories";
+import { CATEGORIES, DEFAULT_CATEGORIES, categoryById } from "@/lib/categories";
 import {
   buildResult,
   calculatePoints,
@@ -56,14 +55,6 @@ import type {
   SeenQuestion,
 } from "@/lib/types";
 import { SEED_QUESTIONS } from "@/data/questions";
-
-const QUESTION_COUNTS = SEED_QUESTIONS.reduce<Record<string, number>>(
-  (counts, question) => {
-    counts[question.categoryId] = (counts[question.categoryId] ?? 0) + 1;
-    return counts;
-  },
-  {},
-);
 
 const GENERIC_EXPLANATION =
   "Det er den centrale sammenhæng, spørgsmålet tester.";
@@ -126,7 +117,7 @@ const emptySetup = (): GameSetup => ({
   questionCount: 10,
   difficulty: 3,
   difficultyMode: "mixed",
-  categoryIds: CATEGORIES.map((c) => c.id),
+  categoryIds: DEFAULT_CATEGORIES.map((c) => c.id),
   favorites: [],
   timer: false,
   minusPoints: false,
@@ -470,10 +461,6 @@ function Home({
   return (
     <div className="home-grid">
       <section className="py-10 sm:py-20">
-        <Badge className="mb-5" variant="secondary">
-          <Sparkles /> {SEED_QUESTIONS.length.toLocaleString("da-DK")}{" "}
-          kvalitetssikrede spørgsmål
-        </Badge>
         <h1 className="max-w-2xl text-5xl font-black leading-[.95] tracking-[-.055em] sm:text-7xl">
           Quiz-aftenen starter <span className="text-primary">her.</span>
         </h1>
@@ -708,7 +695,7 @@ function Setup({
               onClick={() =>
                 setSetup({
                   ...setup,
-                  categoryIds: shuffle(CATEGORIES)
+                  categoryIds: shuffle(DEFAULT_CATEGORIES)
                     .slice(0, 8)
                     .map((c) => c.id),
                 })
@@ -748,9 +735,7 @@ function Setup({
                   >
                     <span>{c.emoji}</span>
                     <b>{c.name}</b>
-                    <small>
-                      {QUESTION_COUNTS[c.id] ?? 0} unikke spørgsmål
-                    </small>
+                    {c.niche && <small>Nichekategori · vælg selv</small>}
                   </button>
                   <button
                     className={`fav ${fav ? "active" : ""}`}
