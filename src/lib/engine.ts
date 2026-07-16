@@ -481,7 +481,7 @@ export function selectQuestions(
   const selectedCategoryIds = new Set(setup.categoryIds);
   const selectedOnlyCategory =
     selectedCategoryIds.size === 1 ? setup.categoryIds[0] : undefined;
-  const eligibleBank = shuffle(bank, random).filter((question) => {
+  const matchesCategorySelection = (question: Question) => {
     if (question.status !== "active") return false;
     if (["cat-45", "cat-46", "cat-47"].includes(selectedOnlyCategory ?? ""))
       return matchesSelectedUmbrellaCategory(question, selectedCategoryIds);
@@ -489,7 +489,8 @@ export function selectQuestions(
       selectedCategoryIds.has(question.categoryId) ||
       matchesSelectedUmbrellaCategory(question, selectedCategoryIds)
     );
-  });
+  };
+  const eligibleBank = shuffle(bank, random).filter(matchesCategorySelection);
   const minimumDifficulty = Math.max(1, setup.difficulty - 1);
   const maximumDifficulty = Math.min(5, setup.difficulty + 1);
   const inDifficultyBand = (question: Question) =>
@@ -627,9 +628,29 @@ export function selectQuestions(
     fairTypesDistributed,
     Math.max(1, setup.players.length),
   );
-  return distributed.map((question, index) => {
+  // Sidste sikkerhedsnet: ingen senere balancering må nogensinde kunne føre et
+  // spørgsmål fra en fravalgt emnekategori ind i spillet.
+  const categorySafeQuestions = distributed.filter(matchesCategorySelection);
+  const questionsWithSelectedCategory = categorySafeQuestions.map(
+    (question) => {
+      if (
+        !selectedOnlyCategory ||
+        selectedCategoryIds.has(question.categoryId)
+      )
+        return question;
+      return {
+        ...question,
+        categoryId: selectedOnlyCategory,
+        secondaryCategoryIds: [
+          ...new Set([question.categoryId, ...question.secondaryCategoryIds]),
+        ],
+      };
+    },
+  );
+  return questionsWithSelectedCategory.map((question, index) => {
     const shuffled = shuffleAnswers(question, random);
-    return setup.finale && index >= Math.max(0, distributed.length - 3)
+    return setup.finale &&
+      index >= Math.max(0, questionsWithSelectedCategory.length - 3)
       ? {
           ...shuffled,
           finale: true,

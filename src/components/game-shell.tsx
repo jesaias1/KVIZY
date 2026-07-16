@@ -631,11 +631,18 @@ export function GameShell() {
   return (
     <main className={`min-h-dvh safe-shell ${view === "play" ? "playing" : ""}`}>
       <TopBar settings={settings} setSettings={setSettings} go={go} />
+      {view === "home" && (
+        <div className="home-ambient" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+      )}
       <motion.div
         key={view}
         initial={settings.reducedMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`w-full px-4 pb-12 pt-4 sm:px-6 ${
+        className={`relative z-10 w-full px-4 pb-12 pt-4 sm:px-6 ${
           view === "home" ? "" : "mx-auto max-w-5xl"
         } ${view === "play" ? "quiz-shell" : ""}`}
       >
@@ -732,11 +739,6 @@ function Home({
 }) {
   return (
     <div className="home-grid">
-      <div className="home-ambient" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
       <section className="relative z-10 mx-auto w-full max-w-5xl py-10 sm:py-20">
         <h1 className="max-w-2xl text-5xl font-black leading-[.95] tracking-[-.055em] sm:text-7xl">
           Quiz-aftenen starter <span className="text-primary">her.</span>

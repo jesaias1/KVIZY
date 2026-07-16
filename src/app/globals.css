@@ -134,8 +134,8 @@
   gap: 0.5rem;
 }
 .brand-lockup-compact .brand-mark {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 4rem;
 }
 .brand-lockup-compact .brand-wordmark {
   width: 6.9rem;
@@ -262,8 +262,8 @@
   overflow: hidden;
 }
 .home-ambient {
-  position: absolute;
-  inset: -15% -2rem;
+  position: fixed;
+  inset: 5rem 0 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;

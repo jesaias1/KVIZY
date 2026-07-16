@@ -324,6 +324,36 @@ describe("adaptiv udvælgelse", () => {
       ).toBe(true);
     }
   });
+  it("respekterer emnefravalg på tværs af samtlige kategorier", () => {
+    for (const category of CATEGORIES) {
+      const anchorId = category.id === "cat-21" ? "cat-1" : "cat-21";
+      const selectedCategoryIds = [anchorId, category.id];
+      const chosen = selectQuestions(SEED_QUESTIONS, {
+        ...setup,
+        questionCount: 20,
+        categoryIds: selectedCategoryIds,
+      });
+      expect(chosen).toHaveLength(20);
+      expect(
+        chosen.every((question) =>
+          selectedCategoryIds.includes(question.categoryId),
+        ),
+      ).toBe(true);
+    }
+  });
+  it("viser kun den valgte kategori, når en paraplykategori står alene", () => {
+    for (const categoryId of ["cat-1", "cat-45", "cat-46", "cat-47"]) {
+      const chosen = selectQuestions(SEED_QUESTIONS, {
+        ...setup,
+        questionCount: 10,
+        categoryIds: [categoryId],
+      });
+      expect(chosen.length).toBeGreaterThan(0);
+      expect(
+        chosen.every((question) => question.categoryId === categoryId),
+      ).toBe(true);
+    }
+  });
   it("lader ikke store kategorier dominere et blandet spil", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,
