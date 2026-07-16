@@ -575,19 +575,45 @@ describe("adaptiv udvælgelse", () => {
     }
     expect(allIds.size).toBe(240);
   });
-  it("gentager ikke set indhold, selv når den valgte pulje er opbrugt", () => {
+  it("genbruger spørgsmål, når den valgte pulje er gennemspillet", () => {
     const smallBank = SEED_QUESTIONS.slice(0, 12);
     const seen = reserveSeenQuestions(
       [],
       smallBank.map((question) => question.id),
     );
-    expect(
-      selectQuestions(
-        smallBank,
-        { ...setup, questionCount: 10 },
-        seen,
-      ),
-    ).toEqual([]);
+    const replay = selectQuestions(
+      smallBank,
+      { ...setup, questionCount: 10 },
+      seen,
+    );
+    expect(replay).toHaveLength(10);
+    expect(new Set(replay.map((question) => question.id)).size).toBe(10);
+  });
+  it("vælger det ældst sete spørgsmål først efter en gennemspillet pulje", () => {
+    const categoryQuestions = SEED_QUESTIONS.filter(
+      (question) => question.categoryId === "cat-21",
+    ).slice(0, 4);
+    const oldestId = categoryQuestions[2].id;
+    const seen: SeenQuestion[] = categoryQuestions.map((question, index) => ({
+      id: question.id,
+      lastSeen:
+        question.id === oldestId
+          ? "2024-01-01T00:00:00.000Z"
+          : `2026-07-${String(10 + index).padStart(2, "0")}T00:00:00.000Z`,
+      count: 1,
+      correct: false,
+    }));
+    const replay = selectQuestions(
+      categoryQuestions,
+      {
+        ...setup,
+        questionCount: 1,
+        categoryIds: ["cat-21"],
+        difficulty: categoryQuestions[2].difficulty,
+      },
+      seen,
+    );
+    expect(replay[0]?.id).toBe(oldestId);
   });
   it("holder anti-repeat-historikken separat for hver enhed", () => {
     const firstGame = selectQuestions(SEED_QUESTIONS, {

@@ -245,6 +245,7 @@ const SPECIALIST_CATEGORY_IDS = new Set([
   "cat-44",
   "cat-58",
 ]);
+const REPEAT_COOLDOWN_MS = 90 * 24 * 60 * 60 * 1_000;
 
 export function isGeneralKnowledgeQuestion(question: Question) {
   return (
@@ -547,12 +548,23 @@ export function selectQuestions(
       allowRepeatedTemplate: boolean,
       requireGeneralKnowledge: boolean,
       allowRepeatedCategory: boolean,
+      seenPolicy: "unseen" | "old" | "any",
     ) => {
       for (const question of candidatePool) {
         const factKey = questionFactKey(question);
         const templateKey = repetitiveTemplateKey(question);
+        const seenQuestion = seenMap.get(question.id);
+        const seenAt = seenQuestion
+          ? Date.parse(seenQuestion.lastSeen)
+          : Number.NaN;
+        const seenAge = Number.isFinite(seenAt)
+          ? Math.max(0, Date.now() - seenAt)
+          : 0;
         if (
-          seenMap.has(question.id) ||
+          (seenPolicy === "unseen" && seenQuestion) ||
+          (seenPolicy === "old" &&
+            (!seenQuestion || seenAge < REPEAT_COOLDOWN_MS)) ||
+          (seenPolicy === "any" && !seenQuestion) ||
           (requireGeneralKnowledge && !isGeneralKnowledgeQuestion(question)) ||
           (!allowRepeatedCategory &&
             (categoryCounts.get(question.categoryId) ?? 0) >= categoryLimit) ||
@@ -582,6 +594,10 @@ export function selectQuestions(
           setup.difficulty <= 3
             ? 5
             : 0) +
+          (seenQuestion
+            ? seenQuestion.count * 20 -
+              Math.min(365, seenAge / (24 * 60 * 60 * 1_000)) * 25
+            : 0) +
           (inDifficultyBand(question) ? 0 : 1_000) +
           Math.abs(question.difficulty - target) * 10 +
           (categoryCounts.get(selectedCategory) ?? 0) * 45 +
@@ -595,14 +611,21 @@ export function selectQuestions(
       }
     };
     const requireGeneralKnowledge = generalSlots.has(i);
-    chooseFromPool(false, false, requireGeneralKnowledge, false);
-    if (!chosen) chooseFromPool(true, false, requireGeneralKnowledge, false);
-    if (!chosen) chooseFromPool(true, true, requireGeneralKnowledge, false);
-    if (!chosen && requireGeneralKnowledge)
-      chooseFromPool(false, false, false, false);
-    if (!chosen) chooseFromPool(true, true, false, true);
-    // Tidligere sete spørgsmål vælges aldrig igen på denne enhed. Et kortere
-    // resultat håndteres af opsætningen med besked om at vælge flere kategorier.
+    const chooseWithSeenPolicy = (policy: "unseen" | "old" | "any") => {
+      chooseFromPool(false, false, requireGeneralKnowledge, false, policy);
+      if (!chosen)
+        chooseFromPool(true, false, requireGeneralKnowledge, false, policy);
+      if (!chosen)
+        chooseFromPool(true, true, requireGeneralKnowledge, false, policy);
+      if (!chosen && requireGeneralKnowledge)
+        chooseFromPool(false, false, false, false, policy);
+      if (!chosen) chooseFromPool(true, true, false, true, policy);
+    };
+    chooseWithSeenPolicy("unseen");
+    if (!chosen) chooseWithSeenPolicy("old");
+    if (!chosen) chooseWithSeenPolicy("any");
+    // Usete kommer altid først. Derefter vælges de ældst sete spørgsmål,
+    // så en gennemspillet kategori fortsat kan bruges uden gentagelser i spillet.
     if (!chosen) break;
     picked.push(chosen);
     pickedIds.add(chosen.id);

@@ -407,8 +407,8 @@ export function GameShell() {
       if (questions.length < normalized.questionCount) {
         setStartError(
           questions.length === 0
-            ? "Der er ingen usete spørgsmål tilbage i de valgte kategorier. Vælg flere kategorier."
-            : `Der er kun ${questions.length} usete spørgsmål til denne opsætning. Vælg flere kategorier eller et kortere spil.`,
+            ? "Der er ingen spørgsmål i de valgte kategorier. Vælg flere kategorier."
+            : `Der er kun ${questions.length} forskellige spørgsmål til denne opsætning. Vælg flere kategorier eller et kortere spil.`,
         );
         setView("setup");
         return;
