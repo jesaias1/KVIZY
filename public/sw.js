@@ -1,8 +1,9 @@
-const CACHE = "kvizy-v7";
+const CACHE = "kvizy-v8";
 const CORE = [
   "/",
   "/manifest.webmanifest",
   "/brand/kvizy-mark.png",
+  "/brand/kvizy-wordmark.png",
   "/brand/kvizy-icon-192.png",
   "/brand/kvizy-icon-512.png",
 ];

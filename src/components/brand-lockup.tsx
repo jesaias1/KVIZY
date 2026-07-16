@@ -22,7 +22,14 @@ export function BrandLockup({
         priority
       />
       <span className="brand-copy">
-        <strong>{APP_CONFIG.name}</strong>
+        <Image
+          src="/brand/kvizy-wordmark.png"
+          alt={APP_CONFIG.name}
+          width={1012}
+          height={294}
+          className="brand-wordmark"
+          priority
+        />
         <small>{APP_CONFIG.tagline}</small>
       </span>
     </span>
