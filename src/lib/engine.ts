@@ -162,10 +162,7 @@ export function selectQuestions(
   const randomizedBank = shuffle(bank, random).filter(
     (question) =>
       question.status === "active" &&
-      (setup.categoryIds.includes(question.categoryId) ||
-        question.secondaryCategoryIds.some((categoryId) =>
-          setup.categoryIds.includes(categoryId),
-        )),
+      setup.categoryIds.includes(question.categoryId),
   );
   const qualityScores = new Map(
     randomizedBank.map((question) => [

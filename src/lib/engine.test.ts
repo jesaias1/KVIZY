@@ -154,20 +154,31 @@ describe("adaptiv udvælgelse", () => {
     );
   });
   it("undgår gentagelser og respekterer kategorier", () => {
+    const selectedCategoryIds = ["cat-1", "cat-2", "cat-3", "cat-4", "cat-5"];
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,
       questionCount: 30,
-      categoryIds: ["cat-1", "cat-2", "cat-3", "cat-4", "cat-5"],
+      categoryIds: selectedCategoryIds,
     });
     expect(chosen).toHaveLength(30);
     expect(new Set(chosen.map((q) => q.id)).size).toBe(30);
+    expect(chosen.every((q) => selectedCategoryIds.includes(q.categoryId))).toBe(
+      true,
+    );
+  });
+  it("holder musikproduktion ude, når kategorien er fravalgt", () => {
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 40,
+      categoryIds: ["cat-9", "cat-21"],
+    });
+    expect(chosen.length).toBeGreaterThan(0);
+    expect(chosen.every((question) => question.categoryId !== "cat-23")).toBe(
+      true,
+    );
     expect(
-      chosen.every(
-        (q) =>
-          setup.categoryIds.slice(0, 5).includes(q.categoryId) ||
-          q.secondaryCategoryIds.some((categoryId) =>
-            setup.categoryIds.slice(0, 5).includes(categoryId),
-          ),
+      chosen.every((question) =>
+        ["cat-9", "cat-21"].includes(question.categoryId),
       ),
     ).toBe(true);
   });
