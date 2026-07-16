@@ -20,6 +20,358 @@ const rows = seedSpecs.flatMap((spec) =>
 );
 
 const overrides: Record<string, string[]> = {
+  "Hvilken planet er nærmest Solen?": ["Venus", "Jorden", "Mars"],
+  "Hvilken planet har den store røde plet?": ["Saturn", "Neptun", "Uranus"],
+  "Hvad kaldes en eksploderende stjerne?": ["Pulsar", "Kvasar", "Rød kæmpe"],
+  "Hvilken måne kredser om Saturn og har tæt atmosfære?": [
+    "Europa",
+    "Ganymedes",
+    "Triton",
+  ],
+  "Hvad betyder CPU?": [
+    "Computer Processing Utility",
+    "Central Program Unit",
+    "Core Processing User",
+  ],
+  "Hvad står URL for?": [
+    "Universal Routing Link",
+    "Uniform Reference Link",
+    "User Resource Location",
+  ],
+  "Hvad står NATO for på dansk?": [
+    "Den Nordatlantiske Handelsorganisation",
+    "Den Nordiske Traktats Organisation",
+    "Den Nationale Atlantiske Traktatorden",
+  ],
+  "Hvad betyder BPM?": [
+    "Bars per measure",
+    "Beats per measure",
+    "Bars per minute",
+  ],
+  "Hvad betyder VAR?": [
+    "Video Action Review",
+    "Visual Assistant Referee",
+    "Video Assisted Replay",
+  ],
+
+  "Hvem skrev Staten?": ["Aristoteles", "Sokrates", "Xenofon"],
+  "Hvilken filosof formulerede 'Jeg tænker, altså er jeg'?": [
+    "Baruch Spinoza",
+    "John Locke",
+    "David Hume",
+  ],
+  "Hvad kaldes læren om viden?": ["Ontologi", "Etik", "Æstetik"],
+  "Hvem forbindes med det kategoriske imperativ?": [
+    "Jeremy Bentham",
+    "John Stuart Mill",
+    "Friedrich Nietzsche",
+  ],
+  "Hvad kaldes spørgsmålet om fri vilje over for årsagsbestemthed?": [
+    "Det ondes problem",
+    "Identitetsproblemet",
+    "Bevidsthedsproblemet",
+  ],
+  "Hvilken disciplin undersøger livets mening filosofisk?": [
+    "Erkendelsesteori",
+    "Sprogfilosofi",
+    "Videnskabsfilosofi",
+  ],
+  "Hvad er et tankeeksperiment?": [
+    "En statistisk stikprøve",
+    "En laboratoriemåling",
+    "En historisk kildeanalyse",
+  ],
+  "Hvad spørger identitetsproblemet især til?": [
+    "Hvordan sikker viden opstår",
+    "Hvordan moralske regler begrundes",
+    "Hvordan sprog får betydning",
+  ],
+  "Hvad er altruïsme?": [
+    "At handle udelukkende for egen fordel",
+    "At tvivle på al sikker viden",
+    "At følge en regel uden undtagelser",
+  ],
+
+  "Hvilket firma skabte Super Mario?": ["Sega", "Atari", "Capcom"],
+  "Hvilket spil foregår i landet Hyrule?": [
+    "Final Fantasy",
+    "Dragon Quest",
+    "Elden Ring",
+  ],
+  "Hvad hedder hovedfiguren i Halo?": [
+    "Commander Shepard",
+    "Marcus Fenix",
+    "Doom Slayer",
+  ],
+  "Hvilket studie udviklede Minecraft oprindeligt?": [
+    "Valve",
+    "Epic Games",
+    "Bethesda Game Studios",
+  ],
+
+  "Hvilken dansker vandt Tour de France i både 2022 og 2023?": [
+    "Bjarne Riis",
+    "Jakob Fuglsang",
+    "Mads Pedersen",
+  ],
+  "Hvilken dansk badmintonspiller vandt OL-guld i 1996?": [
+    "Peter Gade",
+    "Viktor Axelsen",
+    "Morten Frost",
+  ],
+  "Hvilken dansk tennisspiller vandt Australian Open 2018?": [
+    "Clara Tauson",
+    "Holger Rune",
+    "Kenneth Carlsen",
+  ],
+
+  "Hvilket hjortedyr er størst i Norden?": [
+    "Kronhjorten",
+    "Rensdyret",
+    "Dådyret",
+  ],
+  "Hvilken sæl er almindelig i danske farvande?": [
+    "Grønlandssæl",
+    "Klapmyds",
+    "Ringsæl",
+  ],
+
+  "Hvem er tordenguden i nordisk mytologi?": ["Tyr", "Frej", "Heimdal"],
+  "Hvad hedder Odins ottebenede hest?": ["Gulltop", "Svadilfare", "Skinfaxe"],
+  "Hvilket træ forbinder verdenerne?": ["Mímameiðr", "Læraðr", "Glasir"],
+  "Hvem er Lokes datter og dødsrigets hersker?": ["Freja", "Frigg", "Idun"],
+  "Hvad kaldes verdens undergang?": ["Fimbulvinter", "Valhal", "Bifrøst"],
+  "Hvilken gud mistede sin hånd til Fenrisulven?": ["Balder", "Brage", "Njord"],
+
+  "Hvilket kollegium tilhører Harry Potter?": [
+    "Slytherin",
+    "Ravenclaw",
+    "Hufflepuff",
+  ],
+  "Hvad hedder Harrys ugle?": ["Skævben", "Scabbers", "Fawkes"],
+  "Hvilken sport spilles på koste?": ["Troldmandsskak", "Gobstones", "Dueling"],
+  "Hvem er rektor på Hogwarts i de første bøger?": [
+    "Minerva McGonagall",
+    "Severus Snape",
+    "Filius Flitwick",
+  ],
+  "Hvilken trylleformular afvæbner en modstander?": [
+    "Stupefy",
+    "Protego",
+    "Petrificus Totalus",
+  ],
+
+  "Hvilken dansk dessert består af ris, fløde og mandler?": [
+    "Koldskål",
+    "Æblekage",
+    "Citronfromage",
+  ],
+
+  "Hvad får gærdej til at hæve?": [
+    "Ilt fra melet",
+    "Damp fra saltet",
+    "Syre fra sukkeret",
+  ],
+  "Hvad er marengs primært lavet af?": [
+    "Æggeblommer og mel",
+    "Fløde og sukker",
+    "Smør og mandler",
+  ],
+  "Hvad betyder det at temperere chokolade?": [
+    "At piske luft ind i den",
+    "At fortynde den med fløde",
+    "At karamellisere sukkeret",
+  ],
+  "Hvad er en ganache?": [
+    "En luftig æggemasse",
+    "En mørdej med nødder",
+    "En glasur af flormelis og vand",
+  ],
+
+  "Hvilken frugt er botanisk et bær?": [
+    "Jordbærret",
+    "Hindbærret",
+    "Kirsebærret",
+  ],
+  "Hvilket metal kan smelte i hånden?": ["Titan", "Nikkel", "Kobolt"],
+
+  "Hvilken spillekonsol udgav Nintendo i Japan i 1983?": [
+    "Mega Drive",
+    "PC Engine",
+    "Neo Geo",
+  ],
+  "Hvem sang Like a Prayer?": [
+    "Cyndi Lauper",
+    "Whitney Houston",
+    "Tina Turner",
+  ],
+  "Hvilken rumfærge eksploderede i 1986?": [
+    "Columbia",
+    "Discovery",
+    "Atlantis",
+  ],
+  "Hvilket arkadespil har en gul figur, der spiser prikker?": [
+    "Q*bert",
+    "Frogger",
+    "Dig Dug",
+  ],
+
+  "Hvilken søgemaskine blev grundlagt i 1998?": [
+    "AltaVista",
+    "Lycos",
+    "Ask Jeeves",
+  ],
+
+  "Hvilket band udgav Kvinde min?": ["Shu-bi-dua", "TV-2", "Gnags"],
+  "Hvem komponerede Tango Jalousie?": [
+    "Bent Fabricius-Bjerre",
+    "Kai Normann Andersen",
+    "Niels W. Gade",
+  ],
+  "Hvilken sanger står bag Tusind stykker?": [
+    "Sanne Salomonsen",
+    "Lis Sørensen",
+    "Søs Fenger",
+  ],
+  "Hvem udgav albummet No. 1?": [
+    "Kim Larsen",
+    "Sanne Salomonsen",
+    "Anne Linnet",
+  ],
+
+  "Hvilket pattedyr kan flyve aktivt?": [
+    "Flyveegernet",
+    "Svævepossumen",
+    "Kaguangen",
+  ],
+  "Hvilket dyr har sorte og hvide striber?": [
+    "Okapien",
+    "Stinkdyret",
+    "Tapiren",
+  ],
+  "Hvilken fugl er verdens største?": ["Emuen", "Kasuarfuglen", "Nanduen"],
+  "Hvilket dyr bygger dæmninger?": ["Bisamrotten", "Odderen", "Grævlingen"],
+  "Hvilket landdyr er hurtigst?": ["Gaffelbukken", "Løven", "Strudsen"],
+  "Hvad kaldes en gruppe løver?": ["En ulveflok", "En koloni", "En sværm"],
+
+  "Hvilken japansk kunstform arrangerer blomster?": [
+    "Origami",
+    "Kalligrafi",
+    "Bonsai",
+  ],
+  "Hvad kaldes den portugisiske musikstil præget af saudade?": [
+    "Flamenco",
+    "Tarantella",
+    "Rebetiko",
+  ],
+  "Hvilken fest markerer lysets sejr i Indien?": ["Holi", "Vesak", "Songkran"],
+  "Hvilken dans stammer fra Argentina?": ["Samba", "Salsa", "Rumba"],
+  "Hvad kaldes den koreanske bølge af populærkultur?": [
+    "Kawaii",
+    "Bollywood",
+    "Nollywood",
+  ],
+
+  "Hvem er gudernes konge i græsk mytologi?": ["Poseidon", "Hades", "Apollon"],
+  "Hvem er visdommens gudinde?": ["Hera", "Afrodite", "Artemis"],
+  "Hvilken helt dræbte Minotauros?": ["Perseus", "Herakles", "Jason"],
+  "Hvem fløj for tæt på Solen?": ["Daidalos", "Phaeton", "Bellerofon"],
+  "Hvem var havets gud?": ["Zeus", "Hades", "Apollon"],
+
+  "Hvem var den første kvinde til at vinde en Nobelpris?": [
+    "Bertha von Suttner",
+    "Selma Lagerlöf",
+    "Jane Addams",
+  ],
+  "Hvem holdt talen I Have a Dream?": [
+    "Malcolm X",
+    "John Lewis",
+    "Jesse Jackson",
+  ],
+  "Hvem skrev dagbog under skjul i Amsterdam?": [
+    "Etty Hillesum",
+    "Corrie ten Boom",
+    "Hélène Berr",
+  ],
+  "Hvem var Sydafrikas første sorte præsident?": [
+    "Desmond Tutu",
+    "Thabo Mbeki",
+    "F.W. de Klerk",
+  ],
+  "Hvem udviklede relativitetsteorien?": [
+    "Niels Bohr",
+    "Max Planck",
+    "Erwin Schrödinger",
+  ],
+  "Hvem var den første kvinde i rummet?": [
+    "Svetlana Savitskaja",
+    "Sally Ride",
+    "Mae Jemison",
+  ],
+
+  "Hvilken onlineencyklopædi blev lanceret i 2001?": [
+    "Britannica Online",
+    "Encarta",
+    "Citizendium",
+  ],
+  "Hvilken smartphone blev lanceret af Apple i 2007?": [
+    "BlackBerry Bold",
+    "Nokia N95",
+    "HTC Dream",
+  ],
+  "Hvilken social platform blev grundlagt i 2004?": [
+    "Myspace",
+    "Twitter",
+    "Instagram",
+  ],
+  "Hvilken dværgplanet mistede planetstatus i 2006?": [
+    "Ceres",
+    "Eris",
+    "Haumea",
+  ],
+
+  "Hvilken streamingtjeneste lancerede House of Cards i 2013?": [
+    "HBO",
+    "Hulu",
+    "Amazon Prime Video",
+  ],
+  "Hvilket spil blev et globalt fænomen med Battle Royale i 2017?": [
+    "Overwatch",
+    "Destiny 2",
+    "PUBG Mobile",
+  ],
+  "Hvilken rumsonde passerede Pluto i 2015?": ["Voyager 2", "Cassini", "Juno"],
+
+  "Hvad kaldes kunstig intelligens, der kan skabe nyt indhold?": [
+    "Analytisk AI",
+    "Ekspertsystem",
+    "Regelbaseret AI",
+  ],
+  "Hvilken energikilde udnytter bevægelse i luft?": [
+    "Solenergi",
+    "Geotermisk energi",
+    "Bølgeenergi",
+  ],
+  "Hvad er et deepfake?": [
+    "Et krypteret dataarkiv",
+    "Et anonymt netværk",
+    "En digital vandmærkning",
+  ],
+  "Hvad betyder cirkulær økonomi?": [
+    "At øge forbruget af nye råvarer",
+    "At udskifte produkter hurtigere",
+    "At samle produktionen i én virksomhed",
+  ],
+  "Hvilken type bil drives kun af batteri og elmotor?": [
+    "Hybridbil",
+    "Brintbil",
+    "Plug-in-hybrid",
+  ],
+  "Hvad er en podcast?": [
+    "En direkte tv-kanal",
+    "Et digitalt nyhedsbrev",
+    "En billedserie på sociale medier",
+  ],
   "Hvem udviklede teorien om klassisk betingning?": [
     "John B. Watson",
     "Edward Thorndike",
@@ -30,11 +382,12 @@ const overrides: Record<string, string[]> = {
     "John B. Watson",
     "Albert Bandura",
   ],
-  "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?": [
-    "Social læringsteori",
-    "Kognitiv udviklingsteori",
-    "Selvbestemmelsesteori",
-  ],
+  "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?":
+    [
+      "Social læringsteori",
+      "Kognitiv udviklingsteori",
+      "Selvbestemmelsesteori",
+    ],
   "Hvem udviklede den sociokulturelle læringsteori?": [
     "Jerome Bruner",
     "Jean Piaget",
@@ -181,21 +534,9 @@ const overrides: Record<string, string[]> = {
     "Polo Ralph Lauren",
     "Tommy Hilfiger",
   ],
-  "Hvilket firma fremstiller PlayStation?": [
-    "Microsoft",
-    "Nintendo",
-    "Sega",
-  ],
-  "Hvilket brand sælger møbler i flade pakker?": [
-    "JYSK",
-    "ILVA",
-    "BoConcept",
-  ],
-  "Hvilket urmærke har en krone som logo?": [
-    "Omega",
-    "TAG Heuer",
-    "Breitling",
-  ],
+  "Hvilket firma fremstiller PlayStation?": ["Microsoft", "Nintendo", "Sega"],
+  "Hvilket brand sælger møbler i flade pakker?": ["JYSK", "ILVA", "BoConcept"],
+  "Hvilket urmærke har en krone som logo?": ["Omega", "TAG Heuer", "Breitling"],
   "Hvilken virksomhed har et bidt æble som logo?": [
     "Microsoft",
     "Google",
@@ -227,16 +568,10 @@ const overrides: Record<string, string[]> = {
     "Mazda",
     "Subaru",
   ],
-  "Hvilken betalingsvirksomhed bruger en rød og en gul overlappende cirkel i sit logo?": [
-    "Visa",
-    "American Express",
-    "PayPal",
-  ],
-  "Hvad kaldes Folketingets ledelse, som består af formanden og fire næstformænd?": [
-    "Statsrådet",
-    "Udvalget for Forretningsordenen",
-    "Tingsekretærerne",
-  ],
+  "Hvilken betalingsvirksomhed bruger en rød og en gul overlappende cirkel i sit logo?":
+    ["Visa", "American Express", "PayPal"],
+  "Hvad kaldes Folketingets ledelse, som består af formanden og fire næstformænd?":
+    ["Statsrådet", "Udvalget for Forretningsordenen", "Tingsekretærerne"],
   "Hvilket grundstof har det kemiske symbol Au?": ["Sølv", "Kobber", "Jern"],
   "Hvor mange sider har en regulær sekskant?": ["5", "7", "8"],
   "Hvad kaldes verdens største ocean?": [
@@ -295,11 +630,7 @@ const overrides: Record<string, string[]> = {
     "Kål",
     "Havregryn",
   ],
-  "Hvad er rugbrød typisk lavet med?": [
-    "Hvedemel",
-    "Majsmel",
-    "Rismel",
-  ],
+  "Hvad er rugbrød typisk lavet med?": ["Hvedemel", "Majsmel", "Rismel"],
   "Hvad er hovedingrediensen i hummus?": [
     "Linser",
     "Hvide bønner",
@@ -316,11 +647,7 @@ const overrides: Record<string, string[]> = {
     "Mozzarella",
     "Ricotta",
   ],
-  "Hvad er kimchi?": [
-    "En risnudelret",
-    "En fiskesauce",
-    "En sød bønnepasta",
-  ],
+  "Hvad er kimchi?": ["En risnudelret", "En fiskesauce", "En sød bønnepasta"],
   "Hvilken spiritus er basen i en mojito?": ["Vodka", "Gin", "Tequila"],
   "Hvilken bitter aperitif indgår i en negroni?": [
     "Aperol",
@@ -416,7 +743,9 @@ function semanticKey(prompt: string, categoryId: string, answer: string) {
       prompt,
     )
   ) {
-    const answerOpening = answer.match(/^(En|Et|At|Den|Det|Når|Hvor|Hvad)\b/i)?.[1];
+    const answerOpening = answer.match(
+      /^(En|Et|At|Den|Det|Når|Hvor|Hvad)\b/i,
+    )?.[1];
     return `definition:${answerOpening?.toLocaleLowerCase("da") ?? "andet"}`;
   }
   const match = prompt.match(
@@ -440,7 +769,16 @@ const semanticFallbacks: Record<string, string[]> = {
     "Oslo",
     "Stockholm",
   ],
-  island: ["Fyn", "Bornholm", "Lolland", "Falster", "Møn", "Samsø", "Gotland", "Öland"],
+  island: [
+    "Fyn",
+    "Bornholm",
+    "Lolland",
+    "Falster",
+    "Møn",
+    "Samsø",
+    "Gotland",
+    "Öland",
+  ],
   river: [
     "Rhinen",
     "Donau",
@@ -461,10 +799,44 @@ const semanticFallbacks: Record<string, string[]> = {
     "Messinastrædet",
     "Doverstrædet",
   ],
-  mountain: ["Mont Blanc", "Kilimanjaro", "Matterhorn", "Elbrus", "Vesuv", "Etna"],
-  country: ["Danmark", "Norge", "Sverige", "Tyskland", "Frankrig", "Spanien", "Italien", "Polen"],
-  instrument: ["Guitar", "Klaver", "Violin", "Trompet", "Cello", "Klarinet", "Harpe", "Fløjte"],
-  currency: ["Euro", "Dollar", "Krone", "Pund", "Yen", "Franc", "Peso", "Rupie"],
+  mountain: [
+    "Mont Blanc",
+    "Kilimanjaro",
+    "Matterhorn",
+    "Elbrus",
+    "Vesuv",
+    "Etna",
+  ],
+  country: [
+    "Danmark",
+    "Norge",
+    "Sverige",
+    "Tyskland",
+    "Frankrig",
+    "Spanien",
+    "Italien",
+    "Polen",
+  ],
+  instrument: [
+    "Guitar",
+    "Klaver",
+    "Violin",
+    "Trompet",
+    "Cello",
+    "Klarinet",
+    "Harpe",
+    "Fløjte",
+  ],
+  currency: [
+    "Euro",
+    "Dollar",
+    "Krone",
+    "Pund",
+    "Yen",
+    "Franc",
+    "Peso",
+    "Rupie",
+  ],
   animal: ["Ræv", "Grævling", "Odder", "Los", "Mår", "Hare", "Bæver", "Sæl"],
   bridge: [
     "Storebæltsforbindelsen",
@@ -482,7 +854,16 @@ const semanticFallbacks: Record<string, string[]> = {
     "Folketinget",
     "FN's Generalforsamling",
   ],
-  band: ["Queen", "The Beatles", "ABBA", "Nirvana", "U2", "Coldplay", "Metallica", "A-ha"],
+  band: [
+    "Queen",
+    "The Beatles",
+    "ABBA",
+    "Nirvana",
+    "U2",
+    "Coldplay",
+    "Metallica",
+    "A-ha",
+  ],
   abbreviation: [
     "Verdenssundhedsorganisationen",
     "De Forenede Nationer",
@@ -580,29 +961,13 @@ function optionsFor(
           semanticKey(row.prompt, row.categoryId, row.answer) === key,
       )
       .map((row) => row.answer),
-    ...rows
-      .filter(
-        (row) =>
-          row.answer !== correct &&
-          row.categoryId === categoryId &&
-          row.prompt.split(" ")[0] === prompt.split(" ")[0],
-      )
-      .map((row) => row.answer),
-    ...rows
-      .filter(
-        (row) =>
-          row.answer !== correct &&
-          semanticKey(row.prompt, row.categoryId, row.answer) === key,
-      )
-      .map((row) => row.answer),
-    ...rows
-      .filter((row) => row.answer !== correct && row.categoryId === categoryId)
-      .map((row) => row.answer),
   ];
   const uniqueCandidates = [
     ...new Map(
       candidates
-        .filter((candidate) => normalizeText(candidate) !== normalizeText(correct))
+        .filter(
+          (candidate) => normalizeText(candidate) !== normalizeText(correct),
+        )
         .map((candidate) => [normalizeText(candidate), candidate]),
     ).values(),
   ];
@@ -610,65 +975,72 @@ function optionsFor(
 }
 
 const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
-  spec.items.map((item, index) => {
-    const [prompt, correct, detail] = item;
-    const type: QuestionType =
-      spec.categoryId === "cat-47"
-        ? "true_false"
-        : spec.categoryId === "cat-45"
-          ? "what_came_first"
-          : spec.categoryId === "cat-46"
-            ? "odd_one_out"
-            : "multiple_choice";
-    const texts = optionsFor(prompt, correct, spec.categoryId, type);
-    const correctIndex = texts.findIndex(
-      (text) =>
-        text.toLocaleLowerCase("da") === correct.toLocaleLowerCase("da"),
-    );
-    const options = texts.map((text, optionIndex) => ({
-      id: `o${optionIndex + 1}`,
-      text,
-    }));
-    return {
-      id: `q-${spec.categoryId}-${index + 1}`,
-      prompt,
-      type,
-      categoryId: spec.categoryId,
-      secondaryCategoryIds: [],
-      difficulty:
-        ({
-          "Hvem udviklede teorien om klassisk betingning?": 2,
-          "Hvem forbindes med operant betingning?": 2,
-          "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?": 2,
-          "Hvem udviklede den sociokulturelle læringsteori?": 3,
-          "Hvad måler Big Five-modellen?": 2,
-          "Hvilken psykolog beskrev flow?": 3,
-        }[prompt] ??
-        ((Number(spec.categoryId.slice(4)) + index * 2) % 5) + 1),
-      options,
-      correctOptionId: `o${correctIndex + 1}`,
-      explanation:
-        detail ??
-        explanationOverrides[prompt] ??
-        `Det korrekte svar er ${correct}. Det er den centrale sammenhæng, spørgsmålet tester.`,
-      sourceLabel: "KVIZY redaktionel seedbank",
-      tags: [
-        CATEGORIES.find(
-          (category) => category.id === spec.categoryId,
-        )?.name.toLocaleLowerCase("da") ?? "quiz",
-      ],
-      origin: "curated",
-      status: "active",
-      fingerprint: fingerprint(prompt, correct, type),
-      qualityScore: 92,
-      timeSensitive: false,
-      createdAt: created,
-      updatedAt: created,
-      playCount: 0,
-      correctRate: 0,
-      reportCount: 0,
-    } satisfies Question;
-  }),
+  spec.items
+    .map((item, index) => {
+      const [prompt, correct, detail] = item;
+      const type: QuestionType =
+        spec.categoryId === "cat-47"
+          ? "true_false"
+          : spec.categoryId === "cat-45"
+            ? "what_came_first"
+            : spec.categoryId === "cat-46"
+              ? "odd_one_out"
+              : "multiple_choice";
+      const texts = optionsFor(prompt, correct, spec.categoryId, type);
+      const correctIndex = texts.findIndex(
+        (text) =>
+          text.toLocaleLowerCase("da") === correct.toLocaleLowerCase("da"),
+      );
+      const options = texts.map((text, optionIndex) => ({
+        id: `o${optionIndex + 1}`,
+        text,
+      }));
+      return {
+        id: `q-${spec.categoryId}-${index + 1}`,
+        prompt,
+        type,
+        categoryId: spec.categoryId,
+        secondaryCategoryIds: [],
+        difficulty:
+          {
+            "Hvem udviklede teorien om klassisk betingning?": 2,
+            "Hvem forbindes med operant betingning?": 2,
+            "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?": 2,
+            "Hvem udviklede den sociokulturelle læringsteori?": 3,
+            "Hvad måler Big Five-modellen?": 2,
+            "Hvilken psykolog beskrev flow?": 3,
+          }[prompt] ?? ((Number(spec.categoryId.slice(4)) + index * 2) % 5) + 1,
+        options,
+        correctOptionId: `o${correctIndex + 1}`,
+        explanation:
+          detail ??
+          explanationOverrides[prompt] ??
+          `Det korrekte svar er ${correct}. Det er den centrale sammenhæng, spørgsmålet tester.`,
+        sourceLabel: "KVIZY redaktionel seedbank",
+        tags: [
+          CATEGORIES.find(
+            (category) => category.id === spec.categoryId,
+          )?.name.toLocaleLowerCase("da") ?? "quiz",
+        ],
+        origin: "curated",
+        status: "active",
+        fingerprint: fingerprint(prompt, correct, type),
+        qualityScore: 92,
+        timeSensitive: false,
+        createdAt: created,
+        updatedAt: created,
+        playCount: 0,
+        correctRate: 0,
+        reportCount: 0,
+      } satisfies Question;
+    })
+    .filter(
+      (question) =>
+        question.options.length ===
+        (question.type === "true_false" || question.type === "what_came_first"
+          ? 2
+          : 4),
+    ),
 );
 
 const BASE_QUESTIONS: Question[] = [
@@ -745,7 +1117,10 @@ const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
       : value;
   };
   const cleanText = (text: string) =>
-    text.trim().replace(/\s{2,}/g, " ").replace(/\.{2}$/, ".");
+    text
+      .trim()
+      .replace(/\s{2,}/g, " ")
+      .replace(/\.{2}$/, ".");
   return {
     ...question,
     prompt: cleanText(question.prompt),

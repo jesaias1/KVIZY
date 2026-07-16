@@ -63,11 +63,14 @@ describe("automatisk spørgsmålskvalitet", () => {
   it("indeholder ingen maskinagtige udsagn eller gentagne prompts", () => {
     expect(
       SEED_QUESTIONS.some((question) =>
-        [question.prompt, question.explanation, ...question.options.map((o) => o.text)].some(
-          (text) =>
-            /registreret som|centrale sammenhæng|final version|\s{2,}|\.\./i.test(
-              text,
-            ),
+        [
+          question.prompt,
+          question.explanation,
+          ...question.options.map((o) => o.text),
+        ].some((text) =>
+          /registreret som|centrale sammenhæng|final version|\s{2,}|\.\./i.test(
+            text,
+          ),
         ),
       ),
     ).toBe(false);
@@ -118,17 +121,25 @@ describe("automatisk spørgsmålskvalitet", () => {
       "wikiculture-film-director-Q3998",
       "wd-Q29999-language",
     ];
-    expect(removedIds.every((id) => !SEED_QUESTIONS.some((q) => q.id === id))).toBe(true);
+    expect(
+      removedIds.every((id) => !SEED_QUESTIONS.some((q) => q.id === id)),
+    ).toBe(true);
 
     const japan = SEED_QUESTIONS.find((q) => q.id === "wd-Q17-tld");
     expect(japan?.options.map((option) => option.text)).toEqual([
-      ".jp", ".ja", ".jn", ".jo",
+      ".jp",
+      ".ja",
+      ".jn",
+      ".jo",
     ]);
     const redGroed = SEED_QUESTIONS.find(
       (q) => q.id === "wikiculture-food-origin-Q493749",
     );
     expect(redGroed?.options.map((option) => option.text)).toEqual([
-      "Danmark", "Sverige", "Norge", "Finland",
+      "Danmark",
+      "Sverige",
+      "Norge",
+      "Finland",
     ]);
 
     const trueFalse = SEED_QUESTIONS.filter((q) => q.type === "true_false");
@@ -136,7 +147,9 @@ describe("automatisk spørgsmålskvalitet", () => {
       trueFalse,
       (q) => q.correctOptionId ?? "none",
     );
-    expect(Math.abs((truthCounts.o1?.length ?? 0) - (truthCounts.o2?.length ?? 0))).toBeLessThanOrEqual(1);
+    expect(
+      Math.abs((truthCounts.o1?.length ?? 0) - (truthCounts.o2?.length ?? 0)),
+    ).toBeLessThanOrEqual(1);
   });
 
   it("udelukker maskinelle skabeloner med systematiske kvalitetsfejl", () => {
@@ -166,9 +179,7 @@ describe("automatisk spørgsmålskvalitet", () => {
     const europa = SEED_QUESTIONS.find(
       (question) => question.id === "wikithin-invention-inventor-Q3143",
     );
-    expect(europa?.prompt).toBe(
-      "Hvem opdagede Jupiters måne Europa i 1610?",
-    );
+    expect(europa?.prompt).toBe("Hvem opdagede Jupiters måne Europa i 1610?");
     expect(europa?.prompt).not.toMatch(/opfind/i);
     expect(europa?.categoryId).toBe("cat-8");
     expect(
@@ -208,9 +219,34 @@ describe("automatisk spørgsmålskvalitet", () => {
     const albums = SEED_QUESTIONS.find((question) =>
       question.prompt.includes("dansk musikudgivelse"),
     );
-    expect(albums?.options.every((option) => option.text.includes(" af "))).toBe(
-      true,
-    );
+    expect(
+      albums?.options.every((option) => option.text.includes(" af ")),
+    ).toBe(true);
+  });
+
+  it("blander ikke længere svar fra helt forskellige emnefamilier", () => {
+    const expectedOptions: Record<string, string[]> = {
+      "Hvilken planet er nærmest Solen?": ["Merkur", "Venus", "Jorden", "Mars"],
+      "Hvilken fugl er verdens største?": [
+        "Strudsen",
+        "Emuen",
+        "Kasuarfuglen",
+        "Nanduen",
+      ],
+      "Hvilken onlineencyklopædi blev lanceret i 2001?": [
+        "Wikipedia",
+        "Britannica Online",
+        "Encarta",
+        "Citizendium",
+      ],
+    };
+    for (const [prompt, options] of Object.entries(expectedOptions)) {
+      expect(
+        SEED_QUESTIONS.find(
+          (question) => question.prompt === prompt,
+        )?.options.map((option) => option.text),
+      ).toEqual(options);
+    }
   });
 
   it("gentager ikke relationsord i Wikidata-spørgsmål", () => {
