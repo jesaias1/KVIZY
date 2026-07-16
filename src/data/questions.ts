@@ -1,5 +1,6 @@
 import { CATEGORIES } from "@/lib/categories";
 import { fingerprint, normalizeText, stableHash } from "@/lib/engine";
+import { hasAnswerLeak } from "@/lib/question-quality";
 import type { Question, QuestionType } from "@/lib/types";
 import { COUNTRY_QUESTIONS } from "./country-questions";
 import { MUSIC_PRODUCTION_QUESTIONS } from "./music-production-questions";
@@ -19,6 +20,21 @@ const rows = seedSpecs.flatMap((spec) =>
 );
 
 const overrides: Record<string, string[]> = {
+  "Hvilket bilmærkes logo består af tre overlappende ellipser?": [
+    "Lexus",
+    "Mazda",
+    "Subaru",
+  ],
+  "Hvilken betalingsvirksomhed bruger en rød og en gul overlappende cirkel i sit logo?": [
+    "Visa",
+    "American Express",
+    "PayPal",
+  ],
+  "Hvad kaldes Folketingets ledelse, som består af formanden og fire næstformænd?": [
+    "Statsrådet",
+    "Udvalget for Forretningsordenen",
+    "Tingsekretærerne",
+  ],
   "Hvilket grundstof har det kemiske symbol Au?": ["Sølv", "Kobber", "Jern"],
   "Hvor mange sider har en regulær sekskant?": ["5", "7", "8"],
   "Hvad kaldes verdens største ocean?": [
@@ -427,16 +443,20 @@ const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
       ? `${value[0].toLocaleUpperCase("da")}${value.slice(1)}`
       : value;
   };
+  const cleanText = (text: string) =>
+    text.trim().replace(/\s{2,}/g, " ").replace(/\.{2}$/, ".");
   return {
     ...question,
-    prompt: question.prompt.trim(),
+    prompt: cleanText(question.prompt),
     options: question.options.map((option) => ({
       ...option,
-      text: capitalizeOption(option.text),
+      text: cleanText(capitalizeOption(option.text)),
     })),
-    explanation: question.explanation.includes("centrale sammenhæng")
-      ? `Svaret er ${correctAnswer ?? "angivet ovenfor"}.`
-      : question.explanation.trim(),
+    explanation: cleanText(
+      question.explanation.includes("centrale sammenhæng")
+        ? `Svaret er ${correctAnswer ?? "angivet ovenfor"}.`
+        : question.explanation,
+    ),
     secondaryCategoryIds: [
       ...new Set([...question.secondaryCategoryIds, ...inferred]),
     ].filter((categoryId) => categoryId !== question.categoryId),
@@ -465,4 +485,6 @@ for (const question of POLISHED_QUESTIONS) {
   ].filter((categoryId) => categoryId !== existing.categoryId);
 }
 
-export const SEED_QUESTIONS: Question[] = [...QUESTIONS_BY_PROMPT.values()];
+export const SEED_QUESTIONS: Question[] = [
+  ...QUESTIONS_BY_PROMPT.values(),
+].filter((question) => !hasAnswerLeak(question));

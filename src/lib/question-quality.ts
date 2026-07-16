@@ -36,6 +36,80 @@ export function hasPublicSource(
   );
 }
 
+const ANSWER_LEAK_STOP_WORDS = new Set([
+  "album",
+  "arena",
+  "audio",
+  "auto",
+  "bilen",
+  "bilmodel",
+  "bryggeri",
+  "cars",
+  "city",
+  "company",
+  "corporation",
+  "delay",
+  "dollar",
+  "familie",
+  "familien",
+  "film",
+  "firma",
+  "foundation",
+  "kort",
+  "midi",
+  "motor",
+  "peak",
+  "rente",
+  "renter",
+  "serie",
+  "serien",
+  "software",
+  "stadion",
+  "stadium",
+  "super",
+  "technologies",
+  "virksomhed",
+  "virksomheden",
+  "vitamin",
+  "spørgsmål",
+]);
+
+function normalizeForAudit(value: string) {
+  return value
+    .toLocaleLowerCase("da")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9æøå\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function hasAnswerLeak(question: Question) {
+  if (
+    ["true_false", "what_came_first", "odd_one_out", "ordering"].includes(
+      question.type,
+    )
+  )
+    return false;
+  const answer = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  )?.text;
+  if (!answer) return false;
+  const normalizedPrompt = normalizeForAudit(question.prompt);
+  const normalizedAnswer = normalizeForAudit(answer);
+  if (normalizedAnswer.length >= 4 && normalizedPrompt.includes(normalizedAnswer))
+    return true;
+  const answerTokens = normalizedAnswer
+    .split(" ")
+    .filter(
+      (token) => token.length >= 4 && !ANSWER_LEAK_STOP_WORDS.has(token),
+    );
+  if (answerTokens.length === 0) return false;
+  const promptTokens = new Set(normalizedPrompt.split(" "));
+  const overlap = answerTokens.filter((token) => promptTokens.has(token));
+  return overlap.length / answerTokens.length >= 0.5;
+}
+
 export function auditQuestion(question: Question): QualityIssue[] {
   const issues: QualityIssue[] = [];
   if (!hasUsefulExplanation(question.explanation))

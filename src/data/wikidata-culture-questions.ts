@@ -2,10 +2,25 @@ import records from "./wikidata-culture.generated.json";
 import { stableHash } from "@/lib/engine";
 import type { Question } from "@/lib/types";
 
+// P112 ("grundlagt af") indeholder også stater, myndigheder, moderselskaber
+// og historiske forgængere. Det giver teknisk mulige, men dårlige quizsvar som
+// "Israel" eller "Kongressen i USA" på et hvem-spørgsmål, så denne relation
+// bruges ikke uden en særskilt redaktionel kontrol.
+const usableRecords = records.filter(
+  (record) => record.key !== "company-founder",
+);
+
+function workLabel(record: (typeof records)[number]) {
+  return record.work
+    .replace(/\s+/g, " ")
+    .replace(/\s*\(final version\)$/i, "")
+    .trim();
+}
+
 function optionsFor(record: (typeof records)[number]) {
   const pool = [
     ...new Set(
-      records
+      usableRecords
         .filter((item) => item.key === record.key)
         .map((item) => item.answer),
     ),
@@ -26,43 +41,31 @@ function optionsFor(record: (typeof records)[number]) {
 const createdAt = "2026-07-16T00:00:00.000Z";
 
 function factSentence(record: (typeof records)[number], answer: string) {
+  const work = workLabel(record);
   const facts: Record<string, string> = {
-    "film-director": `${answer} instruerede filmen ${record.work}.`,
-    "album-artist": `${answer} udgav albummet ${record.work}.`,
-    "game-developer": `${answer} udviklede spillet ${record.work}.`,
-    "painting-artist": `${answer} skabte maleriet ${record.work}.`,
-    "series-creator": `${answer} skabte TV-serien ${record.work}.`,
-    "software-developer": `${answer} udviklede softwaren ${record.work}.`,
-    "food-origin": `${record.work} forbindes med ${answer} som oprindelsesland.`,
-    "company-founder": `${answer} grundlagde virksomheden ${record.work}.`,
+    "film-director": `${answer} instruerede filmen ${work}.`,
+    "album-artist": `${answer} udgav albummet ${work}.`,
+    "game-developer": `${answer} udviklede spillet ${work}.`,
+    "painting-artist": `${answer} skabte maleriet ${work}.`,
+    "series-creator": `${answer} skabte TV-serien ${work}.`,
+    "software-developer": `${answer} udviklede softwaren ${work}.`,
+    "food-origin": `${work} forbindes med ${answer} som oprindelsesland.`,
   };
-  return facts[record.key] ?? `${answer} forbindes med ${record.work}.`;
+  return facts[record.key] ?? `${answer} forbindes med ${work}.`;
 }
 
-export const WIKIDATA_CULTURE_QUESTIONS: Question[] = records.map(
+export const WIKIDATA_CULTURE_QUESTIONS: Question[] = usableRecords.map(
   (record, index) => {
     const relationOptions = optionsFor(record);
-    const trueFalse = index % 15 === 0;
-    const falseStatement = trueFalse && index % 30 === 0;
-    const statementAnswer = falseStatement
-      ? relationOptions.find((option) => option.id !== "o1")!.text
-      : record.answer;
     return {
       id: `wikiculture-${record.key}-${record.workQid}`,
-      prompt: trueFalse
-        ? `Sandt eller falsk: ${factSentence(record, statementAnswer)}`
-        : record.prompt.replace("{work}", record.work),
-      type: trueFalse ? "true_false" : "multiple_choice",
+      prompt: record.prompt.replace("{work}", workLabel(record)),
+      type: "multiple_choice",
       categoryId: record.categoryId,
       secondaryCategoryIds: [],
       difficulty: ((index + record.work.length) % 4) + 2,
-      options: trueFalse
-        ? [
-            { id: "o1", text: "Sandt" },
-            { id: "o2", text: "Falsk" },
-          ]
-        : relationOptions,
-      correctOptionId: falseStatement ? "o2" : "o1",
+      options: relationOptions,
+      correctOptionId: "o1",
       explanation: factSentence(record, record.answer),
       sourceLabel: "Wikidata (CC0)",
       sourceUrl: `https://www.wikidata.org/wiki/${record.workQid}`,

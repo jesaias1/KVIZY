@@ -67,6 +67,7 @@ const configs = [
     property: "P112",
     categoryId: "cat-35",
     prompt: "Hvem grundlagde virksomheden {work}?",
+    requiresEditorialReview: true,
   },
   {
     key: "spacecraft-manufacturer",
@@ -113,6 +114,7 @@ for (let offset = 0; offset < configs.length; offset += 2) {
       )
       .slice(0, 45);
     for (const item of unambiguous) {
+      if (config.requiresEditorialReview) continue;
       records.push({
         ...item,
         key: config.key,

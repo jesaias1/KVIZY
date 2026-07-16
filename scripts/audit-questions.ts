@@ -1,6 +1,7 @@
 import { SEED_QUESTIONS } from "../src/data/questions";
 import { CATEGORIES } from "../src/lib/categories";
 import { normalizeText } from "../src/lib/engine";
+import { hasAnswerLeak } from "../src/lib/question-quality";
 import { questionSchema } from "../src/lib/types";
 
 const promptKeys = SEED_QUESTIONS.map((question) =>
@@ -18,7 +19,11 @@ const machineCopy = SEED_QUESTIONS.filter((question) =>
     question.prompt,
     question.explanation,
     ...question.options.map((option) => option.text),
-  ].some((text) => /registreret som|centrale sammenhæng/i.test(text)),
+  ].some((text) =>
+    /registreret som|centrale sammenhæng|final version|\s{2,}|\.\./i.test(
+      text,
+    ),
+  ),
 );
 const lowercaseOptions = SEED_QUESTIONS.filter((question) =>
   question.options.some(
@@ -27,6 +32,7 @@ const lowercaseOptions = SEED_QUESTIONS.filter((question) =>
       !/^(iPhone|iPad|iOS|iPod|eBay|macOS)\b/.test(option.text),
   ),
 );
+const answerLeaks = SEED_QUESTIONS.filter(hasAnswerLeak);
 const thinCategories = CATEGORIES.filter(
   (category) =>
     SEED_QUESTIONS.filter(
@@ -44,6 +50,7 @@ const report = {
   duplicateOptions: duplicateOptions.length,
   machineCopy: machineCopy.length,
   lowercaseOptions: lowercaseOptions.length,
+  answerLeaks: answerLeaks.length,
   longestOption: Math.max(
     ...SEED_QUESTIONS.flatMap((question) =>
       question.options.map((option) => option.text.length),
@@ -60,6 +67,7 @@ if (
   report.duplicateOptions > 0 ||
   report.machineCopy > 0 ||
   report.lowercaseOptions > 0 ||
+  report.answerLeaks > 0 ||
   report.longestOption > 70 ||
   report.thinCategories.length > 0
 ) {

@@ -31,13 +31,14 @@ const configs = [
     categoryId: "cat-20",
     prompt: "Hvem skabte den danske TV-serie {work}?",
     relation: "skaber",
-    where: "?work wdt:P31 wd:Q5398426; wdt:P495 wd:Q35; wdt:P170 ?answer.",
+    where:
+      "?work wdt:P31 wd:Q5398426; wdt:P495 wd:Q35; wdt:P170 ?answer. FILTER(?work NOT IN (wd:Q3705475, wd:Q5245862, wd:Q5989452, wd:Q7939619, wd:Q591519))",
   },
   {
     key: "invention-inventor",
     categoryId: "cat-39",
-    prompt: "Hvem forbindes som opfinder af {work}?",
-    relation: "opfinder",
+    prompt: "Hvem forbindes med opdagelsen eller udviklingen af {work}?",
+    relation: "opdager eller udvikler",
     where: "?work wdt:P61 ?answer.",
   },
   {
