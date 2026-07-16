@@ -669,6 +669,51 @@ describe("adaptiv udvælgelse", () => {
     });
     expect(freshDeviceGame).toHaveLength(30);
   });
+  it("giver friske enheder tydeligt forskellige spil", () => {
+    const seededRandom = (seed: number) => {
+      let state = seed;
+      return () =>
+        (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+    };
+    const first = selectQuestions(
+      SEED_QUESTIONS,
+      { ...setup, questionCount: 30 },
+      [],
+      seededRandom(17),
+    );
+    const second = selectQuestions(
+      SEED_QUESTIONS,
+      { ...setup, questionCount: 30 },
+      [],
+      seededRandom(91),
+    );
+    const firstIds = new Set(first.map((question) => question.id));
+    const overlap = second.filter((question) => firstIds.has(question.id));
+    expect(overlap.length).toBeLessThan(15);
+  });
+  it("holder spørgsmål om ophavspersoner som et lille indslag", () => {
+    const creatorTags = new Set([
+      "painting-artist",
+      "film-director",
+      "series-creator",
+      "building-architect",
+      "danish-film-director",
+      "danish-literature-author",
+      "danish-series-creator",
+      "album-artist",
+      "novel-author",
+      "danish-song-performer",
+    ]);
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 30,
+    });
+    expect(
+      chosen.filter((question) =>
+        question.tags.some((tag) => creatorTags.has(tag)),
+      ).length,
+    ).toBeLessThanOrEqual(2);
+  });
   it("gemmer valgte spørgsmål én gang pr. nyt spil på enheden", () => {
     const previous: SeenQuestion[] = [
       {

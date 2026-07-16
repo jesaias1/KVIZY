@@ -204,22 +204,26 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
   const looksLikeOldDefaultSelection =
     validSavedCategoryIds.includes("cat-13") &&
     validSavedCategoryIds.length >= DEFAULT_CATEGORIES.length;
+  const restoredPlayers = saved.players.slice(0, 12).map((player, index) => ({
+    ...newPlayer(
+      typeof player.name === "string" ? player.name : `Spiller ${index + 1}`,
+      index,
+    ),
+    ...player,
+    score: 0,
+    correct: 0,
+    answers: 0,
+    streak: 0,
+    longestStreak: 0,
+  }));
   return {
     ...fallback,
     ...saved,
-    mode: saved.mode === "mystery" ? "classic" : (saved.mode ?? fallback.mode),
-    players: saved.players.slice(0, 12).map((player, index) => ({
-      ...newPlayer(
-        typeof player.name === "string" ? player.name : `Spiller ${index + 1}`,
-        index,
-      ),
-      ...player,
-      score: 0,
-      correct: 0,
-      answers: 0,
-      streak: 0,
-      longestStreak: 0,
-    })),
+    mode: "classic",
+    players:
+      restoredPlayers.length < 2
+        ? [...restoredPlayers, newPlayer("Spiller 2", 1)]
+        : restoredPlayers,
     categoryIds: looksLikeOldDefaultSelection
       ? validSavedCategoryIds.filter((id) => id !== "cat-13")
       : validSavedCategoryIds,
@@ -408,11 +412,14 @@ export function GameShell() {
   const go = (v: View) => {
     tone("tap", settings.sound);
     if (v === "setup") {
-      setSetup((current) =>
-        current.mode === "mystery"
-          ? { ...current, mode: "classic" }
-          : current,
-      );
+      setSetup((current) => ({
+        ...current,
+        mode: "classic",
+        players:
+          current.players.length < 2
+            ? [...current.players, newPlayer("Spiller 2", 1)]
+            : current.players,
+      }));
     }
     setView(v);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -950,9 +957,12 @@ function Setup({
         <div className="space-y-8">
           <section>
             <Label className="mb-3 block text-base">Spilleform</Label>
-            <div className="mode-grid">
+            <div className="mode-grid" role="radiogroup" aria-label="Spilleform">
               {modes.map((m) => (
                 <button
+                  type="button"
+                  role="radio"
+                  aria-checked={setup.mode === m.id}
                   key={m.id}
                   className={`mode-card ${setup.mode === m.id ? "selected" : ""}`}
                   onClick={() => {

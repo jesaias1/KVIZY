@@ -257,6 +257,18 @@ const REPETITIVE_TEMPLATE_TAGS = new Set([
   "philosopher-movement",
   "psychologist-field",
 ]);
+const CREATOR_ATTRIBUTION_TAGS = new Set([
+  "painting-artist",
+  "film-director",
+  "series-creator",
+  "building-architect",
+  "danish-film-director",
+  "danish-literature-author",
+  "danish-series-creator",
+  "album-artist",
+  "novel-author",
+  "danish-song-performer",
+]);
 
 const SPECIALIST_CATEGORY_IDS = new Set([
   "cat-11",
@@ -304,6 +316,8 @@ function matchesSelectedUmbrellaCategory(
 }
 
 function repetitiveTemplateKey(question: Question) {
+  if (question.tags.some((tag) => CREATOR_ATTRIBUTION_TAGS.has(tag)))
+    return "creator-attribution";
   return question.tags.find((tag) => REPETITIVE_TEMPLATE_TAGS.has(tag));
 }
 
@@ -371,13 +385,16 @@ function balanceFairTurnTypes(
           .filter((_, index) => index !== replaceIndex)
           .map(questionFactKey),
       );
-      const replacement = eligibleBank.find(
-        (candidate) =>
-          !fairTypes.has(candidate.type) &&
-          !currentIds.has(candidate.id) &&
-          !currentFingerprints.has(candidate.fingerprint) &&
-          !currentFacts.has(questionFactKey(candidate)),
-      );
+      const canReplace = (candidate: Question) =>
+        !fairTypes.has(candidate.type) &&
+        !currentIds.has(candidate.id) &&
+        !currentFingerprints.has(candidate.fingerprint) &&
+        !currentFacts.has(questionFactKey(candidate));
+      const replacement =
+        eligibleBank.find(
+          (candidate) =>
+            canReplace(candidate) && !repetitiveTemplateKey(candidate),
+        ) ?? eligibleBank.find(canReplace);
       if (replacement) balanced[replaceIndex] = replacement;
       else balanced.splice(replaceIndex, 1);
     }
@@ -537,13 +554,19 @@ export function selectQuestions(
   const pickedFacts = new Set<string>();
   const categoryCounts = new Map<string, number>();
   const templateCounts = new Map<string, number>();
-  const templateLimit = 2;
+  const templateLimit = Math.max(1, Math.ceil(setup.questionCount / 20));
   const categoryLimit = Math.max(
     2,
     Math.ceil(setup.questionCount / Math.max(1, selectedCategoryIds.size)),
   );
   const categoryBias = new Map(
     setup.categoryIds.map((categoryId) => [categoryId, random() * 14]),
+  );
+  // Et tilfældigt starttal pr. spørgsmål gør to friske enheder mærkbart
+  // forskellige. Det bevarer alle kvalitets-, kategori- og historikregler,
+  // men undgår at den samme marginalt højest vurderede pulje altid vinder.
+  const randomPriority = new Map(
+    candidatePool.map((question) => [question.id, random() * 40]),
   );
   const generalQuota = selectedCategoryIds.has("cat-1")
     ? Math.max(2, Math.round(setup.questionCount * 0.2))
@@ -612,6 +635,8 @@ export function selectQuestions(
         const score =
           (setup.favorites.includes(selectedCategory) ? -30 : 0) +
           (categoryBias.get(selectedCategory) ?? 7) +
+          (randomPriority.get(question.id) ?? 20) +
+          (templateKey ? 18 : 0) +
           (SPECIALIST_CATEGORY_IDS.has(selectedCategory) &&
           !setup.favorites.includes(selectedCategory)
             ? 8
