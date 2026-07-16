@@ -8,7 +8,7 @@ export const seedSpecs: { categoryId:string; items:[string,string,string?][] }[]
 {categoryId:"cat-3",items:[
 ["Hvor mange medlemmer har Folketinget inklusive de nordatlantiske mandater?","179"],["Hvad kaldes Folketingets formand traditionelt?","Folketingets formand"],["Hvor ofte skal der senest afholdes folketingsvalg?","Hvert fjerde år"],["Hvilken myndighed vedtager love i Danmark?","Folketinget"],["Hvad hedder Danmarks øverste domstol?","Højesteret"],["Hvilken grundlovsparagraf handler om religionsfrihed?","Paragraf 67"]]},
 {categoryId:"cat-4",items:[
-["Hvor ligger FN's hovedkvarter?","New York"],["Hvor mange permanente medlemmer har FN's Sikkerhedsråd?","5"],["Hvad står NATO for på dansk?","Den Nordatlantiske Traktatorganisation"],["Hvilken institution foreslår normalt ny EU-lovgivning?","Europa-Kommissionen"],["Hvilken by huser Den Internationale Domstol?","Haag"],["Hvilket land er ikke permanent medlem af FN's Sikkerhedsråd?","Tyskland"]]},
+["Hvor ligger FN's hovedkvarter?","New York"],["Hvor mange permanente medlemmer har FN's Sikkerhedsråd?","5"],["Hvad står NATO for på dansk?","Den Nordatlantiske Traktats Organisation"],["Hvilken institution foreslår normalt ny EU-lovgivning?","Europa-Kommissionen"],["Hvilken by huser Den Internationale Domstol?","Haag"],["Hvilket land er ikke permanent medlem af FN's Sikkerhedsråd?","Tyskland"]]},
 {categoryId:"cat-5",items:[
 ["I hvilket år faldt Berlinmuren?","1989"],["Hvilket rige byggede Colosseum?","Romerriget"],["Hvem var den første romerske kejser?","Augustus"],["Hvilket år begyndte den franske revolution?","1789"],["Hvilken pest ramte Europa hårdt i 1300-tallet?","Den sorte død"],["Hvilken fred afsluttede Trediveårskrigen?","Den Westfalske Fred"]]},
 {categoryId:"cat-6",items:[
@@ -42,7 +42,7 @@ export const seedSpecs: { categoryId:string; items:[string,string,string?][] }[]
 {categoryId:"cat-20",items:[
 ["Hvilken serie følger statsminister Birgitte Nyborg?","Borgen"],["Hvad hedder hotellet i Badehotellet?","Andersens Badehotel"],["Hvilken dansk serie foregår på en politistation i København?","Station 2"],["Hvem skabte Riget?","Lars von Trier"],["Hvilken julekalender introducerede Pyrus?","Alletiders jul"],["Hvilken serie handler om familien Andersen-Skjern?","Matador"]]},
 {categoryId:"cat-21",items:[
-["Hvilket band udgav Bohemian Rhapsody?","Queen"],["Hvem komponerede Måneskinssonaten?","Ludwig van Beethoven"],["Hvilket instrument har normalt 88 tangenter?","Klaver"],["Hvilken genre forbindes med Miles Davis?","Jazz"],["Hvem sang Purple Rain?","Prince"],["Hvilket band udgav albumet Abbey Road?","The Beatles"]]},
+["Hvilket band udgav Bohemian Rhapsody?","Queen"],["Hvem komponerede Måneskinssonaten?","Ludwig van Beethoven"],["Hvilket instrument har normalt 88 tangenter?","Klaver"],["Hvilken genre forbindes med Miles Davis?","Jazz"],["Hvem sang Purple Rain?","Prince"],["Hvilket band udgav albummet Abbey Road?","The Beatles"]]},
 {categoryId:"cat-22",items:[
 ["Hvem sang Kvinde min?","Gasolin'"],["Hvilken dansk gruppe udgav Barbie Girl?","Aqua"],["Hvem komponerede Tango Jalousie?","Jacob Gade"],["Hvilken sanger står bag Tusind stykker?","Anne Linnet"],["Hvilket band havde Steffen Brandt som frontfigur?","TV-2"],["Hvem udgav albummet No. 1?","Thomas Helmig"]]},
 {categoryId:"cat-23",items:[
@@ -100,7 +100,7 @@ export const seedSpecs: { categoryId:string; items:[string,string,string?][] }[]
 {categoryId:"cat-49",items:[
 ["Hvilken spillekonsol udgav Nintendo i Japan i 1983?","Famicom"],["Hvilken mur faldt i 1989?","Berlinmuren"],["Hvem sang Like a Prayer?","Madonna"],["Hvilken film introducerede figuren E.T.?","E.T. the Extra-Terrestrial"],["Hvilken rumfærge eksploderede i 1986?","Challenger"],["Hvilket arkadespil har en gul figur, der spiser prikker?","Pac-Man"]]},
 {categoryId:"cat-50",items:[
-["Hvilket band udgav Smells Like Teen Spirit?","Nirvana"],["Hvilken søgemaskine blev grundlagt i 1998?","Google"],["Hvilken film fra 1997 foregår på et berømt skib?","Titanic"],["Hvad hedder Tamagotchi?","Et digitalt kæledyr"],["Hvilken europæisk valuta blev indført elektronisk i 1999?","Euroen"],["Hvilken tv-serie havde premiere med Ross og Rachel i 1994?","Friends"]]},
+["Hvilket band udgav Smells Like Teen Spirit?","Nirvana"],["Hvilken søgemaskine blev grundlagt i 1998?","Google"],["Hvilken film fra 1997 foregår på et berømt skib?","Titanic"],["Hvad er en Tamagotchi?","Et digitalt kæledyr"],["Hvilken europæisk valuta blev indført elektronisk i 1999?","Euroen"],["Hvilken tv-serie havde premiere med Ross og Rachel i 1994?","Friends"]]},
 {categoryId:"cat-51",items:[
 ["Hvilken onlineencyklopædi blev lanceret i 2001?","Wikipedia"],["Hvilken smartphone blev lanceret af Apple i 2007?","iPhone"],["Hvilken filmtrilogi begyndte med Eventyret om Ringen i 2001?","Ringenes Herre"],["Hvilken social platform blev grundlagt i 2004?","Facebook"],["Hvilket dansk band vandt Eurovision i 2000?","Olsen Brothers"],["Hvilken dværgplanet mistede planetstatus i 2006?","Pluto"]]},
 {categoryId:"cat-52",items:[

@@ -16,10 +16,11 @@
     "db:seed": "tsx scripts/seed.ts",
     "questions:export": "tsx scripts/questions.ts export",
     "questions:import": "tsx scripts/questions.ts import",
+    "questions:audit": "tsx scripts/audit-questions.ts",
     "questions:update-wikidata": "node scripts/update-wikidata-countries.mjs",
     "questions:update-culture": "node scripts/update-wikidata-culture.mjs",
     "questions:update-thin": "node scripts/update-wikidata-thin.mjs",
-    "check": "npm run typecheck && npm run lint && npm run test && npm run build"
+    "check": "npm run typecheck && npm run lint && npm run test && npm run questions:audit && npm run build"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

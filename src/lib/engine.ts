@@ -148,6 +148,44 @@ export function calculateQuestionPoints(
 
 const FAIR_TURN_TYPES = ["true_false", "ordering"] as const;
 
+function spreadFairTypes(questions: Question[], playerCount: number) {
+  const spread = [...questions];
+  const fairTypes = new Set<Question["type"]>(FAIR_TURN_TYPES);
+
+  // Swap only within the same player's turns. That keeps the per-player
+  // distribution fair while moving identical special types apart.
+  for (let pass = 0; pass < 2; pass++) {
+    for (let index = 1; index < spread.length; index++) {
+      const repeatedType = spread[index].type;
+      if (
+        !fairTypes.has(repeatedType) ||
+        spread[index - 1].type !== repeatedType
+      )
+        continue;
+      for (
+        let swapIndex = index + playerCount;
+        swapIndex < spread.length;
+        swapIndex += playerCount
+      ) {
+        const candidateType = spread[swapIndex].type;
+        if (
+          candidateType === repeatedType ||
+          spread[index + 1]?.type === candidateType ||
+          spread[swapIndex - 1]?.type === repeatedType ||
+          spread[swapIndex + 1]?.type === repeatedType
+        )
+          continue;
+        [spread[index], spread[swapIndex]] = [
+          spread[swapIndex],
+          spread[index],
+        ];
+        break;
+      }
+    }
+  }
+  return spread;
+}
+
 function questionFactKey(question: Question) {
   if (question.type === "true_false") return question.fingerprint;
   const answer =
@@ -245,7 +283,7 @@ function balanceFairTurnTypes(
     (question) => question ?? remaining[remainingIndex++],
   );
   return ordered.every((question): question is Question => Boolean(question))
-    ? ordered
+    ? spreadFairTypes(ordered, playerCount)
     : balanced;
 }
 
@@ -261,12 +299,13 @@ export function selectQuestions(
       question.status === "active" &&
       setup.categoryIds.includes(question.categoryId),
   );
-  const poolSize = Math.max(600, setup.questionCount * 10);
-  const candidatePool = eligibleBank.slice(0, poolSize);
+  const candidatePool = eligibleBank;
   const picked: Question[] = [];
   const pickedIds = new Set<string>();
   const pickedFingerprints = new Set<string>();
   const pickedFacts = new Set<string>();
+  const categoryCounts = new Map<string, number>();
+  const selectedCategoryFor = (question: Question) => question.categoryId;
   for (let i = 0; i < setup.questionCount; i++) {
     const target = difficultyFor(
       i,
@@ -288,6 +327,7 @@ export function selectQuestions(
         )
           continue;
         const seen = seenMap.get(question.id);
+        const selectedCategory = selectedCategoryFor(question);
         const repeatedType =
           recentTypes.length === 2 &&
           recentTypes.every((type) => type === question.type);
@@ -295,9 +335,10 @@ export function selectQuestions(
           recentCats.length === 2 &&
           recentCats.every((category) => category === question.categoryId);
         const score =
-          (setup.favorites.includes(question.categoryId) ? -20 : 0) +
+          (setup.favorites.includes(selectedCategory) ? -30 : 0) +
           (seen ? 100 + seen.count * 8 : 0) +
           Math.abs(question.difficulty - target) * 10 +
+          (categoryCounts.get(selectedCategory) ?? 0) * 45 +
           (repeatedType ? 40 : 0) +
           (repeatedCategory ? 40 : 0) -
           effectiveQualityScore(question) * 0.08;
@@ -314,6 +355,11 @@ export function selectQuestions(
     pickedIds.add(chosen.id);
     pickedFingerprints.add(chosen.fingerprint);
     pickedFacts.add(questionFactKey(chosen));
+    const selectedCategory = selectedCategoryFor(chosen);
+    categoryCounts.set(
+      selectedCategory,
+      (categoryCounts.get(selectedCategory) ?? 0) + 1,
+    );
   }
   const distributed = balanceFairTurnTypes(picked, candidatePool, setup);
   return distributed.map((question, index) => {

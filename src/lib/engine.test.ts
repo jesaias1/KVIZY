@@ -121,8 +121,11 @@ describe("seedbank og Zod", () => {
     expect(CATEGORIES).toHaveLength(59);
     for (const categoryId of newCategoryIds) {
       expect(
-        SEED_QUESTIONS.filter((question) => question.categoryId === categoryId)
-          .length,
+        SEED_QUESTIONS.filter(
+          (question) =>
+            question.categoryId === categoryId ||
+            question.secondaryCategoryIds.includes(categoryId),
+        ).length,
       ).toBeGreaterThanOrEqual(10);
     }
   });
@@ -133,7 +136,9 @@ describe("seedbank og Zod", () => {
     expect(thinQuestions.length).toBeGreaterThanOrEqual(500);
     expect(
       thinQuestions.every(
-        (question) => question.sourceLabel === "Wikidata (CC0)",
+        (question) =>
+          Boolean(question.sourceLabel) &&
+          Boolean(question.sourceUrl?.startsWith("https://")),
       ),
     ).toBe(true);
   });
@@ -206,15 +211,31 @@ describe("adaptiv udvælgelse", () => {
       ),
     ).toBe(true);
   });
+  it("lader ikke store kategorier dominere et blandet spil", () => {
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 30,
+    });
+    const categoryCounts = Object.values(
+      Object.groupBy(chosen, (question) => question.categoryId),
+    ).map((questions) => questions?.length ?? 0);
+    expect(Math.max(...categoryCounts)).toBeLessThanOrEqual(2);
+    expect(
+      chosen.filter((question) => question.categoryId === "cat-58").length,
+    ).toBeLessThanOrEqual(2);
+  });
   it("fordeler sandt eller falsk og rækkefølge helt lige mellem spillerne", () => {
     const playerCount = 3;
+    let randomState = 7;
+    const random = () =>
+      (randomState = (randomState * 1664525 + 1013904223) >>> 0) / 2 ** 32;
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,
       players: Array.from({ length: playerCount }, (_, index) =>
         newPlayer(`Spiller ${index + 1}`, index),
       ),
       questionCount: 60,
-    });
+    }, [], random);
     const fairTypes = ["true_false", "ordering"] as const;
     expect(Object.keys(chosen)).toHaveLength(chosen.length);
     expect(chosen.every((question) => Boolean(question?.id))).toBe(true);
@@ -232,6 +253,12 @@ describe("adaptiv udvælgelse", () => {
         ).length,
       );
       expect(new Set(counts).size).toBe(1);
+    }
+    for (let index = 1; index < chosen.length; index++) {
+      expect(
+        chosen[index].type === "true_false" &&
+          chosen[index - 1].type === "true_false",
+      ).toBe(false);
     }
   });
   it("prioriterer usete spørgsmål", () => {

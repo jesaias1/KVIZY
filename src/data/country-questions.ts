@@ -1,5 +1,5 @@
 import countries from "./wikidata-countries.generated.json";
-import { stableHash } from "@/lib/engine";
+import { normalizeText, stableHash } from "@/lib/engine";
 import type { Question } from "@/lib/types";
 
 type CountryRecord = (typeof countries)[number];
@@ -56,8 +56,20 @@ const relationConfig: Record<
   tld: { categoryId: "cat-10", secondary: ["cat-6"], bump: 2 },
 };
 
+function validValues(country: CountryRecord, relation: Relation) {
+  const values = (country[relation] ?? []).filter(
+    (value) => value && !/^Q\d+$/i.test(value) && !/^Sprog i\b/i.test(value),
+  );
+  if (relation === "currency" && values.length > 1) return [];
+  if (relation === "tld")
+    return values.filter((value) => /^\.[a-z]{2}$/i.test(value));
+  return values;
+}
+
 function uniqueValues(relation: Relation) {
-  return [...new Set(countries.flatMap((country) => country[relation] ?? []))];
+  return [
+    ...new Set(countries.flatMap((country) => validValues(country, relation))),
+  ];
 }
 
 function plausibleOptions(
@@ -66,15 +78,24 @@ function plausibleOptions(
   pool: string[],
   seed: string,
 ) {
+  const correctKey = normalizeText(correct);
+  const invalidKeys = new Set(invalid.map(normalizeText));
   const available = pool.filter(
-    (value) => value !== correct && !invalid.includes(value),
+    (value) =>
+      normalizeText(value) !== correctKey &&
+      !invalidKeys.has(normalizeText(value)),
   );
   const start =
     Number.parseInt(stableHash(seed), 36) % Math.max(1, available.length);
   const picked: string[] = [];
+  const pickedKeys = new Set<string>();
   for (let i = 0; picked.length < 3 && i < available.length * 2; i++) {
     const value = available[(start + i) % available.length];
-    if (value && !picked.includes(value)) picked.push(value);
+    const key = value ? normalizeText(value) : "";
+    if (value && !pickedKeys.has(key)) {
+      picked.push(value);
+      pickedKeys.add(key);
+    }
   }
   return [correct, ...picked].map((text, index) => ({
     id: `o${index + 1}`,
@@ -97,7 +118,10 @@ function wording(country: CountryRecord, relation: Relation, answer: string) {
   switch (relation) {
     case "capital":
       return {
-        prompt: `Hvad er hovedstaden i ${country.country}?`,
+        prompt:
+          (country.capital?.length ?? 0) > 1
+            ? `Hvilken af disse byer regnes som en hovedstad i ${country.country}?`
+            : `Hvad er hovedstaden i ${country.country}?`,
         explanation: `${answer} er hovedstad i ${country.country}${continent ? `, som ligger i ${continent}` : ""}.`,
       };
     case "currency":
@@ -137,7 +161,7 @@ const pools = Object.fromEntries(
 
 export const COUNTRY_QUESTIONS: Question[] = countries.flatMap((country) =>
   (Object.keys(relationConfig) as Relation[]).flatMap((relation) => {
-    const answers = country[relation] ?? [];
+    const answers = validValues(country, relation);
     const answer = answers[0];
     if (!answer) return [];
     const copy = wording(country, relation, answer);

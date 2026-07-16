@@ -23,44 +23,47 @@ function optionsFor(record: (typeof records)[number]) {
   }));
 }
 
-const relationCopy: Record<string, string> = {
-  "film-director": "instruktør",
-  "novel-author": "forfatter",
-  "album-artist": "udøvende kunstner",
-  "game-developer": "udvikler",
-  "painting-artist": "kunstner",
-  "series-creator": "skaber",
-  "software-developer": "udvikler",
-  "food-origin": "oprindelsesland",
-  "company-founder": "grundlægger",
-  "spacecraft-manufacturer": "producent",
-};
-
 const createdAt = "2026-07-16T00:00:00.000Z";
+
+function factSentence(record: (typeof records)[number], answer: string) {
+  const facts: Record<string, string> = {
+    "film-director": `${answer} instruerede filmen ${record.work}.`,
+    "album-artist": `${answer} udgav albummet ${record.work}.`,
+    "game-developer": `${answer} udviklede spillet ${record.work}.`,
+    "painting-artist": `${answer} skabte maleriet ${record.work}.`,
+    "series-creator": `${answer} skabte TV-serien ${record.work}.`,
+    "software-developer": `${answer} udviklede softwaren ${record.work}.`,
+    "food-origin": `${record.work} forbindes med ${answer} som oprindelsesland.`,
+    "company-founder": `${answer} grundlagde virksomheden ${record.work}.`,
+  };
+  return facts[record.key] ?? `${answer} forbindes med ${record.work}.`;
+}
 
 export const WIKIDATA_CULTURE_QUESTIONS: Question[] = records.map(
   (record, index) => {
     const relationOptions = optionsFor(record);
-    const relation = relationCopy[record.key];
-    const statementVariant = index % 8 === 0;
-    const options = statementVariant
-      ? relationOptions.map((option) => ({
-          ...option,
-          text: `${option.text} er registreret som ${relation} for ${record.work}.`,
-        }))
-      : relationOptions;
+    const trueFalse = index % 15 === 0;
+    const falseStatement = trueFalse && index % 30 === 0;
+    const statementAnswer = falseStatement
+      ? relationOptions.find((option) => option.id !== "o1")!.text
+      : record.answer;
     return {
       id: `wikiculture-${record.key}-${record.workQid}`,
-      prompt: statementVariant
-        ? `Hvilket udsagn om ${record.work} er korrekt?`
+      prompt: trueFalse
+        ? `Sandt eller falsk: ${factSentence(record, statementAnswer)}`
         : record.prompt.replace("{work}", record.work),
-      type: statementVariant ? "correct_statement" : "multiple_choice",
+      type: trueFalse ? "true_false" : "multiple_choice",
       categoryId: record.categoryId,
       secondaryCategoryIds: [],
       difficulty: ((index + record.work.length) % 4) + 2,
-      options,
-      correctOptionId: "o1",
-      explanation: `${record.answer} er registreret som ${relation} for ${record.work}.`,
+      options: trueFalse
+        ? [
+            { id: "o1", text: "Sandt" },
+            { id: "o2", text: "Falsk" },
+          ]
+        : relationOptions,
+      correctOptionId: falseStatement ? "o2" : "o1",
+      explanation: factSentence(record, record.answer),
       sourceLabel: "Wikidata (CC0)",
       sourceUrl: `https://www.wikidata.org/wiki/${record.workQid}`,
       tags: ["wikidata", record.key],

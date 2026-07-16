@@ -1,5 +1,5 @@
 import { CATEGORIES } from "@/lib/categories";
-import { fingerprint } from "@/lib/engine";
+import { fingerprint, normalizeText, stableHash } from "@/lib/engine";
 import type { Question, QuestionType } from "@/lib/types";
 import { COUNTRY_QUESTIONS } from "./country-questions";
 import { MUSIC_PRODUCTION_QUESTIONS } from "./music-production-questions";
@@ -37,6 +37,41 @@ const overrides: Record<string, string[]> = {
     "Orange",
     "Brun",
   ],
+  "Hvad undersøger etik?": [
+    "Hvordan sikker viden opstår",
+    "Hvordan politisk magt fordeles",
+    "Hvordan sprog forandrer sig",
+  ],
+  "Hvad undersøger bevidsthedsfilosofi?": [
+    "Hvordan viden begrundes",
+    "Hvordan stater bør indrettes",
+    "Hvordan økonomisk værdi opstår",
+  ],
+  "Hvad vogtede Kerberos?": [
+    "Porten til Olympen",
+    "Oraklet i Delfi",
+    "Labyrinten på Kreta",
+  ],
+  "Hvad er en kimono?": [
+    "En koreansk kampsport",
+    "En kinesisk tesort",
+    "En indisk musikform",
+  ],
+  "Hvad er skyr oprindeligt?": [
+    "En norsk gedeost",
+    "Et svensk knækbrød",
+    "En finsk rugdrik",
+  ],
+  "Hvad består en klassisk gin og tonic af?": [
+    "Rom, lime og cola",
+    "Vodka og appelsinjuice",
+    "Tequila og grapefrugt",
+  ],
+  "Hvad er en Tamagotchi?": [
+    "Et håndholdt musikspil",
+    "En japansk tegneseriefigur",
+    "En tidlig mobiltelefon",
+  ],
 };
 
 const explanationOverrides: Record<string, string> = {
@@ -60,7 +95,49 @@ function semanticKey(prompt: string, categoryId: string, answer: string) {
     /^(Hvor mange|Hvor lang|Hvilket år)/i.test(prompt)
   )
     return "tal";
-  if (/^Hvem\b/i.test(prompt)) return `${categoryId}:person`;
+  if (/^Hvad står .+ for|^Hvad betyder [A-ZÆØÅ0-9-]{2,}/.test(prompt))
+    return "abbreviation";
+  const kinds: Array<[string, RegExp]> = [
+    ["year", /\b(hvilket år|årstal|århundrede|årtier?)\b/i],
+    ["city", /\b(hovedstad|by)\b/i],
+    ["island", /(?:^|\s)ø(?:\s|[?.!,])|øgruppe/i],
+    ["river", /(?:^|\s)å(?:\s|[?.!,])|flod|vandløb/i],
+    ["mountain", /\b(bjerg|vulkan)\b/i],
+    ["country", /\b(land|nation|rige)\b/i],
+    ["bridge", /\bbro/i],
+    ["organization", /\b(institution|organisation|myndighed)\b/i],
+    ["band", /\b(band|musikgruppe)\b/i],
+    [
+      "person",
+      /(^Hvem\b|\bforfatter|instruktør|kunstner|sanger|musiker|filosof|psykolog|gud|gudinde|helt|opfinder|arkitekt|komponist|forsker|politiker|konge|dronning|skuespiller)/i,
+    ],
+    ["film", /\bfilm(en)?\b/i],
+    ["series", /\b(tv-serie|serie)\b/i],
+    ["book", /\b(roman|bog|værk|novelle|digt)\b/i],
+    ["music", /\b(album|sang|nummer|band|gruppe|genre)\b/i],
+    ["game", /\b(spil|gaming|konsol)\b/i],
+    ["animal", /\b(dyr|fugl|fisk|pattedyr|insekt)\b/i],
+    ["sport", /\b(sport|sportsgren|disciplin|klub)\b/i],
+    ["instrument", /\b(instrument)\b/i],
+    ["language", /\b(sprog|ord|udtryk|begreb)\b/i],
+    ["currency", /\b(valuta|møntfod)\b/i],
+    ["food", /\b(ret|mad|ost|kage|brød|drue|ingrediens)\b/i],
+    ["drink", /\b(cocktail|drink|spiritus)\b/i],
+    ["company", /\b(brand|mærke|virksomhed|firma)\b/i],
+    ["space", /\b(planet|måne|stjerne|stjernebillede)\b/i],
+    ["element", /\b(grundstof|partikel|metal)\b/i],
+    ["theory", /\b(teori|retning|princip|lov)\b/i],
+  ];
+  const kind = kinds.find(([, pattern]) => pattern.test(prompt))?.[0];
+  if (kind) return kind;
+  if (
+    /^(Hvad er|Hvad betyder|Hvad gør|Hvad beskriver|Hvad undersøger|Hvad bruges|Hvad består)/i.test(
+      prompt,
+    )
+  ) {
+    const answerOpening = answer.match(/^(En|Et|At|Den|Det|Når|Hvor|Hvad)\b/i)?.[1];
+    return `definition:${answerOpening?.toLocaleLowerCase("da") ?? "andet"}`;
+  }
   const match = prompt.match(
     /^Hvilke[nrt]?\s+(land|by|film|serie|roman|bog|planet|måne|dyr|fugl|sport|instrument|valuta|farve|træ|ost|drue|cocktail|brand|virksomhed|platform|spil|band|gruppe|sanger|kunstner|filosof|psykolog|gud|helt|opfindelse|teknologi|institution|myndighed|flod|ørken|stræde|pest|fred|genre|stil|retning|teori|partikel|kraft|vitamin)/i,
   );
@@ -69,6 +146,77 @@ function semanticKey(prompt: string, categoryId: string, answer: string) {
     /^(Hvad (?:hedder|kaldes|er|betyder|gør|beskriver|måler|undersøger|består)|Hvor (?:ligger|stammer))/i,
   )?.[1];
   return `${categoryId}:${opening?.toLocaleLowerCase("da") ?? prompt.split(" ")[0]}`;
+}
+
+const semanticFallbacks: Record<string, string[]> = {
+  city: [
+    "København",
+    "Odense",
+    "Aalborg",
+    "Esbjerg",
+    "Randers",
+    "Aarhus",
+    "Oslo",
+    "Stockholm",
+  ],
+  island: ["Fyn", "Bornholm", "Lolland", "Falster", "Møn", "Samsø", "Gotland", "Öland"],
+  river: ["Skjern Å", "Suså", "Odense Å", "Rhinen", "Donau", "Seinen", "Nilen", "Amazonas"],
+  mountain: ["Mont Blanc", "Kilimanjaro", "Matterhorn", "Elbrus", "Vesuv", "Etna"],
+  country: ["Danmark", "Norge", "Sverige", "Tyskland", "Frankrig", "Spanien", "Italien", "Polen"],
+  instrument: ["Guitar", "Klaver", "Violin", "Trompet", "Cello", "Klarinet", "Harpe", "Fløjte"],
+  currency: ["Euro", "Dollar", "Krone", "Pund", "Yen", "Franc", "Peso", "Rupie"],
+  animal: ["Ræv", "Grævling", "Odder", "Los", "Mår", "Hare", "Bæver", "Sæl"],
+  bridge: [
+    "Storebæltsforbindelsen",
+    "Øresundsbroen",
+    "Lillebæltsbroen",
+    "Farøbroerne",
+    "Kronprinsesse Marys Bro",
+    "Dronning Alexandrines Bro",
+  ],
+  organization: [
+    "Europa-Kommissionen",
+    "Europa-Parlamentet",
+    "EU-Domstolen",
+    "Det Europæiske Råd",
+    "Folketinget",
+    "FN's Generalforsamling",
+  ],
+  band: ["Queen", "The Beatles", "ABBA", "Nirvana", "U2", "Coldplay", "Metallica", "A-ha"],
+  abbreviation: [
+    "Verdenssundhedsorganisationen",
+    "De Forenede Nationer",
+    "Den Europæiske Union",
+    "Den Internationale Valutafond",
+    "Den Nordatlantiske Traktatorganisation",
+    "Video Assistant Referee",
+  ],
+};
+
+function fallbackOptions(key: string, prompt: string, categoryId: string) {
+  const danishGeography: Partial<Record<string, string[]>> = {
+    city: [
+      "København",
+      "Odense",
+      "Aalborg",
+      "Esbjerg",
+      "Randers",
+      "Aarhus",
+      "Horsens",
+      "Kolding",
+      "Vejle",
+      "Roskilde",
+    ],
+    island: ["Fyn", "Bornholm", "Lolland", "Falster", "Møn", "Samsø"],
+    river: ["Skjern Å", "Suså", "Odense Å", "Vidå", "Kongeåen", "Storå"],
+  };
+  const values =
+    (categoryId === "cat-2" ? danishGeography[key] : undefined) ??
+    semanticFallbacks[key] ??
+    [];
+  if (values.length === 0) return [];
+  const start = Number.parseInt(stableHash(prompt), 36) % values.length;
+  return values.map((_, index) => values[(start + index) % values.length]);
 }
 
 function numericDistractors(answer: string) {
@@ -123,6 +271,7 @@ function optionsFor(
   const key = semanticKey(prompt, categoryId, correct);
   const candidates = [
     ...(overrides[prompt] ?? []),
+    ...fallbackOptions(key, prompt, categoryId),
     ...rows
       .filter(
         (row) =>
@@ -142,7 +291,14 @@ function optionsFor(
       .filter((row) => row.answer !== correct && row.categoryId === categoryId)
       .map((row) => row.answer),
   ];
-  return [correct, ...new Set(candidates)].slice(0, 4);
+  const uniqueCandidates = [
+    ...new Map(
+      candidates
+        .filter((candidate) => normalizeText(candidate) !== normalizeText(correct))
+        .map((candidate) => [normalizeText(candidate), candidate]),
+    ).values(),
+  ];
+  return [correct, ...uniqueCandidates].slice(0, 4);
 }
 
 const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
@@ -188,7 +344,7 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
       status: "active",
       fingerprint: fingerprint(prompt, correct, type),
       qualityScore: 92,
-      timeSensitive: spec.categoryId === "cat-53",
+      timeSensitive: false,
       createdAt: created,
       updatedAt: created,
       playCount: 0,
@@ -252,7 +408,7 @@ const personTags = new Set([
   "psychologist-field",
 ]);
 
-export const SEED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
+const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
   const inferred = [
     ...(categoryLinks[question.categoryId] ?? []),
     ...(typeLinks[question.type] ? [typeLinks[question.type]!] : []),
@@ -261,10 +417,52 @@ export const SEED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
       ? ["cat-59"]
       : []),
   ];
+  const correctAnswer = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  )?.text;
+  const capitalizeOption = (text: string) => {
+    const value = text.trim();
+    if (/^(iPhone|iPad|iOS|iPod|eBay|macOS)\b/.test(value)) return value;
+    return /^\p{Ll}/u.test(value)
+      ? `${value[0].toLocaleUpperCase("da")}${value.slice(1)}`
+      : value;
+  };
   return {
     ...question,
+    prompt: question.prompt.trim(),
+    options: question.options.map((option) => ({
+      ...option,
+      text: capitalizeOption(option.text),
+    })),
+    explanation: question.explanation.includes("centrale sammenhæng")
+      ? `Svaret er ${correctAnswer ?? "angivet ovenfor"}.`
+      : question.explanation.trim(),
     secondaryCategoryIds: [
       ...new Set([...question.secondaryCategoryIds, ...inferred]),
     ].filter((categoryId) => categoryId !== question.categoryId),
   };
+}).filter((question) => {
+  const optionKeys = question.options.map((option) =>
+    normalizeText(option.text),
+  );
+  return new Set(optionKeys).size === optionKeys.length;
 });
+
+const QUESTIONS_BY_PROMPT = new Map<string, Question>();
+for (const question of POLISHED_QUESTIONS) {
+  const promptKey = normalizeText(question.prompt);
+  const existing = QUESTIONS_BY_PROMPT.get(promptKey);
+  if (!existing) {
+    QUESTIONS_BY_PROMPT.set(promptKey, question);
+    continue;
+  }
+  existing.secondaryCategoryIds = [
+    ...new Set([
+      ...existing.secondaryCategoryIds,
+      question.categoryId,
+      ...question.secondaryCategoryIds,
+    ]),
+  ].filter((categoryId) => categoryId !== existing.categoryId);
+}
+
+export const SEED_QUESTIONS: Question[] = [...QUESTIONS_BY_PROMPT.values()];
