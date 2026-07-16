@@ -185,7 +185,10 @@ describe("seedbank og Zod", () => {
     expect(
       SEED_QUESTIONS.filter((question) => question.categoryId === "cat-23")
         .length,
-    ).toBeGreaterThanOrEqual(60);
+    ).toBeGreaterThanOrEqual(100);
+    expect(
+      SEED_QUESTIONS.filter((question) => question.tags.includes("flstudio")),
+    ).toHaveLength(30);
   });
   it("giver de nye brede kategorier en reel startbank", () => {
     const newCategoryIds = [
