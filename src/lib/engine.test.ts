@@ -100,7 +100,15 @@ describe("sværhedsgrad", () => {
   it("stiger og holdes i 1–5", () => {
     expect(difficultyFor(0, 10, 3, "rising")).toBe(2);
     expect(difficultyFor(9, 10, 3, "rising")).toBe(4);
-    expect(difficultyFor(0, 10, 1, "mixed")).toBe(1);
+    expect(difficultyFor(0, 10, 1, "mixed", () => 0)).toBe(1);
+  });
+  it("blander uden et fast let-mellem-svært-mønster", () => {
+    const values = [0.9, 0.1, 0.55, 0.9, 0.9];
+    expect(
+      values.map((value, index) =>
+        difficultyFor(index, values.length, 3, "mixed", () => value),
+      ),
+    ).toEqual([4, 2, 3, 4, 4]);
   });
 });
 describe("fingerprinting", () => {
@@ -273,6 +281,9 @@ describe("adaptiv udvælgelse", () => {
     expect(
       chosen.filter((question) => question.categoryId === "cat-58").length,
     ).toBeLessThanOrEqual(2);
+    for (const tag of ["painting-artist", "film-director", "building-architect"]) {
+      expect(chosen.filter((question) => question.tags.includes(tag)).length).toBeLessThanOrEqual(3);
+    }
   });
   it("fordeler sandt eller falsk og rækkefølge helt lige mellem spillerne", () => {
     const playerCount = 3;

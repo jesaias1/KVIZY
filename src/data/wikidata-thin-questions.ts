@@ -35,6 +35,12 @@ const excludedFormatAdaptations = new Set([
   "Q7939619",
   "Q591519",
 ]);
+const rejectedPsychologyFields = new Set([
+  "psykologi",
+  "alternativ behandling",
+  "botanik",
+  "filosofi",
+]);
 
 const relationCopy: Record<string, { prompt: string; fact: string }> = {
   Q2270: {
@@ -125,6 +131,11 @@ const usableKeys = new Set(
 const usableRecords = records.filter(
   (record) =>
     usableKeys.has(record.key) &&
+    record.key !== "brand-industry" &&
+    !(
+      record.key === "psychologist-field" &&
+      rejectedPsychologyFields.has(record.answer.toLocaleLowerCase("da"))
+    ) &&
     !excludedFormatAdaptations.has(record.workQid) &&
     (record.key !== "invention-inventor" ||
       allowedDiscoveryOrInventionIds.has(record.workQid)),

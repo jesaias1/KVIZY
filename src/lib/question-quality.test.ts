@@ -92,7 +92,51 @@ describe("automatisk spørgsmålskvalitet", () => {
       correctOptionId: "o1",
     };
     expect(hasAnswerLeak(leaked)).toBe(true);
+    expect(
+      hasAnswerLeak({
+        ...leaked,
+        prompt: "Hvilken filosofisk retning forbindes Platon med?",
+        options: [
+          { id: "o1", text: "Platonisme" },
+          { id: "o2", text: "Stoicisme" },
+          { id: "o3", text: "Utilitarisme" },
+          { id: "o4", text: "Eksistentialisme" },
+        ],
+      }),
+    ).toBe(true);
     expect(SEED_QUESTIONS.some(hasAnswerLeak)).toBe(false);
+  });
+
+  it("har behandlet alle indsendte spørgsmålsrapporter", () => {
+    const removedIds = [
+      "wikithin-brand-industry-Q1420164",
+      "wikithin-brand-industry-Q2638082",
+      "wikithin-brand-industry-Q5253950",
+      "wikithin-psychologist-field-Q217477",
+      "wikithin-philosopher-movement-Q859",
+      "wikiculture-painting-artist-Q107484305",
+      "wikiculture-film-director-Q3998",
+      "wd-Q29999-language",
+    ];
+    expect(removedIds.every((id) => !SEED_QUESTIONS.some((q) => q.id === id))).toBe(true);
+
+    const japan = SEED_QUESTIONS.find((q) => q.id === "wd-Q17-tld");
+    expect(japan?.options.map((option) => option.text)).toEqual([
+      ".jp", ".ja", ".jn", ".jo",
+    ]);
+    const redGroed = SEED_QUESTIONS.find(
+      (q) => q.id === "wikiculture-food-origin-Q493749",
+    );
+    expect(redGroed?.options.map((option) => option.text)).toEqual([
+      "Danmark", "Sverige", "Norge", "Finland",
+    ]);
+
+    const trueFalse = SEED_QUESTIONS.filter((q) => q.type === "true_false");
+    const truthCounts = Object.groupBy(
+      trueFalse,
+      (q) => q.correctOptionId ?? "none",
+    );
+    expect(Math.abs((truthCounts.o1?.length ?? 0) - (truthCounts.o2?.length ?? 0))).toBeLessThanOrEqual(1);
   });
 
   it("skelner mellem opdagelser, udvikling og opfindelser", () => {

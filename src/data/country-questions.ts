@@ -77,6 +77,7 @@ function plausibleOptions(
   invalid: string[],
   pool: string[],
   seed: string,
+  relation: Relation,
 ) {
   const correctKey = normalizeText(correct);
   const invalidKeys = new Set(invalid.map(normalizeText));
@@ -85,8 +86,26 @@ function plausibleOptions(
       normalizeText(value) !== correctKey &&
       !invalidKeys.has(normalizeText(value)),
   );
+  if (relation === "tld") {
+    const correctCode = correct.replace(".", "");
+    available.sort((a, b) => {
+      const distance = (value: string) => {
+        const code = value.replace(".", "");
+        return [...correctCode].reduce(
+          (sum, char, index) => sum + (code[index] === char ? 0 : 1),
+          0,
+        );
+      };
+      return (
+        distance(a) - distance(b) ||
+        stableHash(`${seed}:${a}`).localeCompare(stableHash(`${seed}:${b}`))
+      );
+    });
+  }
   const start =
-    Number.parseInt(stableHash(seed), 36) % Math.max(1, available.length);
+    relation === "tld"
+      ? 0
+      : Number.parseInt(stableHash(seed), 36) % Math.max(1, available.length);
   const picked: string[] = [];
   const pickedKeys = new Set<string>();
   for (let i = 0; picked.length < 3 && i < available.length * 2; i++) {
@@ -159,8 +178,14 @@ const pools = Object.fromEntries(
   ]),
 ) as Record<Relation, string[]>;
 
+const optionOverrides: Record<string, string[]> = {
+  "JP:tld": [".jp", ".ja", ".jn", ".jo"],
+};
+
 export const COUNTRY_QUESTIONS: Question[] = countries.flatMap((country) =>
   (Object.keys(relationConfig) as Relation[]).flatMap((relation) => {
+    // Nederlandsk/Nederlandene røber svaret via selve landenavnet.
+    if (country.code === "NL" && relation === "language") return [];
     const answers = validValues(country, relation);
     const answer = answers[0];
     if (!answer) return [];
@@ -177,12 +202,18 @@ export const COUNTRY_QUESTIONS: Question[] = countries.flatMap((country) =>
         categoryId: config.categoryId,
         secondaryCategoryIds: config.secondary,
         difficulty: level(country, relation),
-        options: plausibleOptions(
-          answer,
-          answers.slice(1),
-          pools[relation],
-          `${country.qid}-${relation}`,
-        ),
+        options:
+          optionOverrides[`${country.code}:${relation}`]?.map((text, index) => ({
+            id: `o${index + 1}`,
+            text,
+          })) ??
+          plausibleOptions(
+            answer,
+            answers.slice(1),
+            pools[relation],
+            `${country.qid}-${relation}`,
+            relation,
+          ),
         correctOptionId: "o1",
         explanation: copy.explanation,
         sourceLabel: "Wikidata (CC0)",

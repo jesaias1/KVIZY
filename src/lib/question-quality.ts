@@ -107,7 +107,21 @@ export function hasAnswerLeak(question: Question) {
   if (answerTokens.length === 0) return false;
   const promptTokens = new Set(normalizedPrompt.split(" "));
   const overlap = answerTokens.filter((token) => promptTokens.has(token));
-  return overlap.length / answerTokens.length >= 0.5;
+  if (overlap.length / answerTokens.length >= 0.5) return true;
+
+  // Fang morfologiske giveaways som Platon/platonisme og bøg/bøgeskov.
+  // Lange ordstammer begrænser falske positiver fra almindelige korte ord.
+  const promptTokenList = [...promptTokens].filter((token) => token.length >= 5);
+  return answerTokens.some((answerToken) =>
+    promptTokenList.some((promptToken) => {
+      const shortest = Math.min(answerToken.length, promptToken.length);
+      return (
+        shortest >= 5 &&
+        (answerToken.startsWith(promptToken) ||
+          promptToken.startsWith(answerToken))
+      );
+    }),
+  );
 }
 
 export function auditQuestion(question: Question): QualityIssue[] {

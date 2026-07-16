@@ -6,9 +6,27 @@ import type { Question } from "@/lib/types";
 // og historiske forgængere. Det giver teknisk mulige, men dårlige quizsvar som
 // "Israel" eller "Kongressen i USA" på et hvem-spørgsmål, så denne relation
 // bruges ikke uden en særskilt redaktionel kontrol.
-const usableRecords = records.filter(
-  (record) => record.key !== "company-founder",
-);
+const familiarFilmIds = new Set([
+  "Q2201", "Q2345", "Q19355", "Q19405", "Q20456", "Q4430", "Q22432",
+  "Q23395", "Q32303", "Q4536", "Q4941", "Q6074", "Q32433", "Q5890",
+  "Q59610", "Q59653", "Q59534", "Q11618", "Q11621", "Q45394", "Q14320",
+  "Q45602", "Q12018", "Q17738", "Q34414", "Q74958", "Q60072", "Q24075",
+]);
+const familiarPaintingIds = new Set([
+  "Q1061035", "Q1065493", "Q106522623", "Q1091086", "Q1169395",
+  "Q1170315", "Q1142058", "Q1167178", "Q118469029", "Q12011341",
+  "Q1219263", "Q12334558", "Q1239950", "Q1245388", "Q124356656",
+  "Q12418", "Q152509", "Q151047", "Q152867", "Q16324087", "Q1659469",
+  "Q16333797", "Q16965482", "Q167605", "Q175036",
+]);
+
+const usableRecords = records.filter((record) => {
+  if (record.key === "company-founder") return false;
+  if (record.key === "film-director") return familiarFilmIds.has(record.workQid);
+  if (record.key === "painting-artist")
+    return familiarPaintingIds.has(record.workQid);
+  return true;
+});
 
 function workLabel(record: (typeof records)[number]) {
   return record.work
@@ -18,6 +36,12 @@ function workLabel(record: (typeof records)[number]) {
 }
 
 function optionsFor(record: (typeof records)[number]) {
+  if (record.key === "food-origin" && record.workQid === "Q493749") {
+    return ["Danmark", "Sverige", "Norge", "Finland"].map((text, index) => ({
+      id: `o${index + 1}`,
+      text,
+    }));
+  }
   const pool = [
     ...new Set(
       usableRecords

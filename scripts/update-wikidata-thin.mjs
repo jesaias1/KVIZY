@@ -203,6 +203,8 @@ const configs = [
   },
 ];
 
+const disabledKeys = new Set(["brand-industry"]);
+
 async function query(config) {
   const sparql = `SELECT ?work ?workLabel ?answer ?answerLabel WHERE {
     ${config.where}
@@ -241,6 +243,14 @@ async function persist() {
 }
 
 for (const config of configs) {
+  if (disabledKeys.has(config.key)) {
+    for (const key of [...merged.keys()]) {
+      if (key.startsWith(`${config.key}:`)) merged.delete(key);
+    }
+    await persist();
+    console.log(`${config.key}: deaktiveret`);
+    continue;
+  }
   if (
     missingOnly &&
     [...merged.values()].some((record) => record.key === config.key)

@@ -325,8 +325,8 @@ const specs: Spec[] = [
   {
     type: "odd_one_out",
     categoryId: "cat-28",
-    difficulty: 1,
-    prompt: "Hvilken passer ikke ind?",
+    difficulty: 2,
+    prompt: "Hvilket af disse dyr er ikke et pattedyr?",
     options: ["Delfin", "Flagermus", "Sæl", "Tun"],
     correct: 3,
     explanation: "Tun er en fisk; delfiner, flagermus og sæler er pattedyr.",
@@ -468,9 +468,9 @@ const specs: Spec[] = [
     categoryId: "cat-22",
     difficulty: 2,
     prompt:
-      "Sandt eller falsk: Roskilde Festival blev første gang afholdt i 1971.",
+      "Sandt eller falsk: Roskilde Festival blev første gang afholdt i 1972.",
     options: ["Sandt", "Falsk"],
-    correct: 0,
+    correct: 1,
     explanation:
       "Den første festival blev holdt i 1971 under navnet Sound Festival.",
     sourceUrl: wiki("Roskilde_Festival"),
@@ -480,9 +480,9 @@ const specs: Spec[] = [
     categoryId: "cat-3",
     difficulty: 3,
     prompt:
-      "Sandt eller falsk: Danmarks Grundlov blev underskrevet den 5. juni 1849.",
+      "Sandt eller falsk: Danmarks Grundlov blev underskrevet den 4. juni 1849.",
     options: ["Sandt", "Falsk"],
-    correct: 0,
+    correct: 1,
     explanation: "Frederik 7. underskrev Junigrundloven den 5. juni 1849.",
     sourceUrl: wiki("Danmarks_Riges_Grundlov"),
   },
@@ -997,9 +997,9 @@ const balanceSpecs: Spec[] = [
     categoryId: "cat-29",
     difficulty: 2,
     prompt:
-      "Sandt eller falsk: Rensdyr findes naturligt i arktiske og subarktiske områder.",
+      "Sandt eller falsk: Rensdyr findes naturligt kun syd for polarcirklen.",
     options: ["Sandt", "Falsk"],
-    correct: 0,
+    correct: 1,
     explanation:
       "Rensdyr er tilpasset tundra og nordlige skovområder i både Eurasien og Nordamerika.",
     sourceUrl: wiki("Rensdyr"),
@@ -1138,6 +1138,71 @@ const balanceSpecs: Spec[] = [
     correct: 0,
     explanation: "De første Pokémon-spil udkom til Game Boy i Japan i 1996.",
     sourceUrl: wiki("Pokémon"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-34",
+    difficulty: 2,
+    prompt: "Hvilket elektronikmærke lancerede den bærbare kassetteafspiller Walkman?",
+    options: ["Sony", "Panasonic", "Philips", "JVC"],
+    correct: 0,
+    explanation:
+      "Sony lancerede den første Walkman i 1979 og gjorde navnet synonymt med bærbar musik.",
+    sourceUrl: wiki("Walkman"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-34",
+    difficulty: 2,
+    prompt: "Hvilket sportsmærke forbindes især med tre parallelle striber?",
+    options: ["Adidas", "Puma", "Reebok", "Asics"],
+    correct: 0,
+    explanation:
+      "Adidas har brugt de tre striber som et centralt varemærke siden virksomhedens tidlige år.",
+    sourceUrl: wiki("Adidas"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-34",
+    difficulty: 3,
+    prompt: "Hvilket bilmærke bruger modelnavnene Corolla, Prius og Yaris?",
+    options: ["Toyota", "Honda", "Nissan", "Mazda"],
+    correct: 0,
+    explanation:
+      "Corolla, Prius og Yaris er tre forskellige modelserier fra Toyota.",
+    sourceUrl: wiki("Toyota"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-56",
+    difficulty: 3,
+    prompt: "Hvad beskriver albedo i klimaforskning?",
+    options: [
+      "Hvor meget lys en overflade reflekterer",
+      "Hvor meget salt havvand indeholder",
+      "Hvor hurtigt lufttrykket falder",
+      "Hvor meget ilt planter optager",
+    ],
+    correct: 0,
+    explanation:
+      "Albedo er den andel af indstrålingen, som en overflade reflekterer; lys sne har derfor høj albedo.",
+    sourceUrl: wiki("Albedo"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-56",
+    difficulty: 3,
+    prompt: "Hvilken proces gør havet mere surt, når det optager mere kuldioxid?",
+    options: [
+      "Dannelse af kulsyre",
+      "Fordampning af salt",
+      "Spaltning af kvælstof",
+      "Udfældning af ilt",
+    ],
+    correct: 0,
+    explanation:
+      "Opløst kuldioxid reagerer med vand og danner kulsyre, som sænker havvandets pH-værdi.",
+    sourceUrl: wiki("Havforsuring"),
   },
 ];
 

@@ -922,7 +922,7 @@ const specs: Spec[] = [
   ],
   [
     "cat-30",
-    "Hvilket træ dominerer mange danske bøgeskove?",
+    "Hvilket løvtræ kendes på sin glatte, grå bark og er Danmarks nationaltræ?",
     "Bøg",
     ["Lærk", "Pil", "Enebær"],
     "Bøgen trives i Danmarks milde, fugtige klima.",

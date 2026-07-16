@@ -76,9 +76,13 @@ export function difficultyFor(
   total: number,
   base: number,
   mode: GameSetup["difficultyMode"],
+  random = Math.random,
 ) {
   if (mode === "mixed")
-    return Math.max(1, Math.min(5, base + ((index % 3) - 1)));
+    return Math.max(
+      1,
+      Math.min(5, base + [-1, 0, 1][Math.floor(random() * 3)]),
+    );
   if (mode === "rising")
     return Math.max(
       1,
@@ -217,6 +221,21 @@ function questionFactKey(question: Question) {
   return `${question.categoryId}:${normalizeText(answer)}:${question.tags[0] ?? ""}`;
 }
 
+const REPETITIVE_TEMPLATE_TAGS = new Set([
+  "painting-artist",
+  "film-director",
+  "series-creator",
+  "building-architect",
+  "danish-film-director",
+  "danish-series-creator",
+  "philosopher-movement",
+  "psychologist-field",
+]);
+
+function repetitiveTemplateKey(question: Question) {
+  return question.tags.find((tag) => REPETITIVE_TEMPLATE_TAGS.has(tag));
+}
+
 function balanceFairTurnTypes(
   picked: Question[],
   eligibleBank: Question[],
@@ -322,6 +341,8 @@ export function selectQuestions(
   const pickedFingerprints = new Set<string>();
   const pickedFacts = new Set<string>();
   const categoryCounts = new Map<string, number>();
+  const templateCounts = new Map<string, number>();
+  const templateLimit = Math.max(2, Math.ceil(setup.questionCount / 10));
   const selectedCategoryFor = (question: Question) => question.categoryId;
   for (let i = 0; i < setup.questionCount; i++) {
     const target = difficultyFor(
@@ -329,18 +350,26 @@ export function selectQuestions(
       setup.questionCount,
       setup.difficulty,
       setup.difficultyMode,
+      random,
     );
     const recentTypes = picked.slice(-2).map((q) => q.type),
       recentCats = picked.slice(-2).map((q) => q.categoryId);
     let chosen: Question | undefined;
     let bestScore = Number.POSITIVE_INFINITY;
-    const chooseFromPool = (allowRepeatedFact: boolean) => {
+    const chooseFromPool = (
+      allowRepeatedFact: boolean,
+      allowRepeatedTemplate: boolean,
+    ) => {
       for (const question of candidatePool) {
         const factKey = questionFactKey(question);
+        const templateKey = repetitiveTemplateKey(question);
         if (
           pickedIds.has(question.id) ||
           pickedFingerprints.has(question.fingerprint) ||
-          (!allowRepeatedFact && pickedFacts.has(factKey))
+          (!allowRepeatedFact && pickedFacts.has(factKey)) ||
+          (!allowRepeatedTemplate &&
+            templateKey &&
+            (templateCounts.get(templateKey) ?? 0) >= templateLimit)
         )
           continue;
         const seen = seenMap.get(question.id);
@@ -365,13 +394,20 @@ export function selectQuestions(
         }
       }
     };
-    chooseFromPool(false);
-    if (!chosen) chooseFromPool(true);
+    chooseFromPool(false, false);
+    if (!chosen) chooseFromPool(true, false);
+    if (!chosen) chooseFromPool(true, true);
     if (!chosen) break;
     picked.push(chosen);
     pickedIds.add(chosen.id);
     pickedFingerprints.add(chosen.fingerprint);
     pickedFacts.add(questionFactKey(chosen));
+    const templateKey = repetitiveTemplateKey(chosen);
+    if (templateKey)
+      templateCounts.set(
+        templateKey,
+        (templateCounts.get(templateKey) ?? 0) + 1,
+      );
     const selectedCategory = selectedCategoryFor(chosen);
     categoryCounts.set(
       selectedCategory,
