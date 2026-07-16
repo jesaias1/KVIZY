@@ -321,10 +321,13 @@ describe("adaptiv udvælgelse", () => {
       "painting-artist",
       "film-director",
       "building-architect",
+      "capital",
+      "continent",
+      "currency",
     ]) {
       expect(
         chosen.filter((question) => question.tags.includes(tag)).length,
-      ).toBeLessThanOrEqual(3);
+      ).toBeLessThanOrEqual(2);
     }
   });
   it("fordeler bred paratviden gennem hele et standardspil", () => {

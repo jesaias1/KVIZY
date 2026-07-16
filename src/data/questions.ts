@@ -53,6 +53,36 @@ const overrides: Record<string, string[]> = {
     "Visual Assistant Referee",
     "Video Assisted Replay",
   ],
+  "Hvilken opfindelse kom først?": [
+    "Telegrafen",
+    "Telefonen",
+    "Den elektriske glødepære",
+  ],
+  "Hvilken musik- eller medieteknologi blev lanceret først?": [
+    "MiniDisc-formatet",
+    "Mp3-formatet",
+    "Dvd-formatet",
+  ],
+  "Hvilken begivenhed i 1900-tallet skete først?": [
+    "Den russiske revolution",
+    "Den første nonstopflyvning over Atlanten",
+    "Fundet af Tutankhamons grav",
+  ],
+  "Hvilken kommunikationsteknologi kom først?": [
+    "Sms-beskeden",
+    "Wikipedia",
+    "YouTube",
+  ],
+  "Hvilket legetøj blev lanceret først?": [
+    "Etch A Sketch",
+    "Rubiks terning",
+    "Playmobil",
+  ],
+  "Hvilken videnskabelig milepæl skete først?": [
+    "Det første menneske i rummet",
+    "Den første månelanding",
+    "Verdens første reagensglasbarn",
+  ],
 
   "Hvem skrev Staten?": ["Aristoteles", "Sokrates", "Xenofon"],
   "Hvilken filosof formulerede 'Jeg tænker, altså er jeg'?": [
@@ -371,6 +401,82 @@ const overrides: Record<string, string[]> = {
     "En direkte tv-kanal",
     "Et digitalt nyhedsbrev",
     "En billedserie på sociale medier",
+  ],
+  "Hvad beskriver kognitiv dissonans?": [
+    "Tendensen til at søge bekræftelse",
+    "Belastning af arbejdshukommelsen",
+    "Passivitet efter gentagne nederlag",
+  ],
+  "Hvad er placeboeffekten?": [
+    "Forværring skabt af negative forventninger",
+    "Bedring uden nogen behandling",
+    "Adfærdsændring fordi man bliver observeret",
+  ],
+  "Hvad er empati?": [
+    "At føle medlidenhed med andre",
+    "At mangle interesse for andres følelser",
+    "At tillægge andre sine egne følelser",
+  ],
+  "Hvad betyder introversion typisk?": [
+    "At søge meget ydre stimulation",
+    "At være ude af stand til at tale med andre",
+    "At mangle interesse for egne tanker",
+  ],
+  "Hvem skrev romanen 1984?": [
+    "Aldous Huxley",
+    "Ray Bradbury",
+    "Jevgenij Zamjatin",
+  ],
+  "Hvem skabte Sherlock Holmes?": [
+    "Agatha Christie",
+    "Wilkie Collins",
+    "G.K. Chesterton",
+  ],
+  "Hvem skrev Hundrede års ensomhed?": [
+    "Jorge Luis Borges",
+    "Isabel Allende",
+    "Mario Vargas Llosa",
+  ],
+  "Hvem skrev Frankenstein?": [
+    "Bram Stoker",
+    "Percy Bysshe Shelley",
+    "John Polidori",
+  ],
+  "Hvem skrev Lykke-Per?": [
+    "Herman Bang",
+    "J.P. Jacobsen",
+    "Martin Andersen Nexø",
+  ],
+  "Hvem er forfatter til Barndommens gade?": [
+    "Dea Trier Mørch",
+    "Kirsten Thorup",
+    "Suzanne Brøgger",
+  ],
+  "Hvem skrev Kongens fald?": [
+    "Henrik Pontoppidan",
+    "Johannes Jørgensen",
+    "Sophus Claussen",
+  ],
+  "Hvem skabte Pelle Erobreren?": [
+    "Jeppe Aakjær",
+    "Hans Kirk",
+    "Hans Scherfig",
+  ],
+  "Hvem forbedrede glødepæren til praktisk massebrug?": [
+    "Joseph Swan",
+    "Nikola Tesla",
+    "George Westinghouse",
+  ],
+  "Hvem opfandt dynamitten?": ["Richard Gatling", "Hiram Maxim", "Samuel Colt"],
+  "Hvem udviklede den første effektive koppevaccine?": [
+    "Louis Pasteur",
+    "Robert Koch",
+    "Joseph Lister",
+  ],
+  "Hvem patenterede en tidlig moderne lynlås?": [
+    "Whitcomb Judson",
+    "Elias Howe",
+    "Isaac Singer",
   ],
   "Hvem udviklede teorien om klassisk betingning?": [
     "John B. Watson",
@@ -988,6 +1094,7 @@ function optionsFor(
   type: QuestionType,
 ) {
   if (type === "true_false") return ["Sandt", "Falsk"];
+  if (overrides[prompt]) return [correct, ...overrides[prompt]].slice(0, 4);
   const listed = listedOptions(prompt, type);
   if (listed.length >= 2) return listed;
   const numeric = numericDistractors(correct);
@@ -1071,12 +1178,16 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
     })
     .filter(
       (question) =>
-        question.options.length ===
-        (question.type === "true_false" || question.type === "what_came_first"
-          ? 2
-          : 4),
+        question.options.length === (question.type === "true_false" ? 2 : 4),
     ),
 );
+
+const redundantQuestionIds = new Set([
+  "variety-072", // Samme volleyballfakta som q-cat-25-6.
+  "expansion-105", // Samme Just Do It-fakta som q-cat-34-1.
+  "expansion-117", // Samme Famicom/NES-fakta som q-cat-49-1.
+  "expansion-173", // Samme deepfake-definition som q-cat-53-3.
+]);
 
 const BASE_QUESTIONS: Question[] = [
   ...CURATED_QUESTIONS,
@@ -1086,7 +1197,7 @@ const BASE_QUESTIONS: Question[] = [
   ...EXPANSION_QUESTIONS,
   ...WIKIDATA_THIN_QUESTIONS,
   ...VARIETY_QUESTIONS,
-];
+].filter((question) => !redundantQuestionIds.has(question.id));
 
 const categoryLinks: Record<string, string[]> = {
   "cat-11": ["cat-14"],

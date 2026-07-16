@@ -19,10 +19,11 @@ const machineCopy = SEED_QUESTIONS.filter((question) =>
     question.prompt,
     question.explanation,
     ...question.options.map((option) => option.text),
-  ].some((text) =>
-    /registreret som|centrale sammenhæng|final version|slaget ved\s+slaget ved|\s{2,}|\.\./i.test(
-      text,
-    ),
+  ].some(
+    (text) =>
+      /registreret som|centrale sammenhæng|final version|slaget ved\s+slaget ved|\s{2,}|\.\./i.test(
+        text,
+      ) || /Ã.|Â.|â[€™“”–—]/.test(text),
   ),
 );
 const lowercaseOptions = SEED_QUESTIONS.filter((question) =>

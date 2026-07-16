@@ -194,12 +194,67 @@ const optionOverrides: Record<string, string[]> = {
   "JP:tld": [".jp", ".ja", ".jn", ".jo"],
 };
 
+// Wikidata kan medtage tegnsprog, dialekter og regionale sprog i en vilkårlig
+// rækkefølge. Brug kun et redaktionelt valgt, alment kendt officielt sprog.
+const approvedLanguageByCountry: Record<string, string> = {
+  AD: "catalansk",
+  AL: "albansk",
+  AM: "armensk",
+  AO: "portugisisk",
+  AZ: "aserbajdsjansk",
+  BD: "Bangla",
+  BG: "bulgarsk",
+  CN: "Putonghua",
+  CZ: "tjekkisk",
+  DE: "tysk",
+  DK: "dansk",
+  EE: "estisk",
+  ES: "spansk",
+  FR: "fransk",
+  GE: "georgisk",
+  GR: "græsk",
+  HR: "kroatisk",
+  HU: "ungarsk",
+  ID: "indonesisk",
+  IR: "persisk",
+  IS: "islandsk",
+  IT: "italiensk",
+  KH: "Khmer",
+  KG: "kirgisisk",
+  KP: "koreansk",
+  KZ: "kasakhisk",
+  LA: "Lao",
+  LT: "litauisk",
+  LV: "lettisk",
+  MK: "makedonsk",
+  MN: "Mongolsk",
+  MV: "Dhivehi",
+  MY: "malajisk",
+  NP: "nepalesisk",
+  PL: "polsk",
+  PT: "portugisisk",
+  RO: "rumænsk",
+  RS: "serbisk",
+  RU: "russisk",
+  SA: "arabisk",
+  SE: "svensk",
+  SI: "slovensk",
+  SK: "slovakisk",
+  TH: "thai",
+  TR: "tyrkisk",
+  UA: "ukrainsk",
+  VN: "vietnamesisk",
+};
+
 export const COUNTRY_QUESTIONS: Question[] = countries.flatMap((country) =>
   (Object.keys(relationConfig) as Relation[]).flatMap((relation) => {
-    // Nederlandsk/Nederlandene røber svaret via selve landenavnet.
-    if (country.code === "NL" && relation === "language") return [];
+    if (relation === "language" && !approvedLanguageByCountry[country.code])
+      return [];
     const answers = validValues(country, relation);
-    const answer = answers[0];
+    const answer =
+      relation === "language"
+        ? approvedLanguageByCountry[country.code]
+        : answers[0];
     if (!answer) return [];
     const copy = wording(country, relation, answer);
     const config = relationConfig[relation];
@@ -215,13 +270,15 @@ export const COUNTRY_QUESTIONS: Question[] = countries.flatMap((country) =>
         secondaryCategoryIds: config.secondary,
         difficulty: level(country, relation),
         options:
-          optionOverrides[`${country.code}:${relation}`]?.map((text, index) => ({
-            id: `o${index + 1}`,
-            text,
-          })) ??
+          optionOverrides[`${country.code}:${relation}`]?.map(
+            (text, index) => ({
+              id: `o${index + 1}`,
+              text,
+            }),
+          ) ??
           plausibleOptions(
             answer,
-            answers.slice(1),
+            answers.filter((candidate) => candidate !== answer),
             plausiblePool(country, relation),
             `${country.qid}-${relation}`,
             relation,

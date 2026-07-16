@@ -34,6 +34,12 @@ const excludedFormatAdaptations = new Set([
   "Q7939619",
   "Q591519",
 ]);
+const excludedAmbiguousOrDuplicateWorkIds = new Set([
+  "Q979", // Polonium blev opdaget af bÃ¥de Marie og Pierre Curie.
+  "Q1128", // Radium blev isoleret/opdaget af flere forskere sammen.
+  "Q143899", // Tandhjulspumpens ophav er for nicheprÃ¦get og kildeafhÃ¦ngigt.
+  "Q466", // Dublikerer det hÃ¥ndskrevne spÃ¸rgsmÃ¥l om World Wide Web.
+]);
 const disabledTemplateKeys = new Set([
   "airport-country",
   "baked-origin",
@@ -65,33 +71,81 @@ const familiarTemplateWorkIds = new Map<string, Set<string>>([
   [
     "danish-film-director",
     new Set([
-      "Q352000", "Q374373", "Q110365", "Q196103", "Q327681", "Q1630226",
-      "Q1327845", "Q1482548", "Q1253821", "Q1423329", "Q775356", "Q1326419",
-      "Q342637", "Q165699", "Q1245864", "Q370707", "Q316761", "Q1321282",
-      "Q1446749", "Q312394",
+      "Q352000",
+      "Q374373",
+      "Q110365",
+      "Q196103",
+      "Q327681",
+      "Q1630226",
+      "Q1327845",
+      "Q1482548",
+      "Q1253821",
+      "Q1423329",
+      "Q775356",
+      "Q1326419",
+      "Q342637",
+      "Q165699",
+      "Q1245864",
+      "Q370707",
+      "Q316761",
+      "Q1321282",
+      "Q1446749",
+      "Q312394",
     ]),
   ],
   [
     "danish-literature-author",
     new Set([
-      "Q790276", "Q1192442", "Q1756234", "Q11868", "Q11859", "Q11876",
-      "Q1807554", "Q11872", "Q1152009", "Q1757858", "Q767189", "Q1760337",
-      "Q1985244", "Q1762814", "Q2180740", "Q1758876", "Q1348207", "Q1642629",
-      "Q1757820", "Q1771634", "Q11880", "Q1757894",
+      "Q790276",
+      "Q1192442",
+      "Q1756234",
+      "Q11868",
+      "Q11859",
+      "Q11876",
+      "Q1807554",
+      "Q11872",
+      "Q1152009",
+      "Q1757858",
+      "Q767189",
+      "Q1760337",
+      "Q1985244",
+      "Q1762814",
+      "Q2180740",
+      "Q1758876",
+      "Q1348207",
+      "Q1642629",
+      "Q1757820",
+      "Q1771634",
+      "Q11880",
+      "Q1757894",
     ]),
   ],
   [
     "danish-series-creator",
     new Set([
-      "Q1211796", "Q115173056", "Q112270002", "Q956446", "Q1782870",
-      "Q1275157", "Q113592299", "Q1331994", "Q12333582", "Q96241173",
+      "Q1211796",
+      "Q115173056",
+      "Q112270002",
+      "Q956446",
+      "Q1782870",
+      "Q1275157",
+      "Q113592299",
+      "Q1331994",
+      "Q12333582",
+      "Q96241173",
     ]),
   ],
   [
     "nordic-mountain-country",
     new Set([
-      "Q1018862", "Q1420616", "Q1496308", "Q1547402", "Q1477173",
-      "Q1315012", "Q1637507", "Q138114",
+      "Q1018862",
+      "Q1420616",
+      "Q1496308",
+      "Q1547402",
+      "Q1477173",
+      "Q1315012",
+      "Q1637507",
+      "Q138114",
     ]),
   ],
 ]);
@@ -185,7 +239,11 @@ const relationCopy: Record<string, { prompt: string; fact: string }> = {
   },
 };
 
-function applyRelationCopy(template: string, record: (typeof records)[number], answer?: string) {
+function applyRelationCopy(
+  template: string,
+  record: (typeof records)[number],
+  answer?: string,
+) {
   return template
     .replace("{work}", record.work)
     .replace("{answer}", answer ?? record.answer);
@@ -203,19 +261,41 @@ const usableRecords = records.filter(
     (!familiarTemplateWorkIds.has(record.key) ||
       familiarTemplateWorkIds.get(record.key)!.has(record.workQid)) &&
     !excludedFormatAdaptations.has(record.workQid) &&
-    (record.key !== "battle-country" || familiarBattleIds.has(record.workQid)) &&
+    !excludedAmbiguousOrDuplicateWorkIds.has(record.workQid) &&
+    (record.key !== "battle-country" ||
+      familiarBattleIds.has(record.workQid)) &&
     (record.key !== "invention-inventor" ||
       allowedDiscoveryOrInventionIds.has(record.workQid)),
 );
 
+const inventionOptionOverrides = new Map<string, string[]>([
+  ["Q2270", ["August Kekulé", "Justus von Liebig", "Humphry Davy"]],
+  ["Q3134", ["Simon Marius", "Johannes Kepler", "Tycho Brahe"]],
+  ["Q3143", ["Simon Marius", "Johannes Kepler", "Tycho Brahe"]],
+  ["Q3169", ["Simon Marius", "Johannes Kepler", "Tycho Brahe"]],
+  ["Q3123", ["Simon Marius", "Johannes Kepler", "Tycho Brahe"]],
+  ["Q143", ["Louis de Beaufront", "Charles K. Bliss", "Marc Okrand"]],
+  ["Q43484", ["Arthur Schopenhauer", "Søren Kierkegaard", "Martin Heidegger"]],
+  ["Q10693", ["Lothar Meyer", "John Newlands", "Antoine Lavoisier"]],
+  ["Q2294", ["J.J. Thomson", "James Chadwick", "Niels Bohr"]],
+  ["Q144334", ["Bi Sheng", "William Caxton", "Laurens Coster"]],
+  ["Q6368", ["Marc Andreessen", "Brendan Eich", "Vint Cerf"]],
+]);
+
 function optionsFor(record: (typeof records)[number]) {
-  const pool = [
+  const nordicCountries = ["Danmark", "Finland", "Island", "Norge", "Sverige"];
+  const generatedPool = [
     ...new Set(
       usableRecords
         .filter((item) => item.key === record.key)
         .map((item) => item.answer),
     ),
   ].filter((answer) => answer !== record.answer);
+  const pool =
+    inventionOptionOverrides.get(record.workQid) ??
+    (record.key === "nordic-mountain-country"
+      ? nordicCountries.filter((answer) => answer !== record.answer)
+      : generatedPool);
   const start =
     Number.parseInt(stableHash(`${record.key}:${record.workQid}`), 36) %
     pool.length;

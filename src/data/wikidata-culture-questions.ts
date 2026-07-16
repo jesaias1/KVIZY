@@ -7,28 +7,97 @@ import type { Question } from "@/lib/types";
 // "Israel" eller "Kongressen i USA" på et hvem-spørgsmål, så denne relation
 // bruges ikke uden en særskilt redaktionel kontrol.
 const familiarFilmIds = new Set([
-  "Q2201", "Q2345", "Q19355", "Q19405", "Q20456", "Q4430", "Q22432",
-  "Q23395", "Q32303", "Q4536", "Q4941", "Q6074", "Q32433", "Q5890",
-  "Q59610", "Q59653", "Q59534", "Q11618", "Q11621", "Q45394", "Q14320",
-  "Q45602", "Q12018", "Q17738", "Q34414", "Q74958", "Q60072", "Q24075",
+  "Q2201",
+  "Q2345",
+  "Q19355",
+  "Q19405",
+  "Q20456",
+  "Q4430",
+  "Q22432",
+  "Q23395",
+  "Q32303",
+  "Q4536",
+  "Q4941",
+  "Q6074",
+  "Q32433",
+  "Q5890",
+  "Q59610",
+  "Q59653",
+  "Q59534",
+  "Q11618",
+  "Q11621",
+  "Q45394",
+  "Q14320",
+  "Q45602",
+  "Q12018",
+  "Q17738",
+  "Q34414",
+  "Q74958",
+  "Q60072",
+  "Q24075",
 ]);
 const familiarPaintingIds = new Set([
-  "Q1061035", "Q1065493", "Q1091086", "Q1170315", "Q1142058", "Q1219263",
-  "Q12334558", "Q1239950", "Q1245388", "Q12418", "Q151047", "Q175036",
+  "Q1061035",
+  "Q1065493",
+  "Q1091086",
+  "Q1170315",
+  "Q1142058",
+  "Q1219263",
+  "Q12334558",
+  "Q1239950",
+  "Q1245388",
+  "Q12418",
+  "Q151047",
+  "Q175036",
 ]);
 const familiarAlbumIds = new Set([
-  "Q45367", "Q127503", "Q128017", "Q45727", "Q11632", "Q8360", "Q27166",
-  "Q13171", "Q13172", "Q15661", "Q129684", "Q109214", "Q17444", "Q113189",
-  "Q131182", "Q131392", "Q131977", "Q117225", "Q19003", "Q58761",
+  "Q45367",
+  "Q127503",
+  "Q128017",
+  "Q45727",
+  "Q11632",
+  "Q8360",
+  "Q27166",
+  "Q13171",
+  "Q13172",
+  "Q15661",
+  "Q129684",
+  "Q109214",
+  "Q17444",
+  "Q113189",
+  "Q131182",
+  "Q131392",
+  "Q131977",
+  "Q117225",
+  "Q19003",
+  "Q58761",
 ]);
 const familiarSeriesIds = new Set([
-  "Q35791", "Q1077", "Q1079", "Q216919", "Q183513", "Q186219", "Q189068",
-  "Q189350", "Q276180", "Q2744", "Q3013", "Q193462", "Q11622", "Q13979",
-  "Q16290", "Q80044", "Q283393", "Q199853",
+  "Q35791",
+  "Q1077",
+  "Q1079",
+  "Q216919",
+  "Q183513",
+  "Q186219",
+  "Q189068",
+  "Q189350",
+  "Q276180",
+  "Q2744",
+  "Q3013",
+  "Q193462",
+  "Q11622",
+  "Q13979",
+  "Q16290",
+  "Q80044",
+  "Q283393",
+  "Q199853",
 ]);
 const familiarFoodIds = new Set([
-  "Q203925", "Q275621", "Q493749", "Q836538", "Q920940",
-  "Q16834113", "Q85772622",
+  "Q203925",
+  "Q275621",
+  "Q493749",
+  "Q920940",
+  "Q85772622",
 ]);
 
 const usableRecords = records.filter((record) => {
@@ -38,11 +107,14 @@ const usableRecords = records.filter((record) => {
     )
   )
     return false;
-  if (record.key === "film-director") return familiarFilmIds.has(record.workQid);
+  if (record.key === "film-director")
+    return familiarFilmIds.has(record.workQid);
   if (record.key === "painting-artist")
     return familiarPaintingIds.has(record.workQid);
-  if (record.key === "album-artist") return familiarAlbumIds.has(record.workQid);
-  if (record.key === "series-creator") return familiarSeriesIds.has(record.workQid);
+  if (record.key === "album-artist")
+    return familiarAlbumIds.has(record.workQid);
+  if (record.key === "series-creator")
+    return familiarSeriesIds.has(record.workQid);
   if (record.key === "food-origin") return familiarFoodIds.has(record.workQid);
   return true;
 });
@@ -55,8 +127,15 @@ function workLabel(record: (typeof records)[number]) {
 }
 
 function optionsFor(record: (typeof records)[number]) {
-  if (record.key === "food-origin" && record.workQid === "Q493749") {
-    return ["Danmark", "Sverige", "Norge", "Finland"].map((text, index) => ({
+  const foodOptions: Record<string, string[]> = {
+    Q203925: ["England", "Skotland", "Irland", "Belgien"],
+    Q275621: ["Danmark", "Sverige", "Norge", "Finland"],
+    Q493749: ["Danmark", "Sverige", "Norge", "Finland"],
+    Q920940: ["Indien", "Sri Lanka", "Pakistan", "Bangladesh"],
+    Q85772622: ["Danmark", "Tyskland", "Østrig", "Nederlandene"],
+  };
+  if (record.key === "food-origin" && foodOptions[record.workQid]) {
+    return foodOptions[record.workQid].map((text, index) => ({
       id: `o${index + 1}`,
       text,
     }));

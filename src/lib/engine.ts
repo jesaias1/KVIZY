@@ -212,6 +212,12 @@ function questionFactKey(question: Question) {
 }
 
 const REPETITIVE_TEMPLATE_TAGS = new Set([
+  "capital",
+  "currency",
+  "continent",
+  "language",
+  "callingCode",
+  "tld",
   "painting-artist",
   "film-director",
   "series-creator",
@@ -282,6 +288,39 @@ function balanceFairTurnTypes(
 
   const fairTypes = new Set<Question["type"]>(FAIR_TURN_TYPES);
   const balanced = [...picked];
+
+  // I længere blandede spil skal mindst én hel spillerunde af hver fair
+  // specialtype med, hvis banken kan levere den. Ellers kunne et enkelt valgt
+  // sandt/falsk-spørgsmål blive fjernet under lighedsbalanceringen, så typen
+  // helt forsvandt fra spillet.
+  if (setup.questionCount >= playerCount * 5) {
+    for (const type of FAIR_TURN_TYPES) {
+      const present = balanced.filter((question) => question.type === type);
+      if (present.length >= playerCount) continue;
+      const usedIds = new Set(balanced.map((question) => question.id));
+      const usedFingerprints = new Set(
+        balanced.map((question) => question.fingerprint),
+      );
+      const additions = eligibleBank
+        .filter(
+          (candidate) =>
+            candidate.type === type &&
+            Math.abs(candidate.difficulty - setup.difficulty) <= 1 &&
+            !usedIds.has(candidate.id) &&
+            !usedFingerprints.has(candidate.fingerprint),
+        )
+        .slice(0, playerCount - present.length);
+      for (const addition of additions) {
+        const replaceIndex = balanced.findLastIndex(
+          (question) => !fairTypes.has(question.type),
+        );
+        if (replaceIndex < 0) break;
+        balanced[replaceIndex] = addition;
+        usedIds.add(addition.id);
+        usedFingerprints.add(addition.fingerprint);
+      }
+    }
+  }
 
   // En fair type må kun optræde i hele spiller-sæt. Eventuelle rester
   // erstattes med almindelige spørgsmål fra de samme valgte kategorier.
@@ -468,7 +507,7 @@ export function selectQuestions(
   const pickedFacts = new Set<string>();
   const categoryCounts = new Map<string, number>();
   const templateCounts = new Map<string, number>();
-  const templateLimit = Math.max(2, Math.ceil(setup.questionCount / 10));
+  const templateLimit = 2;
   const categoryLimit = Math.max(
     2,
     Math.ceil(setup.questionCount / Math.max(1, selectedCategoryIds.size)),

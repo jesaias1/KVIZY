@@ -60,6 +60,13 @@ describe("automatisk spørgsmålskvalitet", () => {
     }
   });
 
+  it("giver fire svar til alle almindelige spørgsmål", () => {
+    for (const question of SEED_QUESTIONS) {
+      const expected = question.type === "true_false" ? 2 : 4;
+      expect(question.options.length, question.id).toBe(expected);
+    }
+  });
+
   it("indeholder ingen maskinagtige udsagn eller gentagne prompts", () => {
     expect(
       SEED_QUESTIONS.some((question) =>
@@ -67,10 +74,11 @@ describe("automatisk spørgsmålskvalitet", () => {
           question.prompt,
           question.explanation,
           ...question.options.map((o) => o.text),
-        ].some((text) =>
-          /registreret som|centrale sammenhæng|final version|\s{2,}|\.\./i.test(
-            text,
-          ),
+        ].some(
+          (text) =>
+            /registreret som|centrale sammenhæng|final version|\s{2,}|\.\./i.test(
+              text,
+            ) || /Ã.|Â.|â[€™“”–—]/.test(text),
         ),
       ),
     ).toBe(false);
@@ -173,6 +181,60 @@ describe("automatisk spørgsmålskvalitet", () => {
         question.tags.some((tag) => removedTemplates.has(tag)),
       ),
     ).toBe(false);
+  });
+
+  it("udelukker tvetydige, dublerede og dårligt matchede Wikidata-fakta", () => {
+    const removedIds = [
+      "wikithin-invention-inventor-Q979",
+      "wikithin-invention-inventor-Q1128",
+      "wikithin-invention-inventor-Q143899",
+      "wikithin-invention-inventor-Q466",
+      "wikiculture-food-origin-Q836538",
+      "wikiculture-food-origin-Q16834113",
+      "variety-072",
+      "expansion-105",
+      "expansion-117",
+      "expansion-173",
+    ];
+    expect(
+      removedIds.every(
+        (id) => !SEED_QUESTIONS.some((question) => question.id === id),
+      ),
+    ).toBe(true);
+
+    const periodicTable = SEED_QUESTIONS.find(
+      (question) => question.id === "wikithin-invention-inventor-Q10693",
+    );
+    expect(periodicTable?.options.map((option) => option.text).sort()).toEqual(
+      [
+        "Antoine Lavoisier",
+        "Dmitrij Mendelejev",
+        "John Newlands",
+        "Lothar Meyer",
+      ].sort(),
+    );
+    expect(
+      SEED_QUESTIONS.filter((question) =>
+        question.tags.includes("nordic-mountain-country"),
+      ).every((question) => question.options.length === 4),
+    ).toBe(true);
+
+    const languageQuestions = SEED_QUESTIONS.filter((question) =>
+      question.tags.includes("language"),
+    );
+    expect(
+      languageQuestions.some((question) =>
+        /Afghanistan|Australien|Taiwan/.test(question.prompt),
+      ),
+    ).toBe(false);
+    const danishLanguage = languageQuestions.find((question) =>
+      question.prompt.includes("Danmark"),
+    );
+    expect(
+      danishLanguage?.options.find(
+        (option) => option.id === danishLanguage.correctOptionId,
+      )?.text,
+    ).toBe("Dansk");
   });
 
   it("skelner mellem opdagelser, udvikling og opfindelser", () => {

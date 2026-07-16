@@ -1143,7 +1143,8 @@ const balanceSpecs: Spec[] = [
     type: "multiple_choice",
     categoryId: "cat-34",
     difficulty: 2,
-    prompt: "Hvilket elektronikmærke lancerede den bærbare kassetteafspiller Walkman?",
+    prompt:
+      "Hvilket elektronikmærke lancerede den bærbare kassetteafspiller Walkman?",
     options: ["Sony", "Panasonic", "Philips", "JVC"],
     correct: 0,
     explanation:
@@ -1192,7 +1193,8 @@ const balanceSpecs: Spec[] = [
     type: "multiple_choice",
     categoryId: "cat-56",
     difficulty: 3,
-    prompt: "Hvilken proces gør havet mere surt, når det optager mere kuldioxid?",
+    prompt:
+      "Hvilken proces gør havet mere surt, når det optager mere kuldioxid?",
     options: [
       "Dannelse af kulsyre",
       "Fordampning af salt",
@@ -1230,7 +1232,8 @@ const balanceSpecs: Spec[] = [
     type: "multiple_choice",
     categoryId: "cat-24",
     difficulty: 2,
-    prompt: "Hvilket materiale bruges til rammen om en Nether-portal i Minecraft?",
+    prompt:
+      "Hvilket materiale bruges til rammen om en Nether-portal i Minecraft?",
     options: ["Obsidian", "Granit", "Bedrock", "Sortsten"],
     correct: 0,
     explanation:
@@ -1300,8 +1303,14 @@ const balanceSpecs: Spec[] = [
     type: "multiple_choice",
     categoryId: "cat-13",
     difficulty: 3,
-    prompt: "Hvilken forsker udviklede Strange Situation-testen af små børns tilknytning?",
-    options: ["Mary Ainsworth", "Anna Freud", "Elizabeth Loftus", "Carol Dweck"],
+    prompt:
+      "Hvilken forsker udviklede Strange Situation-testen af små børns tilknytning?",
+    options: [
+      "Mary Ainsworth",
+      "Anna Freud",
+      "Elizabeth Loftus",
+      "Carol Dweck",
+    ],
     correct: 0,
     explanation:
       "Mary Ainsworth brugte Strange Situation til at undersøge forskellige tilknytningsmønstre.",
@@ -1488,39 +1497,73 @@ const balanceSpecs: Spec[] = [
 
 const createdAt = "2026-07-16T00:00:00.000Z";
 
-export const VARIETY_QUESTIONS: Question[] = [...specs, ...balanceSpecs].map(
-  (spec, index) => {
-    const options = spec.options.map((text, optionIndex) => ({
-      id: `o${optionIndex + 1}`,
-      text,
-    }));
-    return {
-      id: `variety-${String(index + 1).padStart(3, "0")}`,
-      prompt: spec.prompt,
-      type: spec.type,
-      categoryId: spec.categoryId,
-      secondaryCategoryIds: spec.type === "category_cross" ? ["cat-6"] : [],
-      difficulty: spec.difficulty,
-      options,
-      correctOptionId:
-        spec.type === "ordering" ? undefined : options[spec.correct].id,
-      correctOrder: spec.order?.map((position) => options[position].id),
-      explanation: spec.explanation,
-      sourceLabel: "Wikipedia – fagligt overblik",
-      sourceUrl: spec.sourceUrl,
-      tags: ["varieret", spec.type],
-      origin: "curated",
-      status: "active",
-      fingerprint: stableHash(
-        `variety:${spec.type}:${spec.prompt}:${spec.options[spec.correct]}`,
-      ),
-      qualityScore: 94,
-      timeSensitive: false,
-      createdAt,
-      updatedAt: createdAt,
-      playCount: 0,
-      correctRate: 0,
-      reportCount: 0,
-    };
+const qualityAdditions: Spec[] = [
+  {
+    type: "multiple_choice",
+    categoryId: "cat-49",
+    difficulty: 3,
+    prompt:
+      "Hvilken computer lancerede Commodore som sin nye 16-bit-model i 1985?",
+    options: ["Amiga 1000", "Commodore 64", "Atari 2600", "Apple Lisa"],
+    correct: 0,
+    explanation:
+      "Amiga 1000 blev lanceret i 1985 og blev kendt for avanceret grafik og lyd i forhold til mange samtidige hjemmecomputere.",
+    sourceUrl: wiki("Amiga_1000"),
   },
-);
+  {
+    type: "multiple_choice",
+    categoryId: "cat-53",
+    difficulty: 2,
+    prompt:
+      "Hvad gør et indbygget digitalt SIM-modul i en mobiltelefon muligt?",
+    options: [
+      "En operatørprofil kan hentes og skiftes uden et fysisk kort",
+      "Telefonen kan kun bruges via Wi-Fi",
+      "Batteriet kan udskiftes uden værktøj",
+      "Skærmen kan vise elektronisk blæk",
+    ],
+    correct: 0,
+    explanation:
+      "Et eSIM er indbygget i enheden og kan få en operatørprofil installeret digitalt.",
+    sourceUrl: wiki("ESIM"),
+  },
+];
+
+export const VARIETY_QUESTIONS: Question[] = [
+  ...specs,
+  ...balanceSpecs,
+  ...qualityAdditions,
+].map((spec, index) => {
+  const options = spec.options.map((text, optionIndex) => ({
+    id: `o${optionIndex + 1}`,
+    text,
+  }));
+  return {
+    id: `variety-${String(index + 1).padStart(3, "0")}`,
+    prompt: spec.prompt,
+    type: spec.type,
+    categoryId: spec.categoryId,
+    secondaryCategoryIds: spec.type === "category_cross" ? ["cat-6"] : [],
+    difficulty: spec.difficulty,
+    options,
+    correctOptionId:
+      spec.type === "ordering" ? undefined : options[spec.correct].id,
+    correctOrder: spec.order?.map((position) => options[position].id),
+    explanation: spec.explanation,
+    sourceLabel: "Wikipedia – fagligt overblik",
+    sourceUrl: spec.sourceUrl,
+    tags: ["varieret", spec.type],
+    origin: "curated",
+    status: "active",
+    fingerprint: stableHash(
+      `variety:${spec.type}:${spec.prompt}:${spec.options[spec.correct]}`,
+    ),
+    qualityScore: 94,
+    timeSensitive: false,
+    createdAt,
+    updatedAt: createdAt,
+    playCount: 0,
+    correctRate: 0,
+    reportCount: 0,
+  };
+});

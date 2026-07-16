@@ -22,15 +22,25 @@ export const seedSpecs: {
       ["Hvad hedder Danmarks længste å?", "Gudenåen"],
       ["Hvilket år trådte Danmarks Riges Grundlov i kraft?", "1849"],
       ["Hvilken ø er Danmarks største?", "Sjælland"],
-      ["Hvad hedder broforbindelsen mellem Fyn og Sjælland?", "Storebæltsforbindelsen"],
+      [
+        "Hvad hedder broforbindelsen mellem Fyn og Sjælland?",
+        "Storebæltsforbindelsen",
+      ],
       ["Hvilken dansk by kaldes ofte Nordens Paris?", "Aalborg"],
     ],
   },
   {
     categoryId: "cat-3",
     items: [
-      ["Hvor mange medlemmer har Folketinget inklusive de nordatlantiske mandater?", "179"],
-      ["Hvad kaldes Folketingets ledelse, som består af formanden og fire næstformænd?", "Præsidiet", "Folketingets formand og fire næstformænd udgør tilsammen Præsidiet."],
+      [
+        "Hvor mange medlemmer har Folketinget inklusive de nordatlantiske mandater?",
+        "179",
+      ],
+      [
+        "Hvad kaldes Folketingets ledelse, som består af formanden og fire næstformænd?",
+        "Præsidiet",
+        "Folketingets formand og fire næstformænd udgør tilsammen Præsidiet.",
+      ],
       ["Hvor ofte skal der senest afholdes folketingsvalg?", "Hvert fjerde år"],
       ["Hvilken myndighed vedtager love i Danmark?", "Folketinget"],
       ["Hvad hedder Danmarks øverste domstol?", "Højesteret"],
@@ -42,10 +52,19 @@ export const seedSpecs: {
     items: [
       ["Hvor ligger FN's hovedkvarter?", "New York"],
       ["Hvor mange permanente medlemmer har FN's Sikkerhedsråd?", "5"],
-      ["Hvad står NATO for på dansk?", "Den Nordatlantiske Traktats Organisation"],
-      ["Hvilken institution foreslår normalt ny EU-lovgivning?", "Europa-Kommissionen"],
+      [
+        "Hvad står NATO for på dansk?",
+        "Den Nordatlantiske Traktats Organisation",
+      ],
+      [
+        "Hvilken institution foreslår normalt ny EU-lovgivning?",
+        "Europa-Kommissionen",
+      ],
       ["Hvilken by huser Den Internationale Domstol?", "Haag"],
-      ["Hvilket land er ikke permanent medlem af FN's Sikkerhedsråd?", "Tyskland"],
+      [
+        "Hvilket land er ikke permanent medlem af FN's Sikkerhedsråd?",
+        "Tyskland",
+      ],
     ],
   },
   {
@@ -118,7 +137,10 @@ export const seedSpecs: {
     categoryId: "cat-11",
     items: [
       ["Hvem skrev Staten?", "Platon"],
-      ["Hvilken filosof formulerede 'Jeg tænker, altså er jeg'?", "René Descartes"],
+      [
+        "Hvilken filosof formulerede 'Jeg tænker, altså er jeg'?",
+        "René Descartes",
+      ],
       ["Hvad kaldes læren om viden?", "Erkendelsesteori"],
       ["Hvem forbindes med det kategoriske imperativ?", "Immanuel Kant"],
       ["Hvilken retning forbindes med Jean-Paul Sartre?", "Eksistentialisme"],
@@ -130,9 +152,15 @@ export const seedSpecs: {
     items: [
       ["Hvad beskriver kognitiv dissonans?", "Ubehag ved modstridende tanker"],
       ["Hvad er placeboeffekten?", "Bedring skabt af forventning"],
-      ["Hvilken hukommelse holder kortvarigt information aktiv?", "Arbejdshukommelsen"],
+      [
+        "Hvilken hukommelse holder kortvarigt information aktiv?",
+        "Arbejdshukommelsen",
+      ],
       ["Hvad er empati?", "Evnen til at forstå andres følelser"],
-      ["Hvad betyder introversion typisk?", "Energi orienteret mod indre refleksion"],
+      [
+        "Hvad betyder introversion typisk?",
+        "Energi orienteret mod indre refleksion",
+      ],
       ["Hvad er en fobi?", "En vedvarende og stærk frygt"],
     ],
   },
@@ -141,7 +169,10 @@ export const seedSpecs: {
     items: [
       ["Hvem udviklede teorien om klassisk betingning?", "Ivan Pavlov"],
       ["Hvem forbindes med operant betingning?", "B.F. Skinner"],
-      ["Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?", "Tilknytningsteori"],
+      [
+        "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?",
+        "Tilknytningsteori",
+      ],
       ["Hvem udviklede den sociokulturelle læringsteori?", "Lev Vygotskij"],
       ["Hvad måler Big Five-modellen?", "Fem brede personlighedstræk"],
       ["Hvilken psykolog beskrev flow?", "Mihaly Csikszentmihalyi"],
@@ -150,10 +181,22 @@ export const seedSpecs: {
   {
     categoryId: "cat-14",
     items: [
-      ["Hvad kaldes spørgsmålet om fri vilje over for årsagsbestemthed?", "Determinismeproblemet"],
-      ["Hvilken disciplin undersøger livets mening filosofisk?", "Eksistensfilosofi"],
-      ["Hvad er et tankeeksperiment?", "En forestillet situation til at teste en idé"],
-      ["Hvad spørger identitetsproblemet især til?", "Hvad der gør en person til den samme over tid"],
+      [
+        "Hvad kaldes spørgsmålet om fri vilje over for årsagsbestemthed?",
+        "Determinismeproblemet",
+      ],
+      [
+        "Hvilken disciplin undersøger livets mening filosofisk?",
+        "Eksistensfilosofi",
+      ],
+      [
+        "Hvad er et tankeeksperiment?",
+        "En forestillet situation til at teste en idé",
+      ],
+      [
+        "Hvad spørger identitetsproblemet især til?",
+        "Hvad der gør en person til den samme over tid",
+      ],
       ["Hvad er altruïsme?", "At handle for andres skyld"],
       ["Hvad undersøger bevidsthedsfilosofi?", "Forholdet mellem sind og krop"],
     ],
@@ -197,9 +240,15 @@ export const seedSpecs: {
       ["Hvem instruerede Jagten fra 2012?", "Thomas Vinterberg"],
       ["Hvilken dansk filmserie har Egon, Benny og Kjeld?", "Olsen-banden"],
       ["Hvem spiller Tonny i Pusher-filmene?", "Mads Mikkelsen"],
-      ["Hvilken film vandt Danmarks første Oscar for bedste internationale film?", "Babettes gæstebud"],
+      [
+        "Hvilken film vandt Danmarks første Oscar for bedste internationale film?",
+        "Babettes gæstebud",
+      ],
       ["Hvem instruerede Blinkende lygter?", "Anders Thomas Jensen"],
-      ["Hvilken skuespiller spiller præsten Ivan i Adams æbler?", "Mads Mikkelsen"],
+      [
+        "Hvilken skuespiller spiller præsten Ivan i Adams æbler?",
+        "Mads Mikkelsen",
+      ],
     ],
   },
   {
@@ -209,7 +258,10 @@ export const seedSpecs: {
       ["Hvad hedder familien i Succession?", "Roy-familien"],
       ["Hvilken serie følger kemilæreren Walter White?", "Breaking Bad"],
       ["Hvad er navnet på kaffebaren i Friends?", "Central Perk"],
-      ["Hvilken fantasyserie foregår blandt andet i Westeros?", "Game of Thrones"],
+      [
+        "Hvilken fantasyserie foregår blandt andet i Westeros?",
+        "Game of Thrones",
+      ],
       ["Hvem er hovedfigur i The Queen's Gambit?", "Beth Harmon"],
     ],
   },
@@ -218,7 +270,10 @@ export const seedSpecs: {
     items: [
       ["Hvilken serie følger statsminister Birgitte Nyborg?", "Borgen"],
       ["Hvad hedder hotellet i Badehotellet?", "Andersens Badehotel"],
-      ["Hvilken dansk serie foregår på en politistation i København?", "Station 2"],
+      [
+        "Hvilken dansk serie foregår på en politistation i København?",
+        "Station 2",
+      ],
       ["Hvem skabte Riget?", "Lars von Trier"],
       ["Hvilken julekalender introducerede Pyrus?", "Alletiders jul"],
       ["Hvilken serie handler om familien Andersen-Skjern?", "Matador"],
@@ -282,12 +337,24 @@ export const seedSpecs: {
   {
     categoryId: "cat-26",
     items: [
-      ["Hvilken dansker vandt Tour de France i både 2022 og 2023?", "Jonas Vingegaard"],
-      ["Hvilken dansk badmintonspiller vandt OL-guld i 1996?", "Poul-Erik Høyer Larsen"],
+      [
+        "Hvilken dansker vandt Tour de France i både 2022 og 2023?",
+        "Jonas Vingegaard",
+      ],
+      [
+        "Hvilken dansk badmintonspiller vandt OL-guld i 1996?",
+        "Poul-Erik Høyer Larsen",
+      ],
       ["Hvilken by er hjemsted for håndboldklubben GOG?", "Gudme"],
       ["Hvem vandt EM i fodbold med Danmark i 1992?", "Herrelandsholdet"],
-      ["Hvilken dansk tennisspiller vandt Australian Open 2018?", "Caroline Wozniacki"],
-      ["Hvad hedder Danmarks nationale cykelarena i Ballerup?", "Ballerup Super Arena"],
+      [
+        "Hvilken dansk tennisspiller vandt Australian Open 2018?",
+        "Caroline Wozniacki",
+      ],
+      [
+        "Hvad hedder Danmarks nationale cykelarena i Ballerup?",
+        "Ballerup Super Arena",
+      ],
     ],
   },
   {
@@ -331,7 +398,10 @@ export const seedSpecs: {
       ["Hvad er en fjord?", "En smal havarm skabt af is"],
       ["Hvilken naturtype lagrer meget kulstof i tørv?", "Højmosen"],
       ["Hvad kaldes nordlys videnskabeligt?", "Aurora borealis"],
-      ["Hvilken plante forbindes med de svenske skove om sommeren?", "Skovstjerne"],
+      [
+        "Hvilken plante forbindes med de svenske skove om sommeren?",
+        "Skovstjerne",
+      ],
     ],
   },
   {
@@ -387,8 +457,16 @@ export const seedSpecs: {
       ["Hvilken streamingtjeneste bruger et rødt N?", "Netflix"],
       ["Hvilket fragtfirma skjuler en pil i sit ordmærke?", "FedEx"],
       ["Hvilket sportsmærke bruger tre striber?", "Adidas"],
-      ["Hvilket bilmærkes logo består af tre overlappende ellipser?", "Toyota", "Toyotas logo består af tre ellipser, der blandt andet danner et stiliseret T."],
-      ["Hvilken betalingsvirksomhed bruger en rød og en gul overlappende cirkel i sit logo?", "Mastercard", "Mastercards mærke bygger på to overlappende cirkler i rød og gul."],
+      [
+        "Hvilket bilmærkes logo består af tre overlappende ellipser?",
+        "Toyota",
+        "Toyotas logo består af tre ellipser, der blandt andet danner et stiliseret T.",
+      ],
+      [
+        "Hvilken betalingsvirksomhed bruger en rød og en gul overlappende cirkel i sit logo?",
+        "Mastercard",
+        "Mastercards mærke bygger på to overlappende cirkler i rød og gul.",
+      ],
     ],
   },
   {
@@ -431,7 +509,10 @@ export const seedSpecs: {
       ["Hvem opfandt dynamitten?", "Alfred Nobel"],
       ["Hvilken opfindelse forbindes med Alexander Graham Bell?", "Telefonen"],
       ["Hvem udviklede den første effektive koppevaccine?", "Edward Jenner"],
-      ["Hvilket århundrede blev bogtrykkerkunsten udbredt i Europa?", "1400-tallet"],
+      [
+        "Hvilket århundrede blev bogtrykkerkunsten udbredt i Europa?",
+        "1400-tallet",
+      ],
       ["Hvem patenterede en tidlig moderne lynlås?", "Gideon Sundback"],
     ],
   },
@@ -474,7 +555,10 @@ export const seedSpecs: {
       ["Hvad får gærdej til at hæve?", "Kuldioxid fra gæren"],
       ["Hvad er marengs primært lavet af?", "Æggehvider og sukker"],
       ["Hvilket mel bruges traditionelt til rugbrød?", "Rugmel"],
-      ["Hvad betyder det at temperere chokolade?", "At styre krystalliseringen i kakaosmørret"],
+      [
+        "Hvad betyder det at temperere chokolade?",
+        "At styre krystalliseringen i kakaosmørret",
+      ],
       ["Hvad gør bagepulver i en dej?", "Frigiver gas og hæver dejen"],
       ["Hvad er en ganache?", "En blanding af chokolade og fløde"],
     ],
@@ -485,7 +569,10 @@ export const seedSpecs: {
       ["Hvilken spiritus er basen i en mojito?", "Rom"],
       ["Hvad består en klassisk gin og tonic af?", "Gin og tonicvand"],
       ["Hvilken bitter aperitif indgår i en negroni?", "Campari"],
-      ["Hvilken cocktail laves med tequila, lime og appelsinlikør?", "Margarita"],
+      [
+        "Hvilken cocktail laves med tequila, lime og appelsinlikør?",
+        "Margarita",
+      ],
       ["Hvad er sake brygget af?", "Ris"],
       ["Hvilken drue giver rødvin farve fra skallerne?", "Blå druer"],
     ],
@@ -493,23 +580,37 @@ export const seedSpecs: {
   {
     categoryId: "cat-45",
     items: [
-      ["Hvad kom først: trykpressen eller dampmaskinen?", "Trykpressen"],
-      ["Hvad kom først: cd'ens kommercielle lancering eller MIDI-standarden?", "Cd'ens kommercielle lancering", "De første kommercielle cd-afspillere kom i 1982, mens MIDI-standarden blev præsenteret i 1983."],
-      ["Hvad kom først: Titanic-forliset eller Første Verdenskrig?", "Titanic-forliset"],
-      ["Hvad kom først: e-mail eller World Wide Web?", "E-mail"],
-      ["Hvad kom først: LEGO-klodsen eller Barbie-dukken?", "LEGO-klodsen"],
-      ["Hvad kom først: penicillin eller DNA's dobbeltspiral?", "Penicillin"],
+      ["Hvilken opfindelse kom først?", "Trykpressen"],
+      [
+        "Hvilken musik- eller medieteknologi blev lanceret først?",
+        "Cd'ens kommercielle lancering",
+        "De første kommercielle cd-afspillere kom i 1982, mens MIDI-standarden blev præsenteret i 1983.",
+      ],
+      ["Hvilken begivenhed i 1900-tallet skete først?", "Titanic-forliset"],
+      ["Hvilken kommunikationsteknologi kom først?", "E-mail"],
+      ["Hvilket legetøj blev lanceret først?", "LEGO-klodsen"],
+      ["Hvilken videnskabelig milepæl skete først?", "Penicillin"],
     ],
   },
   {
     categoryId: "cat-46",
     items: [
-      ["Hvilken passer ikke ind: violin, cello, bratsch eller trompet?", "Trompet"],
+      [
+        "Hvilken passer ikke ind: violin, cello, bratsch eller trompet?",
+        "Trompet",
+      ],
       ["Hvilken passer ikke ind: Mars, Venus, Månen eller Jupiter?", "Månen"],
       ["Hvilken passer ikke ind: eg, bøg, gran eller løve?", "Løve"],
-      ["Hvilken hovedstad ligger ikke i et EU-land: København, Stockholm, Helsinki eller Oslo?", "Oslo", "Norge er ikke medlem af EU; Danmark, Sverige og Finland er medlemmer."],
+      [
+        "Hvilken hovedstad ligger ikke i et EU-land: København, Stockholm, Helsinki eller Oslo?",
+        "Oslo",
+        "Norge er ikke medlem af EU; Danmark, Sverige og Finland er medlemmer.",
+      ],
       ["Hvilken passer ikke ind: kobber, jern, guld eller glas?", "Glas"],
-      ["Hvilken passer ikke ind: sonet, roman, novelle eller symfoni?", "Symfoni"],
+      [
+        "Hvilken passer ikke ind: sonet, roman, novelle eller symfoni?",
+        "Symfoni",
+      ],
     ],
   },
   {
@@ -517,10 +618,16 @@ export const seedSpecs: {
     items: [
       ["Sandt eller falsk: Venus er varmere end Merkur.", "Sandt"],
       ["Sandt eller falsk: Flagermus er blinde.", "Falsk"],
-      ["Sandt eller falsk: Et døgn på Jorden er præcis 24 timer astronomisk.", "Falsk"],
+      [
+        "Sandt eller falsk: Et døgn på Jorden er præcis 24 timer astronomisk.",
+        "Falsk",
+      ],
       ["Sandt eller falsk: Vand udvider sig, når det fryser.", "Sandt"],
       ["Sandt eller falsk: Australien er bredere end Månen.", "Sandt"],
-      ["Sandt eller falsk: Mennesker har flere end 200 knogler som voksne.", "Sandt"],
+      [
+        "Sandt eller falsk: Mennesker har flere end 200 knogler som voksne.",
+        "Sandt",
+      ],
     ],
   },
   {
@@ -540,7 +647,10 @@ export const seedSpecs: {
       ["Hvilken spillekonsol udgav Nintendo i Japan i 1983?", "Famicom"],
       ["Hvilken mur faldt i 1989?", "Berlinmuren"],
       ["Hvem sang Like a Prayer?", "Madonna"],
-      ["Hvilken film introducerede figuren E.T.?", "E.T. the Extra-Terrestrial"],
+      [
+        "Hvilken film introducerede figuren E.T.?",
+        "E.T. the Extra-Terrestrial",
+      ],
       ["Hvilken rumfærge eksploderede i 1986?", "Challenger"],
       ["Hvilket arkadespil har en gul figur, der spiser prikker?", "Pac-Man"],
     ],
@@ -561,7 +671,10 @@ export const seedSpecs: {
     items: [
       ["Hvilken onlineencyklopædi blev lanceret i 2001?", "Wikipedia"],
       ["Hvilken smartphone blev lanceret af Apple i 2007?", "iPhone"],
-      ["Hvilken filmtrilogi begyndte med Eventyret om Ringen i 2001?", "Ringenes Herre"],
+      [
+        "Hvilken filmtrilogi begyndte med Eventyret om Ringen i 2001?",
+        "Ringenes Herre",
+      ],
       ["Hvilken social platform blev grundlagt i 2004?", "Facebook"],
       ["Hvilket dansk band vandt Eurovision i 2000?", "Olsen Brothers"],
       ["Hvilken dværgplanet mistede planetstatus i 2006?", "Pluto"],
@@ -571,17 +684,26 @@ export const seedSpecs: {
     categoryId: "cat-52",
     items: [
       ["Hvilken streamingtjeneste lancerede House of Cards i 2013?", "Netflix"],
-      ["Hvilket spil blev et globalt fænomen med Battle Royale i 2017?", "Fortnite"],
+      [
+        "Hvilket spil blev et globalt fænomen med Battle Royale i 2017?",
+        "Fortnite",
+      ],
       ["Hvilken rumsonde passerede Pluto i 2015?", "New Horizons"],
       ["Hvilket land vandt VM i fodbold i 2018?", "Frankrig"],
-      ["Hvilken dansk serie havde international premiere som The Rain?", "The Rain"],
+      [
+        "Hvilken dansk serie havde international premiere som The Rain?",
+        "The Rain",
+      ],
       ["Hvilken platform blev kendt for korte dansevideoer?", "TikTok"],
     ],
   },
   {
     categoryId: "cat-53",
     items: [
-      ["Hvad kaldes kunstig intelligens, der kan skabe nyt indhold?", "Generativ AI"],
+      [
+        "Hvad kaldes kunstig intelligens, der kan skabe nyt indhold?",
+        "Generativ AI",
+      ],
       ["Hvilken energikilde udnytter bevægelse i luft?", "Vindenergi"],
       ["Hvad er et deepfake?", "Syntetisk manipuleret lyd eller video"],
       ["Hvad betyder cirkulær økonomi?", "At holde materialer i kredsløb"],
