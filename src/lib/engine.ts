@@ -90,14 +90,14 @@ export function difficultyFor(
 export function calculatePoints(
   correct: boolean,
   responseMs: number,
-  timer: boolean,
+  timeBonus: boolean,
   multiplier = 1,
   minus = false,
   finale = false,
 ) {
   const base = 1000 * (finale ? 2 : 1) * multiplier;
   if (correct) {
-    const bonus = timer
+    const bonus = timeBonus
       ? Math.max(0, Math.round((1 - responseMs / 30000) * 500))
       : 0;
     return base + bonus;
@@ -121,7 +121,7 @@ export function calculateQuestionPoints(
   question: Question,
   answer: string,
   responseMs: number,
-  timer: boolean,
+  timeBonus: boolean,
   multiplier = 1,
   minus = false,
 ) {
@@ -130,7 +130,7 @@ export function calculateQuestionPoints(
     return calculatePoints(
       correct,
       responseMs,
-      timer,
+      timeBonus,
       multiplier,
       minus,
       Boolean(question.finale || question.type === "finale"),
@@ -152,6 +152,98 @@ export function calculateQuestionPoints(
   if (chosen === undefined || target === undefined) return 0;
   return base * multiplier * finale;
 }
+
+const FAIR_TURN_TYPES = ["true_false", "ordering"] as const;
+
+function balanceFairTurnTypes(
+  picked: Question[],
+  eligibleBank: Question[],
+  setup: GameSetup,
+  signatures: Map<string, Set<string>>,
+  qualityScores: Map<string, number>,
+) {
+  const playerCount = Math.max(1, setup.players.length);
+  if (playerCount === 1 || picked.length < playerCount) return picked;
+
+  const fairTypes = new Set<Question["type"]>(FAIR_TURN_TYPES);
+  const balanced = [...picked];
+
+  // En fair type må kun optræde i hele spiller-sæt. Eventuelle rester
+  // erstattes med almindelige spørgsmål fra de samme valgte kategorier.
+  for (const type of FAIR_TURN_TYPES) {
+    const typeIndexes = balanced
+      .map((question, index) => (question.type === type ? index : -1))
+      .filter((index) => index >= 0);
+    const remainder = typeIndexes.length % playerCount;
+    if (remainder === 0) continue;
+    for (const replaceIndex of [...typeIndexes.slice(-remainder)].reverse()) {
+      const currentIds = new Set(balanced.map((question) => question.id));
+      const replacement = eligibleBank
+        .filter(
+          (candidate) =>
+            !fairTypes.has(candidate.type) &&
+            !currentIds.has(candidate.id) &&
+            !balanced.some(
+              (question, index) =>
+                index !== replaceIndex &&
+                (question.fingerprint === candidate.fingerprint ||
+                  setSimilarity(
+                    signatures.get(question.id)!,
+                    signatures.get(candidate.id)!,
+                  ) > 0.9),
+            ),
+        )
+        .sort(
+          (a, b) =>
+            Math.abs(a.difficulty - balanced[replaceIndex].difficulty) * 10 -
+            (qualityScores.get(a.id) ?? 0) * 0.08 -
+            (Math.abs(b.difficulty - balanced[replaceIndex].difficulty) * 10 -
+              (qualityScores.get(b.id) ?? 0) * 0.08),
+        )[0];
+      if (replacement) balanced[replaceIndex] = replacement;
+      else balanced.splice(replaceIndex, 1);
+    }
+  }
+
+  const distributed: Array<Question | undefined> = Array(balanced.length);
+  const openSlots = Array.from({ length: playerCount }, (_, playerIndex) =>
+    balanced
+      .map((_, index) => index)
+      .filter((index) => index % playerCount === playerIndex),
+  );
+  const placedIds = new Set<string>();
+
+  for (const type of FAIR_TURN_TYPES) {
+    const questions = balanced.filter((question) => question.type === type);
+    const perPlayer = Math.floor(questions.length / playerCount);
+    let questionIndex = 0;
+    for (let round = 0; round < perPlayer; round++) {
+      for (let playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+        const slots = openSlots[playerIndex];
+        const slotOffset = Math.min(
+          slots.length - 1,
+          Math.floor(((round + 1) / (perPlayer + 1)) * slots.length),
+        );
+        const [slot] = slots.splice(Math.max(0, slotOffset), 1);
+        const question = questions[questionIndex++];
+        if (slot !== undefined && question) {
+          distributed[slot] = question;
+          placedIds.add(question.id);
+        }
+      }
+    }
+  }
+
+  const remaining = balanced.filter((question) => !placedIds.has(question.id));
+  let remainingIndex = 0;
+  const ordered = distributed.map(
+    (question) => question ?? remaining[remainingIndex++],
+  );
+  return ordered.every((question): question is Question => Boolean(question))
+    ? ordered
+    : balanced;
+}
+
 export function selectQuestions(
   bank: Question[],
   setup: GameSetup,
@@ -231,15 +323,27 @@ export function selectQuestions(
           ),
       ) ?? candidates[0];
     if (!chosen) break;
-    picked.push(shuffleAnswers(chosen, random));
+    picked.push(chosen);
     pickedIds.add(chosen.id);
     pickedFingerprints.add(chosen.fingerprint);
   }
-  return picked.map((q, i) =>
-    setup.finale && i >= Math.max(0, picked.length - 3)
-      ? { ...q, finale: true, difficulty: Math.min(5, q.difficulty + 1) }
-      : q,
+  const distributed = balanceFairTurnTypes(
+    picked,
+    randomizedBank,
+    setup,
+    signatures,
+    qualityScores,
   );
+  return distributed.map((question, index) => {
+    const shuffled = shuffleAnswers(question, random);
+    return setup.finale && index >= Math.max(0, distributed.length - 3)
+      ? {
+          ...shuffled,
+          finale: true,
+          difficulty: Math.min(5, shuffled.difficulty + 1),
+        }
+      : shuffled;
+  });
 }
 export function newPlayer(name: string, index: number): GamePlayer {
   return {

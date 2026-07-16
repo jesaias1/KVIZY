@@ -108,6 +108,7 @@ export type GameSetup = {
   categoryIds: string[];
   favorites: string[];
   timer: boolean;
+  timeBonus: boolean;
   minusPoints: boolean;
   finale: boolean;
 };

@@ -6,7 +6,7 @@
 
 1. Vælg Alle mod alle, Holdkamp, Solo, Hurtig quiz, Risiko eller Mystery Mix.
 2. Tilføj 1–12 spillere eller 2–6 hold, og vælg mellem 59 søgbare kategorier.
-3. Indstil 3–100 spørgsmål, niveau 1–5, fast/blandet/stigende sværhedsgrad, timer, minuspoint og finale.
+3. Indstil 3–100 spørgsmål, niveau 1–5, fast/blandet/stigende sværhedsgrad samt valgfrie timer-, tidsbonus-, minuspoint- og finaleindstillinger.
 4. Giv enheden videre. Svar låses, forklaring og point vises, og spillet gemmes løbende.
 5. Se vinder, scoreboard, svarprocent, streaks, gennemgang, historik og revanche.
 

@@ -131,8 +131,9 @@ const emptySetup = (): GameSetup => ({
   categoryIds: DEFAULT_CATEGORIES.map((c) => c.id),
   favorites: [],
   timer: false,
+  timeBonus: false,
   minusPoints: false,
-  finale: true,
+  finale: false,
 });
 
 function load<T>(key: string, fallback: T): T {
@@ -327,7 +328,7 @@ export function GameShell() {
         q,
         optionId,
         responseMs,
-        game.setup.timer,
+        game.setup.timeBonus ?? false,
         game.riskMultiplier,
         game.setup.minusPoints,
       );
@@ -478,13 +479,15 @@ export function GameShell() {
       />
     );
   return (
-    <main className="min-h-dvh safe-shell">
+    <main
+      className={`min-h-dvh safe-shell ${view === "play" ? "playing" : ""}`}
+    >
       <TopBar settings={settings} setSettings={setSettings} go={go} />
       <motion.div
         key={view}
         initial={settings.reducedMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mx-auto w-full max-w-5xl px-4 pb-12 pt-4 sm:px-6"
+        className={`mx-auto w-full max-w-5xl px-4 pb-12 pt-4 sm:px-6 ${view === "play" ? "quiz-shell" : ""}`}
       >
         {content}
       </motion.div>
@@ -946,11 +949,24 @@ function Setup({
             </CardContent>
           </Card>
           <Card className="md:col-span-2">
-            <CardContent className="grid gap-5 p-5 sm:grid-cols-3">
+            <CardContent className="grid gap-5 p-5 sm:grid-cols-2 lg:grid-cols-4">
               <Toggle
-                label="Timer og fartbonus"
+                label="Vis 30 sek. timer"
                 checked={setup.timer}
-                on={(v) => setSetup({ ...setup, timer: v })}
+                on={(v) =>
+                  setSetup({
+                    ...setup,
+                    timer: v,
+                    timeBonus: v ? setup.timeBonus : false,
+                  })
+                }
+              />
+              <Toggle
+                label="Tidsbonus · valgfri"
+                checked={setup.timeBonus}
+                on={(v) =>
+                  setSetup({ ...setup, timeBonus: v, timer: v || setup.timer })
+                }
               />
               <Toggle
                 label="Minuspoint"
@@ -1031,18 +1047,18 @@ function Play({
     started.current = Date.now();
   }, []);
   useEffect(() => {
-    if (!game.setup.timer || given) return;
+    if (!(game.setup.timer || game.setup.timeBonus) || given) return;
     const interval = window.setInterval(() => {
       setSecondsLeft(
         Math.max(0, 30 - Math.floor((Date.now() - started.current) / 1000)),
       );
     }, 250);
     return () => window.clearInterval(interval);
-  }, [game.setup.timer, given]);
+  }, [game.setup.timer, game.setup.timeBonus, given]);
   const cat = categoryById(q.categoryId);
   return (
-    <div className="mx-auto max-w-3xl">
-      <div className="mb-4 flex items-center justify-between gap-3">
+    <div className="quiz-screen mx-auto max-w-3xl">
+      <div className="quiz-heading mb-4 flex items-center justify-between gap-3">
         <div>
           <small className="text-muted-foreground">
             Spørgsmål {game.index + 1} af {game.questions.length}
@@ -1064,13 +1080,15 @@ function Play({
         </div>
       </div>
       <Progress value={((game.index + 1) / game.questions.length) * 100} />
-      {game.setup.timer && !given && (
+      {(game.setup.timer || game.setup.timeBonus) && !given && (
         <div className="mt-4" aria-live="polite">
           <div className="mb-2 flex items-center justify-between text-sm">
             <span className="flex items-center gap-2 font-medium">
               <Clock3 className="size-4" />
               {secondsLeft > 0
-                ? "Tid til bonus"
+                ? game.setup.timeBonus
+                  ? "Tid til bonus"
+                  : "Tid tilbage"
                 : "Tiden er gået – svar stadig"}
             </span>
             <b className={secondsLeft <= 5 ? "text-destructive" : ""}>
@@ -1108,7 +1126,9 @@ function Play({
             </Badge>
             <Badge variant="secondary">Niveau {q.difficulty}</Badge>
             {typeLabels[q.type] && (
-              <Badge variant="outline">{typeLabels[q.type]}</Badge>
+              <Badge className="quiz-type-badge" variant="outline">
+                {typeLabels[q.type]}
+              </Badge>
             )}
             {(q.finale || q.type === "finale") && <Badge>Finale · 2×</Badge>}
           </div>
@@ -1209,8 +1229,8 @@ function Play({
               </small>
             )}
           </div>
-          <div className="grid gap-2">
-            <Button size="lg" onClick={next}>
+          <div className="feedback-actions grid gap-2">
+            <Button className="next-question-button" size="lg" onClick={next}>
               Videre
               <ArrowRight />
             </Button>
@@ -1561,7 +1581,7 @@ function Help({
           [
             "3",
             "Tænk. Vind.",
-            "Rigtige og hurtige svar giver point. Finalen giver dobbelt.",
+            "Et rigtigt svar giver 1.000 point. Ekstra point kræver et aktivt tilvalg.",
           ],
         ].map((x) => (
           <Card key={x[0]}>
@@ -1577,9 +1597,10 @@ function Help({
         <CardContent className="p-6">
           <h2 className="font-bold">Point der er nemme at forstå</h2>
           <p className="mt-2 text-muted-foreground">
-            Et korrekt svar giver 1.000 point. Timeren kan give op til 500
-            bonuspoint. I Risiko koster et forkert 2×- eller 3×-svar halvdelen
-            af indsatsen. De sidste tre finalespørgsmål giver dobbelt.
+            Et korrekt svar giver som standard altid 1.000 point, uanset
+            svartid. Hvis I aktivt vælger Tidsbonus, kan et hurtigt svar give
+            op til 500 ekstra point. Risiko og Finale ændrer kun pointene, når
+            I selv vælger de spilindstillinger.
           </p>
         </CardContent>
       </Card>
@@ -1702,7 +1723,7 @@ function Toggle({
   return (
     <div className="flex min-h-12 items-center justify-between gap-3">
       <Label>{label}</Label>
-      <Switch checked={checked} onCheckedChange={on} />
+      <Switch aria-label={label} checked={checked} onCheckedChange={on} />
     </div>
   );
 }

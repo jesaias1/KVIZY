@@ -6,6 +6,7 @@ import {
   difficultyFor,
   fingerprint,
   isNearDuplicate,
+  newPlayer,
   normalizeText,
   selectQuestions,
   shuffleAnswers,
@@ -24,12 +25,15 @@ const setup = {
   categoryIds: CATEGORIES.map((c) => c.id),
   favorites: [],
   timer: false,
+  timeBonus: false,
   minusPoints: false,
   finale: false,
 };
 describe("pointberegning", () => {
   it("giver 1000 standardpoint og forståelig risiko", () => {
     expect(calculatePoints(true, 10000, false)).toBe(1000);
+    expect(calculatePoints(true, 0, false)).toBe(1000);
+    expect(calculatePoints(true, 29000, false)).toBe(1000);
     expect(calculatePoints(false, 10000, false, 3)).toBe(-1500);
     expect(calculatePoints(true, 0, true)).toBe(1500);
   });
@@ -181,6 +185,32 @@ describe("adaptiv udvælgelse", () => {
         ["cat-9", "cat-21"].includes(question.categoryId),
       ),
     ).toBe(true);
+  });
+  it("fordeler sandt eller falsk og rækkefølge helt lige mellem spillerne", () => {
+    const playerCount = 3;
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      players: Array.from({ length: playerCount }, (_, index) =>
+        newPlayer(`Spiller ${index + 1}`, index),
+      ),
+      questionCount: 60,
+    });
+    const fairTypes = ["true_false", "ordering"] as const;
+    expect(
+      chosen.some(
+        (question) =>
+          question.type === "true_false" || question.type === "ordering",
+      ),
+    ).toBe(true);
+    for (const type of fairTypes) {
+      const counts = Array.from({ length: playerCount }, (_, playerIndex) =>
+        chosen.filter(
+          (question, questionIndex) =>
+            questionIndex % playerCount === playerIndex && question.type === type,
+        ).length,
+      );
+      expect(new Set(counts).size).toBe(1);
+    }
   });
   it("prioriterer usete spørgsmål", () => {
     const seen = SEED_QUESTIONS.slice(0, 300).map((q) => ({
