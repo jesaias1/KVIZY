@@ -694,6 +694,49 @@ const explanationOverrides: Record<string, string> = {
     "I traditionel farveblanding giver blå og gul grøn, fordi pigmenterne tilsammen absorberer andre dele af lyset.",
 };
 
+// Kernefakta er som udgangspunkt brede niveau 2-spÃ¸rgsmÃ¥l. Kun emner, der
+// reelt krÃ¦ver mere specialiseret viden, lÃ¸ftes eksplicit; niveauet mÃ¥ aldrig
+// afhÃ¦nge af spÃ¸rgsmÃ¥lets placering i filen.
+const difficultyOverrides: Record<string, number> = {
+  "Hvad kaldes Folketingets ledelse, som bestÃ¥r af formanden og fire nÃ¦stformÃ¦nd?": 3,
+  "Hvilken grundlovsparagraf handler om religionsfrihed?": 4,
+  "Hvilken fred afsluttede TrediveÃ¥rskrigen?": 4,
+  "Hvad er Europas stÃ¸rste sÃ¸ mÃ¥lt pÃ¥ areal?": 3,
+  "Hvilken Ã¸rken dÃ¦kker meget af Botswana?": 3,
+  "Hvad mÃ¥les i enheden pascal?": 3,
+  "Hvilken mÃ¥ne kredser om Saturn og har tÃ¦t atmosfÃ¦re?": 3,
+  "Hvad gÃ¸r en kompilator?": 3,
+  "Hvilken retning forbindes med Jean-Paul Sartre?": 3,
+  "Hvad undersÃ¸ger bevidsthedsfilosofi?": 3,
+  "Hvem udviklede teorien om klassisk betingning?": 3,
+  "Hvem forbindes med operant betingning?": 3,
+  "Hvilken teori beskriver de fÃ¸lelsesmÃ¦ssige bÃ¥nd mellem et barn og dets omsorgsperson?": 3,
+  "Hvem udviklede den sociokulturelle lÃ¦ringsteori?": 4,
+  "Hvad mÃ¥ler Big Five-modellen?": 3,
+  "Hvilken psykolog beskrev flow?": 4,
+  "I hvilken roman optrÃ¦der Atticus Finch?": 3,
+  "Hvem skrev Hundrede Ã¥rs ensomhed?": 3,
+  "Hvem skrev Den kroniske uskyld?": 3,
+  "Hvem instruerede Parasite?": 3,
+  "Hvem skabte Riget?": 3,
+  "Hvem komponerede Tango Jalousie?": 3,
+  "Hvem udgav albummet No. 1?": 3,
+  "Hvad er MIDI primÃ¦rt?": 3,
+  "Hvad gÃ¸r en limiter?": 3,
+  "Hvilken dansk badmintonspiller vandt OL-guld i 1996?": 3,
+  "Hvilket land vandt det fÃ¸rste VM i 1930?": 3,
+  "Hvilken rovfugl har hvid hale som voksen?": 3,
+  "Hvad kaldes det nordiske skovbÃ¦lte domineret af nÃ¥letrÃ¦er?": 3,
+  "Hvilken gud mistede sin hÃ¥nd til Fenrisulven?": 3,
+  "Hvad er Lord Voldemorts fÃ¸denavn?": 3,
+  "Hvilken dansk maler skabte Hip, hip, hurra!?": 3,
+  "Hvem patenterede en tidlig moderne lynlÃ¥s?": 4,
+  "Hvad er hovedingrediensen i svensk kroppkakor?": 3,
+  "Hvad betyder det at temperere chokolade?": 3,
+  "Hvilken bitter aperitif indgÃ¥r i en negroni?": 3,
+  "Hvad kan en gruppe flamingoer kaldes pÃ¥ engelsk?": 4,
+};
+
 function semanticKey(prompt: string, categoryId: string, answer: string) {
   if (
     /^\d+(?:[,.]\d+)?(?:\s|$)/.test(answer) ||
@@ -1001,15 +1044,7 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
         type,
         categoryId: spec.categoryId,
         secondaryCategoryIds: [],
-        difficulty:
-          {
-            "Hvem udviklede teorien om klassisk betingning?": 2,
-            "Hvem forbindes med operant betingning?": 2,
-            "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?": 2,
-            "Hvem udviklede den sociokulturelle læringsteori?": 3,
-            "Hvad måler Big Five-modellen?": 2,
-            "Hvilken psykolog beskrev flow?": 3,
-          }[prompt] ?? ((Number(spec.categoryId.slice(4)) + index * 2) % 5) + 1,
+        difficulty: difficultyOverrides[prompt] ?? 2,
         options,
         correctOptionId: `o${correctIndex + 1}`,
         explanation:

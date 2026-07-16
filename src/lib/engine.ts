@@ -78,20 +78,14 @@ export function difficultyFor(
   mode: GameSetup["difficultyMode"],
   random = Math.random,
 ) {
+  const minimum = Math.max(1, base - 1);
+  const maximum = Math.min(5, base + 1);
+  const clamp = (value: number) => Math.max(minimum, Math.min(maximum, value));
   if (mode === "mixed")
-    return Math.max(
-      1,
-      Math.min(5, base + [-1, 0, 0, 0, 1][Math.floor(random() * 5)]),
-    );
+    return clamp(base + [-1, 0, 0, 0, 1][Math.floor(random() * 5)]);
   if (mode === "rising")
-    return Math.max(
-      1,
-      Math.min(
-        5,
-        Math.round(
-          Math.max(1, base - 1) + (index / Math.max(1, total - 1)) * 2,
-        ),
-      ),
+    return clamp(
+      Math.round(Math.max(1, base - 1) + (index / Math.max(1, total - 1)) * 2),
     );
   return base;
 }
@@ -196,10 +190,7 @@ function spreadFairTypes(questions: Question[], playerCount: number) {
           spread[swapIndex + 1]?.type === repeatedType
         )
           continue;
-        [spread[index], spread[swapIndex]] = [
-          spread[swapIndex],
-          spread[index],
-        ];
+        [spread[index], spread[swapIndex]] = [spread[swapIndex], spread[index]];
         break;
       }
     }
@@ -210,9 +201,8 @@ function spreadFairTypes(questions: Question[], playerCount: number) {
 function questionFactKey(question: Question) {
   if (question.type === "true_false") return question.fingerprint;
   const answer =
-    question.options.find(
-      (option) => option.id === question.correctOptionId,
-    )?.text ??
+    question.options.find((option) => option.id === question.correctOptionId)
+      ?.text ??
     (question.correctOrder ?? [])
       .map(
         (id) => question.options.find((option) => option.id === id)?.text ?? id,
@@ -369,6 +359,77 @@ function balanceFairTurnTypes(
     : balanced;
 }
 
+function difficultyBucket(question: Question) {
+  return FAIR_TURN_TYPES.includes(
+    question.type as (typeof FAIR_TURN_TYPES)[number],
+  )
+    ? question.type
+    : "standard";
+}
+
+function balancePlayerDifficulties(questions: Question[], playerCount: number) {
+  if (playerCount <= 1 || questions.length < playerCount) return questions;
+  const balanced = [...questions];
+  const turnCounts = Array.from(
+    { length: playerCount },
+    (_, playerIndex) =>
+      balanced.filter((_, index) => index % playerCount === playerIndex).length,
+  );
+  const totals = () =>
+    Array.from({ length: playerCount }, (_, playerIndex) =>
+      balanced.reduce(
+        (sum, question, index) =>
+          index % playerCount === playerIndex ? sum + question.difficulty : sum,
+        0,
+      ),
+    );
+  const score = (totalsByPlayer: number[]) => {
+    const values = totalsByPlayer.map(
+      (total, playerIndex) => total / Math.max(1, turnCounts[playerIndex]),
+    );
+    const average =
+      values.reduce((sum, value) => sum + value, 0) / values.length;
+    return (
+      (Math.max(...values) - Math.min(...values)) * 1_000 +
+      values.reduce((sum, value) => sum + (value - average) ** 2, 0)
+    );
+  };
+
+  for (let pass = 0; pass < 100; pass++) {
+    const currentTotals = totals();
+    let bestScore = score(currentTotals);
+    let bestSwap: [number, number] | undefined;
+    for (let left = 0; left < balanced.length; left++) {
+      for (let right = left + 1; right < balanced.length; right++) {
+        const leftPlayer = left % playerCount;
+        const rightPlayer = right % playerCount;
+        if (
+          leftPlayer === rightPlayer ||
+          difficultyBucket(balanced[left]) !== difficultyBucket(balanced[right])
+        )
+          continue;
+        const leftDifficulty = balanced[left].difficulty;
+        const rightDifficulty = balanced[right].difficulty;
+        if (leftDifficulty === rightDifficulty) continue;
+        const candidateTotals = [...currentTotals];
+        candidateTotals[leftPlayer] += rightDifficulty - leftDifficulty;
+        candidateTotals[rightPlayer] += leftDifficulty - rightDifficulty;
+        const candidateScore = score(candidateTotals);
+        if (candidateScore < bestScore) {
+          bestScore = candidateScore;
+          bestSwap = [left, right];
+        }
+      }
+    }
+    if (!bestSwap) break;
+    [balanced[bestSwap[0]], balanced[bestSwap[1]]] = [
+      balanced[bestSwap[1]],
+      balanced[bestSwap[0]],
+    ];
+  }
+  return balanced;
+}
+
 export function selectQuestions(
   bank: Question[],
   setup: GameSetup,
@@ -379,18 +440,28 @@ export function selectQuestions(
   const selectedCategoryIds = new Set(setup.categoryIds);
   const selectedOnlyCategory =
     selectedCategoryIds.size === 1 ? setup.categoryIds[0] : undefined;
-  const eligibleBank = shuffle(bank, random).filter(
-    (question) => {
-      if (question.status !== "active") return false;
-      if (["cat-45", "cat-46", "cat-47"].includes(selectedOnlyCategory ?? ""))
-        return matchesSelectedUmbrellaCategory(question, selectedCategoryIds);
-      return (
-        selectedCategoryIds.has(question.categoryId) ||
-        matchesSelectedUmbrellaCategory(question, selectedCategoryIds)
-      );
-    },
-  );
-  const candidatePool = eligibleBank;
+  const eligibleBank = shuffle(bank, random).filter((question) => {
+    if (question.status !== "active") return false;
+    if (["cat-45", "cat-46", "cat-47"].includes(selectedOnlyCategory ?? ""))
+      return matchesSelectedUmbrellaCategory(question, selectedCategoryIds);
+    return (
+      selectedCategoryIds.has(question.categoryId) ||
+      matchesSelectedUmbrellaCategory(question, selectedCategoryIds)
+    );
+  });
+  const minimumDifficulty = Math.max(1, setup.difficulty - 1);
+  const maximumDifficulty = Math.min(5, setup.difficulty + 1);
+  const inDifficultyBand = (question: Question) =>
+    question.difficulty >= minimumDifficulty &&
+    question.difficulty <= maximumDifficulty;
+  const strictEdgeLevel = setup.difficulty === 1 || setup.difficulty === 5;
+  const inBandBank = eligibleBank.filter(inDifficultyBand);
+  const candidatePool = strictEdgeLevel
+    ? inBandBank
+    : [
+        ...inBandBank,
+        ...eligibleBank.filter((question) => !inDifficultyBand(question)),
+      ];
   const picked: Question[] = [];
   const pickedIds = new Set<string>();
   const pickedFingerprints = new Set<string>();
@@ -470,6 +541,7 @@ export function selectQuestions(
             ? 5
             : 0) +
           (seen ? 100 + seen.count * 8 : 0) +
+          (inDifficultyBand(question) ? 0 : 1_000) +
           Math.abs(question.difficulty - target) * 10 +
           (categoryCounts.get(selectedCategory) ?? 0) * 45 +
           (repeatedType ? 40 : 0) +
@@ -505,14 +577,21 @@ export function selectQuestions(
       (categoryCounts.get(selectedCategory) ?? 0) + 1,
     );
   }
-  const distributed = balanceFairTurnTypes(picked, candidatePool, setup);
+  const fairTypesDistributed = balanceFairTurnTypes(
+    picked,
+    candidatePool,
+    setup,
+  );
+  const distributed = balancePlayerDifficulties(
+    fairTypesDistributed,
+    Math.max(1, setup.players.length),
+  );
   return distributed.map((question, index) => {
     const shuffled = shuffleAnswers(question, random);
     return setup.finale && index >= Math.max(0, distributed.length - 3)
       ? {
           ...shuffled,
           finale: true,
-          difficulty: Math.min(5, shuffled.difficulty + 1),
         }
       : shuffled;
   });
