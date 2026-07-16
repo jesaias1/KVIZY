@@ -555,7 +555,41 @@ describe("adaptiv udvælgelse", () => {
       chosen.some((q) => SEED_QUESTIONS.slice(300).some((x) => x.id === q.id)),
     ).toBe(true);
   });
-  it("gentager ikke spørgsmål i næste spil, mens usete alternativer findes", () => {
+  it("gentager aldrig spørgsmål i nye spil på samme enhed", () => {
+    let seen: SeenQuestion[] = [];
+    const allIds = new Set<string>();
+    for (let gameNumber = 0; gameNumber < 8; gameNumber++) {
+      const game = selectQuestions(
+        SEED_QUESTIONS,
+        { ...setup, questionCount: 30 },
+        seen,
+      );
+      expect(game).toHaveLength(30);
+      expect(game.every((question) => !allIds.has(question.id))).toBe(true);
+      game.forEach((question) => allIds.add(question.id));
+      seen = reserveSeenQuestions(
+        seen,
+        game.map((question) => question.id),
+        `2026-07-16T${String(gameNumber).padStart(2, "0")}:00:00.000Z`,
+      );
+    }
+    expect(allIds.size).toBe(240);
+  });
+  it("gentager ikke set indhold, selv når den valgte pulje er opbrugt", () => {
+    const smallBank = SEED_QUESTIONS.slice(0, 12);
+    const seen = reserveSeenQuestions(
+      [],
+      smallBank.map((question) => question.id),
+    );
+    expect(
+      selectQuestions(
+        smallBank,
+        { ...setup, questionCount: 10 },
+        seen,
+      ),
+    ).toEqual([]);
+  });
+  it("holder anti-repeat-historikken separat for hver enhed", () => {
     const firstGame = selectQuestions(SEED_QUESTIONS, {
       ...setup,
       questionCount: 30,
@@ -575,6 +609,11 @@ describe("adaptiv udvælgelse", () => {
     expect(secondGame.every((question) => !firstIds.has(question.id))).toBe(
       true,
     );
+    const freshDeviceGame = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 30,
+    });
+    expect(freshDeviceGame).toHaveLength(30);
   });
   it("gemmer valgte spørgsmål én gang pr. nyt spil på enheden", () => {
     const previous: SeenQuestion[] = [

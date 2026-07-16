@@ -404,9 +404,11 @@ export function GameShell() {
       };
       const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
       const questions = selectQuestions(questionBank, normalized, seen);
-      if (questions.length === 0) {
+      if (questions.length < normalized.questionCount) {
         setStartError(
-          "Der er ikke nok spørgsmål i de valgte kategorier. Vælg mindst én kategori.",
+          questions.length === 0
+            ? "Der er ingen usete spørgsmål tilbage i de valgte kategorier. Vælg flere kategorier."
+            : `Der er kun ${questions.length} usete spørgsmål til denne opsætning. Vælg flere kategorier eller et kortere spil.`,
         );
         setView("setup");
         return;

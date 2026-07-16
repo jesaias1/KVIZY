@@ -547,14 +547,12 @@ export function selectQuestions(
       allowRepeatedTemplate: boolean,
       requireGeneralKnowledge: boolean,
       allowRepeatedCategory: boolean,
-      allowSeen: boolean,
     ) => {
       for (const question of candidatePool) {
         const factKey = questionFactKey(question);
         const templateKey = repetitiveTemplateKey(question);
-        const seenQuestion = seenMap.get(question.id);
         if (
-          (!allowSeen && seenQuestion) ||
+          seenMap.has(question.id) ||
           (requireGeneralKnowledge && !isGeneralKnowledgeQuestion(question)) ||
           (!allowRepeatedCategory &&
             (categoryCounts.get(question.categoryId) ?? 0) >= categoryLimit) ||
@@ -584,7 +582,6 @@ export function selectQuestions(
           setup.difficulty <= 3
             ? 5
             : 0) +
-          (seenQuestion ? 100 + seenQuestion.count * 8 : 0) +
           (inDifficultyBand(question) ? 0 : 1_000) +
           Math.abs(question.difficulty - target) * 10 +
           (categoryCounts.get(selectedCategory) ?? 0) * 45 +
@@ -598,20 +595,14 @@ export function selectQuestions(
       }
     };
     const requireGeneralKnowledge = generalSlots.has(i);
-    const chooseWithSeenPolicy = (allowSeen: boolean) => {
-      chooseFromPool(false, false, requireGeneralKnowledge, false, allowSeen);
-      if (!chosen)
-        chooseFromPool(true, false, requireGeneralKnowledge, false, allowSeen);
-      if (!chosen)
-        chooseFromPool(true, true, requireGeneralKnowledge, false, allowSeen);
-      if (!chosen && requireGeneralKnowledge)
-        chooseFromPool(false, false, false, false, allowSeen);
-      if (!chosen) chooseFromPool(true, true, false, true, allowSeen);
-    };
-    // Et tidligere set spørgsmål er kun en sidste udvej, når alle relevante
-    // usete alternativer er opbrugt på denne enhed.
-    chooseWithSeenPolicy(false);
-    if (!chosen) chooseWithSeenPolicy(true);
+    chooseFromPool(false, false, requireGeneralKnowledge, false);
+    if (!chosen) chooseFromPool(true, false, requireGeneralKnowledge, false);
+    if (!chosen) chooseFromPool(true, true, requireGeneralKnowledge, false);
+    if (!chosen && requireGeneralKnowledge)
+      chooseFromPool(false, false, false, false);
+    if (!chosen) chooseFromPool(true, true, false, true);
+    // Tidligere sete spørgsmål vælges aldrig igen på denne enhed. Et kortere
+    // resultat håndteres af opsætningen med besked om at vælge flere kategorier.
     if (!chosen) break;
     picked.push(chosen);
     pickedIds.add(chosen.id);
