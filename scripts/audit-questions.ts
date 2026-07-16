@@ -20,7 +20,7 @@ const machineCopy = SEED_QUESTIONS.filter((question) =>
     question.explanation,
     ...question.options.map((option) => option.text),
   ].some((text) =>
-    /registreret som|centrale sammenhæng|final version|\s{2,}|\.\./i.test(
+    /registreret som|centrale sammenhæng|final version|slaget ved\s+slaget ved|\s{2,}|\.\./i.test(
       text,
     ),
   ),

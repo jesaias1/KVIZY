@@ -109,6 +109,7 @@ export type GameSetup = {
   favorites: string[];
   timer: boolean;
   timeBonus: boolean;
+  streakBonus: boolean;
   minusPoints: boolean;
   finale: boolean;
 };

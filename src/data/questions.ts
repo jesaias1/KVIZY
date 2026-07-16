@@ -20,6 +20,188 @@ const rows = seedSpecs.flatMap((spec) =>
 );
 
 const overrides: Record<string, string[]> = {
+  "Hvor ligger FN's hovedkvarter?": ["Genève", "Wien", "Paris"],
+  "Hvilket land er ikke permanent medlem af FN's Sikkerhedsråd?": [
+    "USA",
+    "Kina",
+    "Frankrig",
+  ],
+  "Hvor ofte skal der senest afholdes folketingsvalg?": [
+    "Hvert tredje år",
+    "Hvert femte år",
+    "Hvert sjette år",
+  ],
+  "Hvad hedder Danmarks øverste domstol?": [
+    "Østre Landsret",
+    "Vestre Landsret",
+    "Sø- og Handelsretten",
+  ],
+  "Hvilken grundlovsparagraf handler om religionsfrihed?": [
+    "Paragraf 70",
+    "Paragraf 71",
+    "Paragraf 77",
+  ],
+  "Hvilken myndighed vedtager love i Danmark?": [
+    "Regeringen",
+    "Højesteret",
+    "Kommunalbestyrelserne",
+  ],
+  "Hvilket rige byggede Colosseum?": [
+    "Det Byzantinske Rige",
+    "Det Persiske Rige",
+    "Det Osmanniske Rige",
+  ],
+  "Hvilken pest ramte Europa hårdt i 1300-tallet?": [
+    "Den justinianske pest",
+    "Den spanske syge",
+    "Koleraepidemien",
+  ],
+  "Hvem var den første romerske kejser?": ["Nero", "Trajan", "Hadrian"],
+  "Hvem var første menneske på Månen?": [
+    "Buzz Aldrin",
+    "Jurij Gagarin",
+    "John Glenn",
+  ],
+  "Hvem forbindes med opfindelsen af World Wide Web?": [
+    "Vint Cerf",
+    "Robert Kahn",
+    "Marc Andreessen",
+  ],
+  "Hvilken partikel har negativ elektrisk ladning?": [
+    "Protonen",
+    "Neutronen",
+    "Positronen",
+  ],
+  "Hvad er vands kemiske formel?": ["CO₂", "O₂", "H₂O₂"],
+  "Hvilken kraft holder planeter i bane?": [
+    "Elektromagnetismen",
+    "Den stærke kernekraft",
+    "Den svage kernekraft",
+  ],
+  "Hvad måles i enheden pascal?": ["Energi", "Effekt", "Elektrisk spænding"],
+  "Hvilket vitamin danner huden ved sollys?": [
+    "A-vitamin",
+    "C-vitamin",
+    "K-vitamin",
+  ],
+  "Hvad kaldes celledeling til to genetisk ens celler?": [
+    "Meiose",
+    "Mutation",
+    "Befrugtning",
+  ],
+  "Hvilken teknologi lagrer data i blokke kædet sammen?": [
+    "Relationsdatabase",
+    "Objektlager",
+    "Filsystem",
+  ],
+  "Hvad gør en kompilator?": [
+    "Kører kildekoden linje for linje",
+    "Finder IP-adressen til et domæne",
+    "Komprimerer billeder og lyd",
+  ],
+  "Hvilken enhed måles processorfrekvens i?": ["Byte", "Watt", "Volt"],
+  "Hvad gemmer en browsercookie typisk?": [
+    "Hele websidens kildekode",
+    "Computerens adgangskode",
+    "En kopi af operativsystemet",
+  ],
+  "Hvilken retning forbindes med Jean-Paul Sartre?": [
+    "Stoicisme",
+    "Utilitarisme",
+    "Positivisme",
+  ],
+  "Hvilken teori handler om tilknytning mellem barn og omsorgsperson?": [
+    "Social indlæringsteori",
+    "Kognitiv dissonansteori",
+    "Selvbestemmelsesteori",
+  ],
+  "Hvad måler Big Five-modellen?": [
+    "Fem former for intelligens",
+    "Fem udviklingsstadier",
+    "Fem typer hukommelse",
+  ],
+  "I hvilken roman optræder Atticus Finch?": [
+    "Den store Gatsby",
+    "Vredens druer",
+    "Farven lilla",
+  ],
+  "Hvad hedder kaptajnen i Moby-Dick?": [
+    "Kaptajn Nemo",
+    "Kaptajn Hook",
+    "Kaptajn Haddock",
+  ],
+  "Hvilken dansk gruppe udgav Barbie Girl?": [
+    "Toy-Box",
+    "Cartoons",
+    "Infernal",
+  ],
+  "Hvilken stil forbindes med Claude Monet?": [
+    "Kubisme",
+    "Surrealisme",
+    "Ekspressionisme",
+  ],
+  "Hvilken dansk maler skabte Hip, hip, hurra!?": [
+    "Michael Ancher",
+    "Anna Ancher",
+    "Vilhelm Hammershøi",
+  ],
+  "Hvad kaldes kunst lavet af små farvede stenstykker?": [
+    "Fresko",
+    "Relief",
+    "Collage",
+  ],
+  "Hvilket bilmærke producerer modellen Golf?": ["Ford", "Opel", "Peugeot"],
+  "Hvilket brand forbindes med sloganet Just Do It?": [
+    "Adidas",
+    "Puma",
+    "Reebok",
+  ],
+  "Hvilket mærke har et krokodillelogo?": [
+    "Fred Perry",
+    "Polo Ralph Lauren",
+    "Tommy Hilfiger",
+  ],
+  "Hvilket firma fremstiller PlayStation?": [
+    "Microsoft",
+    "Nintendo",
+    "Sega",
+  ],
+  "Hvilket brand sælger møbler i flade pakker?": [
+    "JYSK",
+    "ILVA",
+    "BoConcept",
+  ],
+  "Hvilket urmærke har en krone som logo?": [
+    "Omega",
+    "TAG Heuer",
+    "Breitling",
+  ],
+  "Hvilken virksomhed har et bidt æble som logo?": [
+    "Microsoft",
+    "Google",
+    "Samsung",
+  ],
+  "Hvilken virksomhed bruger fire sammenkædede ringe?": [
+    "BMW",
+    "Mercedes-Benz",
+    "Volkswagen",
+  ],
+  "Hvilket logo forestiller en havfrue med krone?": [
+    "Costa Coffee",
+    "Dunkin'",
+    "Caffè Nero",
+  ],
+  "Hvilken streamingtjeneste bruger et rødt N?": [
+    "Disney+",
+    "HBO Max",
+    "Amazon Prime Video",
+  ],
+  "Hvilket fragtfirma skjuler en pil i sit ordmærke?": [
+    "DHL",
+    "UPS",
+    "PostNord",
+  ],
+  "Hvilket sportsmærke bruger tre striber?": ["Nike", "Puma", "Reebok"],
   "Hvilket bilmærkes logo består af tre overlappende ellipser?": [
     "Lexus",
     "Mazda",
@@ -88,6 +270,54 @@ const overrides: Record<string, string[]> = {
     "En japansk tegneseriefigur",
     "En tidlig mobiltelefon",
   ],
+  "Hvad er hovedingrediensen i svensk kroppkakor?": [
+    "Rugmel",
+    "Kål",
+    "Havregryn",
+  ],
+  "Hvad er rugbrød typisk lavet med?": [
+    "Hvedemel",
+    "Majsmel",
+    "Rismel",
+  ],
+  "Hvad er hovedingrediensen i hummus?": [
+    "Linser",
+    "Hvide bønner",
+    "Aubergine",
+  ],
+  "Hvor stammer paella fra?": ["Italien", "Portugal", "Grækenland"],
+  "Hvad er miso lavet af traditionelt?": [
+    "Fermenterede ris alene",
+    "Tørrede kikærter",
+    "Malede sesamfrø",
+  ],
+  "Hvilken ost bruges klassisk i græsk salat?": [
+    "Halloumi",
+    "Mozzarella",
+    "Ricotta",
+  ],
+  "Hvad er kimchi?": [
+    "En risnudelret",
+    "En fiskesauce",
+    "En sød bønnepasta",
+  ],
+  "Hvilken spiritus er basen i en mojito?": ["Vodka", "Gin", "Tequila"],
+  "Hvilken bitter aperitif indgår i en negroni?": [
+    "Aperol",
+    "Fernet-Branca",
+    "Suze",
+  ],
+  "Hvilken cocktail laves med tequila, lime og appelsinlikør?": [
+    "Daiquiri",
+    "Sidecar",
+    "Mai Tai",
+  ],
+  "Hvad er sake brygget af?": ["Byg", "Druer", "Kartofler"],
+  "Hvilken drue giver rødvin farve fra skallerne?": [
+    "Grønne druer",
+    "Rosiner",
+    "Kerneløse hvide druer",
+  ],
 };
 
 const explanationOverrides: Record<string, string> = {
@@ -118,9 +348,12 @@ function semanticKey(prompt: string, categoryId: string, answer: string) {
     ["city", /\b(hovedstad|by)\b/i],
     ["island", /(?:^|\s)ø(?:\s|[?.!,])|øgruppe/i],
     ["river", /(?:^|\s)å(?:\s|[?.!,])|flod|vandløb/i],
+    ["sø", /(?:^|\s)sø(?:\s|[?.!,])|søen|søer/i],
+    ["ørken", /ørken/i],
+    ["stræde", /stræde/i],
     ["mountain", /\b(bjerg|vulkan)\b/i],
     ["country", /\b(land|nation|rige)\b/i],
-    ["bridge", /\bbro/i],
+    ["bridge", /\bbro(?:en|er|erne|forbindelse)?\b/i],
     ["organization", /\b(institution|organisation|myndighed)\b/i],
     ["band", /\b(band|musikgruppe)\b/i],
     [
@@ -176,7 +409,26 @@ const semanticFallbacks: Record<string, string[]> = {
     "Stockholm",
   ],
   island: ["Fyn", "Bornholm", "Lolland", "Falster", "Møn", "Samsø", "Gotland", "Öland"],
-  river: ["Skjern Å", "Suså", "Odense Å", "Rhinen", "Donau", "Seinen", "Nilen", "Amazonas"],
+  river: [
+    "Rhinen",
+    "Donau",
+    "Seinen",
+    "Themsen",
+    "Elben",
+    "Volga",
+    "Po",
+    "Tiberen",
+  ],
+  sø: ["Ladoga", "Onega", "Vänern", "Genèvesøen", "Balatonsøen", "Comosøen"],
+  ørken: ["Kalahari", "Sahara", "Namib", "Gobi", "Atacama", "Thar"],
+  stræde: [
+    "Gibraltarstrædet",
+    "Bosporusstrædet",
+    "Beringstrædet",
+    "Hormuzstrædet",
+    "Messinastrædet",
+    "Doverstrædet",
+  ],
   mountain: ["Mont Blanc", "Kilimanjaro", "Matterhorn", "Elbrus", "Vesuv", "Etna"],
   country: ["Danmark", "Norge", "Sverige", "Tyskland", "Frankrig", "Spanien", "Italien", "Polen"],
   instrument: ["Guitar", "Klaver", "Violin", "Trompet", "Cello", "Klarinet", "Harpe", "Fløjte"],
@@ -292,6 +544,7 @@ function optionsFor(
       .filter(
         (row) =>
           row.answer !== correct &&
+          row.categoryId === categoryId &&
           semanticKey(row.prompt, row.categoryId, row.answer) === key,
       )
       .map((row) => row.answer),
@@ -301,6 +554,13 @@ function optionsFor(
           row.answer !== correct &&
           row.categoryId === categoryId &&
           row.prompt.split(" ")[0] === prompt.split(" ")[0],
+      )
+      .map((row) => row.answer),
+    ...rows
+      .filter(
+        (row) =>
+          row.answer !== correct &&
+          semanticKey(row.prompt, row.categoryId, row.answer) === key,
       )
       .map((row) => row.answer),
     ...rows

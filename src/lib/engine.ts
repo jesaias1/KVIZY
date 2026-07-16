@@ -117,10 +117,12 @@ export function calculateQuestionPoints(
   timeBonus: boolean,
   multiplier = 1,
   minus = false,
+  streak = 0,
+  streakBonus = false,
 ) {
   const correct = answerIsCorrect(question, answer);
-  if (question.type !== "closest_wins")
-    return calculatePoints(
+  if (question.type !== "closest_wins") {
+    const points = calculatePoints(
       correct,
       responseMs,
       timeBonus,
@@ -128,6 +130,10 @@ export function calculateQuestionPoints(
       minus,
       Boolean(question.finale || question.type === "finale"),
     );
+    return correct && streakBonus
+      ? points + Math.min(3, Math.max(0, streak)) * 25
+      : points;
+  }
   const chosen = numericOption(question, answer);
   const target = numericOption(question, question.correctOptionId ?? "");
   const distances = question.options

@@ -133,6 +133,7 @@ const emptySetup = (): GameSetup => ({
   favorites: [],
   timer: false,
   timeBonus: false,
+  streakBonus: false,
   minusPoints: false,
   finale: false,
 });
@@ -189,6 +190,7 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
       ? saved.favorites.filter((id) => validCategoryIds.has(id))
       : [],
     timeBonus: saved.timeBonus ?? false,
+    streakBonus: saved.streakBonus ?? false,
   };
 }
 function tone(kind: "tap" | "correct" | "wrong" | "win", enabled: boolean) {
@@ -314,6 +316,42 @@ export function GameShell() {
     if (!hydrated) return;
     safeSet(APP_CONFIG.setupKey, JSON.stringify(setup));
   }, [setup, hydrated]);
+  useEffect(() => {
+    if (!hydrated) return;
+    const pending = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, [])
+      .filter((report) => !report.synced)
+      .slice(0, 8);
+    if (pending.length === 0) return;
+    const controller = new AbortController();
+    void (async () => {
+      const syncedIds = new Set<string>();
+      for (const report of pending) {
+        try {
+          const response = await fetch("/api/reports", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              questionId: report.questionId,
+              reason: report.reason,
+              note: report.note,
+            }),
+            signal: controller.signal,
+          });
+          const result = response.ok ? await response.json() : null;
+          if (result?.stored) syncedIds.add(report.id);
+        } catch {
+          break;
+        }
+      }
+      if (syncedIds.size === 0) return;
+      const reports = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []).map(
+        (report) =>
+          syncedIds.has(report.id) ? { ...report, synced: true } : report,
+      );
+      safeSet(APP_CONFIG.reportsKey, JSON.stringify(reports));
+    })();
+    return () => controller.abort();
+  }, [hydrated]);
   const go = (v: View) => {
     tone("tap", settings.sound);
     setView(v);
@@ -399,6 +437,8 @@ export function GameShell() {
         game.setup.timeBonus ?? false,
         game.riskMultiplier,
         game.setup.minusPoints,
+        p.streak,
+        game.setup.streakBonus ?? false,
       );
     const players = game.setup.players.map((x) =>
       x.id === p.id
@@ -1050,7 +1090,7 @@ function Setup({
             </CardContent>
           </Card>
           <Card className="md:col-span-2">
-            <CardContent className="grid gap-5 p-5 sm:grid-cols-2 lg:grid-cols-4">
+            <CardContent className="grid gap-5 p-5 sm:grid-cols-2 lg:grid-cols-5">
               <Toggle
                 label="Vis 30 sek. timer"
                 checked={setup.timer}
@@ -1068,6 +1108,11 @@ function Setup({
                 on={(v) =>
                   setSetup({ ...setup, timeBonus: v, timer: v || setup.timer })
                 }
+              />
+              <Toggle
+                label="Streakbonus · valgfri"
+                checked={setup.streakBonus}
+                on={(v) => setSetup({ ...setup, streakBonus: v })}
               />
               <Toggle
                 label="Minuspoint"
@@ -1699,9 +1744,11 @@ function Help({
           <h2 className="font-bold">Point der er nemme at forstå</h2>
           <p className="mt-2 text-muted-foreground">
             Et korrekt svar giver som standard altid 100 point, uanset
-            svartid. Hvis I aktivt vælger Tidsbonus, kan et hurtigt svar give
-            op til 50 ekstra point. Risiko og Finale ændrer kun pointene, når
-            I selv vælger de spilindstillinger.
+            svartid og streak. Hvis I aktivt vælger Tidsbonus, kan et hurtigt
+            svar give op til 50 ekstra point. Streakbonus giver 25 ekstra point
+            for hvert tidligere svar i den aktuelle streak, højst 75. Risiko
+            og Finale ændrer kun pointene, når I selv vælger de
+            spilindstillinger.
           </p>
         </CardContent>
       </Card>

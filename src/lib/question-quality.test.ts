@@ -120,4 +120,47 @@ describe("automatisk spørgsmålskvalitet", () => {
       true,
     );
   });
+
+  it("bruger plausible svarfamilier i de rapporterede spørgsmål", () => {
+    const golf = SEED_QUESTIONS.find((question) =>
+      question.prompt.includes("modellen Golf"),
+    );
+    expect(golf?.options.map((option) => option.text)).toEqual([
+      "Volkswagen",
+      "Ford",
+      "Opel",
+      "Peugeot",
+    ]);
+
+    const budapest = SEED_QUESTIONS.find((question) =>
+      question.prompt.includes("gennem Budapest"),
+    );
+    expect(budapest?.options.map((option) => option.text)).toEqual([
+      "Donau",
+      "Rhinen",
+      "Seinen",
+      "Themsen",
+    ]);
+
+    const albums = SEED_QUESTIONS.find((question) =>
+      question.prompt.includes("dansk musikudgivelse"),
+    );
+    expect(albums?.options.every((option) => option.text.includes(" af "))).toBe(
+      true,
+    );
+  });
+
+  it("gentager ikke relationsord i Wikidata-spørgsmål", () => {
+    expect(
+      SEED_QUESTIONS.some((question) =>
+        /slaget ved\s+slaget ved/i.test(question.prompt),
+      ),
+    ).toBe(false);
+    const liegnitz = SEED_QUESTIONS.find((question) =>
+      question.prompt.includes("Liegnitz"),
+    );
+    expect(liegnitz?.prompt).toBe(
+      "I hvilket land fandt slaget ved Liegnitz sted?",
+    );
+  });
 });

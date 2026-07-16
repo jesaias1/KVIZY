@@ -27,6 +27,7 @@ const setup = {
   favorites: [],
   timer: false,
   timeBonus: false,
+  streakBonus: false,
   minusPoints: false,
   finale: false,
 };
@@ -37,6 +38,36 @@ describe("pointberegning", () => {
     expect(calculatePoints(true, 29000, false)).toBe(100);
     expect(calculatePoints(false, 10000, false, 3)).toBe(-150);
     expect(calculatePoints(true, 0, true)).toBe(150);
+  });
+  it("giver kun streakbonus efter et aktivt tilvalg", () => {
+    const question = SEED_QUESTIONS.find(
+      (item) => item.type === "multiple_choice",
+    )!;
+    const answer = question.correctOptionId!;
+    expect(
+      calculateQuestionPoints(
+        question,
+        answer,
+        5_000,
+        false,
+        1,
+        false,
+        3,
+        false,
+      ),
+    ).toBe(100);
+    expect(
+      calculateQuestionPoints(
+        question,
+        answer,
+        5_000,
+        false,
+        1,
+        false,
+        3,
+        true,
+      ),
+    ).toBe(175);
   });
 });
 describe("spilleravatarer", () => {

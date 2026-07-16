@@ -302,9 +302,9 @@ const specs: Spec[] = [
     prompt: "Hvilken dansk musikudgivelse kom først?",
     options: [
       "Aquarium af Aqua",
-      "No Fuel Left for the Pilgrims",
+      "No Fuel Left for the Pilgrims af D-A-D",
       "Philharmonics af Agnes Obel",
-      "Efter endnu en dag",
+      "Efter endnu en dag af Gasolin'",
     ],
     correct: 3,
     explanation:

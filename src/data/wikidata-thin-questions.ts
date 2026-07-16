@@ -162,6 +162,12 @@ function directPrompt(record: (typeof records)[number]) {
     "car-model-designer": `Hvem designede bilmodellen ${record.work}?`,
     "invention-inventor": `Hvem forbindes med opfindelsen af ${record.work}?`,
   };
+  if (record.key === "battle-country") {
+    const event = /\bslag(?:et)?\b/i.test(record.work)
+      ? `${record.work[0].toLocaleLowerCase("da")}${record.work.slice(1)}`
+      : `slaget ved ${record.work}`;
+    return `I hvilket land fandt ${event} sted?`;
+  }
   if (record.key === "invention-inventor") {
     const copy = relationCopy[record.workQid];
     if (copy) return applyRelationCopy(copy.prompt, record);
@@ -179,7 +185,6 @@ function factSentence(record: (typeof records)[number], answer: string) {
     "airport-country": `${record.work} ligger i ${answer}.`,
     "athlete-sport": `${record.work} forbindes med ${answer}.`,
     "baked-origin": `${record.work} stammer fra ${answer}.`,
-    "battle-country": `Slaget ved ${record.work} fandt sted i ${answer}.`,
     "brand-industry": `${record.work} forbindes primært med ${answer}.`,
     "building-architect": `${answer} er arkitekten bag ${record.work}.`,
     "car-model-designer": `${answer} designede bilmodellen ${record.work}.`,
@@ -198,6 +203,12 @@ function factSentence(record: (typeof records)[number], answer: string) {
     "scientist-field": `${record.work} forbindes især med ${answer}.`,
     "space-constellation": `${record.work} ligger i stjernebilledet ${answer}.`,
   };
+  if (record.key === "battle-country") {
+    const event = /\bslag(?:et)?\b/i.test(record.work)
+      ? record.work
+      : `Slaget ved ${record.work}`;
+    return `${event} fandt sted i ${answer}.`;
+  }
   if (record.key === "invention-inventor") {
     const copy = relationCopy[record.workQid];
     if (copy) return applyRelationCopy(copy.fact, record, answer);

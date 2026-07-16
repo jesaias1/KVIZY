@@ -138,7 +138,7 @@ const configs = [
   {
     key: "battle-country",
     categoryId: "cat-5",
-    prompt: "I hvilket land fandt slaget ved {work} sted?",
+    prompt: "I hvilket land fandt {work} sted?",
     relation: "land",
     where: "?work wdt:P31/wdt:P279* wd:Q178561; wdt:P17 ?answer.",
   },
