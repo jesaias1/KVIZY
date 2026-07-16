@@ -66,7 +66,6 @@ import type {
   QuestionReportReason,
   SeenQuestion,
 } from "@/lib/types";
-import { SEED_QUESTIONS } from "@/data/questions";
 import { hasPublicSource, hasUsefulExplanation } from "@/lib/question-quality";
 
 type View =
@@ -238,7 +237,7 @@ export function GameShell() {
     [step, setStep] = useState(0),
     [game, setGame] = useState<Game | null>(null),
     [history, setHistory] = useState<GameResult[]>([]),
-    [questionBank, setQuestionBank] = useState<Question[]>(SEED_QUESTIONS),
+    [questionBank, setQuestionBank] = useState<Question[]>([]),
     [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(
       null,
     ),
@@ -269,10 +268,20 @@ export function GameShell() {
   }, [setTheme]);
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/questions", { signal: controller.signal })
-      .then((response) => (response.ok ? response.json() : { overrides: [] }))
-      .then((data) => {
-        if (!Array.isArray(data.overrides) || data.overrides.length === 0)
+    let cancelled = false;
+    void import("@/data/questions")
+      .then(async ({ SEED_QUESTIONS }) => {
+        if (cancelled) return;
+        setQuestionBank(SEED_QUESTIONS);
+        const response = await fetch("/api/questions", {
+          signal: controller.signal,
+        });
+        const data = response.ok ? await response.json() : { overrides: [] };
+        if (
+          cancelled ||
+          !Array.isArray(data.overrides) ||
+          data.overrides.length === 0
+        )
           return;
         const overrides = new Map<string, Question>(
           data.overrides.map((question: Question) => [question.id, question]),
@@ -286,7 +295,10 @@ export function GameShell() {
       .catch(() => {
         // Den indbyggede bank er den fulde offline-fallback.
       });
-    return () => controller.abort();
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, []);
   useEffect(() => {
     const detect = window.setTimeout(() => {
@@ -376,6 +388,13 @@ export function GameShell() {
   const start = (same?: GameSetup) => {
     try {
       setStartError(null);
+      if (questionBank.length === 0) {
+        setStartError(
+          "Spørgsmålene gøres stadig klar. Prøv igen om et øjeblik.",
+        );
+        setView("setup");
+        return;
+      }
       const s = same ?? setup;
       const normalized = {
         ...s,
@@ -567,6 +586,7 @@ export function GameShell() {
         setStep={setStep}
         start={start}
         startError={startError}
+        questionsReady={questionBank.length > 0}
         go={go}
       />
     ) : view === "play" && game ? (
@@ -587,7 +607,12 @@ export function GameShell() {
     ) : view === "history" ? (
       <HistoryView items={history} go={go} />
     ) : view === "settings" ? (
-      <SettingsView value={settings} onChange={setSettings} go={go} />
+      <SettingsView
+        value={settings}
+        onChange={setSettings}
+        questions={questionBank}
+        go={go}
+      />
     ) : view === "review" && game ? (
       <Review game={game} go={go} />
     ) : (
@@ -707,7 +732,12 @@ function Home({
 }) {
   return (
     <div className="home-grid">
-      <section className="py-10 sm:py-20">
+      <div className="home-ambient" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <section className="relative z-10 py-10 sm:py-20">
         <h1 className="max-w-2xl text-5xl font-black leading-[.95] tracking-[-.055em] sm:text-7xl">
           Quiz-aftenen starter <span className="text-primary">her.</span>
         </h1>
@@ -747,7 +777,7 @@ function Home({
           </Button>
         </div>
       </section>
-      <aside className="relative hidden min-h-[520px] items-center justify-center lg:flex">
+      <aside className="relative z-10 hidden min-h-[520px] items-center justify-center lg:flex">
         <div className="hero-orbit">
           <div className="hero-score">
             <Trophy />
@@ -771,6 +801,7 @@ function Setup({
   setStep,
   start,
   startError,
+  questionsReady,
   go,
 }: {
   setup: GameSetup;
@@ -779,6 +810,7 @@ function Setup({
   setStep: (n: number) => void;
   start: (s?: GameSetup) => void;
   startError: string | null;
+  questionsReady: boolean;
   go: (v: View) => void;
 }) {
   const [search, setSearch] = useState("");
@@ -1164,12 +1196,13 @@ function Setup({
           <Button
             className="ml-auto"
             disabled={
+              !questionsReady ||
               setup.players.some((p) => !p.name.trim()) ||
               !setup.categoryIds.length
             }
             onClick={() => start()}
           >
-            Start quizzen
+            {questionsReady ? "Start quizzen" : "Gør spørgsmål klar…"}
             <ArrowRight />
           </Button>
         )}
@@ -1826,18 +1859,18 @@ function Help({
 function SettingsView({
   value,
   onChange,
+  questions,
   go,
 }: {
   value: AppSettings;
   onChange: (s: AppSettings) => void;
+  questions: Question[];
   go: (v: View) => void;
 }) {
   const localReports = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []);
   const downloadReports = () => {
     const data = localReports.map((report) => {
-      const question = SEED_QUESTIONS.find(
-        (item) => item.id === report.questionId,
-      );
+      const question = questions.find((item) => item.id === report.questionId);
       return {
         ...report,
         prompt: question?.prompt,
