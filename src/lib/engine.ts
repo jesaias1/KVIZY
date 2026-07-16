@@ -99,8 +99,10 @@ export function selectQuestions(
   bank: Question[],
   setup: GameSetup,
   seen: SeenQuestion[] = [],
+  random = Math.random,
 ): Question[] {
   const seenMap = new Map(seen.map((s) => [s.id, s]));
+  const randomizedBank = shuffle(bank, random);
   const picked: Question[] = [];
   for (let i = 0; i < setup.questionCount; i++) {
     const target = difficultyFor(
@@ -109,7 +111,7 @@ export function selectQuestions(
       setup.difficulty,
       setup.difficultyMode,
     );
-    const candidates = bank
+    const candidates = randomizedBank
       .filter(
         (q) =>
           q.status === "active" &&
@@ -144,7 +146,7 @@ export function selectQuestions(
           ),
       ) ?? candidates[0];
     if (!chosen) break;
-    picked.push(shuffleAnswers(chosen));
+    picked.push(shuffleAnswers(chosen, random));
   }
   return picked.map((q, i) =>
     setup.finale && i >= Math.max(0, picked.length - 3)

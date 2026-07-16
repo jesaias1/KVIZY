@@ -113,6 +113,21 @@ describe("seedbank og Zod", () => {
   });
 });
 describe("adaptiv udvælgelse", () => {
+  it("giver forskellige nye browsere forskellige startrækkefølger", () => {
+    const seeded = (initial: number) => {
+      let state = initial;
+      return () => (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+    };
+    const gameSetup = { ...setup, questionCount: 10 };
+    const first = selectQuestions(SEED_QUESTIONS, gameSetup, [], seeded(1));
+    const second = selectQuestions(SEED_QUESTIONS, gameSetup, [], seeded(2));
+    expect(first.map((question) => question.id)).not.toEqual(
+      second.map((question) => question.id),
+    );
+    expect(first[0].prompt).not.toBe(
+      "Hvilket grundstof har det kemiske symbol Au?",
+    );
+  });
   it("undgår gentagelser og respekterer kategorier", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,

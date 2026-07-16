@@ -61,6 +61,20 @@ const configs = [
     categoryId: "cat-42",
     prompt: "Hvilket land forbindes {work} med som oprindelsesland?",
   },
+  {
+    key: "company-founder",
+    instance: "Q4830453",
+    property: "P112",
+    categoryId: "cat-35",
+    prompt: "Hvem grundlagde virksomheden {work}?",
+  },
+  {
+    key: "spacecraft-manufacturer",
+    instance: "Q40218",
+    property: "P176",
+    categoryId: "cat-8",
+    prompt: "Hvilken producent byggede rumfartøjet {work}?",
+  },
 ];
 
 async function fetchRows(config) {

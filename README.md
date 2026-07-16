@@ -14,7 +14,7 @@
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 1.996 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
+- 2.096 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
 - localStorage til aktivt spil, historik, indstillinger og set-historik
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
 - Vercel AI SDK 6 `generateText` + `Output.object()` + Zod til validerede AI-batches
@@ -93,7 +93,7 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.996 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 2.096 seedspørgsmål stadig.
 
 ## Projektstruktur
 

@@ -32,6 +32,8 @@ const relationCopy: Record<string, string> = {
   "series-creator": "skaber",
   "software-developer": "udvikler",
   "food-origin": "oprindelsesland",
+  "company-founder": "grundlægger",
+  "spacecraft-manufacturer": "producent",
 };
 
 const createdAt = "2026-07-16T00:00:00.000Z";
