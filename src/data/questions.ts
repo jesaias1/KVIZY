@@ -1187,6 +1187,7 @@ const redundantQuestionIds = new Set([
   "expansion-105", // Samme Just Do It-fakta som q-cat-34-1.
   "expansion-117", // Samme Famicom/NES-fakta som q-cat-49-1.
   "expansion-173", // Samme deepfake-definition som q-cat-53-3.
+  "expansion-112", // "Brun" i spørgsmålet afslører svaret brunost.
 ]);
 
 const BASE_QUESTIONS: Question[] = [

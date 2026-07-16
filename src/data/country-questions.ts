@@ -192,6 +192,34 @@ const pools = Object.fromEntries(
 
 const optionOverrides: Record<string, string[]> = {
   "JP:tld": [".jp", ".ja", ".jn", ".jo"],
+  "AD:language": ["catalansk", "spansk", "fransk", "portugisisk"],
+  "AO:language": ["portugisisk", "fransk", "swahili", "engelsk"],
+  "CN:language": ["Putonghua", "kantonesisk", "japansk", "koreansk"],
+  "IR:language": ["persisk", "arabisk", "kurdisk", "tyrkisk"],
+  "KH:language": ["Khmer", "thai", "vietnamesisk", "Lao"],
+  "MV:language": ["Dhivehi", "tamil", "singalesisk", "hindi"],
+};
+
+// Sprogspørgsmål er kun værd at beholde, når svaret ikke blot er landets navn
+// med en anden endelse. De få udvalgte her har en reel quizpointe.
+const worthwhileLanguageCountries = new Set(["AD", "AO", "CN", "IR", "KH", "MV"]);
+
+function sharesObviousNameStem(country: string, answer: string) {
+  const countryWords = normalizeText(country).split(" ");
+  const answerWords = normalizeText(answer).split(" ");
+  return countryWords.some((countryWord) =>
+    answerWords.some((answerWord) => {
+      const limit = Math.min(countryWord.length, answerWord.length);
+      let shared = 0;
+      while (shared < limit && countryWord[shared] === answerWord[shared])
+        shared++;
+      return shared >= 5;
+    }),
+  );
+}
+
+const answerOverrides: Record<string, string> = {
+  "GT:capital": "Guatemala City",
 };
 
 // Wikidata kan medtage tegnsprog, dialekter og regionale sprog i en vilkårlig
@@ -248,14 +276,24 @@ const approvedLanguageByCountry: Record<string, string> = {
 
 export const COUNTRY_QUESTIONS: Question[] = countries.flatMap((country) =>
   (Object.keys(relationConfig) as Relation[]).flatMap((relation) => {
-    if (relation === "language" && !approvedLanguageByCountry[country.code])
+    if (
+      relation === "language" &&
+      (!approvedLanguageByCountry[country.code] ||
+        !worthwhileLanguageCountries.has(country.code))
+    )
       return [];
     const answers = validValues(country, relation);
     const answer =
-      relation === "language"
+      answerOverrides[`${country.code}:${relation}`] ??
+      (relation === "language"
         ? approvedLanguageByCountry[country.code]
-        : answers[0];
+        : answers[0]);
     if (!answer) return [];
+    if (
+      (relation === "capital" || relation === "currency") &&
+      sharesObviousNameStem(country.country, answer)
+    )
+      return [];
     const copy = wording(country, relation, answer);
     const config = relationConfig[relation];
     return [

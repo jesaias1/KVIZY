@@ -646,6 +646,15 @@
 .score-pill.active {
   border-color: var(--primary);
 }
+.timer-progress {
+  height: 0.38rem;
+  background: #ffbd7a32;
+  box-shadow: inset 0 0 0 1px #ffbd7a26;
+}
+.timer-progress [data-slot="progress-indicator"] {
+  background: #ffb86c;
+  box-shadow: 0 0 0.8rem #ffb86c88;
+}
 @media (min-width: 600px) {
   .score-pill {
     display: flex;

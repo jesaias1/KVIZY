@@ -34,6 +34,25 @@ const lowercaseOptions = SEED_QUESTIONS.filter((question) =>
   ),
 );
 const answerLeaks = SEED_QUESTIONS.filter(hasAnswerLeak);
+const obviousCountryAnswers = SEED_QUESTIONS.filter((question) => {
+  if (!/-(capital|currency|language)$/.test(question.id)) return false;
+  const country = question.tags[2];
+  const answer = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  )?.text;
+  if (!country || !answer) return false;
+  const countryWords = normalizeText(country).split(" ");
+  const answerWords = normalizeText(answer).split(" ");
+  return countryWords.some((countryWord) =>
+    answerWords.some((answerWord) => {
+      const limit = Math.min(countryWord.length, answerWord.length);
+      let shared = 0;
+      while (shared < limit && countryWord[shared] === answerWord[shared])
+        shared++;
+      return shared >= (question.id.endsWith("-language") ? 4 : 5);
+    }),
+  );
+});
 const thinCategories = CATEGORIES.filter(
   (category) =>
     SEED_QUESTIONS.filter(
@@ -52,6 +71,7 @@ const report = {
   machineCopy: machineCopy.length,
   lowercaseOptions: lowercaseOptions.length,
   answerLeaks: answerLeaks.length,
+  obviousCountryAnswers: obviousCountryAnswers.length,
   longestOption: Math.max(
     ...SEED_QUESTIONS.flatMap((question) =>
       question.options.map((option) => option.text.length),
@@ -69,6 +89,7 @@ if (
   report.machineCopy > 0 ||
   report.lowercaseOptions > 0 ||
   report.answerLeaks > 0 ||
+  report.obviousCountryAnswers > 0 ||
   report.longestOption > 70 ||
   report.thinCategories.length > 0
 ) {

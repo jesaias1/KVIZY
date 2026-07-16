@@ -1527,6 +1527,55 @@ const qualityAdditions: Spec[] = [
       "Et eSIM er indbygget i enheden og kan få en operatørprofil installeret digitalt.",
     sourceUrl: wiki("ESIM"),
   },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-38",
+    difficulty: 2,
+    prompt: "Hvad kaldes et ord, der læses ens forfra og bagfra?",
+    options: ["Palindrom", "Anagram", "Akronym", "Homonym"],
+    correct: 0,
+    explanation:
+      "Et palindrom har samme bogstavrækkefølge i begge læseretninger; 'kajak' er et dansk eksempel.",
+    sourceUrl: wiki("Palindrom"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-38",
+    difficulty: 3,
+    prompt: "Hvilken ordklasse er 'hurtigt' i sætningen 'Hun løber hurtigt'?",
+    options: ["Biord", "Tillægsord", "Udsagnsord", "Navneord"],
+    correct: 0,
+    explanation:
+      "'Hurtigt' beskriver her, hvordan handlingen udføres, og fungerer derfor som et biord.",
+    sourceUrl: wiki("Biord"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-38",
+    difficulty: 3,
+    prompt: "Hvad kendetegner homofoner?",
+    options: [
+      "De udtales ens, men har forskellig betydning",
+      "De staves ens og betyder det samme",
+      "De kommer altid fra samme sprog",
+      "De kan kun bruges som navneord",
+    ],
+    correct: 0,
+    explanation:
+      "Homofoner lyder ens, men kan have forskellig stavemåde og betydning, som 'vær' og 'vejr'.",
+    sourceUrl: wiki("Homofon"),
+  },
+  {
+    type: "multiple_choice",
+    categoryId: "cat-41",
+    difficulty: 2,
+    prompt: "Hvilken norsk ret fremstilles traditionelt af tørret fisk, der behandles med lud?",
+    options: ["Lutefisk", "Rakfisk", "Fårikål", "Lapskaus"],
+    correct: 0,
+    explanation:
+      "Lutefisk fremstilles af tørret hvidfisk, som udblødes og behandles med lud før tilberedning.",
+    sourceUrl: wiki("Lutefisk"),
+  },
 ];
 
 export const VARIETY_QUESTIONS: Question[] = [

@@ -52,6 +52,7 @@ import {
   calculateQuestionPoints,
   newPlayer,
   rankPlayers,
+  reserveSeenQuestions,
   selectQuestions,
   shuffle,
 } from "@/lib/engine";
@@ -432,6 +433,16 @@ export function GameShell() {
       };
       setGame(g);
       safeSet(APP_CONFIG.gameKey, JSON.stringify(g));
+      safeSet(
+        APP_CONFIG.seenKey,
+        JSON.stringify(
+          reserveSeenQuestions(
+            seen,
+            questions.map((question) => question.id),
+            g.startedAt,
+          ),
+        ),
+      );
       go("play");
     } catch {
       setStartError(
@@ -518,7 +529,7 @@ export function GameShell() {
         {
           id: q.id,
           lastSeen: new Date().toISOString(),
-          count: (previousSeen?.count ?? 0) + 1,
+          count: previousSeen?.count ?? 1,
           correct,
         },
       ]),
@@ -745,7 +756,7 @@ function Home({
         </h1>
         <p className="mt-6 text-xl text-muted-foreground">
           <strong className="text-foreground">{APP_CONFIG.tagline}.</strong>{" "}
-          Dansk multiplayer quiz på én skærm — uden login og ventetid.
+          Dansk multiplayer quiz på én skærm.
         </p>
         <div className="mt-9 grid gap-3 sm:max-w-md">
           <Button
@@ -1292,6 +1303,7 @@ function Play({
             </b>
           </div>
           <Progress
+            className="timer-progress"
             value={(secondsLeft / 30) * 100}
             aria-label="Resterende svartid"
           />

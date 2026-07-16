@@ -547,11 +547,14 @@ export function selectQuestions(
       allowRepeatedTemplate: boolean,
       requireGeneralKnowledge: boolean,
       allowRepeatedCategory: boolean,
+      allowSeen: boolean,
     ) => {
       for (const question of candidatePool) {
         const factKey = questionFactKey(question);
         const templateKey = repetitiveTemplateKey(question);
+        const seenQuestion = seenMap.get(question.id);
         if (
+          (!allowSeen && seenQuestion) ||
           (requireGeneralKnowledge && !isGeneralKnowledgeQuestion(question)) ||
           (!allowRepeatedCategory &&
             (categoryCounts.get(question.categoryId) ?? 0) >= categoryLimit) ||
@@ -563,7 +566,6 @@ export function selectQuestions(
             (templateCounts.get(templateKey) ?? 0) >= templateLimit)
         )
           continue;
-        const seen = seenMap.get(question.id);
         const selectedCategory = selectedCategoryFor(question);
         const repeatedType =
           recentTypes.length === 2 &&
@@ -582,7 +584,7 @@ export function selectQuestions(
           setup.difficulty <= 3
             ? 5
             : 0) +
-          (seen ? 100 + seen.count * 8 : 0) +
+          (seenQuestion ? 100 + seenQuestion.count * 8 : 0) +
           (inDifficultyBand(question) ? 0 : 1_000) +
           Math.abs(question.difficulty - target) * 10 +
           (categoryCounts.get(selectedCategory) ?? 0) * 45 +
@@ -596,12 +598,20 @@ export function selectQuestions(
       }
     };
     const requireGeneralKnowledge = generalSlots.has(i);
-    chooseFromPool(false, false, requireGeneralKnowledge, false);
-    if (!chosen) chooseFromPool(true, false, requireGeneralKnowledge, false);
-    if (!chosen) chooseFromPool(true, true, requireGeneralKnowledge, false);
-    if (!chosen && requireGeneralKnowledge)
-      chooseFromPool(false, false, false, false);
-    if (!chosen) chooseFromPool(true, true, false, true);
+    const chooseWithSeenPolicy = (allowSeen: boolean) => {
+      chooseFromPool(false, false, requireGeneralKnowledge, false, allowSeen);
+      if (!chosen)
+        chooseFromPool(true, false, requireGeneralKnowledge, false, allowSeen);
+      if (!chosen)
+        chooseFromPool(true, true, requireGeneralKnowledge, false, allowSeen);
+      if (!chosen && requireGeneralKnowledge)
+        chooseFromPool(false, false, false, false, allowSeen);
+      if (!chosen) chooseFromPool(true, true, false, true, allowSeen);
+    };
+    // Et tidligere set spørgsmål er kun en sidste udvej, når alle relevante
+    // usete alternativer er opbrugt på denne enhed.
+    chooseWithSeenPolicy(false);
+    if (!chosen) chooseWithSeenPolicy(true);
     if (!chosen) break;
     picked.push(chosen);
     pickedIds.add(chosen.id);
@@ -657,6 +667,24 @@ export function selectQuestions(
         }
       : shuffled;
   });
+}
+
+export function reserveSeenQuestions(
+  seen: SeenQuestion[],
+  questionIds: string[],
+  lastSeen = new Date().toISOString(),
+) {
+  const byId = new Map(seen.map((item) => [item.id, item]));
+  for (const id of new Set(questionIds)) {
+    const previous = byId.get(id);
+    byId.set(id, {
+      id,
+      lastSeen,
+      count: (previous?.count ?? 0) + 1,
+      correct: previous?.correct ?? false,
+    });
+  }
+  return [...byId.values()];
 }
 export function newPlayer(name: string, index: number): GamePlayer {
   return {

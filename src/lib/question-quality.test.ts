@@ -195,6 +195,7 @@ describe("automatisk spørgsmålskvalitet", () => {
       "expansion-105",
       "expansion-117",
       "expansion-173",
+      "expansion-112",
     ];
     expect(
       removedIds.every(
@@ -227,14 +228,19 @@ describe("automatisk spørgsmålskvalitet", () => {
         /Afghanistan|Australien|Taiwan/.test(question.prompt),
       ),
     ).toBe(false);
-    const danishLanguage = languageQuestions.find((question) =>
-      question.prompt.includes("Danmark"),
+    expect(
+      languageQuestions.some((question) =>
+        /Danmark|Rusland|Frankrig|Spanien/.test(question.prompt),
+      ),
+    ).toBe(false);
+    const andorranLanguage = languageQuestions.find((question) =>
+      question.prompt.includes("Andorra"),
     );
     expect(
-      danishLanguage?.options.find(
-        (option) => option.id === danishLanguage.correctOptionId,
+      andorranLanguage?.options.find(
+        (option) => option.id === andorranLanguage.correctOptionId,
       )?.text,
-    ).toBe("Dansk");
+    ).toBe("Catalansk");
   });
 
   it("skelner mellem opdagelser, udvikling og opfindelser", () => {

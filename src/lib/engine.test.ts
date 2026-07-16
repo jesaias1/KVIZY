@@ -10,6 +10,7 @@ import {
   newPlayer,
   normalizeText,
   rankPlayers,
+  reserveSeenQuestions,
   selectQuestions,
   shuffleAnswers,
   similarity,
@@ -18,7 +19,7 @@ import {
 import { SEED_QUESTIONS } from "@/data/questions";
 import { CATEGORIES, DEFAULT_CATEGORIES } from "./categories";
 import { ANIMAL_AVATARS } from "./config";
-import { questionSchema } from "./types";
+import { questionSchema, type SeenQuestion } from "./types";
 const setup = {
   mode: "classic" as const,
   players: [],
@@ -553,6 +554,44 @@ describe("adaptiv udvælgelse", () => {
     expect(
       chosen.some((q) => SEED_QUESTIONS.slice(300).some((x) => x.id === q.id)),
     ).toBe(true);
+  });
+  it("gentager ikke spørgsmål i næste spil, mens usete alternativer findes", () => {
+    const firstGame = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 30,
+    });
+    const seen = reserveSeenQuestions(
+      [],
+      firstGame.map((question) => question.id),
+      "2026-07-16T12:00:00.000Z",
+    );
+    const secondGame = selectQuestions(
+      SEED_QUESTIONS,
+      { ...setup, questionCount: 30 },
+      seen,
+    );
+    const firstIds = new Set(firstGame.map((question) => question.id));
+    expect(secondGame).toHaveLength(30);
+    expect(secondGame.every((question) => !firstIds.has(question.id))).toBe(
+      true,
+    );
+  });
+  it("gemmer valgte spørgsmål én gang pr. nyt spil på enheden", () => {
+    const previous: SeenQuestion[] = [
+      {
+        id: "q-1",
+        lastSeen: "2026-07-15T12:00:00.000Z",
+        count: 2,
+        correct: true,
+      },
+    ];
+    const next = reserveSeenQuestions(
+      previous,
+      ["q-1", "q-2", "q-2"],
+      "2026-07-16T12:00:00.000Z",
+    );
+    expect(next.find((item) => item.id === "q-1")?.count).toBe(3);
+    expect(next.find((item) => item.id === "q-2")?.count).toBe(1);
   });
 });
 describe("kategori-vægtning", () => {
