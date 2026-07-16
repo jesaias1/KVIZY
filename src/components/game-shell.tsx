@@ -1823,6 +1823,29 @@ function SettingsView({
   onChange: (s: AppSettings) => void;
   go: (v: View) => void;
 }) {
+  const localReports = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []);
+  const downloadReports = () => {
+    const data = localReports.map((report) => {
+      const question = SEED_QUESTIONS.find(
+        (item) => item.id === report.questionId,
+      );
+      return {
+        ...report,
+        prompt: question?.prompt,
+        options: question?.options,
+        correctOptionId: question?.correctOptionId,
+        explanation: question?.explanation,
+      };
+    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const anchor = document.createElement("a");
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = "kvizy-lokale-rapporter.json";
+    anchor.click();
+    URL.revokeObjectURL(anchor.href);
+  };
   return (
     <>
       <PageHead title="Indstillinger" onBack={() => go("home")} />
@@ -1854,6 +1877,25 @@ function SettingsView({
               }
             />
           </div>
+        </CardContent>
+      </Card>
+      <Card className="mt-6">
+        <CardContent className="p-5">
+          <h2 className="font-bold">Dine spørgsmålsrapporter</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Rapporterne gemmes på denne enhed, indtil en central database er
+            tilsluttet. Eksporten indeholder spørgsmål og svar, men ingen
+            adgangskoder.
+          </p>
+          <Button
+            className="mt-4 w-full"
+            variant="outline"
+            disabled={localReports.length === 0}
+            onClick={downloadReports}
+          >
+            <Download />
+            Eksportér {localReports.length} rapporter
+          </Button>
         </CardContent>
       </Card>
     </>
