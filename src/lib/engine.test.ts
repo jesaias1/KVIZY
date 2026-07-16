@@ -5,6 +5,7 @@ import {
   calculatePoints,
   difficultyFor,
   fingerprint,
+  isGeneralKnowledgeQuestion,
   isNearDuplicate,
   newPlayer,
   normalizeText,
@@ -284,6 +285,34 @@ describe("adaptiv udvælgelse", () => {
     for (const tag of ["painting-artist", "film-director", "building-architect"]) {
       expect(chosen.filter((question) => question.tags.includes(tag)).length).toBeLessThanOrEqual(3);
     }
+  });
+  it("fordeler bred paratviden gennem hele et standardspil", () => {
+    let randomState = 19;
+    const random = () =>
+      (randomState = (randomState * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+    const chosen = selectQuestions(
+      SEED_QUESTIONS,
+      { ...setup, questionCount: 30 },
+      [],
+      random,
+    );
+    const generalIndexes = chosen
+      .map((question, index) =>
+        isGeneralKnowledgeQuestion(question) ? index : -1,
+      )
+      .filter((index) => index >= 0);
+    expect(generalIndexes.length).toBeGreaterThanOrEqual(6);
+    expect(generalIndexes.some((index) => index < 10)).toBe(true);
+    expect(generalIndexes.some((index) => index >= 20)).toBe(true);
+  });
+  it("kan fylde et spil, når kun General paratviden er valgt", () => {
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 20,
+      categoryIds: ["cat-1"],
+    });
+    expect(chosen).toHaveLength(20);
+    expect(chosen.every(isGeneralKnowledgeQuestion)).toBe(true);
   });
   it("fordeler sandt eller falsk og rækkefølge helt lige mellem spillerne", () => {
     const playerCount = 3;

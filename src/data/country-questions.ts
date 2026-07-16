@@ -49,7 +49,7 @@ const relationConfig: Record<
   { categoryId: string; secondary: string[]; bump: number }
 > = {
   capital: { categoryId: "cat-6", secondary: ["cat-1"], bump: 0 },
-  currency: { categoryId: "cat-1", secondary: ["cat-6", "cat-55"], bump: 1 },
+  currency: { categoryId: "cat-55", secondary: ["cat-6"], bump: 1 },
   continent: { categoryId: "cat-6", secondary: ["cat-4"], bump: 0 },
   language: { categoryId: "cat-38", secondary: ["cat-6"], bump: 1 },
   callingCode: { categoryId: "cat-10", secondary: ["cat-6"], bump: 2 },

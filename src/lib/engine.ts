@@ -81,7 +81,7 @@ export function difficultyFor(
   if (mode === "mixed")
     return Math.max(
       1,
-      Math.min(5, base + [-1, 0, 1][Math.floor(random() * 3)]),
+      Math.min(5, base + [-1, 0, 0, 0, 1][Math.floor(random() * 5)]),
     );
   if (mode === "rising")
     return Math.max(
@@ -232,6 +232,32 @@ const REPETITIVE_TEMPLATE_TAGS = new Set([
   "psychologist-field",
 ]);
 
+const SPECIALIST_CATEGORY_IDS = new Set([
+  "cat-11",
+  "cat-13",
+  "cat-14",
+  "cat-23",
+  "cat-31",
+  "cat-32",
+  "cat-33",
+  "cat-37",
+  "cat-39",
+  "cat-44",
+  "cat-58",
+]);
+
+export function isGeneralKnowledgeQuestion(question: Question) {
+  return (
+    question.categoryId === "cat-1" ||
+    question.categoryId === "cat-59" ||
+    (question.tags.includes("varieret") &&
+      question.categoryId !== "cat-23" &&
+      question.type !== "ordering" &&
+      question.type !== "true_false" &&
+      question.difficulty <= 3)
+  );
+}
+
 function repetitiveTemplateKey(question: Question) {
   return question.tags.find((tag) => REPETITIVE_TEMPLATE_TAGS.has(tag));
 }
@@ -330,10 +356,14 @@ export function selectQuestions(
   random = Math.random,
 ): Question[] {
   const seenMap = new Map(seen.map((s) => [s.id, s]));
+  const selectedCategoryIds = new Set(setup.categoryIds);
+  const generalOnly =
+    setup.categoryIds.length === 1 && selectedCategoryIds.has("cat-1");
   const eligibleBank = shuffle(bank, random).filter(
     (question) =>
       question.status === "active" &&
-      setup.categoryIds.includes(question.categoryId),
+      (selectedCategoryIds.has(question.categoryId) ||
+        (generalOnly && isGeneralKnowledgeQuestion(question))),
   );
   const candidatePool = eligibleBank;
   const picked: Question[] = [];
@@ -343,6 +373,20 @@ export function selectQuestions(
   const categoryCounts = new Map<string, number>();
   const templateCounts = new Map<string, number>();
   const templateLimit = Math.max(2, Math.ceil(setup.questionCount / 10));
+  const categoryBias = new Map(
+    setup.categoryIds.map((categoryId) => [categoryId, random() * 14]),
+  );
+  const generalQuota = selectedCategoryIds.has("cat-1")
+    ? Math.max(2, Math.round(setup.questionCount * 0.2))
+    : 0;
+  const generalSlots = new Set(
+    Array.from({ length: generalQuota }, (_, slot) =>
+      Math.min(
+        setup.questionCount - 1,
+        Math.floor(((slot + 0.5) * setup.questionCount) / generalQuota),
+      ),
+    ),
+  );
   const selectedCategoryFor = (question: Question) => question.categoryId;
   for (let i = 0; i < setup.questionCount; i++) {
     const target = difficultyFor(
@@ -359,11 +403,13 @@ export function selectQuestions(
     const chooseFromPool = (
       allowRepeatedFact: boolean,
       allowRepeatedTemplate: boolean,
+      requireGeneralKnowledge: boolean,
     ) => {
       for (const question of candidatePool) {
         const factKey = questionFactKey(question);
         const templateKey = repetitiveTemplateKey(question);
         if (
+          (requireGeneralKnowledge && !isGeneralKnowledgeQuestion(question)) ||
           pickedIds.has(question.id) ||
           pickedFingerprints.has(question.fingerprint) ||
           (!allowRepeatedFact && pickedFacts.has(factKey)) ||
@@ -382,6 +428,15 @@ export function selectQuestions(
           recentCats.every((category) => category === question.categoryId);
         const score =
           (setup.favorites.includes(selectedCategory) ? -30 : 0) +
+          (categoryBias.get(selectedCategory) ?? 7) +
+          (SPECIALIST_CATEGORY_IDS.has(selectedCategory) &&
+          !setup.favorites.includes(selectedCategory)
+            ? 8
+            : 0) +
+          (/^(wd|wikithin|wikiculture)-/.test(question.id) &&
+          setup.difficulty <= 3
+            ? 5
+            : 0) +
           (seen ? 100 + seen.count * 8 : 0) +
           Math.abs(question.difficulty - target) * 10 +
           (categoryCounts.get(selectedCategory) ?? 0) * 45 +
@@ -394,9 +449,11 @@ export function selectQuestions(
         }
       }
     };
-    chooseFromPool(false, false);
-    if (!chosen) chooseFromPool(true, false);
-    if (!chosen) chooseFromPool(true, true);
+    const requireGeneralKnowledge = generalSlots.has(i);
+    chooseFromPool(false, false, requireGeneralKnowledge);
+    if (!chosen) chooseFromPool(true, false, requireGeneralKnowledge);
+    if (!chosen) chooseFromPool(true, true, requireGeneralKnowledge);
+    if (!chosen && requireGeneralKnowledge) chooseFromPool(false, false, false);
     if (!chosen) break;
     picked.push(chosen);
     pickedIds.add(chosen.id);
