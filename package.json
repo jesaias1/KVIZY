@@ -18,6 +18,7 @@
     "questions:import": "tsx scripts/questions.ts import",
     "questions:update-wikidata": "node scripts/update-wikidata-countries.mjs",
     "questions:update-culture": "node scripts/update-wikidata-culture.mjs",
+    "questions:update-thin": "node scripts/update-wikidata-thin.mjs",
     "check": "npm run typecheck && npm run lint && npm run test && npm run build"
   },
   "dependencies": {

@@ -1,0 +1,2882 @@
+[
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q187495",
+    "work": "Baklava",
+    "answerQid": "Q12560",
+    "answer": "Osmanniske Rige"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q2839342",
+    "work": "benløse fugle",
+    "answerQid": "Q101081",
+    "answer": "Provence"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q828043",
+    "work": "bouillabaisse",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q390823",
+    "work": "burrito",
+    "answerQid": "Q96",
+    "answer": "Mexico"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1139527",
+    "work": "California roll",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1068574",
+    "work": "chawanmushi",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q863794",
+    "work": "chili con carne",
+    "answerQid": "Q96",
+    "answer": "Mexico"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1093380",
+    "work": "Club sandwich",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q12200",
+    "work": "crepe",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q367225",
+    "work": "gule ærter",
+    "answerQid": "Q11772",
+    "answer": "Oldtidens Grækenland"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q205762",
+    "work": "Gullasch",
+    "answerQid": "Q171150",
+    "answer": "Kongeriget Ungarn"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1703796",
+    "work": "Hákarl",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1364509",
+    "work": "jambalaya",
+    "answerQid": "Q1588",
+    "answer": "Louisiana"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q3272930",
+    "work": "Kyaraben",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q20034",
+    "work": "lasagne",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q827654",
+    "work": "Lassi",
+    "answerQid": "Q668",
+    "answer": "Indien"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1200514",
+    "work": "moules-frites",
+    "answerQid": "Q31",
+    "answer": "Belgien"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q52406",
+    "work": "mysli",
+    "answerQid": "Q39",
+    "answer": "Schweiz"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1136876",
+    "work": "Okinawa soba",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q453174",
+    "work": "Onsen tamago",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q862557",
+    "work": "Osechi ryouri",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1057256",
+    "work": "Ossobuco",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q44541",
+    "work": "pandekage",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q130097",
+    "work": "Pemmikan",
+    "answerQid": "Q49",
+    "answer": "Nordamerika"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q865325",
+    "work": "quesadilla",
+    "answerQid": "Q96",
+    "answer": "Mexico"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q860465",
+    "work": "roastbeef",
+    "answerQid": "Q21",
+    "answer": "England"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q356346",
+    "work": "Rumfordsuppe",
+    "answerQid": "Q980",
+    "answer": "Bayern"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q2339814",
+    "work": "S'more",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1236601",
+    "work": "Spaghetti alle vongole",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q20065",
+    "work": "Spätzle",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1432724",
+    "work": "Sucuk",
+    "answerQid": "Q43",
+    "answer": "Tyrkiet"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q865004",
+    "work": "Tagine",
+    "answerQid": "Q28227",
+    "answer": "Maghreb"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q905527",
+    "work": "takoyaki",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1142841",
+    "work": "Tonkatsu",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q182339",
+    "work": "Tyrkisk delight",
+    "answerQid": "Q12560",
+    "answer": "Osmanniske Rige"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q1435874",
+    "work": "ugali",
+    "answerQid": "Q114",
+    "answer": "Kenya"
+  },
+  {
+    "key": "baked-origin",
+    "categoryId": "cat-43",
+    "prompt": "Hvilket land stammer bagværket {work} fra?",
+    "relation": "oprindelsesland",
+    "workQid": "Q375",
+    "work": "vaffel",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q359185",
+    "work": "Admiralitetet",
+    "answerQid": "Q51205",
+    "answer": "Andreyan Zakharov"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q436079",
+    "work": "Alte Oper",
+    "answerQid": "Q51988",
+    "answer": "Richard Lucae"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q154563",
+    "work": "Berliner Dom",
+    "answerQid": "Q69715",
+    "answer": "Julius Carl Raschdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q32653910",
+    "work": "Berliner Philharmonie",
+    "answerQid": "Q57481",
+    "answer": "Hans Scharoun"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q170119",
+    "work": "Berliner Stadtschloss",
+    "answerQid": "Q61256",
+    "answer": "Friedrich August Stüler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q82425",
+    "work": "Brandenburger Tor",
+    "answerQid": "Q72120",
+    "answer": "Heinrich Strack"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q125006",
+    "work": "Brooklyn Bridge",
+    "answerQid": "Q77237",
+    "answer": "John Augustus Roebling"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q800588",
+    "work": "Bruxelles-Central",
+    "answerQid": "Q49744",
+    "answer": "Victor Horta"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q156457",
+    "work": "Burg Hohenzollern",
+    "answerQid": "Q61256",
+    "answer": "Friedrich August Stüler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q461371",
+    "work": "Casa Batlló",
+    "answerQid": "Q25328",
+    "answer": "Antoni Gaudí"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q191739",
+    "work": "Cattedrale di Santa Maria del Fiore",
+    "answerQid": "Q7814",
+    "answer": "Giotto di Bondone"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q43433",
+    "work": "Chandigarh",
+    "answerQid": "Q4724",
+    "answer": "Le Corbusier"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q736185",
+    "work": "Château de Marly",
+    "answerQid": "Q8053",
+    "answer": "Jules Hardouin-Mansart"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q2946",
+    "work": "Château de Versailles",
+    "answerQid": "Q8053",
+    "answer": "Jules Hardouin-Mansart"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q37200",
+    "work": "Den store pyramide i Giza",
+    "answerQid": "Q59087",
+    "answer": "Hemiunu"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q208559",
+    "work": "Drottningholm Slot",
+    "answerQid": "Q61188",
+    "answer": "Nicodemus Tessin den ældre"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q463179",
+    "work": "Fallingwater",
+    "answerQid": "Q5604",
+    "answer": "Frank Lloyd Wright"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q11297",
+    "work": "FN's hovedkvarter",
+    "answerQid": "Q4724",
+    "answer": "Le Corbusier"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q7461",
+    "work": "Gattjinapaladset",
+    "answerQid": "Q19165",
+    "answer": "Antonio Rinaldi"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q155743",
+    "work": "Hala Stulecia",
+    "answerQid": "Q67034",
+    "answer": "Max Berg"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q656054",
+    "work": "Hôtel Ritz Paris",
+    "answerQid": "Q8053",
+    "answer": "Jules Hardouin-Mansart"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q4992220",
+    "work": "Invalidekirken",
+    "answerQid": "Q8053",
+    "answer": "Jules Hardouin-Mansart"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q153951",
+    "work": "Kaiser-Wilhelm-Gedächtniskirche",
+    "answerQid": "Q72574",
+    "answer": "Franz Schwechten"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q874634",
+    "work": "Kaufhaus Oberpollinger",
+    "answerQid": "Q67407",
+    "answer": "Max Littmann"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q404571",
+    "work": "Kazan-katedralen",
+    "answerQid": "Q51199",
+    "answer": "Andrey Voronikhin"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q4022689",
+    "work": "Khusruwiyah Moské",
+    "answerQid": "Q5600",
+    "answer": "Sinan"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q573639",
+    "work": "Kyffhäusermonumentet",
+    "answerQid": "Q70102",
+    "answer": "Bruno Schmitz"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q4346882",
+    "work": "Københavns Synagoge",
+    "answerQid": "Q71685",
+    "answer": "G.F. Hetsch"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q162052",
+    "work": "Linderhof Slot",
+    "answerQid": "Q77138",
+    "answer": "Georg Carl Heinrich von Dollmann"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1060121",
+    "work": "Lugou Qiao",
+    "answerQid": "Q17790",
+    "answer": "Kangxi Emperor"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q569445",
+    "work": "Martin-Gropius-Bau",
+    "answerQid": "Q69384",
+    "answer": "Martin Gropius"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q156198",
+    "work": "Messeturm",
+    "answerQid": "Q77311",
+    "answer": "Helmut Jahn"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q152349",
+    "work": "MHPArena",
+    "answerQid": "Q67612",
+    "answer": "Paul Bonatz"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q199618",
+    "work": "Monticello",
+    "answerQid": "Q11812",
+    "answer": "Thomas Jefferson"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q333906",
+    "work": "Musei Capitolini",
+    "answerQid": "Q5592",
+    "answer": "Michelangelo"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q3330707",
+    "work": "Nasjonalgalleriet",
+    "answerQid": "Q70880",
+    "answer": "Heinrich Ernst Schirmer"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q246474",
+    "work": "Neue Synagoge",
+    "answerQid": "Q67976",
+    "answer": "Eduard Knoblauch"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q157316",
+    "work": "Neues Museum",
+    "answerQid": "Q61256",
+    "answer": "Friedrich August Stüler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q4152",
+    "work": "Neuschwanstein",
+    "answerQid": "Q77138",
+    "answer": "Georg Carl Heinrich von Dollmann"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q215023",
+    "work": "Nidarosdomen",
+    "answerQid": "Q70880",
+    "answer": "Heinrich Ernst Schirmer"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q212867",
+    "work": "Park Güell",
+    "answerQid": "Q25328",
+    "answer": "Antoni Gaudí"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1758497",
+    "work": "Pont Royal",
+    "answerQid": "Q8053",
+    "answer": "Jules Hardouin-Mansart"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q167195",
+    "work": "Post Tower",
+    "answerQid": "Q77311",
+    "answer": "Helmut Jahn"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q48435",
+    "work": "Sagrada Família",
+    "answerQid": "Q25328",
+    "answer": "Antoni Gaudí"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1238512",
+    "work": "Sankt Ansgars Kirke",
+    "answerQid": "Q71685",
+    "answer": "G.F. Hetsch"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q201469",
+    "work": "Solomon R. Guggenheim Museum",
+    "answerQid": "Q5604",
+    "answer": "Frank Lloyd Wright"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1583447",
+    "work": "Spejlsalen",
+    "answerQid": "Q8053",
+    "answer": "Jules Hardouin-Mansart"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q22720",
+    "work": "Speyerdomen",
+    "answerQid": "Q77259",
+    "answer": "Otto von Bamberg"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1980",
+    "work": "Stade Gerland",
+    "answerQid": "Q1544",
+    "answer": "Tony Garnier"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q178643",
+    "work": "Süleymaniye-moskéen",
+    "answerQid": "Q5600",
+    "answer": "Sinan"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q2842096",
+    "work": "Trefoldighetskirken i Oslo",
+    "answerQid": "Q70903",
+    "answer": "Wilhelm von Hanno"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q456196",
+    "work": "Ullevål universitetssygehus",
+    "answerQid": "Q70880",
+    "answer": "Heinrich Ernst Schirmer"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q940746",
+    "work": "Villa Savoye",
+    "answerQid": "Q4724",
+    "answer": "Le Corbusier"
+  },
+  {
+    "key": "cocktail-origin",
+    "categoryId": "cat-44",
+    "prompt": "Hvilket land forbindes cocktailen {work} med?",
+    "relation": "oprindelsesland",
+    "workQid": "Q487338",
+    "work": "Mojito",
+    "answerQid": "Q241",
+    "answer": "Cuba"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1507766",
+    "work": "Arn: Tempelridderen",
+    "answerQid": "Q2074912",
+    "answer": "Peter Flinth"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q756444",
+    "work": "Atlantic Rhapsody",
+    "answerQid": "Q466341",
+    "answer": "Katrin Ottarsdóttir"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q790282",
+    "work": "Barbara",
+    "answerQid": "Q526540",
+    "answer": "Nils Malmros"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1127630",
+    "work": "Constance",
+    "answerQid": "Q6423813",
+    "answer": "Knud Vesterskov"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q110365",
+    "work": "Dancer in the Dark",
+    "answerQid": "Q133730",
+    "answer": "Lars von Trier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1403042",
+    "work": "Dansen med Regitze",
+    "answerQid": "Q3193725",
+    "answer": "Kaspar Rostrup"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1180628",
+    "work": "De fem og spionerne",
+    "answerQid": "Q33436662",
+    "answer": "Trine Hedman"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1664445",
+    "work": "De fortabte sjæles ø",
+    "answerQid": "Q2867634",
+    "answer": "Nikolaj Arcel"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q196103",
+    "work": "Den skaldede frisør",
+    "answerQid": "Q236148",
+    "answer": "Susanne Bier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1630226",
+    "work": "Drabet",
+    "answerQid": "Q3354008",
+    "answer": "Per Fly"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1482548",
+    "work": "Elsker dig for evigt",
+    "answerQid": "Q236148",
+    "answer": "Susanne Bier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1534667",
+    "work": "En som Hodder",
+    "answerQid": "Q5716496",
+    "answer": "Henrik Ruben Genz"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1193235",
+    "work": "Fakiren fra Bilbao",
+    "answerQid": "Q2074912",
+    "answer": "Peter Flinth"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1430594",
+    "work": "Fluerne på væggen",
+    "answerQid": "Q270911",
+    "answer": "Åke Sandgren"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q127011",
+    "work": "Forbrydelser",
+    "answerQid": "Q185671",
+    "answer": "Annette K. Olesen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1521948",
+    "work": "Ghosts of Cité Soleil",
+    "answerQid": "Q724516",
+    "answer": "Asger Leth"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1554218",
+    "work": "Guld til præriens skrappe drenge",
+    "answerQid": "Q33233561",
+    "answer": "Finn Karlsson"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1403047",
+    "work": "Harry og kammertjeneren",
+    "answerQid": "Q2896719",
+    "answer": "Bent Christensen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1438966",
+    "work": "Heksen",
+    "answerQid": "Q817442",
+    "answer": "Benjamin Christensen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1407094",
+    "work": "Hip Hip Hurra!",
+    "answerQid": "Q4355683",
+    "answer": "Kjell Grede"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q734819",
+    "work": "HotMen CoolBoyz",
+    "answerQid": "Q6423813",
+    "answer": "Knud Vesterskov"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q781684",
+    "work": "Hvordan vi slipper af med de andre",
+    "answerQid": "Q4753909",
+    "answer": "Anders Rønnow Klarlund"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1423329",
+    "work": "I Kina spiser de hunde",
+    "answerQid": "Q1387115",
+    "answer": "Lasse Spang Olsen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q784369",
+    "work": "I Tvillingernes tegn",
+    "answerQid": "Q5796337",
+    "answer": "Werner Hedman"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q775356",
+    "work": "Idioterne",
+    "answerQid": "Q133730",
+    "answer": "Lars von Trier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q32303",
+    "work": "Jagten",
+    "answerQid": "Q314287",
+    "answer": "Thomas Vinterberg"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1142950",
+    "work": "Lilja 4-ever",
+    "answerQid": "Q319849",
+    "answer": "Lukas Moodysson"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1416607",
+    "work": "Luftkastellet der blev sprængt",
+    "answerQid": "Q1159900",
+    "answer": "Daniel Alfredson"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1141731",
+    "work": "Manderlay",
+    "answerQid": "Q133730",
+    "answer": "Lars von Trier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1218226",
+    "work": "Maria Larssons evige øjeblik",
+    "answerQid": "Q381876",
+    "answer": "Jan Troell"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q165699",
+    "work": "Melancholia",
+    "answerQid": "Q133730",
+    "answer": "Lars von Trier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1245864",
+    "work": "Mifunes sidste sang",
+    "answerQid": "Q1244129",
+    "answer": "Søren Kragh-Jacobsen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1212397",
+    "work": "Min kones ferie",
+    "answerQid": "Q12320183",
+    "answer": "John Hilbard"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1193228",
+    "work": "Mod lyset",
+    "answerQid": "Q1382349",
+    "answer": "Holger-Madsen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1179100",
+    "work": "Monterey Pop",
+    "answerQid": "Q225852",
+    "answer": "D. A. Pennebaker"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1134037",
+    "work": "Oskar & Josefine",
+    "answerQid": "Q33436763",
+    "answer": "Carsten Myllerup"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q254687",
+    "work": "Pan",
+    "answerQid": "Q3077730",
+    "answer": "Henning Carlsen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1632262",
+    "work": "Paw",
+    "answerQid": "Q460582",
+    "answer": "Astrid Henning-Jensen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1165090",
+    "work": "Pigen der legede med ilden",
+    "answerQid": "Q1159900",
+    "answer": "Daniel Alfredson"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q762898",
+    "work": "Pink Prison",
+    "answerQid": "Q6558586",
+    "answer": "Lisbeth Lynghøft"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1126097",
+    "work": "Pusher II",
+    "answerQid": "Q359397",
+    "answer": "Nicolas Winding Refn"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q766096",
+    "work": "Pusher III",
+    "answerQid": "Q359397",
+    "answer": "Nicolas Winding Refn"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q221887",
+    "work": "Reconstruction",
+    "answerQid": "Q1084396",
+    "answer": "Christoffer Boe"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1428455",
+    "work": "Rembrandt",
+    "answerQid": "Q16196081",
+    "answer": "Jannik Johansen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q59721",
+    "work": "Russian Ark",
+    "answerQid": "Q55172",
+    "answer": "Aleksandr Sokurov"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1226345",
+    "work": "Sidste time",
+    "answerQid": "Q24807481",
+    "answer": "Martin Schmidt"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1219667",
+    "work": "Sunes familie",
+    "answerQid": "Q12315456",
+    "answer": "Hans Kristensen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q195959",
+    "work": "Tempelriddernes skat",
+    "answerQid": "Q6374646",
+    "answer": "Kasper Barfoed"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1446749",
+    "work": "Valhalla Rising",
+    "answerQid": "Q359397",
+    "answer": "Nicolas Winding Refn"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q153685",
+    "work": "Verdens undergang",
+    "answerQid": "Q760959",
+    "answer": "August Blom"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q117378",
+    "work": "Wilbur begår selvmord",
+    "answerQid": "Q241546",
+    "answer": "Lone Scherfig"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q151730",
+    "work": "Zozo",
+    "answerQid": "Q1345960",
+    "answer": "Josef Fares"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1167202",
+    "work": "Ørnens øje",
+    "answerQid": "Q2074912",
+    "answer": "Peter Flinth"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q131948140",
+    "work": "Andre folks penge",
+    "answerQid": "Q1682199",
+    "answer": "Jan Schomburg"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q130348717",
+    "work": "Anker",
+    "answerQid": "Q38051211",
+    "answer": "Bo Tengberg"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q2111069",
+    "work": "Anthonsen",
+    "answerQid": "Q343362",
+    "answer": "Henning Bahs"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q1211796",
+    "work": "Broen",
+    "answerQid": "Q6079725",
+    "answer": "Hans Rosenfeldt"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q115173056",
+    "work": "Carmen Curlers (tv-serie)",
+    "answerQid": "Q175510",
+    "answer": "Mette Heeno"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q112270002",
+    "work": "Dag & nat",
+    "answerQid": "Q241546",
+    "answer": "Lone Scherfig"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q3705475",
+    "work": "Danmarks Næste Topmodel",
+    "answerQid": "Q172303",
+    "answer": "Tyra Banks"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q5245862",
+    "work": "Deal/No Deal",
+    "answerQid": "Q470847",
+    "answer": "John de Mol Jr."
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q638590",
+    "work": "Den som dræber",
+    "answerQid": "Q2479260",
+    "answer": "Elsebeth Egholm"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q956446",
+    "work": "Forbrydelsen",
+    "answerQid": "Q2380228",
+    "answer": "Søren Sveistrup"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q133825203",
+    "work": "Generationer",
+    "answerQid": "Q58644198",
+    "answer": "Anna Emma Haudal"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q29108232",
+    "work": "Gidseltagningen",
+    "answerQid": "Q6374646",
+    "answer": "Kasper Barfoed"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q5989452",
+    "work": "Idols (Danmark)",
+    "answerQid": "Q2624387",
+    "answer": "TV3 Danmark"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q1782870",
+    "work": "Krøniken",
+    "answerQid": "Q12337221",
+    "answer": "Stig Thorsboe"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q1275157",
+    "work": "Matador",
+    "answerQid": "Q463747",
+    "answer": "Lise Nørgaard"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q100268160",
+    "work": "Muldvarpen - Undercover i Nordkorea",
+    "answerQid": "Q1747857",
+    "answer": "Mads Brügger"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q113592299",
+    "work": "Onkel Reje",
+    "answerQid": "Q113591950",
+    "answer": "Mads Geertsen"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q12332033",
+    "work": "Politistationen",
+    "answerQid": "Q38055090",
+    "answer": "Anders Dalgaard"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q1331994",
+    "work": "Riget",
+    "answerQid": "Q133730",
+    "answer": "Lars von Trier"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q12333582",
+    "work": "Rita",
+    "answerQid": "Q12306187",
+    "answer": "Christian Torpe"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q96241173",
+    "work": "Sommerdahl",
+    "answerQid": "Q72549029",
+    "answer": "Anna-Karina Steenholdt"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q113372081",
+    "work": "Trom",
+    "answerQid": "Q116954563",
+    "answer": "Torfinnur Jákupsson"
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q7939619",
+    "work": "Voice - Danmarks største stemme",
+    "answerQid": "Q470847",
+    "answer": "John de Mol Jr."
+  },
+  {
+    "key": "danish-series-creator",
+    "categoryId": "cat-20",
+    "prompt": "Hvem skabte den danske TV-serie {work}?",
+    "relation": "skaber",
+    "workQid": "Q591519",
+    "work": "X Factor",
+    "answerQid": "Q162629",
+    "answer": "Simon Cowell"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q828",
+    "work": "Amerika",
+    "answerQid": "Q7322",
+    "answer": "Christoffer Columbus"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q6199",
+    "work": "anarkisme",
+    "answerQid": "Q5749",
+    "answer": "Joseph-Pierre Proudhon"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q188670",
+    "work": "Anarko-kommunisme",
+    "answerQid": "Q5752",
+    "answer": "Peter Kropotkin"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q2270",
+    "work": "Benzen",
+    "answerQid": "Q8750",
+    "answer": "Michael Faraday"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q3134",
+    "work": "Callisto",
+    "answerQid": "Q307",
+    "answer": "Galileo Galilei"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q5785",
+    "work": "Caymanøerne",
+    "answerQid": "Q7322",
+    "answer": "Christoffer Columbus"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q8548",
+    "work": "Dijkstras algoritme",
+    "answerQid": "Q8556",
+    "answer": "Edsger W. Dijkstra"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q139085",
+    "work": "Ecdyson",
+    "answerQid": "Q5327",
+    "answer": "Adolf Butenandt"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q143",
+    "work": "esperanto",
+    "answerQid": "Q11758",
+    "answer": "Ludwik Lejzer Zamenhof"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q3143",
+    "work": "Europa",
+    "answerQid": "Q307",
+    "answer": "Galileo Galilei"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q650",
+    "work": "fluor",
+    "answerQid": "Q675",
+    "answer": "André-Marie Ampère"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q3169",
+    "work": "Ganymedes",
+    "answerQid": "Q307",
+    "answer": "Galileo Galilei"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q3123",
+    "work": "Io",
+    "answerQid": "Q307",
+    "answer": "Galileo Galilei"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q49984",
+    "work": "Lille Magellanske Sky",
+    "answerQid": "Q1496",
+    "answer": "Ferdinand Magellan"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q48365",
+    "work": "Magellanstrædet",
+    "answerQid": "Q1496",
+    "answer": "Ferdinand Magellan"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q7264",
+    "work": "Marxisme",
+    "answerQid": "Q9061",
+    "answer": "Karl Marx"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q74304",
+    "work": "Mindste kvadraters metode",
+    "answerQid": "Q6722",
+    "answer": "Carl Friedrich Gauss"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q102694",
+    "work": "Nix",
+    "answerQid": "Q2513",
+    "answer": "Hubble-rumteleskopet"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q43484",
+    "work": "Overmenneske",
+    "answerQid": "Q9358",
+    "answer": "Friedrich Nietzsche"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q10693",
+    "work": "periodiske system",
+    "answerQid": "Q9106",
+    "answer": "Dmitrij Mendelejev"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q122894",
+    "work": "Plancks konstant",
+    "answerQid": "Q9021",
+    "answer": "Max Karl Ernst Ludwig Planck"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q979",
+    "work": "polonium",
+    "answerQid": "Q7186",
+    "answer": "Marie Curie"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q2294",
+    "work": "proton",
+    "answerQid": "Q9123",
+    "answer": "Ernest Rutherford"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q1128",
+    "work": "radium",
+    "answerQid": "Q7186",
+    "answer": "Marie Curie"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q1133",
+    "work": "radon",
+    "answerQid": "Q9123",
+    "answer": "Ernest Rutherford"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q25596",
+    "work": "Saint Martin",
+    "answerQid": "Q7322",
+    "answer": "Christoffer Columbus"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q2409",
+    "work": "saltsyre",
+    "answerQid": "Q7499",
+    "answer": "Mary the Jewess"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q49957",
+    "work": "Store Magellanske Sky",
+    "answerQid": "Q11075",
+    "answer": "Abd-al-Rahman Al Sufi"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q123300",
+    "work": "Stående bølge",
+    "answerQid": "Q8750",
+    "answer": "Michael Faraday"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q933",
+    "work": "Sydpolen",
+    "answerQid": "Q926",
+    "answer": "Roald Amundsen"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q143899",
+    "work": "tandhjulspumpe",
+    "answerQid": "Q8963",
+    "answer": "Johannes Kepler"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q188589",
+    "work": "Tokamak",
+    "answerQid": "Q997",
+    "answer": "Andrej Sakharov"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q144334",
+    "work": "Trykpresse",
+    "answerQid": "Q8958",
+    "answer": "Johann Gutenberg"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q6368",
+    "work": "webbrowser",
+    "answerQid": "Q80",
+    "answer": "Tim Berners-Lee"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q466",
+    "work": "World Wide Web",
+    "answerQid": "Q80",
+    "answer": "Tim Berners-Lee"
+  },
+  {
+    "key": "invention-inventor",
+    "categoryId": "cat-39",
+    "prompt": "Hvem forbindes som opfinder af {work}?",
+    "relation": "opfinder",
+    "workQid": "Q131246",
+    "work": "Ødipuskompleks",
+    "answerQid": "Q9215",
+    "answer": "Sigmund Freud"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11242892",
+    "work": "Alvsnosi",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1018862",
+    "work": "Bárðarbunga",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11962490",
+    "work": "Brøknipa",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11248154",
+    "work": "Dordinakken",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q116693",
+    "work": "Esjan",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1420616",
+    "work": "Fløyen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1496308",
+    "work": "Gaustatoppen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1773136",
+    "work": "Gråhø",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1141849",
+    "work": "Helgafell",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1413846",
+    "work": "Hengill",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1095308",
+    "work": "Jervvasstind",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1688935",
+    "work": "Jiehkkevárri",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1547402",
+    "work": "Kirkjufell",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1477173",
+    "work": "Kjerag",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q12716546",
+    "work": "Lille Russetinden",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1026479",
+    "work": "Lodalskåpa",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1770210",
+    "work": "Lyderhorn",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q15243243",
+    "work": "Løvstakken",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11988056",
+    "work": "Mannen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11236492",
+    "work": "Melderskin",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q16901593",
+    "work": "Memurutinderne",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1419222",
+    "work": "Newtontoppen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q10609536",
+    "work": "Omberg",
+    "answerQid": "Q34",
+    "answer": "Sverige"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11252275",
+    "work": "Rostafjellet",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1771244",
+    "work": "Rundemanen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1772137",
+    "work": "Sandviksfjeldet",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11236926",
+    "work": "Skagastølstinderne",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1777780",
+    "work": "Skrimfjella",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1315012",
+    "work": "Snæfellsjökull",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1078075",
+    "work": "Storen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q12003467",
+    "work": "Storheia",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1370893",
+    "work": "Storsylen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1637507",
+    "work": "Saana",
+    "answerQid": "Q33",
+    "answer": "Finland"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q138114",
+    "work": "Þórsmörk",
+    "answerQid": "Q189",
+    "answer": "Island"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q1770130",
+    "work": "Tverrådalskyrkja",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-mountain-country",
+    "categoryId": "cat-30",
+    "prompt": "I hvilket nordisk land ligger bjerget {work}?",
+    "relation": "land",
+    "workQid": "Q11256002",
+    "work": "Vassdalsfjellet",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q868",
+    "work": "Aristoteles",
+    "answerQid": "Q194414",
+    "answer": "Peripatetiske skole"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q31845",
+    "work": "Arrian",
+    "answerQid": "Q48235",
+    "answer": "Stoicisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q12718",
+    "work": "Auguste Comte",
+    "answerQid": "Q131015",
+    "answer": "positivisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q223723",
+    "work": "Cesare Beccaria",
+    "answerQid": "Q3441125",
+    "answer": "Italiensk romantisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q1067",
+    "work": "Dante Alighieri",
+    "answerQid": "Q542036",
+    "answer": "Dolce stil novo"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q41980",
+    "work": "Demokrit",
+    "answerQid": "Q178668",
+    "answer": "Atomisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q59180",
+    "work": "Diogenes",
+    "answerQid": "Q485459",
+    "answer": "Kynisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q58586",
+    "work": "Edmund Husserl",
+    "answerQid": "Q842333",
+    "answer": "Vestlig filosofi"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q43216",
+    "work": "Epikur",
+    "answerQid": "Q179541",
+    "answer": "epikurisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q43499",
+    "work": "Erasmus af Rotterdam",
+    "answerQid": "Q917440",
+    "answer": "Renæssancens filosofi"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q991",
+    "work": "Fjodor Dostojevskij",
+    "answerQid": "Q667661",
+    "answer": "Realisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q13575",
+    "work": "François Quesnay",
+    "answerQid": "Q183244",
+    "answer": "Fysiokrater"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q27913",
+    "work": "Friedrich Paulsen",
+    "answerQid": "Q737560",
+    "answer": "Nykantianisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q60070",
+    "work": "Friedrich Wilhelm Joseph von Schelling",
+    "answerQid": "Q679842",
+    "answer": "Tysk idealisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q131333",
+    "work": "George Eliot",
+    "answerQid": "Q667661",
+    "answer": "Realisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q60025",
+    "work": "Hannah Arendt",
+    "answerQid": "Q179235",
+    "answer": "fænomenologi"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q42156",
+    "work": "Henri Bergson",
+    "answerQid": "Q59104",
+    "answer": "kontinental filosofi"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q131149",
+    "work": "Henry David Thoreau",
+    "answerQid": "Q842333",
+    "answer": "Vestlig filosofi"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q60030",
+    "work": "Herbert Marcuse",
+    "answerQid": "Q151843",
+    "answer": "Frankfurterskolen"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q25973",
+    "work": "Hermann Hesse",
+    "answerQid": "Q34636",
+    "answer": "jugendstil"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q221697",
+    "work": "Hilary Putnam",
+    "answerQid": "Q431354",
+    "answer": "Videnskabelig realisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q11903",
+    "work": "Hypatia af Alexandria",
+    "answerQid": "Q162145",
+    "answer": "Neoplatonisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q60887",
+    "work": "Jeremy Bentham",
+    "answerQid": "Q160590",
+    "answer": "utilitarisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q61067",
+    "work": "Johann Reuchlin",
+    "answerQid": "Q2455000",
+    "answer": "tysk renæssance"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q60208",
+    "work": "Karl Korsch",
+    "answerQid": "Q59104",
+    "answer": "kontinental filosofi"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q64137",
+    "work": "Kaspar Schwenckfeld",
+    "answerQid": "Q100275927",
+    "answer": "Spiritualisme (teologi)"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q33391",
+    "work": "Lev Trotskij",
+    "answerQid": "Q181133",
+    "answer": "trotskisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q60698",
+    "work": "Ludwig Klages",
+    "answerQid": "Q191631",
+    "answer": "Vitalisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q1001",
+    "work": "Mahatma Gandhi",
+    "answerQid": "Q76611",
+    "answer": "ikkevold"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q1430",
+    "work": "Marcus Aurelius",
+    "answerQid": "Q48235",
+    "answer": "Stoicisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q1541",
+    "work": "Marcus Tullius Cicero",
+    "answerQid": "Q3345153",
+    "answer": "academic skepticism"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q1399",
+    "work": "Niccolò Machiavelli",
+    "answerQid": "Q1474884",
+    "answer": "højrenæssance"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q11730",
+    "work": "Otto Bauer",
+    "answerQid": "Q7264",
+    "answer": "Marxisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q859",
+    "work": "Platon",
+    "answerQid": "Q193589",
+    "answer": "platonisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q222134",
+    "work": "Ted Kaczynski",
+    "answerQid": "Q2662880",
+    "answer": "neoluddisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q61078",
+    "work": "Walter Benjamin",
+    "answerQid": "Q7264",
+    "answer": "Marxisme"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q27718",
+    "work": "Walter Block",
+    "answerQid": "Q203411",
+    "answer": "Den østrigske skole"
+  },
+  {
+    "key": "philosopher-movement",
+    "categoryId": "cat-11",
+    "prompt": "Hvilken filosofisk retning forbindes {work} med?",
+    "relation": "filosofisk retning",
+    "workQid": "Q60080",
+    "work": "Wilhelm Dilthey",
+    "answerQid": "Q842333",
+    "answer": "Vestlig filosofi"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q67567",
+    "work": "Charlotte Bühler",
+    "answerQid": "Q23364",
+    "answer": "Humanistisk psykologi"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q124210",
+    "work": "Emma Jung",
+    "answerQid": "Q41630",
+    "answer": "psykoanalyse"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q142881",
+    "work": "Frederick Herzberg",
+    "answerQid": "Q9418",
+    "answer": "psykologi"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q72710",
+    "work": "Gerda Alexander",
+    "answerQid": "Q188504",
+    "answer": "alternativ behandling"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q76881",
+    "work": "Gustav Fechner",
+    "answerQid": "Q500096",
+    "answer": "psykofysik"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q144535",
+    "work": "Herbert Spencer",
+    "answerQid": "Q441",
+    "answer": "botanik"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q176515",
+    "work": "Howard Gardner",
+    "answerQid": "Q175002",
+    "answer": "udviklingspsykologi"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q217477",
+    "work": "John Broadus Watson",
+    "answerQid": "Q9418",
+    "answer": "psykologi"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q115472",
+    "work": "Marie Bonaparte",
+    "answerQid": "Q41630",
+    "answer": "psykoanalyse"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q151301",
+    "work": "Vaira Vīķe-Freiberga",
+    "answerQid": "Q9418",
+    "answer": "psykologi"
+  }
+]

@@ -107,9 +107,21 @@ describe("seedbank og Zod", () => {
     expect(CATEGORIES).toHaveLength(59);
     for (const categoryId of newCategoryIds) {
       expect(
-        SEED_QUESTIONS.filter((question) => question.categoryId === categoryId),
-      ).toHaveLength(10);
+        SEED_QUESTIONS.filter((question) => question.categoryId === categoryId)
+          .length,
+      ).toBeGreaterThanOrEqual(10);
     }
+  });
+  it("har en valideret Wikidata-udvidelse til tynde kategorier", () => {
+    const thinQuestions = SEED_QUESTIONS.filter((question) =>
+      question.id.startsWith("wikithin-"),
+    );
+    expect(thinQuestions.length).toBeGreaterThanOrEqual(250);
+    expect(
+      thinQuestions.every(
+        (question) => question.sourceLabel === "Wikidata (CC0)",
+      ),
+    ).toBe(true);
   });
 });
 describe("adaptiv udvælgelse", () => {
