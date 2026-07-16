@@ -8,6 +8,7 @@ import {
   ArrowRight,
   BookOpen,
   Check,
+  CircleHelp,
   Clock3,
   Crown,
   Download,
@@ -15,6 +16,7 @@ import {
   Gamepad2,
   Heart,
   History,
+  LifeBuoy,
   Menu,
   RefreshCw,
   Search,
@@ -50,6 +52,8 @@ import {
   answerIsCorrect,
   buildResult,
   calculateQuestionPoints,
+  closestFairQuestionCount,
+  fairQuestionCounts,
   newPlayer,
   rankPlayers,
   reserveSeenQuestions,
@@ -102,7 +106,7 @@ const modes: { id: GameMode; title: string; text: string; icon: string }[] = [
   {
     id: "quick",
     title: "Hurtig quiz",
-    text: "10 blandede spørgsmål",
+    text: "Omkring 10 blandede spørgsmål",
     icon: "⚡",
   },
   { id: "risk", title: "Risiko", text: "Sats 1×, 2× eller 3×", icon: "🎲" },
@@ -125,6 +129,23 @@ const typeLabels: Partial<Record<Question["type"], string>> = {
   ordering: "Korrekt rækkefølge",
   category_cross: "Kategorikryds",
 };
+const difficultyModes = [
+  {
+    id: "fixed",
+    label: "Fast niveau",
+    info: "Holder spørgsmålene på det valgte niveau.",
+  },
+  {
+    id: "mixed",
+    label: "Blandet niveau",
+    info: "Blander spørgsmål fra niveauet lige under, det valgte niveau og niveauet lige over.",
+  },
+  {
+    id: "rising",
+    label: "Stigende niveau",
+    info: "Starter lidt lettere og bliver gradvist sværere, men holder sig tæt på det valgte niveau.",
+  },
+] as const;
 const emptySetup = (): GameSetup => ({
   mode: "classic",
   players: [newPlayer("Spiller 1", 0), newPlayer("Spiller 2", 1)],
@@ -138,6 +159,7 @@ const emptySetup = (): GameSetup => ({
   streakBonus: false,
   minusPoints: false,
   finale: false,
+  lifelines: false,
 });
 
 function load<T>(key: string, fallback: T): T {
@@ -185,6 +207,7 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
   return {
     ...fallback,
     ...saved,
+    mode: saved.mode === "mystery" ? "classic" : (saved.mode ?? fallback.mode),
     players: saved.players.slice(0, 12).map((player, index) => ({
       ...newPlayer(
         typeof player.name === "string" ? player.name : `Spiller ${index + 1}`,
@@ -205,6 +228,7 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
       : [],
     timeBonus: saved.timeBonus ?? false,
     streakBonus: saved.streakBonus ?? false,
+    lifelines: saved.lifelines ?? false,
   };
 }
 function tone(kind: "tap" | "correct" | "wrong" | "win", enabled: boolean) {
@@ -383,6 +407,13 @@ export function GameShell() {
   }, [hydrated]);
   const go = (v: View) => {
     tone("tap", settings.sound);
+    if (v === "setup") {
+      setSetup((current) =>
+        current.mode === "mystery"
+          ? { ...current, mode: "classic" }
+          : current,
+      );
+    }
     setView(v);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -397,10 +428,16 @@ export function GameShell() {
         return;
       }
       const s = same ?? setup;
+      const selectedPlayers =
+        s.mode === "solo" ? [s.players[0]] : s.players;
+      const requestedCount = s.mode === "quick" ? 10 : s.questionCount;
       const normalized = {
         ...s,
-        questionCount: s.mode === "quick" ? 10 : s.questionCount,
-        players: s.mode === "solo" ? [s.players[0]] : s.players,
+        questionCount: closestFairQuestionCount(
+          requestedCount,
+          selectedPlayers.length,
+        ),
+        players: selectedPlayers,
       };
       const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
       const questions = selectQuestions(questionBank, normalized, seen);
@@ -432,6 +469,10 @@ export function GameShell() {
         answers: [],
         startedAt: new Date().toISOString(),
         riskMultiplier: 1,
+        lifelinesRemaining: Object.fromEntries(
+          normalized.players.map((player) => [player.id, 3]),
+        ),
+        hiddenOptionIds: [],
       };
       setGame(g);
       safeSet(APP_CONFIG.gameKey, JSON.stringify(g));
@@ -583,6 +624,43 @@ export function GameShell() {
       activePlayerIndex:
         (game.activePlayerIndex + 1) % game.setup.players.length,
       riskMultiplier: 1,
+      hiddenOptionIds: [],
+    };
+    setGame(next);
+    safeSet(APP_CONFIG.gameKey, JSON.stringify(next));
+    tone("tap", settings.sound);
+  };
+  const useLifeline = () => {
+    if (!game || !game.setup.lifelines) return;
+    const question = game.questions[game.index];
+    const player = game.setup.players[game.activePlayerIndex];
+    const alreadyAnswered = game.answers.some(
+      (item) => item.questionId === question.id,
+    );
+    const remaining = game.lifelinesRemaining?.[player.id] ?? 3;
+    if (
+      alreadyAnswered ||
+      remaining < 1 ||
+      game.hiddenOptionIds?.length ||
+      question.type === "ordering" ||
+      question.options.length !== 4 ||
+      !question.correctOptionId
+    )
+      return;
+    const hiddenOptionIds = shuffle(
+      question.options.filter(
+        (option) => option.id !== question.correctOptionId,
+      ),
+    )
+      .slice(0, 2)
+      .map((option) => option.id);
+    const next = {
+      ...game,
+      hiddenOptionIds,
+      lifelinesRemaining: {
+        ...game.lifelinesRemaining,
+        [player.id]: remaining - 1,
+      },
     };
     setGame(next);
     safeSet(APP_CONFIG.gameKey, JSON.stringify(next));
@@ -609,6 +687,7 @@ export function GameShell() {
         answer={answer}
         next={nextQuestion}
         report={reportQuestion}
+        useLifeline={useLifeline}
         setRisk={(n) => {
           const g = { ...game, riskMultiplier: n };
           setGame(g);
@@ -675,7 +754,7 @@ function TopBar({
   go: (v: View) => void;
 }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
+    <header className="app-topbar sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:px-6">
         <button
           onClick={() => go("home")}
@@ -831,6 +910,11 @@ function Setup({
   const [search, setSearch] = useState("");
   const filtered = CATEGORIES.filter((c) =>
     c.name.toLocaleLowerCase("da").includes(search.toLocaleLowerCase("da")),
+  );
+  const questionCounts = fairQuestionCounts(setup.players.length);
+  const displayedQuestionCount = closestFairQuestionCount(
+    setup.mode === "quick" ? 10 : setup.questionCount,
+    setup.players.length,
   );
   const add = () =>
     setSetup({
@@ -1032,7 +1116,7 @@ function Setup({
             </Button>
           </div>
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-3 size-5 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="pl-10"
               placeholder="Søg i kategorier"
@@ -1091,32 +1175,22 @@ function Setup({
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Spillets længde</CardTitle>
+              <CardTitle>Antal spørgsmål</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
-              {[10, 20, 30, 40, 60].map((n) => (
+              {questionCounts.map((n) => (
                 <Button
                   key={n}
-                  variant={setup.questionCount === n ? "default" : "outline"}
+                  className="h-auto min-w-16 flex-col gap-0.5 py-2"
+                  variant={displayedQuestionCount === n ? "default" : "outline"}
                   onClick={() => setSetup({ ...setup, questionCount: n })}
                 >
-                  {n}
+                  <b>{n}</b>
+                  <small className="text-[0.65rem] font-normal opacity-75">
+                    {n / setup.players.length} pr. {setup.mode === "teams" ? "hold" : "spiller"}
+                  </small>
                 </Button>
               ))}
-              <Input
-                type="number"
-                min={3}
-                max={100}
-                className="w-24"
-                aria-label="Brugerdefineret antal"
-                value={setup.questionCount}
-                onChange={(e) =>
-                  setSetup({
-                    ...setup,
-                    questionCount: Math.max(3, Math.min(100, +e.target.value)),
-                  })
-                }
-              />
             </CardContent>
           </Card>
           <Card>
@@ -1137,24 +1211,31 @@ function Setup({
                 value={[setup.difficulty]}
                 onValueChange={([n]) => setSetup({ ...setup, difficulty: n })}
               />
-              <div className="mt-5 grid grid-cols-3 gap-2">
-                {(["fixed", "mixed", "rising"] as const).map((x, i) => (
-                  <Button
-                    size="sm"
-                    key={x}
-                    variant={setup.difficultyMode === x ? "secondary" : "ghost"}
-                    onClick={() => setSetup({ ...setup, difficultyMode: x })}
-                  >
-                    {["Fast", "Blandet", "Stigende"][i]}
-                  </Button>
+              <div className="mt-8 grid grid-cols-3 gap-2">
+                {difficultyModes.map((option) => (
+                  <div className="difficulty-mode-option" key={option.id}>
+                    <Button
+                      size="sm"
+                      className="w-full px-2"
+                      variant={setup.difficultyMode === option.id ? "secondary" : "ghost"}
+                      onClick={() => setSetup({ ...setup, difficultyMode: option.id })}
+                    >
+                      {option.label}
+                    </Button>
+                    <InfoHint text={option.info} label={`Om ${option.label}`} />
+                  </div>
                 ))}
               </div>
             </CardContent>
           </Card>
           <Card className="md:col-span-2">
-            <CardContent className="grid gap-5 p-5 sm:grid-cols-2 lg:grid-cols-5">
+            <CardHeader>
+              <CardTitle>Tilføjelser</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-5 p-5 pt-0 sm:grid-cols-2 lg:grid-cols-3">
               <Toggle
                 label="Vis 30 sek. timer"
+                info="Viser en nedtælling. Tiden giver ikke ekstra point, medmindre Tidsbonus også slås til."
                 checked={setup.timer}
                 on={(v) =>
                   setSetup({
@@ -1165,26 +1246,36 @@ function Setup({
                 }
               />
               <Toggle
-                label="Tidsbonus · valgfri"
+                label="Tidsbonus"
+                info="Giver op til 50 ekstra point for et hurtigt korrekt svar og slår automatisk timeren til."
                 checked={setup.timeBonus}
                 on={(v) =>
                   setSetup({ ...setup, timeBonus: v, timer: v || setup.timer })
                 }
               />
               <Toggle
-                label="Streakbonus · valgfri"
+                label="Streakbonus"
+                info="Giver 25 ekstra point pr. svar i den aktuelle sejrsrække, op til 75 bonuspoint."
                 checked={setup.streakBonus}
                 on={(v) => setSetup({ ...setup, streakBonus: v })}
               />
               <Toggle
                 label="Minuspoint"
+                info="Forkerte svar kan koste point. Risiko med 2× eller 3× kan stadig koste point efter sine egne regler."
                 checked={setup.minusPoints}
                 on={(v) => setSetup({ ...setup, minusPoints: v })}
               />
               <Toggle
-                label="Finale · sidste 3"
+                label="Finale Dobbelt Point"
+                info="Hver spiller eller hvert hold får dobbelt point på sit sidste spørgsmål."
                 checked={setup.finale}
                 on={(v) => setSetup({ ...setup, finale: v })}
+              />
+              <Toggle
+                label="3 livslinjer"
+                info="Hver spiller eller hvert hold får tre 50/50-livslinjer, som fjerner to forkerte svar."
+                checked={setup.lifelines}
+                on={(v) => setSetup({ ...setup, lifelines: v })}
               />
             </CardContent>
           </Card>
@@ -1231,11 +1322,13 @@ function Play({
   next,
   setRisk,
   report,
+  useLifeline,
 }: {
   game: Game;
   answer: (id: string, ms: number) => void;
   next: () => void;
   setRisk: (n: number) => void;
+  useLifeline: () => void;
   report: (
     questionId: string,
     reason: QuestionReportReason,
@@ -1245,6 +1338,19 @@ function Play({
   const q = game.questions[game.index],
     p = game.setup.players[game.activePlayerIndex],
     given = game.answers.find((a) => a.questionId === q.id);
+  const hiddenOptionIds = new Set(game.hiddenOptionIds ?? []);
+  const visibleOptions = q.options.filter(
+    (option) => !hiddenOptionIds.has(option.id),
+  );
+  const lifelinesLeft = game.lifelinesRemaining?.[p.id] ?? 3;
+  const canUseLifeline =
+    game.setup.lifelines &&
+    !given &&
+    lifelinesLeft > 0 &&
+    hiddenOptionIds.size === 0 &&
+    q.type !== "ordering" &&
+    q.options.length === 4 &&
+    Boolean(q.correctOptionId);
   const started = useRef(0);
   const [order, setOrder] = useState<string[]>([]),
     [reportOpen, setReportOpen] = useState(false),
@@ -1326,6 +1432,26 @@ function Play({
           ))}
         </div>
       )}
+      {game.setup.lifelines && !given && (
+        <div className="mt-4 flex justify-end">
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={!canUseLifeline}
+            onClick={useLifeline}
+            title={
+              canUseLifeline
+                ? "Fjern to forkerte svar"
+                : lifelinesLeft < 1
+                  ? "Ingen livslinjer tilbage"
+                  : "50/50 kan ikke bruges på denne spørgsmålstype"
+            }
+          >
+            <LifeBuoy />
+            50/50 · {lifelinesLeft} tilbage
+          </Button>
+        </div>
+      )}
       <Card className="question-card mt-6">
         <CardHeader>
           <div className="flex flex-wrap gap-2">
@@ -1340,14 +1466,16 @@ function Play({
                 {typeLabels[q.type]}
               </Badge>
             )}
-            {(q.finale || q.type === "finale") && <Badge>Finale · 2×</Badge>}
+            {(q.finale || q.type === "finale") && (
+              <Badge>Finale · dobbelt point</Badge>
+            )}
           </div>
           <CardTitle className="pt-4 text-2xl leading-tight sm:text-4xl">
             {q.prompt}
           </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3">
-          {q.options.map((o, i) => {
+          {visibleOptions.map((o, i) => {
             const selected = given?.optionId === o.id,
               correct = o.id === q.correctOptionId,
               orderIndex = order.indexOf(o.id);
@@ -1982,18 +2110,33 @@ function PageHead({
 }
 function Toggle({
   label,
+  info,
   checked,
   on,
 }: {
   label: string;
+  info: string;
   checked: boolean;
   on: (v: boolean) => void;
 }) {
   return (
     <div className="flex min-h-12 items-center justify-between gap-3">
-      <Label>{label}</Label>
+      <div className="flex items-center gap-1">
+        <Label>{label}</Label>
+        <InfoHint text={info} label={`Om ${label}`} />
+      </div>
       <Switch aria-label={label} checked={checked} onCheckedChange={on} />
     </div>
+  );
+}
+function InfoHint({ text, label }: { text: string; label: string }) {
+  return (
+    <details className="info-hint">
+      <summary aria-label={label}>
+        <CircleHelp aria-hidden="true" />
+      </summary>
+      <p>{text}</p>
+    </details>
   );
 }
 function Empty({

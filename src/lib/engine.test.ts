@@ -3,7 +3,9 @@ import {
   answerIsCorrect,
   calculateQuestionPoints,
   calculatePoints,
+  closestFairQuestionCount,
   difficultyFor,
+  fairQuestionCounts,
   fingerprint,
   isGeneralKnowledgeQuestion,
   isNearDuplicate,
@@ -33,6 +35,7 @@ const setup = {
   streakBonus: false,
   minusPoints: false,
   finale: false,
+  lifelines: false,
 };
 describe("pointberegning", () => {
   it("giver 100 standardpoint og forståelig risiko", () => {
@@ -399,7 +402,7 @@ describe("adaptiv udvælgelse", () => {
     expect(generalIndexes.some((index) => index < 10)).toBe(true);
     expect(generalIndexes.some((index) => index >= 20)).toBe(true);
   });
-  it("kan fylde et spil, når kun General paratviden er valgt", () => {
+  it("kan fylde et spil, når kun Paratviden er valgt", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,
       questionCount: 20,
@@ -407,6 +410,31 @@ describe("adaptiv udvælgelse", () => {
     });
     expect(chosen).toHaveLength(20);
     expect(chosen.every(isGeneralKnowledgeQuestion)).toBe(true);
+  });
+  it("giver alle lige mange spørgsmål og finale på hver spillers sidste tur", () => {
+    const players = Array.from({ length: 3 }, (_, index) =>
+      newPlayer(`Spiller ${index + 1}`, index),
+    );
+    expect(fairQuestionCounts(players.length)).toEqual([
+      9, 21, 30, 39, 51, 60, 69, 81, 90, 99,
+    ]);
+    expect(closestFairQuestionCount(10, players.length)).toBe(9);
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      players,
+      questionCount: 30,
+      finale: true,
+    });
+    expect(chosen).toHaveLength(30);
+    for (let playerIndex = 0; playerIndex < players.length; playerIndex++) {
+      const playerQuestions = chosen.filter(
+        (_, questionIndex) => questionIndex % players.length === playerIndex,
+      );
+      expect(playerQuestions.filter((question) => question.finale)).toHaveLength(
+        1,
+      );
+      expect(playerQuestions.at(-1)?.finale).toBe(true);
+    }
   });
   it("kan fylde spil fra en valgt spørgsmålsform", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {

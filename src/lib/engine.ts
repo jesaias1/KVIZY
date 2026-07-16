@@ -89,6 +89,32 @@ export function difficultyFor(
     );
   return base;
 }
+
+export function fairQuestionCounts(playerCount: number) {
+  const players = Math.max(1, Math.floor(playerCount));
+  const multiples = Array.from(
+    { length: Math.floor(100 / players) },
+    (_, index) => (index + 1) * players,
+  );
+  const closest = (target: number) =>
+    [...multiples].sort(
+      (left, right) =>
+        Math.abs(left - target) - Math.abs(right - target) || right - left,
+    )[0];
+  return [
+    ...new Set(
+      Array.from({ length: 10 }, (_, index) => closest((index + 1) * 10)),
+    ),
+  ].sort((left, right) => left - right);
+}
+
+export function closestFairQuestionCount(count: number, playerCount: number) {
+  const choices = fairQuestionCounts(playerCount);
+  return [...choices].sort(
+    (left, right) =>
+      Math.abs(left - count) - Math.abs(right - count) || right - left,
+  )[0];
+}
 export function calculatePoints(
   correct: boolean,
   responseMs: number,
@@ -673,8 +699,10 @@ export function selectQuestions(
   );
   return questionsWithSelectedCategory.map((question, index) => {
     const shuffled = shuffleAnswers(question, random);
+    const finaleQuestionCount = Math.max(1, setup.players.length);
     return setup.finale &&
-      index >= Math.max(0, questionsWithSelectedCategory.length - 3)
+      index >=
+        Math.max(0, questionsWithSelectedCategory.length - finaleQuestionCount)
       ? {
           ...shuffled,
           finale: true,

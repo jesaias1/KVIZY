@@ -112,6 +112,7 @@ export type GameSetup = {
   streakBonus: boolean;
   minusPoints: boolean;
   finale: boolean;
+  lifelines: boolean;
 };
 export type Game = {
   id: string;
@@ -123,6 +124,8 @@ export type Game = {
   startedAt: string;
   completedAt?: string;
   riskMultiplier: number;
+  lifelinesRemaining?: Record<string, number>;
+  hiddenOptionIds?: string[];
 };
 export type GameResult = {
   id: string;
