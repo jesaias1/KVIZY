@@ -175,6 +175,12 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
   )
     return fallback;
   const validCategoryIds = new Set(CATEGORIES.map((category) => category.id));
+  const validSavedCategoryIds = saved.categoryIds.filter((id) =>
+    validCategoryIds.has(id),
+  );
+  const looksLikeOldDefaultSelection =
+    validSavedCategoryIds.includes("cat-13") &&
+    validSavedCategoryIds.length >= DEFAULT_CATEGORIES.length;
   return {
     ...fallback,
     ...saved,
@@ -190,7 +196,9 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
       streak: 0,
       longestStreak: 0,
     })),
-    categoryIds: saved.categoryIds.filter((id) => validCategoryIds.has(id)),
+    categoryIds: looksLikeOldDefaultSelection
+      ? validSavedCategoryIds.filter((id) => id !== "cat-13")
+      : validSavedCategoryIds,
     favorites: Array.isArray(saved.favorites)
       ? saved.favorites.filter((id) => validCategoryIds.has(id))
       : [],
