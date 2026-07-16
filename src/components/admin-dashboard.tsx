@@ -117,6 +117,28 @@ export function AdminDashboard() {
     a.click();
     URL.revokeObjectURL(a.href);
   };
+  const downloadReports = () => {
+    const data = reports.map((report) => {
+      const question = SEED_QUESTIONS.find(
+        (item) => item.id === report.questionId,
+      );
+      return {
+        ...report,
+        prompt: question?.prompt,
+        options: question?.options,
+        correctOptionId: question?.correctOptionId,
+        explanation: question?.explanation,
+      };
+    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const anchor = document.createElement("a");
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = "kvizy-rapporter.json";
+    anchor.click();
+    URL.revokeObjectURL(anchor.href);
+  };
   const updateQuestion = async (
     question: Question,
     changes: Partial<Question>,
@@ -208,10 +230,16 @@ export function AdminDashboard() {
       {reports.length > 0 && (
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Seneste spillerrapporter</CardTitle>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <CardTitle>Alle spillerrapporter</CardTitle>
+              <Button size="sm" variant="outline" onClick={downloadReports}>
+                <Download />
+                Eksportér rapporter
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="grid gap-3">
-            {reports.slice(0, 12).map((report) => {
+            {reports.map((report) => {
               const question = SEED_QUESTIONS.find(
                 (item) => item.id === report.questionId,
               );

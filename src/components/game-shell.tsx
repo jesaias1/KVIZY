@@ -50,6 +50,7 @@ import {
   buildResult,
   calculateQuestionPoints,
   newPlayer,
+  rankPlayers,
   selectQuestions,
   shuffle,
 } from "@/lib/engine";
@@ -159,6 +160,10 @@ function safeRemove(key: string) {
   } catch {
     // Manglende lageradgang må aldrig afbryde et spil.
   }
+}
+function formatNames(names: string[]) {
+  if (names.length < 2) return names[0] ?? "Ingen";
+  return `${names.slice(0, -1).join(", ")} og ${names.at(-1)}`;
 }
 function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
   const fallback = emptySetup();
@@ -1446,8 +1451,14 @@ function Results({
   go: (v: View) => void;
   replay: () => void;
 }) {
-  const sorted = [...game.setup.players].sort((a, b) => b.score - a.score),
-    winner = sorted[0];
+  const standings = rankPlayers(game.setup.players),
+    sorted = standings.map(({ player }) => player),
+    winners = standings
+      .filter(({ rank }) => rank === 1)
+      .map(({ player }) => player),
+    winner = winners[0],
+    winnerNames = formatNames(winners.map((player) => player.name)),
+    sharedWin = winners.length > 1;
   const categoryStats = [
     ...new Set(game.answers.map((answer) => answer.categoryId)),
   ]
@@ -1503,8 +1514,9 @@ function Results({
     })
     .filter((stat) => stat.total > 0);
   const winnerRate = winner.correct / Math.max(1, winner.answers);
-  const summary =
-    winnerRate >= 0.8
+  const summary = sharedWin
+    ? `${winnerNames} deler sejren efter en helt lige kamp.`
+    : winnerRate >= 0.8
       ? `${winner.name} leverede en vaskeægte quizmester-præstation.`
       : winner.longestStreak >= 4
         ? `${winner.name} afgjorde kampen med en stærk stime på ${winner.longestStreak}.`
@@ -1512,7 +1524,9 @@ function Results({
           ? "Det blev afgjort på marginalerne – en revanche ligger lige for."
           : `${winner.name} holdt hovedet koldt og tog sejren.`;
   const share = async () => {
-    const text = `${APP_CONFIG.name}: ${winner.name} vandt med ${winner.score.toLocaleString("da-DK")} point!`;
+    const text = sharedWin
+      ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${winner.score.toLocaleString("da-DK")} point!`
+      : `${APP_CONFIG.name}: ${winner.name} vandt med ${winner.score.toLocaleString("da-DK")} point!`;
     if (navigator.share)
       await navigator.share({ title: APP_CONFIG.name, text });
     else await navigator.clipboard.writeText(text);
@@ -1522,17 +1536,18 @@ function Results({
       <div className="winner-crown">👑</div>
       <Badge>Spillet er slut</Badge>
       <h1 className="mt-4 text-4xl font-black sm:text-6xl">
-        {winner.name} vinder!
+        {sharedWin ? `${winnerNames} deler sejren!` : `${winner.name} vinder!`}
       </h1>
       <p className="mt-2 text-xl text-muted-foreground">
-        {winner.score.toLocaleString("da-DK")} point · {winner.correct} rigtige
+        {winner.score.toLocaleString("da-DK")} point
+        {!sharedWin && ` · ${winner.correct} rigtige`}
       </p>
       <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{summary}</p>
       <div className="my-8 grid gap-3 text-left">
-        {sorted.map((p, i) => (
-          <Card key={p.id} className={i === 0 ? "winner-card" : ""}>
+        {standings.map(({ player: p, rank }) => (
+          <Card key={p.id} className={rank === 1 ? "winner-card" : ""}>
             <CardContent className="flex items-center gap-4 p-4">
-              <b className="w-7 text-xl">{i + 1}.</b>
+              <b className="w-7 text-xl">{rank}.</b>
               <span className="text-3xl">{p.avatar}</span>
               <div className="flex-1">
                 <b>{p.name}</b>
@@ -1665,28 +1680,34 @@ function HistoryView({
       <PageHead title="Spilhistorik" onBack={() => go("home")} />
       {items.length ? (
         <div className="grid gap-3">
-          {items.map((r) => (
-            <Card key={r.id}>
-              <CardContent className="flex items-center gap-4 p-4">
-                <Trophy className="text-primary" />
-                <div className="flex-1">
-                  <b>
-                    {[...r.players].sort((a, b) => b.score - a.score)[0]?.name}{" "}
-                    vandt
-                  </b>
+          {items.map((r) => {
+            const standings = rankPlayers(r.players);
+            const winners = standings
+              .filter(({ rank }) => rank === 1)
+              .map(({ player }) => player);
+            const names = formatNames(winners.map((player) => player.name));
+            return (
+              <Card key={r.id}>
+                <CardContent className="flex items-center gap-4 p-4">
+                  <Trophy className="text-primary" />
+                  <div className="flex-1">
+                    <b>
+                      {winners.length > 1
+                        ? `${names} delte førstepladsen`
+                        : `${names} vandt`}
+                    </b>
                   <p className="text-sm text-muted-foreground">
                     {new Date(r.playedAt).toLocaleDateString("da-DK")} ·{" "}
                     {r.questions.length} spørgsmål
                   </p>
                 </div>
                 <strong>
-                  {Math.max(...r.players.map((p) => p.score)).toLocaleString(
-                    "da-DK",
-                  )}
+                    {(winners[0]?.score ?? 0).toLocaleString("da-DK")}
                 </strong>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <Empty

@@ -56,6 +56,17 @@ export function shuffle<T>(items: T[], random = Math.random) {
   }
   return out;
 }
+
+export function rankPlayers<T extends Pick<GamePlayer, "score">>(players: T[]) {
+  const sorted = [...players].sort((a, b) => b.score - a.score);
+  return sorted.map((player, index) => ({
+    player,
+    rank:
+      index > 0 && player.score === sorted[index - 1].score
+        ? sorted.findIndex((item) => item.score === player.score) + 1
+        : index + 1,
+  }));
+}
 export function shuffleAnswers(q: Question, random = Math.random): Question {
   if (q.type === "ordering") return q;
   return { ...q, options: shuffle(q.options, random) };

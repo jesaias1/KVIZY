@@ -8,6 +8,7 @@ import {
   isNearDuplicate,
   newPlayer,
   normalizeText,
+  rankPlayers,
   selectQuestions,
   shuffleAnswers,
   similarity,
@@ -68,6 +69,24 @@ describe("pointberegning", () => {
         true,
       ),
     ).toBe(175);
+  });
+});
+describe("placeringer", () => {
+  it("giver spillere med samme point samme plads", () => {
+    const standings = rankPlayers([
+      { name: "A", score: 300 },
+      { name: "B", score: 500 },
+      { name: "C", score: 500 },
+      { name: "D", score: 100 },
+    ]);
+    expect(
+      standings.map(({ player, rank }) => [player.name, player.score, rank]),
+    ).toEqual([
+      ["B", 500, 1],
+      ["C", 500, 1],
+      ["A", 300, 3],
+      ["D", 100, 4],
+    ]);
   });
 });
 describe("spilleravatarer", () => {
