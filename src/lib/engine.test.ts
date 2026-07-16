@@ -118,12 +118,23 @@ describe("seedbank og Zod", () => {
     const thinQuestions = SEED_QUESTIONS.filter((question) =>
       question.id.startsWith("wikithin-"),
     );
-    expect(thinQuestions.length).toBeGreaterThanOrEqual(250);
+    expect(thinQuestions.length).toBeGreaterThanOrEqual(500);
     expect(
       thinQuestions.every(
         (question) => question.sourceLabel === "Wikidata (CC0)",
       ),
     ).toBe(true);
+  });
+  it("giver hver kategori mindst ti semantisk relevante spørgsmål", () => {
+    for (const category of CATEGORIES) {
+      expect(
+        SEED_QUESTIONS.filter(
+          (question) =>
+            question.categoryId === category.id ||
+            question.secondaryCategoryIds.includes(category.id),
+        ).length,
+      ).toBeGreaterThanOrEqual(10);
+    }
   });
 });
 describe("adaptiv udvælgelse", () => {

@@ -1,5 +1,1005 @@
 [
   {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8981",
+    "work": "Aberdeen Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q14302",
+    "work": "Adelaide Lufthavn",
+    "answerQid": "Q408",
+    "answer": "Australien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q60879",
+    "work": "Allama Iqbal International Airport",
+    "answerQid": "Q843",
+    "answer": "Pakistan"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q211734",
+    "work": "Athen Internationale Lufthavn",
+    "answerQid": "Q41",
+    "answer": "Grækenland"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8979",
+    "work": "Belfast International Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8719",
+    "work": "Birmingham Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q389241",
+    "work": "Bologna Guglielmo Marconi Lufthavn",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q45523",
+    "work": "Brisbane Lufthavn",
+    "answerQid": "Q408",
+    "answer": "Australien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8725",
+    "work": "Bristol Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q25226",
+    "work": "Cam Ranh Lufthavn",
+    "answerQid": "Q881",
+    "answer": "Vietnam"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8994",
+    "work": "Cardiff Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q387560",
+    "work": "Chengdu Shuangliu International Airport",
+    "answerQid": "Q148",
+    "answer": "Kina"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q213717",
+    "work": "Chicago O'Hare International Airport",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q47724",
+    "work": "Con Dao Lufthavn",
+    "answerQid": "Q881",
+    "answer": "Vietnam"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q4156",
+    "work": "Dong Hoi Lufthavn",
+    "answerQid": "Q881",
+    "answer": "Vietnam"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8716",
+    "work": "Edinburgh Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8721",
+    "work": "Glasgow Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q214861",
+    "work": "Hartsfield-Jackson Atlanta International Airport",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q215327",
+    "work": "Helsinki Lufthavn",
+    "answerQid": "Q33",
+    "answer": "Finland"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q385191",
+    "work": "Hurghada Lufthavn",
+    "answerQid": "Q79",
+    "answer": "Egypten"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q20932",
+    "work": "Incheon International Airport",
+    "answerQid": "Q884",
+    "answer": "Sydkorea"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q206349",
+    "work": "Jomo Kenyatta International Airport",
+    "answerQid": "Q114",
+    "answer": "Kenya"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q392728",
+    "work": "King Shaka International Airport",
+    "answerQid": "Q258",
+    "answer": "Sydafrika"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q403671",
+    "work": "Lissabon-Portela Lufthavn",
+    "answerQid": "Q45",
+    "answer": "Portugal"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8727",
+    "work": "Liverpool John Lennon Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8982",
+    "work": "London City Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8731",
+    "work": "Los Angeles International Airport",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8694",
+    "work": "Manchester Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q60910",
+    "work": "Milano Malpensa Airport",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q384788",
+    "work": "Ministro Pistarini Internationale Lufthavn",
+    "answerQid": "Q414",
+    "answer": "Argentina"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q26504",
+    "work": "Mo i Rana Lufthavn",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q192733",
+    "work": "Moskva-Sjeremetevo Internationale Lufthavn",
+    "answerQid": "Q159",
+    "answer": "Rusland"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q26514",
+    "work": "Narvik Lufthavn, Framnes",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8975",
+    "work": "Newcastle Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q210559",
+    "work": "Oslo Lufthavn",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q193408",
+    "work": "Phu Cat Lufthavn",
+    "answerQid": "Q881",
+    "answer": "Vietnam"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q203395",
+    "work": "Phu Quoc Lufthavn",
+    "answerQid": "Q881",
+    "answer": "Vietnam"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q240694",
+    "work": "Phuket Internationale Lufthavn",
+    "answerQid": "Q869",
+    "answer": "Thailand"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8688",
+    "work": "San Francisco International Airport",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q59669",
+    "work": "Sao Vang Lufthavn",
+    "answerQid": "Q881",
+    "answer": "Vietnam"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q14295",
+    "work": "Seattle-Tacoma International Airport",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q421811",
+    "work": "Shanghai Hongqiao Airport",
+    "answerQid": "Q148",
+    "answer": "Kina"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q8988",
+    "work": "Southampton Airport",
+    "answerQid": "Q145",
+    "answer": "Storbritannien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q223499",
+    "work": "Stockholm-Arlanda Airport",
+    "answerQid": "Q34",
+    "answer": "Sverige"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q194316",
+    "work": "Suvarnabhumi Lufthavn",
+    "answerQid": "Q869",
+    "answer": "Thailand"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q59633",
+    "work": "Svalbard Lufthavn",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q17581",
+    "work": "Sydney Airport",
+    "answerQid": "Q408",
+    "answer": "Australien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q217226",
+    "work": "Tirana Internationale Lufthavn Nënë Tereza",
+    "answerQid": "Q222",
+    "answer": "Albanien"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q204853",
+    "work": "Tokyo International Airport",
+    "answerQid": "Q17",
+    "answer": "Japan"
+  },
+  {
+    "key": "airport-country",
+    "categoryId": "cat-57",
+    "prompt": "I hvilket land ligger lufthavnen {work}?",
+    "relation": "land",
+    "workQid": "Q182789",
+    "work": "Vadsø Lufthavn",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1007752",
+    "work": "Abraão Lincoln Martins",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q486837",
+    "work": "Anastasios Metaxas",
+    "answerQid": "Q206989",
+    "answer": "skydesport"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1007872",
+    "work": "Anderson Roberto da Silva Luiz",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q10125",
+    "work": "Andy Murray",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q101067809",
+    "work": "Ange-Yoan Bonny",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q63057767",
+    "work": "Anne-Julie Foght Schütt",
+    "answerQid": "Q14085739",
+    "answer": "kapsejlads"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100979792",
+    "work": "Asmus Diemer",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100144340",
+    "work": "Axel Arendrup",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1001910",
+    "work": "Buff Bagwell",
+    "answerQid": "Q131359",
+    "answer": "wrestling"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q233566",
+    "work": "Charlaine Harris",
+    "answerQid": "Q11419",
+    "answer": "karate"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100715719",
+    "work": "Christian Spang Kjeldsen",
+    "answerQid": "Q3609",
+    "answer": "landevejscykling"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100272666",
+    "work": "Daniel Peretz",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100257508",
+    "work": "Dominic Stricker",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1002293",
+    "work": "Dustin Johnson",
+    "answerQid": "Q5377",
+    "answer": "golf"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q265486",
+    "work": "Emilija Turej",
+    "answerQid": "Q8418",
+    "answer": "håndbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1007982",
+    "work": "Gamal Al-Ghandour",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1009230",
+    "work": "Gennady Golovkin",
+    "answerQid": "Q32112",
+    "answer": "boksning"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1010483",
+    "work": "Giles Barnes",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100148",
+    "work": "Hans Bernhardt",
+    "answerQid": "Q2215841",
+    "answer": "cykelsport"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q101050020",
+    "work": "Henrik Bernburg",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1010218",
+    "work": "Huenes Marcelo Lemos",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q111657951",
+    "work": "Ida Callisen",
+    "answerQid": "Q8418",
+    "answer": "håndbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q229073",
+    "work": "Jaroslava Sjvedova",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q15269",
+    "work": "Jelena Janković",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100074",
+    "work": "Jessie Diggins",
+    "answerQid": "Q179687",
+    "answer": "langrend"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100302",
+    "work": "Jochen Meißner",
+    "answerQid": "Q159354",
+    "answer": "roning"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100979870",
+    "work": "Johannes Bronée",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q12320250",
+    "work": "Johnny Webb",
+    "answerQid": "Q131359",
+    "answer": "wrestling"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q4262660",
+    "work": "Julia Lipnitskaia",
+    "answerQid": "Q38108",
+    "answer": "kunstskøjteløb"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100979860",
+    "work": "Karl Gadegaard",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q57303",
+    "work": "Karolos Papoulias",
+    "answerQid": "Q1734",
+    "answer": "volleyball"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100871017",
+    "work": "Kim Woo-min",
+    "answerQid": "Q31920",
+    "answer": "konkurrencesvømning"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q10120",
+    "work": "Laura Robson",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100707672",
+    "work": "Lirim Qamili",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q101004538",
+    "work": "Mike Santiago",
+    "answerQid": "Q114466",
+    "answer": "MMA"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q101068038",
+    "work": "Misaki Emura",
+    "answerQid": "Q12100",
+    "answer": "fægtning"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100712232",
+    "work": "Natalie Perry",
+    "answerQid": "Q41466",
+    "answer": "ishockey"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100276766",
+    "work": "Olaf Roggensack",
+    "answerQid": "Q159354",
+    "answer": "roning"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q101069717",
+    "work": "Pete Whittaker",
+    "answerQid": "Q1154336",
+    "answer": "klippeklatring"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100362",
+    "work": "Peter Neusel",
+    "answerQid": "Q159354",
+    "answer": "roning"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q101018214",
+    "work": "Philip Oslev",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100869591",
+    "work": "Pind",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100310613",
+    "work": "Robert Wintle",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q111658075",
+    "work": "Sidsel Mejlvang",
+    "answerQid": "Q8418",
+    "answer": "håndbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q7606262",
+    "work": "Stefan Schmidt",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q1000592",
+    "work": "Tyson Fury",
+    "answerQid": "Q32112",
+    "answer": "boksning"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100144433",
+    "work": "Victor Torp",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q10118",
+    "work": "Viktoria Azarenka",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100652743",
+    "work": "Wahid Faghir",
+    "answerQid": "Q2736",
+    "answer": "fodbold"
+  },
+  {
+    "key": "athlete-sport",
+    "categoryId": "cat-25",
+    "prompt": "Hvilken sportsgren forbindes atleten {work} med?",
+    "relation": "sportsgren",
+    "workQid": "Q100700157",
+    "work": "Zizou Bergs",
+    "answerQid": "Q847",
+    "answer": "tennis"
+  },
+  {
     "key": "baked-origin",
     "categoryId": "cat-43",
     "prompt": "Hvilket land stammer bagværket {work} fra?",
@@ -2118,6 +3118,1006 @@
     "work": "Villa Tugendhat",
     "answerQid": "Q64648",
     "answer": "Lilly Reich"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1124136",
+    "work": "Alfa Romeo 164",
+    "answerQid": "Q5379553",
+    "answer": "Enrico Fumia"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1362760",
+    "work": "Alfa Romeo 33",
+    "answerQid": "Q3731910",
+    "answer": "Ermanno Cressoni"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q2469805",
+    "work": "Alfa Romeo 4c",
+    "answerQid": "Q3664754",
+    "answer": "Centre Style Fiat"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q622479",
+    "work": "Alfa Romeo 8C Competizione",
+    "answerQid": "Q68704",
+    "answer": "Wolfgang Egger"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1130996",
+    "work": "Alfa Romeo GT",
+    "answerQid": "Q27325",
+    "answer": "Bertone"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1477201",
+    "work": "Alfa Romeo Spider",
+    "answerQid": "Q551406",
+    "answer": "Battista Farina"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q749853",
+    "work": "Aston Martin DB4 GT Zagato",
+    "answerQid": "Q181343",
+    "answer": "Ercole Spada"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q181496",
+    "work": "Aston Martin DBS",
+    "answerQid": "Q510624",
+    "answer": "William Towns"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q266681",
+    "work": "BMC ADO17",
+    "answerQid": "Q457634",
+    "answer": "Alec Issigonis"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q838837",
+    "work": "BMW E30",
+    "answerQid": "Q39525",
+    "answer": "Claus Luthe"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q796453",
+    "work": "BMW E32",
+    "answerQid": "Q181343",
+    "answer": "Ercole Spada"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q756792",
+    "work": "BMW E46",
+    "answerQid": "Q702921",
+    "answer": "Chris Bangle"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q326015",
+    "work": "Citroën 2CV",
+    "answerQid": "Q654827",
+    "answer": "Flaminio Bertoni"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q494447",
+    "work": "Daewoo Espero",
+    "answerQid": "Q27325",
+    "answer": "Bertone"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q277339",
+    "work": "Ferrari 250 GTO",
+    "answerQid": "Q1472799",
+    "answer": "Sergio Scaglietti"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q748461",
+    "work": "Ferrari F50",
+    "answerQid": "Q40987",
+    "answer": "Pininfarina"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q915927",
+    "work": "Fiat 127",
+    "answerQid": "Q3905383",
+    "answer": "Pio Manzù"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q846139",
+    "work": "Fiat 128",
+    "answerQid": "Q1164986",
+    "answer": "Dante Giacosa"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1410468",
+    "work": "Fiat 1800",
+    "answerQid": "Q1164986",
+    "answer": "Dante Giacosa"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q642575",
+    "work": "Fiat 500L",
+    "answerQid": "Q2791497",
+    "answer": "Roberto Giolito"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1054074",
+    "work": "Fiat 600 Multipla",
+    "answerQid": "Q1164986",
+    "answer": "Dante Giacosa"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q849372",
+    "work": "Fiat Barchetta",
+    "answerQid": "Q501317",
+    "answer": "Andreas Zapatinas"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1123868",
+    "work": "Fiat Coupé",
+    "answerQid": "Q702921",
+    "answer": "Chris Bangle"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1132608",
+    "work": "Fiat Croma",
+    "answerQid": "Q316565",
+    "answer": "Giorgetto Giugiaro"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q2672675",
+    "work": "Fiat Croma",
+    "answerQid": "Q316565",
+    "answer": "Giorgetto Giugiaro"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q223621",
+    "work": "Fiat Multipla",
+    "answerQid": "Q2791497",
+    "answer": "Roberto Giolito"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q776618",
+    "work": "Fiat Ritmo",
+    "answerQid": "Q3956282",
+    "answer": "Sergio Sartorelli"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q369293",
+    "work": "Fiat Sedici",
+    "answerQid": "Q316565",
+    "answer": "Giorgetto Giugiaro"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1132604",
+    "work": "Fiat Tempra",
+    "answerQid": "Q181343",
+    "answer": "Ercole Spada"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q669666",
+    "work": "Fiat X1/9",
+    "answerQid": "Q438424",
+    "answer": "Marcello Gandini"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1140133",
+    "work": "Ford Capri",
+    "answerQid": "Q7184448",
+    "answer": "Philip T. Clark"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q863812",
+    "work": "Lamborghini Countach",
+    "answerQid": "Q438424",
+    "answer": "Marcello Gandini"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q216757",
+    "work": "Lamborghini Murciélago",
+    "answerQid": "Q984210",
+    "answer": "Luc Donckerwolke"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1130052",
+    "work": "Land Rover Freelander",
+    "answerQid": "Q5552893",
+    "answer": "Gerry McGovern"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1264219",
+    "work": "Opel Adam",
+    "answerQid": "Q3849428",
+    "answer": "Mark Adams"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1777731",
+    "work": "Opel Astra H",
+    "answerQid": "Q3849428",
+    "answer": "Mark Adams"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q825781",
+    "work": "Peugeot 405",
+    "answerQid": "Q40987",
+    "answer": "Pininfarina"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1124536",
+    "work": "Renault 16",
+    "answerQid": "Q3099047",
+    "answer": "Gaston Juchet"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q3425021",
+    "work": "Renault Clio IV",
+    "answerQid": "Q2358350",
+    "answer": "Laurens van den Acker"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1333796",
+    "work": "Renault Fuego",
+    "answerQid": "Q1349129",
+    "answer": "Robert Opron"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1130591",
+    "work": "Rolls-Royce Phantom",
+    "answerQid": "Q51792374",
+    "answer": "Marek Djordjevic"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q3476815",
+    "work": "Seat Altea Prototipo",
+    "answerQid": "Q443303",
+    "answer": "Walter De Silva"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q387120",
+    "work": "Seat Arosa",
+    "answerQid": "Q573474",
+    "answer": "Jozef Kabaň"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1584867",
+    "work": "SEAT Mii",
+    "answerQid": "Q60145",
+    "answer": "R. Walther Darré"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q727502",
+    "work": "Saab 99",
+    "answerQid": "Q262279",
+    "answer": "Sixten Sason"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1634161",
+    "work": "Tesla Model X",
+    "answerQid": "Q5493043",
+    "answer": "Franz von Holzhausen"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q826174",
+    "work": "ThrustSSC",
+    "answerQid": "Q7363486",
+    "answer": "Ron Ayers"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1545536",
+    "work": "Volkswagen Golf I",
+    "answerQid": "Q316565",
+    "answer": "Giorgetto Giugiaro"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q152946",
+    "work": "Volkswagen Type 1",
+    "answerQid": "Q57249",
+    "answer": "Ferdinand Porsche"
+  },
+  {
+    "key": "car-model-designer",
+    "categoryId": "cat-57",
+    "prompt": "Hvem er registreret som designer af bilmodellen {work}?",
+    "relation": "designer",
+    "workQid": "Q1755988",
+    "work": "Volvo 780",
+    "answerQid": "Q1378396",
+    "answer": "Nuccio Bertone"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q174366",
+    "work": "Alfa Romeo 147",
+    "answerQid": "Q26921",
+    "answer": "Alfa Romeo"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q1610",
+    "work": "Alfa Romeo 159",
+    "answerQid": "Q940689",
+    "answer": "Fiat Group"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q181496",
+    "work": "Aston Martin DBS",
+    "answerQid": "Q27074",
+    "answer": "Aston Martin"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q263434",
+    "work": "Audi V8",
+    "answerQid": "Q23317",
+    "answer": "Audi"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q31905",
+    "work": "Chevrolet Orlando",
+    "answerQid": "Q497193",
+    "answer": "GM Daewoo"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q370785",
+    "work": "Citroën ZX",
+    "answerQid": "Q6742",
+    "answer": "Peugeot"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q371349",
+    "work": "Daewoo Tacuma",
+    "answerQid": "Q81965",
+    "answer": "General Motors"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q370524",
+    "work": "DeLorean DMC-12",
+    "answerQid": "Q1241608",
+    "answer": "DeLorean Motor Company"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q369293",
+    "work": "Fiat Sedici",
+    "answerQid": "Q27597",
+    "answer": "Fiat"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q275747",
+    "work": "Ford Mondeo",
+    "answerQid": "Q571934",
+    "answer": "Ford of Europe"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q366912",
+    "work": "Ford Sierra",
+    "answerQid": "Q571934",
+    "answer": "Ford of Europe"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q255461",
+    "work": "Honda CR-V",
+    "answerQid": "Q9584",
+    "answer": "Honda"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q178581",
+    "work": "Hyundai Veloster",
+    "answerQid": "Q55931",
+    "answer": "Hyundai Motor"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q249303",
+    "work": "Jaguar E-Type",
+    "answerQid": "Q30055",
+    "answer": "Jaguar Cars"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q169964",
+    "work": "Kia Pride",
+    "answerQid": "Q35349",
+    "answer": "Kia"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q420780",
+    "work": "Kia Soul",
+    "answerQid": "Q35349",
+    "answer": "Kia"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q268800",
+    "work": "Mazda 121",
+    "answerQid": "Q35996",
+    "answer": "Mazda"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q402409",
+    "work": "Mercedes-Benz Citan",
+    "answerQid": "Q27530",
+    "answer": "Daimler AG"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q345168",
+    "work": "Mercedes-Benz Vito",
+    "answerQid": "Q55383469",
+    "answer": "Mercedes-Benz"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q37474",
+    "work": "Mitsubishi Colt CZC",
+    "answerQid": "Q36033",
+    "answer": "Mitsubishi Motors"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q31143",
+    "work": "Mitsubishi Pajero Pinin",
+    "answerQid": "Q36033",
+    "answer": "Mitsubishi Motors"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q174496",
+    "work": "Mitsubishi Space Star",
+    "answerQid": "Q36033",
+    "answer": "Mitsubishi Motors"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q360188",
+    "work": "Opel Tigra TwinTop",
+    "answerQid": "Q40966",
+    "answer": "Opel"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q328139",
+    "work": "Peugeot 406",
+    "answerQid": "Q6742",
+    "answer": "Peugeot"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q181002",
+    "work": "Peugeot 505",
+    "answerQid": "Q6742",
+    "answer": "Peugeot"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q179308",
+    "work": "Peugeot 604",
+    "answerQid": "Q6742",
+    "answer": "Peugeot"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q247971",
+    "work": "Porsche Cayman",
+    "answerQid": "Q40993",
+    "answer": "Porsche"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q247716",
+    "work": "Renault 4",
+    "answerQid": "Q6686",
+    "answer": "Renault"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q391936",
+    "work": "Škoda 742",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q391963",
+    "work": "Škoda Citigo",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q391996",
+    "work": "Škoda Favorit",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392016",
+    "work": "Škoda Felicia",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392017",
+    "work": "Škoda Octavia I",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392018",
+    "work": "Škoda Octavia II",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q180270",
+    "work": "Škoda Rapid",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392038",
+    "work": "Škoda Rapid",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392036",
+    "work": "Škoda Rapid (2011)",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392071",
+    "work": "Škoda Roomster",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392083",
+    "work": "Škoda Superb",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392063",
+    "work": "Škoda Superb I",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392067",
+    "work": "Škoda Superb II",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q392105",
+    "work": "Škoda Yeti",
+    "answerQid": "Q29637",
+    "answer": "Škoda Auto"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q265163",
+    "work": "Subaru Justy",
+    "answerQid": "Q172741",
+    "answer": "Subaru"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q420807",
+    "work": "Saab 9-3",
+    "answerQid": "Q48957",
+    "answer": "Saab Automobile"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q420925",
+    "work": "Saab 9-3X",
+    "answerQid": "Q48957",
+    "answer": "Saab Automobile"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q420806",
+    "work": "Saab 9-5",
+    "answerQid": "Q48957",
+    "answer": "Saab Automobile"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q169116",
+    "work": "Saab 9000",
+    "answerQid": "Q48957",
+    "answer": "Saab Automobile"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q370674",
+    "work": "Toyota iQ",
+    "answerQid": "Q53268",
+    "answer": "Toyota Motor"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q275442",
+    "work": "Volkswagen Gol",
+    "answerQid": "Q156578",
+    "answer": "Volkswagen Aktiengesellschaft"
+  },
+  {
+    "key": "car-model-manufacturer",
+    "categoryId": "cat-57",
+    "prompt": "Hvilken bilproducent fremstiller modellen {work}?",
+    "relation": "producent",
+    "workQid": "Q30600",
+    "work": "Volkswagen Passat B2",
+    "answerQid": "Q156578",
+    "answer": "Volkswagen Aktiengesellschaft"
   },
   {
     "key": "cocktail-origin",
@@ -4578,6 +6578,506 @@
     "work": "Ødipuskompleks",
     "answerQid": "Q9215",
     "answer": "Sigmund Freud"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q467497",
+    "work": "Arne Garborg",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q571691",
+    "work": "Arnulf Øverland",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q462524",
+    "work": "Astrid Hjertenæs Andersen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q46405",
+    "work": "Bjørnstjerne Bjørnson",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q468548",
+    "work": "Cecilie Løveid",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q269087",
+    "work": "Dorothe Engelbretsdatter",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q464760",
+    "work": "Eldrid Lunden",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q450138",
+    "work": "Enevold de Falsen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q1771923",
+    "work": "Erling Kittelsen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q741327",
+    "work": "Eyvind Skaldaspillir",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q718724",
+    "work": "Gunnar Heiberg",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q924430",
+    "work": "Gunnar Staalesen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q64406",
+    "work": "Heinrich Steffens",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q36661",
+    "work": "Henrik Ibsen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q351705",
+    "work": "Henrik Wergeland",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q255359",
+    "work": "Herbjørg Wassmo",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q263004",
+    "work": "Inger Hagerup",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q921187",
+    "work": "Isak Saba",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q106812",
+    "work": "Ivar Aasen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q558044",
+    "work": "Jens Bjørneboe",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q206184",
+    "work": "Jens Zetlitz",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q946392",
+    "work": "Johan Storm Munch",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q443868",
+    "work": "Jon Fosse",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q185548",
+    "work": "Jostein Gaarder",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q470002",
+    "work": "Jørgen Engebretsen Moe",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q256789",
+    "work": "Karin Fossum",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q721753",
+    "work": "Kjell Askildsen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q40826",
+    "work": "Knut Hamsun",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q155158",
+    "work": "Kurt Schwitters",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q366281",
+    "work": "Lars Saabye Christensen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q268259",
+    "work": "Lorentz Dietrichson",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q216692",
+    "work": "Ludvig Holberg",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q443649",
+    "work": "Magdalene Thoresen",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q586227",
+    "work": "Magnus Brostrup Landstad",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q462548",
+    "work": "Margrethe Munthe",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q215145",
+    "work": "Max Tau",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q736063",
+    "work": "Niels Fredrik Dahl",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q379684",
+    "work": "Nils-Aslak Valkeapää",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q381734",
+    "work": "Nordahl Grieg",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q558590",
+    "work": "Petter Dass",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q25161",
+    "work": "Roald Dahl",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q80889",
+    "work": "Sigrid Undset",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q381443",
+    "work": "Tarjei Vesaas",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q1773735",
+    "work": "Theodor Caspari",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q612925",
+    "work": "Thjodolf den Hvinverske",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q934901",
+    "work": "Thomas Peter Krag",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q721766",
+    "work": "Thorbjørn Egner",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q335551",
+    "work": "Torbjørn Hornkløve",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q1770669",
+    "work": "Torvald Tu",
+    "answerQid": "Q20",
+    "answer": "Norge"
+  },
+  {
+    "key": "nordic-author-country",
+    "categoryId": "cat-15",
+    "prompt": "Hvilket nordisk land kom forfatteren {work} fra?",
+    "relation": "statsborgerskab",
+    "workQid": "Q303687",
+    "work": "Aasmund Olavsson Vinje",
+    "answerQid": "Q20",
+    "answer": "Norge"
   },
   {
     "key": "nordic-mountain-country",

@@ -8,7 +8,9 @@ import {
   ArrowRight,
   BookOpen,
   Check,
+  Clock3,
   Crown,
+  Download,
   Flag,
   Gamepad2,
   Heart,
@@ -16,6 +18,8 @@ import {
   Menu,
   RefreshCw,
   Search,
+  Share2,
+  Smartphone,
   Settings,
   Shuffle,
   Volume2 as Sound2,
@@ -159,6 +163,10 @@ declare global {
     webkitAudioContext: typeof AudioContext;
   }
 }
+interface InstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
 
 export function GameShell() {
   const [view, setView] = useState<View>("home"),
@@ -166,6 +174,15 @@ export function GameShell() {
     [step, setStep] = useState(0),
     [game, setGame] = useState<Game | null>(null),
     [history, setHistory] = useState<GameResult[]>([]),
+    [questionBank, setQuestionBank] = useState<Question[]>(SEED_QUESTIONS),
+    [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(
+      null,
+    ),
+    [installContext, setInstallContext] = useState({
+      mobile: false,
+      ios: false,
+      standalone: false,
+    }),
     [settings, setSettings] = useState(defaults),
     [hydrated, setHydrated] = useState(false);
   const { setTheme } = useTheme();
@@ -180,6 +197,56 @@ export function GameShell() {
     }, 0);
     return () => window.clearTimeout(id);
   }, [setTheme]);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/questions", { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : { overrides: [] }))
+      .then((data) => {
+        if (!Array.isArray(data.overrides) || data.overrides.length === 0)
+          return;
+        const overrides = new Map<string, Question>(
+          data.overrides.map((question: Question) => [question.id, question]),
+        );
+        setQuestionBank(
+          SEED_QUESTIONS.map(
+            (question) => overrides.get(question.id) ?? question,
+          ).filter((question) => question.status === "active"),
+        );
+      })
+      .catch(() => {
+        // Den indbyggede bank er den fulde offline-fallback.
+      });
+    return () => controller.abort();
+  }, []);
+  useEffect(() => {
+    const detect = window.setTimeout(() => {
+      const navigatorWithStandalone = navigator as Navigator & {
+        standalone?: boolean;
+      };
+      setInstallContext({
+        mobile:
+          /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+          window.matchMedia("(max-width: 767px)").matches,
+        ios: /iPhone|iPad|iPod/i.test(navigator.userAgent),
+        standalone:
+          window.matchMedia("(display-mode: standalone)").matches ||
+          Boolean(navigatorWithStandalone.standalone),
+      });
+    }, 0);
+    const capturePrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as InstallPromptEvent);
+    };
+    const installed = () =>
+      setInstallContext((current) => ({ ...current, standalone: true }));
+    window.addEventListener("beforeinstallprompt", capturePrompt);
+    window.addEventListener("appinstalled", installed);
+    return () => {
+      window.clearTimeout(detect);
+      window.removeEventListener("beforeinstallprompt", capturePrompt);
+      window.removeEventListener("appinstalled", installed);
+    };
+  }, []);
   useEffect(() => {
     if (!hydrated) return;
     localStorage.setItem(APP_CONFIG.settingsKey, JSON.stringify(settings));
@@ -202,7 +269,7 @@ export function GameShell() {
       players: s.mode === "solo" ? [s.players[0]] : s.players,
     };
     const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
-    const questions = selectQuestions(SEED_QUESTIONS, normalized, seen);
+    const questions = selectQuestions(questionBank, normalized, seen);
     if (questions.length === 0)
       return alert(
         "Der er ikke nok spørgsmål i de valgte kategorier. Vælg mindst én kategori.",
@@ -398,7 +465,17 @@ export function GameShell() {
     ) : view === "review" && game ? (
       <Review game={game} go={go} />
     ) : (
-      <Help go={go} />
+      <Help
+        go={go}
+        installContext={installContext}
+        canInstall={Boolean(installPrompt)}
+        install={async () => {
+          if (!installPrompt) return;
+          await installPrompt.prompt();
+          await installPrompt.userChoice;
+          setInstallPrompt(null);
+        }}
+      />
     );
   return (
     <main className="min-h-dvh safe-shell">
@@ -948,10 +1025,20 @@ function Play({
     [reportOpen, setReportOpen] = useState(false),
     [reportReason, setReportReason] = useState<QuestionReportReason>("unclear"),
     [reportNote, setReportNote] = useState(""),
-    [reportSent, setReportSent] = useState(false);
+    [reportSent, setReportSent] = useState(false),
+    [secondsLeft, setSecondsLeft] = useState(30);
   useEffect(() => {
     started.current = Date.now();
-  }, [q.id]);
+  }, []);
+  useEffect(() => {
+    if (!game.setup.timer || given) return;
+    const interval = window.setInterval(() => {
+      setSecondsLeft(
+        Math.max(0, 30 - Math.floor((Date.now() - started.current) / 1000)),
+      );
+    }, 250);
+    return () => window.clearInterval(interval);
+  }, [game.setup.timer, given]);
   const cat = categoryById(q.categoryId);
   return (
     <div className="mx-auto max-w-3xl">
@@ -977,6 +1064,25 @@ function Play({
         </div>
       </div>
       <Progress value={((game.index + 1) / game.questions.length) * 100} />
+      {game.setup.timer && !given && (
+        <div className="mt-4" aria-live="polite">
+          <div className="mb-2 flex items-center justify-between text-sm">
+            <span className="flex items-center gap-2 font-medium">
+              <Clock3 className="size-4" />
+              {secondsLeft > 0
+                ? "Tid til bonus"
+                : "Tiden er gået – svar stadig"}
+            </span>
+            <b className={secondsLeft <= 5 ? "text-destructive" : ""}>
+              {secondsLeft} sek.
+            </b>
+          </div>
+          <Progress
+            value={(secondsLeft / 30) * 100}
+            aria-label="Resterende svartid"
+          />
+        </div>
+      )}
       {game.setup.mode === "risk" && !given && (
         <div className="my-5 flex items-center justify-center gap-2">
           <span className="text-sm text-muted-foreground">Vælg risiko:</span>
@@ -1176,6 +1282,69 @@ function Results({
 }) {
   const sorted = [...game.setup.players].sort((a, b) => b.score - a.score),
     winner = sorted[0];
+  const categoryStats = [
+    ...new Set(game.answers.map((answer) => answer.categoryId)),
+  ]
+    .map((categoryId) => {
+      const answers = game.answers.filter(
+        (answer) => answer.categoryId === categoryId,
+      );
+      const correct = answers.filter((answer) => answer.correct).length;
+      return {
+        categoryId,
+        name: categoryById(categoryId)?.name ?? "Ukendt kategori",
+        correct,
+        total: answers.length,
+        rate: correct / Math.max(1, answers.length),
+      };
+    })
+    .sort((a, b) => b.rate - a.rate || b.total - a.total);
+  const bestCategory = categoryStats[0];
+  const weakestCategory = [...categoryStats].sort(
+    (a, b) => a.rate - b.rate || b.total - a.total,
+  )[0];
+  const fastest = [...game.answers]
+    .filter((answer) => answer.correct)
+    .sort((a, b) => a.responseMs - b.responseMs)[0];
+  const hardestAnswer = [...game.answers].sort((a, b) => {
+    const aq = game.questions.find((question) => question.id === a.questionId);
+    const bq = game.questions.find((question) => question.id === b.questionId);
+    return (
+      Number(a.correct) - Number(b.correct) ||
+      (bq?.difficulty ?? 0) - (aq?.difficulty ?? 0)
+    );
+  })[0];
+  const hardestQuestion = game.questions.find(
+    (question) => question.id === hardestAnswer?.questionId,
+  );
+  const typeStats = [
+    ...new Set(game.questions.map((question) => question.type)),
+  ]
+    .map((type) => {
+      const ids = new Set(
+        game.questions
+          .filter((question) => question.type === type)
+          .map((question) => question.id),
+      );
+      const answers = game.answers.filter((answer) =>
+        ids.has(answer.questionId),
+      );
+      return {
+        type,
+        total: answers.length,
+        correct: answers.filter((answer) => answer.correct).length,
+      };
+    })
+    .filter((stat) => stat.total > 0);
+  const winnerRate = winner.correct / Math.max(1, winner.answers);
+  const summary =
+    winnerRate >= 0.8
+      ? `${winner.name} leverede en vaskeægte quizmester-præstation.`
+      : winner.longestStreak >= 4
+        ? `${winner.name} afgjorde kampen med en stærk stime på ${winner.longestStreak}.`
+        : sorted.length > 1 && winner.score - sorted[1].score <= 1000
+          ? "Det blev afgjort på marginalerne – en revanche ligger lige for."
+          : `${winner.name} holdt hovedet koldt og tog sejren.`;
   const share = async () => {
     const text = `${APP_CONFIG.name}: ${winner.name} vandt med ${winner.score.toLocaleString("da-DK")} point!`;
     if (navigator.share)
@@ -1192,6 +1361,7 @@ function Results({
       <p className="mt-2 text-xl text-muted-foreground">
         {winner.score.toLocaleString("da-DK")} point · {winner.correct} rigtige
       </p>
+      <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{summary}</p>
       <div className="my-8 grid gap-3 text-left">
         {sorted.map((p, i) => (
           <Card key={p.id} className={i === 0 ? "winner-card" : ""}>
@@ -1210,6 +1380,54 @@ function Results({
           </Card>
         ))}
       </div>
+      <div className="mb-8 grid gap-3 text-left sm:grid-cols-2">
+        <ResultStat
+          label="Bedste kategori"
+          value={
+            bestCategory
+              ? `${bestCategory.name} · ${Math.round(bestCategory.rate * 100)}%`
+              : "Ingen data"
+          }
+        />
+        <ResultStat
+          label="Største udfordring"
+          value={
+            weakestCategory
+              ? `${weakestCategory.name} · ${Math.round(weakestCategory.rate * 100)}%`
+              : "Ingen data"
+          }
+        />
+        <ResultStat
+          label="Hurtigste korrekte svar"
+          value={
+            fastest
+              ? `${(fastest.responseMs / 1000).toFixed(1)} sek.`
+              : "Ingen korrekte svar"
+          }
+        />
+        <ResultStat
+          label="Sværest i spillet"
+          value={
+            hardestQuestion
+              ? `Niveau ${hardestQuestion.difficulty} · ${hardestQuestion.prompt}`
+              : "Ingen data"
+          }
+        />
+      </div>
+      <Card className="mb-8 text-left">
+        <CardHeader>
+          <CardTitle className="text-lg">
+            Præstation efter spørgsmålstype
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-2">
+          {typeStats.map((stat) => (
+            <Badge key={stat.type} variant="secondary">
+              {typeLabels[stat.type] ?? "Klassisk"}: {stat.correct}/{stat.total}
+            </Badge>
+          ))}
+        </CardContent>
+      </Card>
       <div className="grid gap-3 sm:grid-cols-2">
         <Button size="lg" onClick={replay}>
           <RefreshCw />
@@ -1227,6 +1445,16 @@ function Results({
         </Button>
       </div>
     </div>
+  );
+}
+function ResultStat({ label, value }: { label: string; value: string }) {
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <small className="text-muted-foreground">{label}</small>
+        <p className="mt-1 font-bold">{value}</p>
+      </CardContent>
+    </Card>
   );
 }
 function Review({ game, go }: { game: Game; go: (v: View) => void }) {
@@ -1304,7 +1532,17 @@ function HistoryView({
     </>
   );
 }
-function Help({ go }: { go: (v: View) => void }) {
+function Help({
+  go,
+  installContext,
+  canInstall,
+  install,
+}: {
+  go: (v: View) => void;
+  installContext: { mobile: boolean; ios: boolean; standalone: boolean };
+  canInstall: boolean;
+  install: () => Promise<void>;
+}) {
   return (
     <>
       <PageHead title="Sådan spiller I" onBack={() => go("home")} />
@@ -1345,6 +1583,44 @@ function Help({ go }: { go: (v: View) => void }) {
           </p>
         </CardContent>
       </Card>
+      {installContext.mobile && !installContext.standalone && (
+        <Card className="mt-6 border-primary/40 md:hidden">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="rounded-xl bg-primary/15 p-3 text-primary">
+                <Smartphone />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="font-bold">Brug KVIZY som en app</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Føj KVIZY til hjemmeskærmen. Så åbner spillet uden
+                  browserbjælke og kan bruges i fuldskærm.
+                </p>
+                {canInstall ? (
+                  <Button className="mt-4 w-full" onClick={install}>
+                    <Download />
+                    Installér KVIZY
+                  </Button>
+                ) : installContext.ios ? (
+                  <ol className="mt-4 grid gap-2 text-sm">
+                    <li className="flex gap-2">
+                      <Share2 className="size-5 shrink-0 text-primary" />
+                      Tryk på Del i Safari.
+                    </li>
+                    <li>Vælg “Føj til hjemmeskærm”.</li>
+                    <li>Tryk “Tilføj”.</li>
+                  </ol>
+                ) : (
+                  <p className="mt-4 text-sm">
+                    Åbn browsermenuen, og vælg “Installér app” eller “Føj til
+                    startskærm”.
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </>
   );
 }

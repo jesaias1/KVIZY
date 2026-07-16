@@ -14,7 +14,7 @@
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 2.782 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
+- 2.982 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
 - 12 spørgsmålstyper, blandt andet rækkefølge, nærmest vinder, udsagn, beskrivelser og kategorikryds
 - localStorage til aktivt spil, historik, indstillinger, set-historik og offline spillerrapporter
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
@@ -70,7 +70,7 @@ npm run questions:export -- eksport.json
 npm run questions:import -- eksport.json
 ```
 
-Importkommandoen Zod-validerer hele filen og afviser dublerede fingerprints. Admin på `/admin` kan søge, filtrere, eksportere, previewe AI-batches, se automatiske kvalitetsadvarsler og læse centralt synkroniserede spillerrapporter. AI vises som utilgængelig, hvis credentials mangler.
+Importkommandoen Zod-validerer hele filen og afviser dublerede fingerprints. Admin på `/admin` kan søge, filtrere, redigere, aktivere/deaktivere, eksportere, previewe AI-batches, se automatiske kvalitetsadvarsler og læse centralt synkroniserede spillerrapporter. Databaseændringer hentes som små overrides ved appstart; den komplette indbyggede bank forbliver offline-fallback. AI vises som utilgængelig, hvis credentials mangler.
 
 Efter hvert svar kan spilleren rapportere forkert svar, uklar formulering, forkert niveau, dårlige svarmuligheder eller forældet information. Rapporten gemmes først lokalt og synkroniseres derefter via `POST /api/reports`, når en database er tilgængelig. Generiske faktafelter skjules automatisk i spillet.
 
@@ -104,7 +104,11 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 2.782 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 2.982 seedspørgsmål stadig.
+
+## Installation som mobilapp
+
+Manifest, service worker, safe areas og standalone/fullscreen-visning er inkluderet. På understøttede Android-browsere vises en native “Installér KVIZY”-knap nederst i “Sådan spiller I”. På iPhone vises Safari-trinene “Del → Føj til hjemmeskærm”. Installationssektionen vises kun på mobil og skjules, når appen allerede kører installeret.
 
 ## Projektstruktur
 

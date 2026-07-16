@@ -1,10 +1,18 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Download, Flag, Search, Sparkles, TriangleAlert } from "lucide-react";
+import {
+  CheckCheck,
+  Download,
+  Flag,
+  Search,
+  Sparkles,
+  TriangleAlert,
+} from "lucide-react";
 import { MessageResponse } from "@/components/ai-elements/message";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -35,7 +43,12 @@ export function AdminDashboard() {
   const [search, setSearch] = useState(""),
     [cat, setCat] = useState("all"),
     [generated, setGenerated] = useState<Question[]>([]),
+    [managed, setManaged] = useState<Question[]>(SEED_QUESTIONS),
     [reports, setReports] = useState<ServerReport[]>([]),
+    [editing, setEditing] = useState<Question | null>(null),
+    [reviewOnly, setReviewOnly] = useState(false),
+    [databaseReady, setDatabaseReady] = useState(false),
+    [saving, setSaving] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   useEffect(() => {
@@ -46,22 +59,33 @@ export function AdminDashboard() {
       .catch((fetchError) => {
         if (fetchError.name !== "AbortError") setReports([]);
       });
+    fetch("/api/admin/questions", { signal: controller.signal })
+      .then((response) =>
+        response.ok ? response.json() : { questions: [], databaseReady: false },
+      )
+      .then((data) => {
+        setDatabaseReady(Boolean(data.databaseReady));
+        if (Array.isArray(data.questions) && data.questions.length > 0)
+          setManaged(data.questions);
+      })
+      .catch(() => setDatabaseReady(false));
     return () => controller.abort();
   }, []);
   const flaggedQuestions = useMemo(
-    () => SEED_QUESTIONS.filter((question) => auditQuestion(question).length),
-    [],
+    () => managed.filter((question) => auditQuestion(question).length),
+    [managed],
   );
   const rows = useMemo(
     () =>
-      [...generated, ...SEED_QUESTIONS].filter(
+      [...generated, ...managed].filter(
         (q) =>
           (cat === "all" || q.categoryId === cat) &&
+          (!reviewOnly || auditQuestion(q).length > 0) &&
           q.prompt
             .toLocaleLowerCase("da")
             .includes(search.toLocaleLowerCase("da")),
       ),
-    [cat, generated, search],
+    [cat, generated, managed, reviewOnly, search],
   );
   const generate = async () => {
     setBusy(true);
@@ -84,15 +108,47 @@ export function AdminDashboard() {
     setBusy(false);
   };
   const download = () => {
-    const b = new Blob(
-        [JSON.stringify([...generated, ...SEED_QUESTIONS], null, 2)],
-        { type: "application/json" },
-      ),
+    const b = new Blob([JSON.stringify([...generated, ...managed], null, 2)], {
+        type: "application/json",
+      }),
       a = document.createElement("a");
     a.href = URL.createObjectURL(b);
     a.download = "kvizy-spoergsmaal.json";
     a.click();
     URL.revokeObjectURL(a.href);
+  };
+  const updateQuestion = async (
+    question: Question,
+    changes: Partial<Question>,
+  ) => {
+    if (!databaseReady) {
+      setError("Kobl databasen til og kør migration/seed før redigering.");
+      return false;
+    }
+    setSaving(true);
+    setError("");
+    const response = await fetch(
+      `/api/admin/questions/${encodeURIComponent(question.id)}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(changes),
+      },
+    );
+    const result = await response.json().catch(() => ({}));
+    setSaving(false);
+    if (!response.ok) {
+      setError(result.error ?? "Ændringen kunne ikke gemmes.");
+      return false;
+    }
+    setManaged((current) =>
+      current.map((item) =>
+        item.id === question.id
+          ? { ...item, ...changes, updatedAt: new Date().toISOString() }
+          : item,
+      ),
+    );
+    return true;
   };
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
@@ -101,8 +157,12 @@ export function AdminDashboard() {
           <Badge>Beskyttet</Badge>
           <h1 className="mt-2 text-3xl font-black">Spørgsmålsadministration</h1>
           <p className="text-muted-foreground">
-            {SEED_QUESTIONS.length} aktive · {CATEGORIES.length} kategorier ·{" "}
-            {generated.length} i preview
+            {managed.filter((question) => question.status === "active").length}{" "}
+            aktive · {CATEGORIES.length} kategorier · {generated.length} i
+            preview
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Database: {databaseReady ? "forbundet" : "offline-fallback"}
           </p>
         </div>
         <div className="flex gap-2">
@@ -174,6 +234,24 @@ export function AdminDashboard() {
                       {noteParts.join(":")}
                     </p>
                   )}
+                  <Button
+                    className="mt-3"
+                    size="sm"
+                    variant="outline"
+                    onClick={async () => {
+                      const response = await fetch(
+                        `/api/admin/reports/${encodeURIComponent(report.id)}`,
+                        { method: "DELETE" },
+                      );
+                      if (response.ok)
+                        setReports((current) =>
+                          current.filter((item) => item.id !== report.id),
+                        );
+                    }}
+                  >
+                    <CheckCheck />
+                    Markér behandlet
+                  </Button>
                 </div>
               );
             })}
@@ -194,6 +272,69 @@ export function AdminDashboard() {
                 </Badge>
               </div>
             ))}
+          </CardContent>
+        </Card>
+      )}
+      {editing && (
+        <Card className="mb-6 border-primary/40">
+          <CardHeader>
+            <CardTitle>Redigér spørgsmål</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-3">
+            <Textarea
+              value={editing.prompt}
+              onChange={(event) =>
+                setEditing({ ...editing, prompt: event.target.value })
+              }
+            />
+            <Textarea
+              value={editing.explanation}
+              placeholder="Forklaring eller interessant fakta"
+              onChange={(event) =>
+                setEditing({ ...editing, explanation: event.target.value })
+              }
+            />
+            <div className="flex flex-wrap items-center gap-2">
+              <Select
+                value={String(editing.difficulty)}
+                onValueChange={(value) =>
+                  setEditing({ ...editing, difficulty: Number(value) })
+                }
+              >
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5].map((level) => (
+                    <SelectItem key={level} value={String(level)}>
+                      Niveau {level}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                disabled={saving}
+                onClick={async () => {
+                  const original = managed.find(
+                    (item) => item.id === editing.id,
+                  );
+                  if (
+                    original &&
+                    (await updateQuestion(original, {
+                      prompt: editing.prompt,
+                      explanation: editing.explanation,
+                      difficulty: editing.difficulty,
+                    }))
+                  )
+                    setEditing(null);
+                }}
+              >
+                {saving ? "Gemmer…" : "Gem ændringer"}
+              </Button>
+              <Button variant="ghost" onClick={() => setEditing(null)}>
+                Annullér
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -221,6 +362,14 @@ export function AdminDashboard() {
           </SelectContent>
         </Select>
       </div>
+      <Button
+        className="mb-4"
+        variant={reviewOnly ? "default" : "outline"}
+        onClick={() => setReviewOnly((value) => !value)}
+      >
+        <TriangleAlert />
+        {reviewOnly ? "Viser kvalitetskø" : "Vis kun kvalitetskø"}
+      </Button>
       <div className="grid gap-3">
         {rows.slice(0, 100).map((q) => (
           <Card key={q.id}>
@@ -241,11 +390,24 @@ export function AdminDashboard() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setEditing(q)}
+                >
                   Redigér
                 </Button>
-                <Button size="sm" variant="ghost">
-                  Deaktivér
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  disabled={saving}
+                  onClick={() =>
+                    updateQuestion(q, {
+                      status: q.status === "active" ? "disabled" : "active",
+                    })
+                  }
+                >
+                  {q.status === "active" ? "Deaktivér" : "Aktivér"}
                 </Button>
               </div>
             </CardContent>

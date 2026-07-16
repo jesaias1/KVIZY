@@ -38,6 +38,14 @@ export function similarity(a: string, b: string) {
   const inter = [...A].filter((x) => B.has(x)).length;
   return inter / (A.size + B.size - inter || 1);
 }
+function tokenSet(value: string) {
+  return new Set(normalizeText(value).split(" "));
+}
+function setSimilarity(a: Set<string>, b: Set<string>) {
+  let intersection = 0;
+  for (const token of a) if (b.has(token)) intersection++;
+  return intersection / (a.size + b.size - intersection || 1);
+}
 export function isNearDuplicate(a: Question, b: Question) {
   return (
     a.fingerprint === b.fingerprint ||
@@ -151,8 +159,31 @@ export function selectQuestions(
   random = Math.random,
 ): Question[] {
   const seenMap = new Map(seen.map((s) => [s.id, s]));
-  const randomizedBank = shuffle(bank, random);
+  const randomizedBank = shuffle(bank, random).filter(
+    (question) =>
+      question.status === "active" &&
+      (setup.categoryIds.includes(question.categoryId) ||
+        question.secondaryCategoryIds.some((categoryId) =>
+          setup.categoryIds.includes(categoryId),
+        )),
+  );
+  const qualityScores = new Map(
+    randomizedBank.map((question) => [
+      question.id,
+      effectiveQualityScore(question),
+    ]),
+  );
+  const signatures = new Map(
+    randomizedBank.map((question) => [
+      question.id,
+      tokenSet(
+        `${question.prompt} ${question.options.find((option) => option.id === question.correctOptionId)?.text ?? ""}`,
+      ),
+    ]),
+  );
   const picked: Question[] = [];
+  const pickedIds = new Set<string>();
+  const pickedFingerprints = new Set<string>();
   for (let i = 0; i < setup.questionCount; i++) {
     const target = difficultyFor(
       i,
@@ -163,12 +194,15 @@ export function selectQuestions(
     const candidates = randomizedBank
       .filter(
         (q) =>
-          q.status === "active" &&
-          (setup.categoryIds.includes(q.categoryId) ||
-            q.secondaryCategoryIds.some((categoryId) =>
-              setup.categoryIds.includes(categoryId),
-            )) &&
-          !picked.some((p) => p.id === q.id || isNearDuplicate(p, q)),
+          !pickedIds.has(q.id) &&
+          !pickedFingerprints.has(q.fingerprint) &&
+          !picked.some(
+            (pickedQuestion) =>
+              setSimilarity(
+                signatures.get(pickedQuestion.id)!,
+                signatures.get(q.id)!,
+              ) > 0.9,
+          ),
       )
       .sort((a, b) => {
         const af = setup.favorites.includes(a.categoryId) ? -20 : 0,
@@ -179,11 +213,11 @@ export function selectQuestions(
           af +
           (as ? 100 + as.count * 8 : 0) +
           Math.abs(a.difficulty - target) * 10 -
-          effectiveQualityScore(a) * 0.08 -
+          (qualityScores.get(a.id) ?? 0) * 0.08 -
           (bf +
             (bs ? 100 + bs.count * 8 : 0) +
             Math.abs(b.difficulty - target) * 10 -
-            effectiveQualityScore(b) * 0.08)
+            (qualityScores.get(b.id) ?? 0) * 0.08)
         );
       });
     const recentTypes = picked.slice(-2).map((q) => q.type),
@@ -201,6 +235,8 @@ export function selectQuestions(
       ) ?? candidates[0];
     if (!chosen) break;
     picked.push(shuffleAnswers(chosen, random));
+    pickedIds.add(chosen.id);
+    pickedFingerprints.add(chosen.fingerprint);
   }
   return picked.map((q, i) =>
     setup.finale && i >= Math.max(0, picked.length - 3)

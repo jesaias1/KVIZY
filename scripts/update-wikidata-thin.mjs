@@ -179,6 +179,27 @@ const configs = [
     where:
       "?work wdt:P31 wd:Q16521; wdt:P171+ ?answer. ?answer wdt:P31 wd:Q37517.",
   },
+  {
+    key: "car-model-manufacturer",
+    categoryId: "cat-57",
+    prompt: "Hvilken bilproducent fremstiller modellen {work}?",
+    relation: "producent",
+    where: "?work wdt:P31 wd:Q3231690; wdt:P176 ?answer.",
+  },
+  {
+    key: "airport-country",
+    categoryId: "cat-57",
+    prompt: "I hvilket land ligger lufthavnen {work}?",
+    relation: "land",
+    where: "?work wdt:P31 wd:Q1248784; wdt:P17 ?answer.",
+  },
+  {
+    key: "car-model-designer",
+    categoryId: "cat-57",
+    prompt: "Hvem er registreret som designer af bilmodellen {work}?",
+    relation: "designer",
+    where: "?work wdt:P31 wd:Q3231690; wdt:P287 ?answer.",
+  },
 ];
 
 async function query(config) {

@@ -198,7 +198,7 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
   }),
 );
 
-export const SEED_QUESTIONS: Question[] = [
+const BASE_QUESTIONS: Question[] = [
   ...CURATED_QUESTIONS,
   ...COUNTRY_QUESTIONS,
   ...MUSIC_PRODUCTION_QUESTIONS,
@@ -207,3 +207,64 @@ export const SEED_QUESTIONS: Question[] = [
   ...WIKIDATA_THIN_QUESTIONS,
   ...VARIETY_QUESTIONS,
 ];
+
+const categoryLinks: Record<string, string[]> = {
+  "cat-11": ["cat-14"],
+  "cat-12": ["cat-13"],
+  "cat-13": ["cat-12"],
+  "cat-16": ["cat-2", "cat-15", "cat-36"],
+  "cat-17": ["cat-36"],
+  "cat-18": ["cat-2", "cat-17", "cat-36"],
+  "cat-19": ["cat-36"],
+  "cat-20": ["cat-2", "cat-19", "cat-36"],
+  "cat-21": ["cat-36"],
+  "cat-22": ["cat-2", "cat-21", "cat-36"],
+  "cat-26": ["cat-2", "cat-25"],
+  "cat-27": ["cat-25"],
+  "cat-8": ["cat-7"],
+  "cat-29": ["cat-28"],
+  "cat-41": ["cat-36"],
+  "cat-42": ["cat-36"],
+  "cat-43": ["cat-36", "cat-42"],
+  "cat-44": ["cat-36"],
+};
+const typeLinks: Partial<Record<Question["type"], string>> = {
+  true_false: "cat-47",
+  odd_one_out: "cat-46",
+  what_came_first: "cat-45",
+  ordering: "cat-45",
+  incorrect_statement: "cat-46",
+};
+const personTags = new Set([
+  "novel-author",
+  "danish-literature-author",
+  "film-director",
+  "danish-film-director",
+  "series-creator",
+  "danish-series-creator",
+  "album-artist",
+  "danish-song-performer",
+  "painting-artist",
+  "company-founder",
+  "building-architect",
+  "invention-inventor",
+  "philosopher-movement",
+  "psychologist-field",
+]);
+
+export const SEED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
+  const inferred = [
+    ...(categoryLinks[question.categoryId] ?? []),
+    ...(typeLinks[question.type] ? [typeLinks[question.type]!] : []),
+    ...(question.tags.some((tag) => personTags.has(tag)) ? ["cat-40"] : []),
+    ...(question.categoryId === "cat-1" && question.difficulty <= 2
+      ? ["cat-59"]
+      : []),
+  ];
+  return {
+    ...question,
+    secondaryCategoryIds: [
+      ...new Set([...question.secondaryCategoryIds, ...inferred]),
+    ].filter((categoryId) => categoryId !== question.categoryId),
+  };
+});
