@@ -227,7 +227,11 @@ const REPETITIVE_TEMPLATE_TAGS = new Set([
   "series-creator",
   "building-architect",
   "danish-film-director",
+  "danish-literature-author",
   "danish-series-creator",
+  "athlete-sport",
+  "football-club-stadium",
+  "album-artist",
   "philosopher-movement",
   "psychologist-field",
 ]);
@@ -255,6 +259,22 @@ export function isGeneralKnowledgeQuestion(question: Question) {
       question.type !== "ordering" &&
       question.type !== "true_false" &&
       question.difficulty <= 3)
+  );
+}
+
+function matchesSelectedUmbrellaCategory(
+  question: Question,
+  selectedCategoryIds: Set<string>,
+) {
+  return (
+    (selectedCategoryIds.size === 1 &&
+      selectedCategoryIds.has("cat-1") &&
+      isGeneralKnowledgeQuestion(question)) ||
+    (selectedCategoryIds.has("cat-45") &&
+      ["what_came_first", "ordering"].includes(question.type)) ||
+    (selectedCategoryIds.has("cat-46") &&
+      ["odd_one_out", "incorrect_statement"].includes(question.type)) ||
+    (selectedCategoryIds.has("cat-47") && question.type === "true_false")
   );
 }
 
@@ -357,13 +377,18 @@ export function selectQuestions(
 ): Question[] {
   const seenMap = new Map(seen.map((s) => [s.id, s]));
   const selectedCategoryIds = new Set(setup.categoryIds);
-  const generalOnly =
-    setup.categoryIds.length === 1 && selectedCategoryIds.has("cat-1");
+  const selectedOnlyCategory =
+    selectedCategoryIds.size === 1 ? setup.categoryIds[0] : undefined;
   const eligibleBank = shuffle(bank, random).filter(
-    (question) =>
-      question.status === "active" &&
-      (selectedCategoryIds.has(question.categoryId) ||
-        (generalOnly && isGeneralKnowledgeQuestion(question))),
+    (question) => {
+      if (question.status !== "active") return false;
+      if (["cat-45", "cat-46", "cat-47"].includes(selectedOnlyCategory ?? ""))
+        return matchesSelectedUmbrellaCategory(question, selectedCategoryIds);
+      return (
+        selectedCategoryIds.has(question.categoryId) ||
+        matchesSelectedUmbrellaCategory(question, selectedCategoryIds)
+      );
+    },
   );
   const candidatePool = eligibleBank;
   const picked: Question[] = [];
@@ -373,6 +398,10 @@ export function selectQuestions(
   const categoryCounts = new Map<string, number>();
   const templateCounts = new Map<string, number>();
   const templateLimit = Math.max(2, Math.ceil(setup.questionCount / 10));
+  const categoryLimit = Math.max(
+    2,
+    Math.ceil(setup.questionCount / Math.max(1, selectedCategoryIds.size)),
+  );
   const categoryBias = new Map(
     setup.categoryIds.map((categoryId) => [categoryId, random() * 14]),
   );
@@ -404,12 +433,15 @@ export function selectQuestions(
       allowRepeatedFact: boolean,
       allowRepeatedTemplate: boolean,
       requireGeneralKnowledge: boolean,
+      allowRepeatedCategory: boolean,
     ) => {
       for (const question of candidatePool) {
         const factKey = questionFactKey(question);
         const templateKey = repetitiveTemplateKey(question);
         if (
           (requireGeneralKnowledge && !isGeneralKnowledgeQuestion(question)) ||
+          (!allowRepeatedCategory &&
+            (categoryCounts.get(question.categoryId) ?? 0) >= categoryLimit) ||
           pickedIds.has(question.id) ||
           pickedFingerprints.has(question.fingerprint) ||
           (!allowRepeatedFact && pickedFacts.has(factKey)) ||
@@ -450,10 +482,12 @@ export function selectQuestions(
       }
     };
     const requireGeneralKnowledge = generalSlots.has(i);
-    chooseFromPool(false, false, requireGeneralKnowledge);
-    if (!chosen) chooseFromPool(true, false, requireGeneralKnowledge);
-    if (!chosen) chooseFromPool(true, true, requireGeneralKnowledge);
-    if (!chosen && requireGeneralKnowledge) chooseFromPool(false, false, false);
+    chooseFromPool(false, false, requireGeneralKnowledge, false);
+    if (!chosen) chooseFromPool(true, false, requireGeneralKnowledge, false);
+    if (!chosen) chooseFromPool(true, true, requireGeneralKnowledge, false);
+    if (!chosen && requireGeneralKnowledge)
+      chooseFromPool(false, false, false, false);
+    if (!chosen) chooseFromPool(true, true, false, true);
     if (!chosen) break;
     picked.push(chosen);
     pickedIds.add(chosen.id);

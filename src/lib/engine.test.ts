@@ -157,12 +157,14 @@ describe("seedbank og Zod", () => {
     expect(q.options.map((o) => o.text)).toEqual(["6", "5", "7", "8"]);
   });
   it("holder nichekategorier ude af standard- og tilfældigpuljen", () => {
-    expect(CATEGORIES.find((category) => category.id === "cat-23")?.niche).toBe(
-      true,
-    );
-    expect(
-      DEFAULT_CATEGORIES.some((category) => category.id === "cat-23"),
-    ).toBe(false);
+    for (const categoryId of ["cat-13", "cat-23"]) {
+      expect(CATEGORIES.find((category) => category.id === categoryId)?.niche).toBe(
+        true,
+      );
+      expect(
+        DEFAULT_CATEGORIES.some((category) => category.id === categoryId),
+      ).toBe(false);
+    }
     expect(
       SEED_QUESTIONS.filter((question) => question.categoryId === "cat-23")
         .length,
@@ -192,7 +194,7 @@ describe("seedbank og Zod", () => {
     const thinQuestions = SEED_QUESTIONS.filter((question) =>
       question.id.startsWith("wikithin-"),
     );
-    expect(thinQuestions.length).toBeGreaterThanOrEqual(500);
+    expect(thinQuestions.length).toBeGreaterThanOrEqual(80);
     expect(
       thinQuestions.every(
         (question) =>
@@ -209,6 +211,18 @@ describe("seedbank og Zod", () => {
             question.categoryId === category.id ||
             question.secondaryCategoryIds.includes(category.id),
         ).length,
+      ).toBeGreaterThanOrEqual(10);
+    }
+  });
+  it("kan fylde et normalt spil fra hver almindelig emnekategori", () => {
+    const umbrellaCategoryIds = new Set(["cat-1", "cat-45", "cat-46", "cat-47"]);
+    for (const category of CATEGORIES) {
+      if (umbrellaCategoryIds.has(category.id)) continue;
+      expect(
+        SEED_QUESTIONS.filter(
+          (question) => question.categoryId === category.id,
+        ).length,
+        category.name,
       ).toBeGreaterThanOrEqual(10);
     }
   });
@@ -313,6 +327,17 @@ describe("adaptiv udvælgelse", () => {
     });
     expect(chosen).toHaveLength(20);
     expect(chosen.every(isGeneralKnowledgeQuestion)).toBe(true);
+  });
+  it("kan fylde spil fra en valgt spørgsmålsform", () => {
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 10,
+      categoryIds: ["cat-47"],
+    });
+    expect(chosen).toHaveLength(10);
+    expect(chosen.every((question) => question.type === "true_false")).toBe(
+      true,
+    );
   });
   it("fordeler sandt eller falsk og rækkefølge helt lige mellem spillerne", () => {
     const playerCount = 3;

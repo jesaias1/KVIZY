@@ -18,7 +18,6 @@ const developmentWorkIds = new Set([
   "Q10693",
   "Q122894",
   "Q43484",
-  "Q131246",
   "Q143899",
   "Q144334",
   "Q6368",
@@ -35,11 +34,80 @@ const excludedFormatAdaptations = new Set([
   "Q7939619",
   "Q591519",
 ]);
-const rejectedPsychologyFields = new Set([
-  "psykologi",
-  "alternativ behandling",
-  "botanik",
-  "filosofi",
+const disabledTemplateKeys = new Set([
+  "airport-country",
+  "baked-origin",
+  "brand-industry",
+  "building-architect",
+  "car-model-manufacturer",
+  "car-model-designer",
+  "danish-song-performer",
+  "football-club-stadium",
+  "philosopher-movement",
+  "psychologist-field",
+  "scientist-field",
+  "space-constellation",
+]);
+const familiarTemplateWorkIds = new Map<string, Set<string>>([
+  [
+    "athlete-sport",
+    new Set([
+      "Q10125",
+      "Q1002293",
+      "Q1009230",
+      "Q100074",
+      "Q4262660",
+      "Q1000592",
+      "Q10118",
+      "Q15269",
+    ]),
+  ],
+  [
+    "danish-film-director",
+    new Set([
+      "Q352000", "Q374373", "Q110365", "Q196103", "Q327681", "Q1630226",
+      "Q1327845", "Q1482548", "Q1253821", "Q1423329", "Q775356", "Q1326419",
+      "Q342637", "Q165699", "Q1245864", "Q370707", "Q316761", "Q1321282",
+      "Q1446749", "Q312394",
+    ]),
+  ],
+  [
+    "danish-literature-author",
+    new Set([
+      "Q790276", "Q1192442", "Q1756234", "Q11868", "Q11859", "Q11876",
+      "Q1807554", "Q11872", "Q1152009", "Q1757858", "Q767189", "Q1760337",
+      "Q1985244", "Q1762814", "Q2180740", "Q1758876", "Q1348207", "Q1642629",
+      "Q1757820", "Q1771634", "Q11880", "Q1757894",
+    ]),
+  ],
+  [
+    "danish-series-creator",
+    new Set([
+      "Q1211796", "Q115173056", "Q112270002", "Q956446", "Q1782870",
+      "Q1275157", "Q113592299", "Q1331994", "Q12333582", "Q96241173",
+    ]),
+  ],
+  [
+    "nordic-mountain-country",
+    new Set([
+      "Q1018862", "Q1420616", "Q1496308", "Q1547402", "Q1477173",
+      "Q1315012", "Q1637507", "Q138114",
+    ]),
+  ],
+]);
+const familiarBattleIds = new Set([
+  "Q153376",
+  "Q16470",
+  "Q154182",
+  "Q151290",
+  "Q38789",
+  "Q33132",
+  "Q31900",
+  "Q27759",
+  "Q184320",
+  "Q132568",
+  "Q131969",
+  "Q130847",
 ]);
 
 const relationCopy: Record<string, { prompt: string; fact: string }> = {
@@ -131,12 +199,11 @@ const usableKeys = new Set(
 const usableRecords = records.filter(
   (record) =>
     usableKeys.has(record.key) &&
-    record.key !== "brand-industry" &&
-    !(
-      record.key === "psychologist-field" &&
-      rejectedPsychologyFields.has(record.answer.toLocaleLowerCase("da"))
-    ) &&
+    !disabledTemplateKeys.has(record.key) &&
+    (!familiarTemplateWorkIds.has(record.key) ||
+      familiarTemplateWorkIds.get(record.key)!.has(record.workQid)) &&
     !excludedFormatAdaptations.has(record.workQid) &&
+    (record.key !== "battle-country" || familiarBattleIds.has(record.workQid)) &&
     (record.key !== "invention-inventor" ||
       allowedDiscoveryOrInventionIds.has(record.workQid)),
 );
@@ -245,7 +312,6 @@ function categoryFor(record: (typeof records)[number]) {
     Q10693: "cat-7",
     Q122894: "cat-7",
     Q43484: "cat-11",
-    Q131246: "cat-13",
     Q143899: "cat-39",
     Q144334: "cat-39",
     Q6368: "cat-10",
@@ -255,6 +321,18 @@ function categoryFor(record: (typeof records)[number]) {
 }
 
 const createdAt = "2026-07-16T00:00:00.000Z";
+
+function recordDifficulty(record: (typeof records)[number], index: number) {
+  const generated = ((index + record.work.length) % 4) + 2;
+  const minimumByTemplate: Record<string, number> = {
+    "battle-country": 3,
+    "danish-film-director": 3,
+    "danish-series-creator": 3,
+    "nordic-mountain-country": 4,
+  };
+  return Math.max(generated, minimumByTemplate[record.key] ?? 2);
+}
+
 export const WIKIDATA_THIN_QUESTIONS: Question[] = usableRecords.map(
   (record, index) => {
     const relationOptions = optionsFor(record);
@@ -264,7 +342,7 @@ export const WIKIDATA_THIN_QUESTIONS: Question[] = usableRecords.map(
       type: "multiple_choice",
       categoryId: categoryFor(record),
       secondaryCategoryIds: [],
-      difficulty: ((index + record.work.length) % 4) + 2,
+      difficulty: recordDifficulty(record, index),
       options: relationOptions,
       correctOptionId: "o1",
       explanation: factSentence(record, record.answer),

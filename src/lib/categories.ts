@@ -122,7 +122,7 @@ const emojis = [
   "🏗️",
   "🛠️",
 ];
-const nicheIds = new Set(["cat-23"]);
+const nicheIds = new Set(["cat-13", "cat-23"]);
 
 export const CATEGORIES: Category[] = names
   .map((name, i) => {

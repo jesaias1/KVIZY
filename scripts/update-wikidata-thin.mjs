@@ -203,7 +203,20 @@ const configs = [
   },
 ];
 
-const disabledKeys = new Set(["brand-industry"]);
+const disabledKeys = new Set([
+  "airport-country",
+  "baked-origin",
+  "brand-industry",
+  "building-architect",
+  "car-model-manufacturer",
+  "car-model-designer",
+  "danish-song-performer",
+  "football-club-stadium",
+  "philosopher-movement",
+  "psychologist-field",
+  "scientist-field",
+  "space-constellation",
+]);
 
 async function query(config) {
   const sparql = `SELECT ?work ?workLabel ?answer ?answerLabel WHERE {

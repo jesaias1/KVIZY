@@ -139,6 +139,29 @@ describe("automatisk spørgsmålskvalitet", () => {
     expect(Math.abs((truthCounts.o1?.length ?? 0) - (truthCounts.o2?.length ?? 0))).toBeLessThanOrEqual(1);
   });
 
+  it("udelukker maskinelle skabeloner med systematiske kvalitetsfejl", () => {
+    const removedTemplates = new Set([
+      "airport-country",
+      "baked-origin",
+      "building-architect",
+      "car-model-manufacturer",
+      "car-model-designer",
+      "danish-song-performer",
+      "football-club-stadium",
+      "game-developer",
+      "philosopher-movement",
+      "psychologist-field",
+      "scientist-field",
+      "software-developer",
+      "space-constellation",
+    ]);
+    expect(
+      SEED_QUESTIONS.some((question) =>
+        question.tags.some((tag) => removedTemplates.has(tag)),
+      ),
+    ).toBe(false);
+  });
+
   it("skelner mellem opdagelser, udvikling og opfindelser", () => {
     const europa = SEED_QUESTIONS.find(
       (question) => question.id === "wikithin-invention-inventor-Q3143",
@@ -153,16 +176,12 @@ describe("automatisk spørgsmålskvalitet", () => {
     ).toBe(false);
   });
 
-  it("formulerer Nidarosdomen præcist med korte navnesvar", () => {
-    const question = SEED_QUESTIONS.find((item) =>
-      item.prompt.includes("Nidarosdomen"),
-    );
-    expect(question?.prompt).toBe(
-      "Hvem var den første domkirkearkitekt under restaureringen af Nidarosdomen?",
-    );
-    expect(question?.options.every((option) => option.text.length < 40)).toBe(
-      true,
-    );
+  it("viser ikke længere den fejlbehæftede arkitektskabelon", () => {
+    expect(
+      SEED_QUESTIONS.some((question) =>
+        question.tags.includes("building-architect"),
+      ),
+    ).toBe(false);
   });
 
   it("bruger plausible svarfamilier i de rapporterede spørgsmål", () => {
@@ -200,11 +219,11 @@ describe("automatisk spørgsmålskvalitet", () => {
         /slaget ved\s+slaget ved/i.test(question.prompt),
       ),
     ).toBe(false);
-    const liegnitz = SEED_QUESTIONS.find((question) =>
-      question.prompt.includes("Liegnitz"),
+    const gettysburg = SEED_QUESTIONS.find((question) =>
+      question.prompt.includes("Gettysburg"),
     );
-    expect(liegnitz?.prompt).toBe(
-      "I hvilket land fandt slaget ved Liegnitz sted?",
+    expect(gettysburg?.prompt).toBe(
+      "I hvilket land fandt slaget ved Gettysburg sted?",
     );
   });
 });

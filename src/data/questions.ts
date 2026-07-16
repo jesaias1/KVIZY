@@ -20,6 +20,31 @@ const rows = seedSpecs.flatMap((spec) =>
 );
 
 const overrides: Record<string, string[]> = {
+  "Hvem udviklede teorien om klassisk betingning?": [
+    "John B. Watson",
+    "Edward Thorndike",
+    "B.F. Skinner",
+  ],
+  "Hvem forbindes med operant betingning?": [
+    "Edward Thorndike",
+    "John B. Watson",
+    "Albert Bandura",
+  ],
+  "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?": [
+    "Social læringsteori",
+    "Kognitiv udviklingsteori",
+    "Selvbestemmelsesteori",
+  ],
+  "Hvem udviklede den sociokulturelle læringsteori?": [
+    "Jerome Bruner",
+    "Jean Piaget",
+    "Albert Bandura",
+  ],
+  "Hvilken psykolog beskrev flow?": [
+    "Abraham Maslow",
+    "Carl Rogers",
+    "Martin Seligman",
+  ],
   "Hvor ligger FN's hovedkvarter?": ["Genève", "Wien", "Paris"],
   "Hvilket land er ikke permanent medlem af FN's Sikkerhedsråd?": [
     "USA",
@@ -109,11 +134,6 @@ const overrides: Record<string, string[]> = {
     "Stoicisme",
     "Utilitarisme",
     "Positivisme",
-  ],
-  "Hvilken teori handler om tilknytning mellem barn og omsorgsperson?": [
-    "Social indlæringsteori",
-    "Kognitiv dissonansteori",
-    "Selvbestemmelsesteori",
   ],
   "Hvad måler Big Five-modellen?": [
     "Fem former for intelligens",
@@ -321,6 +341,18 @@ const overrides: Record<string, string[]> = {
 };
 
 const explanationOverrides: Record<string, string> = {
+  "Hvem udviklede teorien om klassisk betingning?":
+    "Ivan Pavlov viste, hvordan en neutral stimulus kan udløse en indlært reaktion gennem gentagen kobling.",
+  "Hvem forbindes med operant betingning?":
+    "B.F. Skinner undersøgte, hvordan konsekvenser som belønning og straf påvirker adfærd.",
+  "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?":
+    "Tilknytningsteori blev især udviklet af John Bowlby og senere undersøgt empirisk af Mary Ainsworth.",
+  "Hvem udviklede den sociokulturelle læringsteori?":
+    "Lev Vygotskij fremhævede, at læring formes gennem sprog, kultur og samspil med andre.",
+  "Hvad måler Big Five-modellen?":
+    "Big Five beskriver personlighed gennem fem brede træk, blandt andet åbenhed og samvittighedsfuldhed.",
+  "Hvilken psykolog beskrev flow?":
+    "Mihaly Csikszentmihalyi beskrev flow som en tilstand af dyb koncentration, hvor udfordring og færdigheder er i balance.",
   "Hvilket grundstof har det kemiske symbol Au?":
     "Au kommer af det latinske navn aurum. Guld er et ædelmetal, som næsten ikke reagerer med luft eller vand.",
   "Hvor mange sider har en regulær sekskant?":
@@ -603,7 +635,16 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
       type,
       categoryId: spec.categoryId,
       secondaryCategoryIds: [],
-      difficulty: ((Number(spec.categoryId.slice(4)) + index * 2) % 5) + 1,
+      difficulty:
+        ({
+          "Hvem udviklede teorien om klassisk betingning?": 2,
+          "Hvem forbindes med operant betingning?": 2,
+          "Hvilken teori beskriver de følelsesmæssige bånd mellem et barn og dets omsorgsperson?": 2,
+          "Hvem udviklede den sociokulturelle læringsteori?": 3,
+          "Hvad måler Big Five-modellen?": 2,
+          "Hvilken psykolog beskrev flow?": 3,
+        }[prompt] ??
+        ((Number(spec.categoryId.slice(4)) + index * 2) % 5) + 1),
       options,
       correctOptionId: `o${correctIndex + 1}`,
       explanation:

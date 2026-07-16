@@ -13,18 +13,37 @@ const familiarFilmIds = new Set([
   "Q45602", "Q12018", "Q17738", "Q34414", "Q74958", "Q60072", "Q24075",
 ]);
 const familiarPaintingIds = new Set([
-  "Q1061035", "Q1065493", "Q106522623", "Q1091086", "Q1169395",
-  "Q1170315", "Q1142058", "Q1167178", "Q118469029", "Q12011341",
-  "Q1219263", "Q12334558", "Q1239950", "Q1245388", "Q124356656",
-  "Q12418", "Q152509", "Q151047", "Q152867", "Q16324087", "Q1659469",
-  "Q16333797", "Q16965482", "Q167605", "Q175036",
+  "Q1061035", "Q1065493", "Q1091086", "Q1170315", "Q1142058", "Q1219263",
+  "Q12334558", "Q1239950", "Q1245388", "Q12418", "Q151047", "Q175036",
+]);
+const familiarAlbumIds = new Set([
+  "Q45367", "Q127503", "Q128017", "Q45727", "Q11632", "Q8360", "Q27166",
+  "Q13171", "Q13172", "Q15661", "Q129684", "Q109214", "Q17444", "Q113189",
+  "Q131182", "Q131392", "Q131977", "Q117225", "Q19003", "Q58761",
+]);
+const familiarSeriesIds = new Set([
+  "Q35791", "Q1077", "Q1079", "Q216919", "Q183513", "Q186219", "Q189068",
+  "Q189350", "Q276180", "Q2744", "Q3013", "Q193462", "Q11622", "Q13979",
+  "Q16290", "Q80044", "Q283393", "Q199853",
+]);
+const familiarFoodIds = new Set([
+  "Q203925", "Q275621", "Q493749", "Q836538", "Q920940",
+  "Q16834113", "Q85772622",
 ]);
 
 const usableRecords = records.filter((record) => {
-  if (record.key === "company-founder") return false;
+  if (
+    ["company-founder", "game-developer", "software-developer"].includes(
+      record.key,
+    )
+  )
+    return false;
   if (record.key === "film-director") return familiarFilmIds.has(record.workQid);
   if (record.key === "painting-artist")
     return familiarPaintingIds.has(record.workQid);
+  if (record.key === "album-artist") return familiarAlbumIds.has(record.workQid);
+  if (record.key === "series-creator") return familiarSeriesIds.has(record.workQid);
+  if (record.key === "food-origin") return familiarFoodIds.has(record.workQid);
   return true;
 });
 
@@ -64,6 +83,17 @@ function optionsFor(record: (typeof records)[number]) {
 
 const createdAt = "2026-07-16T00:00:00.000Z";
 
+function difficultyFor(record: (typeof records)[number], index: number) {
+  const generated = ((index + record.work.length) % 4) + 2;
+  const minimumByTemplate: Record<string, number> = {
+    "album-artist": 3,
+    "film-director": 3,
+    "painting-artist": 4,
+    "series-creator": 3,
+  };
+  return Math.max(generated, minimumByTemplate[record.key] ?? 2);
+}
+
 function factSentence(record: (typeof records)[number], answer: string) {
   const work = workLabel(record);
   const facts: Record<string, string> = {
@@ -87,7 +117,7 @@ export const WIKIDATA_CULTURE_QUESTIONS: Question[] = usableRecords.map(
       type: "multiple_choice",
       categoryId: record.categoryId,
       secondaryCategoryIds: [],
-      difficulty: ((index + record.work.length) % 4) + 2,
+      difficulty: difficultyFor(record, index),
       options: relationOptions,
       correctOptionId: "o1",
       explanation: factSentence(record, record.answer),

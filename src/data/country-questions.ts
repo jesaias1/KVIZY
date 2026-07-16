@@ -52,7 +52,7 @@ const relationConfig: Record<
   currency: { categoryId: "cat-55", secondary: ["cat-6"], bump: 1 },
   continent: { categoryId: "cat-6", secondary: ["cat-4"], bump: 0 },
   language: { categoryId: "cat-38", secondary: ["cat-6"], bump: 1 },
-  callingCode: { categoryId: "cat-10", secondary: ["cat-6"], bump: 2 },
+  callingCode: { categoryId: "cat-6", secondary: ["cat-59"], bump: 2 },
   tld: { categoryId: "cat-10", secondary: ["cat-6"], bump: 2 },
 };
 
@@ -66,10 +66,22 @@ function validValues(country: CountryRecord, relation: Relation) {
   return values;
 }
 
-function uniqueValues(relation: Relation) {
+function uniqueValues(relation: Relation, source = countries) {
   return [
-    ...new Set(countries.flatMap((country) => validValues(country, relation))),
+    ...new Set(source.flatMap((country) => validValues(country, relation))),
   ];
+}
+
+function plausiblePool(country: CountryRecord, relation: Relation) {
+  if (relation === "continent" || relation === "tld") return pools[relation];
+  const continents = new Set(country.continent ?? []);
+  const regional = uniqueValues(
+    relation,
+    countries.filter((candidate) =>
+      candidate.continent?.some((continent) => continents.has(continent)),
+    ),
+  );
+  return regional.length >= 4 ? regional : pools[relation];
 }
 
 function plausibleOptions(
@@ -127,7 +139,7 @@ function level(country: CountryRecord, relation: Relation) {
     ? 1
     : country.continent?.includes("Europa")
       ? 2
-      : 3;
+      : 4;
   return Math.min(5, base + relationConfig[relation].bump);
 }
 
@@ -210,7 +222,7 @@ export const COUNTRY_QUESTIONS: Question[] = countries.flatMap((country) =>
           plausibleOptions(
             answer,
             answers.slice(1),
-            pools[relation],
+            plausiblePool(country, relation),
             `${country.qid}-${relation}`,
             relation,
           ),
