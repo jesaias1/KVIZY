@@ -745,7 +745,7 @@ function Home({
         </h1>
         <p className="mt-6 text-xl text-muted-foreground">
           <strong className="text-foreground">{APP_CONFIG.tagline}.</strong>{" "}
-          Dansk multiplayer på én skærm — uden login og ventetid.
+          Dansk multiplayer quiz på én skærm — uden login og ventetid.
         </p>
         <div className="mt-9 grid gap-3 sm:max-w-md">
           <Button
