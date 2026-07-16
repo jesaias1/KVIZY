@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  answerIsCorrect,
+  calculateQuestionPoints,
   calculatePoints,
   difficultyFor,
   fingerprint,
@@ -149,7 +151,13 @@ describe("adaptiv udvælgelse", () => {
     expect(chosen).toHaveLength(30);
     expect(new Set(chosen.map((q) => q.id)).size).toBe(30);
     expect(
-      chosen.every((q) => setup.categoryIds.slice(0, 5).includes(q.categoryId)),
+      chosen.every(
+        (q) =>
+          setup.categoryIds.slice(0, 5).includes(q.categoryId) ||
+          q.secondaryCategoryIds.some((categoryId) =>
+            setup.categoryIds.slice(0, 5).includes(categoryId),
+          ),
+      ),
     ).toBe(true);
   });
   it("prioriterer usete spørgsmål", () => {
@@ -177,5 +185,41 @@ describe("kategori-vægtning", () => {
       favorites: ["cat-20"],
     });
     expect(chosen.some((q) => q.categoryId === "cat-20")).toBe(true);
+  });
+});
+
+describe("specialspørgsmål", () => {
+  it("validerer en valgt rækkefølge", () => {
+    const question = SEED_QUESTIONS.find((item) => item.type === "ordering")!;
+    expect(answerIsCorrect(question, question.correctOrder!.join("|"))).toBe(
+      true,
+    );
+    expect(
+      answerIsCorrect(
+        question,
+        [...question.correctOrder!].reverse().join("|"),
+      ),
+    ).toBe(false);
+  });
+
+  it("giver faldende point efter afstand i nærmest vinder", () => {
+    const question = SEED_QUESTIONS.find(
+      (item) => item.type === "closest_wins",
+    )!;
+    const exact = calculateQuestionPoints(
+      question,
+      question.correctOptionId!,
+      1000,
+      false,
+    );
+    const other = calculateQuestionPoints(
+      question,
+      question.options.find((item) => item.id !== question.correctOptionId)!.id,
+      1000,
+      false,
+    );
+    expect(exact).toBe(1000);
+    expect(other).toBeLessThan(exact);
+    expect(other).toBeGreaterThan(0);
   });
 });

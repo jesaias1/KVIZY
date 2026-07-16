@@ -9,6 +9,7 @@ import {
   BookOpen,
   Check,
   Crown,
+  Flag,
   Gamepad2,
   Heart,
   History,
@@ -40,8 +41,9 @@ import {
 import { APP_CONFIG, DIFFICULTY_LABELS } from "@/lib/config";
 import { CATEGORIES, DEFAULT_CATEGORIES, categoryById } from "@/lib/categories";
 import {
+  answerIsCorrect,
   buildResult,
-  calculatePoints,
+  calculateQuestionPoints,
   newPlayer,
   selectQuestions,
   shuffle,
@@ -52,20 +54,13 @@ import type {
   GameMode,
   GameResult,
   GameSetup,
+  LocalQuestionReport,
+  Question,
+  QuestionReportReason,
   SeenQuestion,
 } from "@/lib/types";
 import { SEED_QUESTIONS } from "@/data/questions";
-
-const GENERIC_EXPLANATION =
-  "Det er den centrale sammenhæng, spørgsmålet tester.";
-
-function hasUsefulExplanation(explanation: string) {
-  return !explanation.includes(GENERIC_EXPLANATION);
-}
-
-function hasPublicSource(sourceLabel?: string) {
-  return Boolean(sourceLabel && sourceLabel !== "KVIZY redaktionel seedbank");
-}
+import { hasPublicSource, hasUsefulExplanation } from "@/lib/question-quality";
 
 type View =
   | "home"
@@ -111,6 +106,18 @@ const modes: { id: GameMode; title: string; text: string; icon: string }[] = [
     icon: "🎁",
   },
 ];
+const typeLabels: Partial<Record<Question["type"], string>> = {
+  true_false: "Sandt eller falsk",
+  odd_one_out: "Hvilken passer ikke ind?",
+  what_came_first: "Hvad kom først?",
+  quote: "Hvem sagde det?",
+  incorrect_statement: "Find det forkerte udsagn",
+  correct_statement: "Find det korrekte udsagn",
+  description: "Hvem eller hvad?",
+  closest_wins: "Nærmest vinder",
+  ordering: "Korrekt rækkefølge",
+  category_cross: "Kategorikryds",
+};
 const emptySetup = (): GameSetup => ({
   mode: "classic",
   players: [newPlayer("Spiller 1", 0), newPlayer("Spiller 2", 1)],
@@ -248,15 +255,14 @@ export function GameShell() {
       return;
     const q = game.questions[game.index],
       p = game.setup.players[game.activePlayerIndex],
-      correct = optionId === q.correctOptionId,
-      finale = q.type === "finale",
-      points = calculatePoints(
-        correct,
+      correct = answerIsCorrect(q, optionId),
+      points = calculateQuestionPoints(
+        q,
+        optionId,
         responseMs,
         game.setup.timer,
         game.riskMultiplier,
         game.setup.minusPoints,
-        finale,
       );
     const players = game.setup.players.map((x) =>
       x.id === p.id
@@ -309,6 +315,41 @@ export function GameShell() {
     tone(correct ? "correct" : "wrong", settings.sound);
     if (settings.haptics) navigator.vibrate?.(correct ? 30 : [40, 30, 40]);
   };
+  const reportQuestion = async (
+    questionId: string,
+    reason: QuestionReportReason,
+    note?: string,
+  ) => {
+    const report: LocalQuestionReport = {
+      id: crypto.randomUUID(),
+      questionId,
+      reason,
+      note: note?.trim() || undefined,
+      createdAt: new Date().toISOString(),
+      synced: false,
+    };
+    const stored = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []);
+    localStorage.setItem(
+      APP_CONFIG.reportsKey,
+      JSON.stringify([report, ...stored].slice(0, 100)),
+    );
+    void fetch("/api/reports", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ questionId, reason, note: report.note }),
+    })
+      .then(async (response) => (response.ok ? response.json() : null))
+      .then((result) => {
+        if (!result?.stored) return;
+        const next = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []).map(
+          (item) => (item.id === report.id ? { ...item, synced: true } : item),
+        );
+        localStorage.setItem(APP_CONFIG.reportsKey, JSON.stringify(next));
+      })
+      .catch(() => {
+        // Offline-rapporter bliver liggende lokalt på enheden.
+      });
+  };
   const nextQuestion = () => {
     if (!game) return;
     if (game.index === game.questions.length - 1) return finish(game);
@@ -337,9 +378,11 @@ export function GameShell() {
       />
     ) : view === "play" && game ? (
       <Play
+        key={game.questions[game.index].id}
         game={game}
         answer={answer}
         next={nextQuestion}
+        report={reportQuestion}
         setRisk={(n) => {
           const g = { ...game, riskMultiplier: n };
           setGame(g);
@@ -885,16 +928,27 @@ function Play({
   answer,
   next,
   setRisk,
+  report,
 }: {
   game: Game;
   answer: (id: string, ms: number) => void;
   next: () => void;
   setRisk: (n: number) => void;
+  report: (
+    questionId: string,
+    reason: QuestionReportReason,
+    note?: string,
+  ) => Promise<void>;
 }) {
   const q = game.questions[game.index],
     p = game.setup.players[game.activePlayerIndex],
     given = game.answers.find((a) => a.questionId === q.id);
   const started = useRef(0);
+  const [order, setOrder] = useState<string[]>([]),
+    [reportOpen, setReportOpen] = useState(false),
+    [reportReason, setReportReason] = useState<QuestionReportReason>("unclear"),
+    [reportNote, setReportNote] = useState(""),
+    [reportSent, setReportSent] = useState(false);
   useEffect(() => {
     started.current = Date.now();
   }, [q.id]);
@@ -947,7 +1001,10 @@ function Play({
                 : `${cat?.emoji} ${cat?.name}`}
             </Badge>
             <Badge variant="secondary">Niveau {q.difficulty}</Badge>
-            {q.type === "finale" && <Badge>Finale · 2×</Badge>}
+            {typeLabels[q.type] && (
+              <Badge variant="outline">{typeLabels[q.type]}</Badge>
+            )}
+            {(q.finale || q.type === "finale") && <Badge>Finale · 2×</Badge>}
           </div>
           <CardTitle className="pt-4 text-2xl leading-tight sm:text-4xl">
             {q.prompt}
@@ -956,26 +1013,57 @@ function Play({
         <CardContent className="grid gap-3">
           {q.options.map((o, i) => {
             const selected = given?.optionId === o.id,
-              correct = o.id === q.correctOptionId;
+              correct = o.id === q.correctOptionId,
+              orderIndex = order.indexOf(o.id);
             return (
               <Button
                 key={o.id}
                 variant="outline"
                 disabled={!!given}
-                onClick={() => answer(o.id, Date.now() - started.current)}
+                onClick={() =>
+                  q.type === "ordering"
+                    ? setOrder((current) =>
+                        current.includes(o.id)
+                          ? current.filter((id) => id !== o.id)
+                          : [...current, o.id],
+                      )
+                    : answer(o.id, Date.now() - started.current)
+                }
                 className={`answer-button ${given && correct ? "correct" : ""} ${given && selected && !correct ? "wrong" : ""}`}
               >
-                <span>{String.fromCharCode(65 + i)}</span>
+                <span>
+                  {q.type === "ordering" && orderIndex >= 0
+                    ? orderIndex + 1
+                    : String.fromCharCode(65 + i)}
+                </span>
                 <b>{o.text}</b>
                 {given && correct && <Check className="ml-auto" />}
                 {given && selected && !correct && <X className="ml-auto" />}
               </Button>
             );
           })}
+          {q.type === "ordering" && !given && (
+            <div className="mt-2 flex gap-2">
+              <Button
+                className="flex-1"
+                disabled={order.length !== q.options.length}
+                onClick={() =>
+                  answer(order.join("|"), Date.now() - started.current)
+                }
+              >
+                Lås rækkefølgen
+              </Button>
+              <Button variant="ghost" onClick={() => setOrder([])}>
+                Nulstil
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
       {given && (
         <motion.div
+          role="status"
+          aria-live="polite"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className={`feedback ${given.correct ? "good" : "bad"}`}
@@ -987,7 +1075,17 @@ function Play({
               {given.points.toLocaleString("da-DK")} point
             </b>
             {hasUsefulExplanation(q.explanation) && <p>{q.explanation}</p>}
-            {hasPublicSource(q.sourceLabel) && (
+            {q.type === "ordering" && q.correctOrder && (
+              <p>
+                Korrekt rækkefølge:{" "}
+                {q.correctOrder
+                  .map(
+                    (id) => q.options.find((option) => option.id === id)?.text,
+                  )
+                  .join(" → ")}
+              </p>
+            )}
+            {hasPublicSource(q) && (
               <small>
                 Kilde:{" "}
                 {q.sourceUrl ? (
@@ -1005,11 +1103,64 @@ function Play({
               </small>
             )}
           </div>
-          <Button size="lg" onClick={next}>
-            Videre
-            <ArrowRight />
-          </Button>
+          <div className="grid gap-2">
+            <Button size="lg" onClick={next}>
+              Videre
+              <ArrowRight />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={reportSent}
+              onClick={() => setReportOpen((value) => !value)}
+            >
+              <Flag />
+              {reportSent ? "Tak for hjælpen" : "Er der noget galt?"}
+            </Button>
+          </div>
         </motion.div>
+      )}
+      {given && reportOpen && !reportSent && (
+        <Card className="mt-3 border-amber-500/40">
+          <CardContent className="grid gap-3 p-4">
+            <b>Hvad bør vi se på?</b>
+            <div className="flex flex-wrap gap-2">
+              {(
+                [
+                  ["wrong_answer", "Forkert svar"],
+                  ["unclear", "Uklart spørgsmål"],
+                  ["difficulty", "Forkert niveau"],
+                  ["bad_options", "Dårlige svarmuligheder"],
+                  ["outdated", "Forældet information"],
+                ] as const
+              ).map(([value, label]) => (
+                <Button
+                  key={value}
+                  size="sm"
+                  variant={reportReason === value ? "default" : "outline"}
+                  onClick={() => setReportReason(value)}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
+            <Input
+              value={reportNote}
+              maxLength={240}
+              placeholder="Valgfri kort kommentar"
+              onChange={(event) => setReportNote(event.target.value)}
+            />
+            <Button
+              onClick={async () => {
+                await report(q.id, reportReason, reportNote);
+                setReportSent(true);
+                setReportOpen(false);
+              }}
+            >
+              Send rapport
+            </Button>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

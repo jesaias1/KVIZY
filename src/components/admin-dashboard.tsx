@@ -1,6 +1,6 @@
 "use client";
-import { useMemo, useState } from "react";
-import { Download, Search, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Download, Flag, Search, Sparkles, TriangleAlert } from "lucide-react";
 import { MessageResponse } from "@/components/ai-elements/message";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,12 +16,42 @@ import {
 import { SEED_QUESTIONS } from "@/data/questions";
 import { CATEGORIES, categoryById } from "@/lib/categories";
 import type { Question, QuestionType } from "@/lib/types";
+import { auditQuestion } from "@/lib/question-quality";
+
+type ServerReport = {
+  id: string;
+  questionId: string;
+  reason: string;
+  createdAt: string;
+};
+const reportLabels: Record<string, string> = {
+  wrong_answer: "Forkert svar",
+  unclear: "Uklart spørgsmål",
+  difficulty: "Forkert niveau",
+  bad_options: "Dårlige svarmuligheder",
+  outdated: "Forældet information",
+};
 export function AdminDashboard() {
   const [search, setSearch] = useState(""),
     [cat, setCat] = useState("all"),
     [generated, setGenerated] = useState<Question[]>([]),
+    [reports, setReports] = useState<ServerReport[]>([]),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/admin/reports", { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : { reports: [] }))
+      .then((data) => setReports(data.reports ?? []))
+      .catch((fetchError) => {
+        if (fetchError.name !== "AbortError") setReports([]);
+      });
+    return () => controller.abort();
+  }, []);
+  const flaggedQuestions = useMemo(
+    () => SEED_QUESTIONS.filter((question) => auditQuestion(question).length),
+    [],
+  );
   const rows = useMemo(
     () =>
       [...generated, ...SEED_QUESTIONS].filter(
@@ -91,6 +121,65 @@ export function AdminDashboard() {
           <CardContent className="p-4 text-destructive">{error}</CardContent>
         </Card>
       )}{" "}
+      <div className="mb-6 grid gap-3 sm:grid-cols-2">
+        <Card>
+          <CardContent className="flex items-center gap-4 p-4">
+            <TriangleAlert className="text-amber-500" />
+            <div>
+              <b>{flaggedQuestions.length} spørgsmål bør gennemgås</b>
+              <p className="text-sm text-muted-foreground">
+                Automatisk kontrol af fakta, kilder og svarmønstre
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-4 p-4">
+            <Flag className="text-primary" />
+            <div>
+              <b>{reports.length} spillerrapporter</b>
+              <p className="text-sm text-muted-foreground">
+                Seneste rapporter fra den centrale database
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      {reports.length > 0 && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Seneste spillerrapporter</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-3">
+            {reports.slice(0, 12).map((report) => {
+              const question = SEED_QUESTIONS.find(
+                (item) => item.id === report.questionId,
+              );
+              const [reason, ...noteParts] = report.reason.split(":");
+              return (
+                <div key={report.id} className="rounded-xl border p-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="destructive">
+                      {reportLabels[reason] ?? "Andet problem"}
+                    </Badge>
+                    <small className="text-muted-foreground">
+                      {new Date(report.createdAt).toLocaleDateString("da-DK")}
+                    </small>
+                  </div>
+                  <p className="mt-2 font-medium">
+                    {question?.prompt ?? report.questionId}
+                  </p>
+                  {noteParts.length > 0 && (
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {noteParts.join(":")}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+      )}
       {generated.length > 0 && (
         <Card className="mb-6">
           <CardHeader>
@@ -140,6 +229,11 @@ export function AdminDashboard() {
                 <div className="flex gap-2">
                   <Badge variant="outline">Niveau {q.difficulty}</Badge>
                   <Badge variant="secondary">{q.origin}</Badge>
+                  {auditQuestion(q).length > 0 && (
+                    <Badge variant="destructive">
+                      {auditQuestion(q).length} advarsler
+                    </Badge>
+                  )}
                 </div>
                 <h2 className="mt-2 font-bold">{q.prompt}</h2>
                 <p className="text-sm text-muted-foreground">

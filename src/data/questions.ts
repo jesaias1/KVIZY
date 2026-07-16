@@ -6,6 +6,7 @@ import { MUSIC_PRODUCTION_QUESTIONS } from "./music-production-questions";
 import { WIKIDATA_CULTURE_QUESTIONS } from "./wikidata-culture-questions";
 import { EXPANSION_QUESTIONS } from "./expansion-questions";
 import { WIKIDATA_THIN_QUESTIONS } from "./wikidata-thin-questions";
+import { VARIETY_QUESTIONS } from "./variety-questions";
 import { seedSpecs } from "./seed-spec";
 
 const created = "2026-07-15T00:00:00.000Z";
@@ -204,4 +205,5 @@ export const SEED_QUESTIONS: Question[] = [
   ...WIKIDATA_CULTURE_QUESTIONS,
   ...EXPANSION_QUESTIONS,
   ...WIKIDATA_THIN_QUESTIONS,
+  ...VARIETY_QUESTIONS,
 ];

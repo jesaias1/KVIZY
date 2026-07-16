@@ -370,6 +370,916 @@
     "answer": "Frankrig"
   },
   {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q153376",
+    "work": "Andet slag om el-Alamein",
+    "answerQid": "Q79",
+    "answer": "Egypten"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q370671",
+    "work": "Andet slag ved Franklin",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q325985",
+    "work": "Belejringen af Akko",
+    "answerQid": "Q55502",
+    "answer": "Kongeriget Jerusalem"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q16470",
+    "work": "D-dag",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q25628",
+    "work": "Det store møde ved Ugra-floden",
+    "answerQid": "Q159",
+    "answer": "Rusland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q157873",
+    "work": "Det tredje slag om Kharkov",
+    "answerQid": "Q212",
+    "answer": "Ukraine"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q160077",
+    "work": "Konstantinopels fald",
+    "answerQid": "Q43",
+    "answer": "Tyrkiet"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q273069",
+    "work": "Lechfeldslaget",
+    "answerQid": "Q183",
+    "answer": "Tyskland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q130861",
+    "work": "Panserslaget ved Kursk",
+    "answerQid": "Q15180",
+    "answer": "Sovjetunionen"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q154182",
+    "work": "Slaget om Berlin",
+    "answerQid": "Q183",
+    "answer": "Tyskland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q155103",
+    "work": "Slaget om Budapest",
+    "answerQid": "Q28",
+    "answer": "Ungarn"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q151340",
+    "work": "Slaget om Frankrig",
+    "answerQid": "Q31",
+    "answer": "Belgien"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q153316",
+    "work": "Slaget om Kreta",
+    "answerQid": "Q41",
+    "answer": "Grækenland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q335288",
+    "work": "Slaget om Monte Cassino",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q151290",
+    "work": "Slaget om Moskva",
+    "answerQid": "Q15180",
+    "answer": "Sovjetunionen"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q323735",
+    "work": "Slaget om Rügen",
+    "answerQid": "Q183",
+    "answer": "Tyskland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q254599",
+    "work": "Slaget om Shanghai",
+    "answerQid": "Q865",
+    "answer": "Taiwan"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q275019",
+    "work": "Slaget om Smolensk",
+    "answerQid": "Q159",
+    "answer": "Rusland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q38789",
+    "work": "Slaget om Stalingrad",
+    "answerQid": "Q159",
+    "answer": "Rusland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q327052",
+    "work": "Slaget om Aachen",
+    "answerQid": "Q183",
+    "answer": "Tyskland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q128996",
+    "work": "Slaget ved Akroinon",
+    "answerQid": "Q43",
+    "answer": "Tyrkiet"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q154635",
+    "work": "Slaget ved Blenheim",
+    "answerQid": "Q183",
+    "answer": "Tyskland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q184320",
+    "work": "Slaget ved Borodino",
+    "answerQid": "Q159",
+    "answer": "Rusland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q27759",
+    "work": "Slaget ved Crécy",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q339321",
+    "work": "Slaget ved Den Milviske Bro",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q328768",
+    "work": "Slaget ved Detern",
+    "answerQid": "Q183",
+    "answer": "Tyskland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q270517",
+    "work": "Slaget ved Dieppe",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q194329",
+    "work": "Slaget ved Five Forks",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q327035",
+    "work": "Slaget ved Gazala",
+    "answerQid": "Q1016",
+    "answer": "Libyen"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q33132",
+    "work": "Slaget ved Gettysburg",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q145588",
+    "work": "Slaget ved Gumbinnen",
+    "answerQid": "Q159",
+    "answer": "Rusland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q135468",
+    "work": "Slaget ved Haw's Shop",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q159512",
+    "work": "Slaget ved Liegnitz",
+    "answerQid": "Q36",
+    "answer": "Polen"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q200032",
+    "work": "Slaget ved Manzikert",
+    "answerQid": "Q43",
+    "answer": "Tyrkiet"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q31900",
+    "work": "Slaget ved Marathon",
+    "answerQid": "Q41",
+    "answer": "Grækenland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q273011",
+    "work": "Slaget ved Marengo",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q190712",
+    "work": "Slaget ved Marne",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q195118",
+    "work": "Slaget ved Old Church",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q152486",
+    "work": "Slaget ved Poltava",
+    "answerQid": "Q212",
+    "answer": "Ukraine"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q156681",
+    "work": "Slaget ved Sedan",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q324916",
+    "work": "Slaget ved Solferino",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q132568",
+    "work": "Slaget ved Somme",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q149560",
+    "work": "Slaget ved Stallupönen",
+    "answerQid": "Q159",
+    "answer": "Rusland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q153858",
+    "work": "Slaget ved Tannenberg",
+    "answerQid": "Q36",
+    "answer": "Polen"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q131969",
+    "work": "Slaget ved Thermopylæ",
+    "answerQid": "Q41",
+    "answer": "Grækenland"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q152158",
+    "work": "Slaget ved Totopotomoy Creek",
+    "answerQid": "Q30",
+    "answer": "USA"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q271873",
+    "work": "Slaget ved Trebia",
+    "answerQid": "Q38",
+    "answer": "Italien"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q130847",
+    "work": "Slaget ved Verdun",
+    "answerQid": "Q142",
+    "answer": "Frankrig"
+  },
+  {
+    "key": "battle-country",
+    "categoryId": "cat-5",
+    "prompt": "I hvilket land fandt slaget ved {work} sted?",
+    "relation": "land",
+    "workQid": "Q252698",
+    "work": "Slaget ved Wesenberg (1268)",
+    "answerQid": "Q191",
+    "answer": "Estland"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q128738",
+    "work": "Anheuser-Busch InBev",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q865859",
+    "work": "Birra Peroni",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q706698",
+    "work": "Bitburger Brauerei",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q4980769",
+    "work": "Bryggeriet Vestfyen",
+    "answerQid": "Q4899370",
+    "answer": "drikkevareindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1041750",
+    "work": "Carling Brewery",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1056430",
+    "work": "Cervecería Cuauhtémoc Moctezuma",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1083003",
+    "work": "Christianssands Bryggeri",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q486002",
+    "work": "Doosan Group",
+    "answerQid": "Q778575",
+    "answer": "konglomerat"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q698957",
+    "work": "Erdinger",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q2128955",
+    "work": "Faxe Bryggeri",
+    "answerQid": "Q4899370",
+    "answer": "drikkevareindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1435628",
+    "work": "FEMSA",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q682660",
+    "work": "Flensborg Bryggeri",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q5253950",
+    "work": "Fuller's Brewery",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q257229",
+    "work": "Föroya Bjór",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q521673",
+    "work": "Grupo Modelo",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q145670",
+    "work": "Hansa Bryggeri",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1587723",
+    "work": "Hartwall",
+    "answerQid": "Q4899370",
+    "answer": "drikkevareindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q2638082",
+    "work": "Hijos de Rivera",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q107057848",
+    "work": "ISG Ltd",
+    "answerQid": "Q3875186",
+    "answer": "byggeri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q4992054",
+    "work": "Kalnapilis",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q900289",
+    "work": "Kopparbergs Bryggeri",
+    "answerQid": "Q131734",
+    "answer": "bryggeri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q694218",
+    "work": "Krombacher Brauerei",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q17093192",
+    "work": "Lakeland Dairies",
+    "answerQid": "Q14096331",
+    "answer": "dairy farming"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q862750",
+    "work": "Mahou-San Miguel",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q6808160",
+    "work": "Megacable",
+    "answerQid": "Q418",
+    "answer": "telekommunikation"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1970693",
+    "work": "Mikkeller",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1637028",
+    "work": "Mythos",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q4115848",
+    "work": "Nissan",
+    "answerQid": "Q778575",
+    "answer": "konglomerat"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q340194",
+    "work": "Nøgne Ø",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q672384",
+    "work": "Ottakringer Brauerei",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1334431",
+    "work": "Ringnes",
+    "answerQid": "Q4899370",
+    "answer": "drikkevareindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q20716",
+    "work": "Samsung Group",
+    "answerQid": "Q778575",
+    "answer": "konglomerat"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q288727",
+    "work": "Sapporo Breweries",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1516849",
+    "work": "Shaw Communications",
+    "answerQid": "Q2401742",
+    "answer": "telekommunikationsindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q877556",
+    "work": "Stieglbrauerei zu Salzburg",
+    "answerQid": "Q4899370",
+    "answer": "drikkevareindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q2072541",
+    "work": "Swinkels Family Brewers",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q1420164",
+    "work": "Telmex",
+    "answerQid": "Q2401742",
+    "answer": "telekommunikationsindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q313542",
+    "work": "Tsingtao",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q780442",
+    "work": "Uber",
+    "answerQid": "Q11661",
+    "answer": "informationsteknologi"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q467752",
+    "work": "Verizon Communications",
+    "answerQid": "Q2401742",
+    "answer": "telekommunikationsindustri"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q696787",
+    "work": "Warsteiner Brauerei",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
+    "key": "brand-industry",
+    "categoryId": "cat-34",
+    "prompt": "Hvilken branche forbindes virksomheden {work} primært med?",
+    "relation": "branche",
+    "workQid": "Q844073",
+    "work": "Yuengling",
+    "answerQid": "Q11644505",
+    "answer": "bryggeribranchen"
+  },
+  {
     "key": "building-architect",
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
@@ -384,10 +1294,30 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q162111",
+    "work": "Alte Nationalgalerie",
+    "answerQid": "Q61256",
+    "answer": "Friedrich August Stüler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q436079",
     "work": "Alte Oper",
     "answerQid": "Q51988",
     "answer": "Richard Lucae"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q5924",
+    "work": "Bamberg domkirke",
+    "answerQid": "Q66149",
+    "answer": "Friedrich von Gärtner"
   },
   {
     "key": "building-architect",
@@ -418,6 +1348,26 @@
     "work": "Berliner Stadtschloss",
     "answerQid": "Q61256",
     "answer": "Friedrich August Stüler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q892231",
+    "work": "Bondeska paladset",
+    "answerQid": "Q61188",
+    "answer": "Nicodemus Tessin den ældre"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1589230",
+    "work": "Borgholm Slot",
+    "answerQid": "Q61188",
+    "answer": "Nicodemus Tessin den ældre"
   },
   {
     "key": "building-architect",
@@ -494,6 +1444,16 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q154996",
+    "work": "Charlottenburg Slot",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q736185",
     "work": "Château de Marly",
     "answerQid": "Q8053",
@@ -518,6 +1478,16 @@
     "work": "Den store pyramide i Giza",
     "answerQid": "Q59087",
     "answer": "Hemiunu"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q819575",
+    "work": "Det brune hus",
+    "answerQid": "Q63199",
+    "answer": "Paul Troost"
   },
   {
     "key": "building-architect",
@@ -554,6 +1524,16 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q157229",
+    "work": "Frauenkirche",
+    "answerQid": "Q66169",
+    "answer": "George Bähr"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q7461",
     "work": "Gattjinapaladset",
     "answerQid": "Q19165",
@@ -564,10 +1544,30 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q4890",
+    "work": "Gemäldegalerie Alte Meister",
+    "answerQid": "Q61342",
+    "answer": "Gottfried Semper"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q155743",
     "work": "Hala Stulecia",
     "answerQid": "Q67034",
     "answer": "Max Berg"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q697782",
+    "work": "Haus der Kunst",
+    "answerQid": "Q63199",
+    "answer": "Paul Troost"
   },
   {
     "key": "building-architect",
@@ -596,8 +1596,18 @@
     "relation": "arkitekt",
     "workQid": "Q153951",
     "work": "Kaiser-Wilhelm-Gedächtniskirche",
-    "answerQid": "Q72574",
-    "answer": "Franz Schwechten"
+    "answerQid": "Q65803",
+    "answer": "Egon Eiermann"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1236665",
+    "work": "Kalmar Domkirke",
+    "answerQid": "Q61188",
+    "answer": "Nicodemus Tessin den ældre"
   },
   {
     "key": "building-architect",
@@ -648,6 +1658,16 @@
     "work": "Københavns Synagoge",
     "answerQid": "Q71685",
     "answer": "G.F. Hetsch"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q4176",
+    "work": "Kölner Dom",
+    "answerQid": "Q61332",
+    "answer": "Peter Parler"
   },
   {
     "key": "building-architect",
@@ -714,6 +1734,16 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q473831",
+    "work": "Mosigkau Slot",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q333906",
     "work": "Musei Capitolini",
     "answerQid": "Q5592",
@@ -734,10 +1764,30 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q526924",
+    "work": "Neptungrotte",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q246474",
     "work": "Neue Synagoge",
     "answerQid": "Q67976",
     "answer": "Eduard Knoblauch"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q152341",
+    "work": "Neue Wache",
+    "answerQid": "Q63191",
+    "answer": "Heinrich Tessenow"
   },
   {
     "key": "building-architect",
@@ -774,6 +1824,46 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q151374",
+    "work": "Olympiastadion",
+    "answerQid": "Q66359",
+    "answer": "Werner March"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q131610",
+    "work": "Olympiastadion München",
+    "answerQid": "Q64412",
+    "answer": "Frei Otto"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q677478",
+    "work": "Orangerieschloss",
+    "answerQid": "Q61256",
+    "answer": "Friedrich August Stüler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q208811",
+    "work": "Panathinaiko Stadion",
+    "answerQid": "Q66108",
+    "answer": "Ernst Ziller"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q212867",
     "work": "Park Güell",
     "answerQid": "Q25328",
@@ -804,6 +1894,36 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q527260",
+    "work": "Potsdamer Stadtschloss",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q10658480",
+    "work": "Räntmästarhuset",
+    "answerQid": "Q61188",
+    "answer": "Nicodemus Tessin den ældre"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1886105",
+    "work": "Sagerske hus",
+    "answerQid": "Q63906",
+    "answer": "Jean René Pierre Litoux"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q48435",
     "work": "Sagrada Família",
     "answerQid": "Q25328",
@@ -818,6 +1938,66 @@
     "work": "Sankt Ansgars Kirke",
     "answerQid": "Q71685",
     "answer": "G.F. Hetsch"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q5949",
+    "work": "Sankt Vitus-katedralen",
+    "answerQid": "Q61332",
+    "answer": "Peter Parler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q170123",
+    "work": "Sankt-Hedwigs-Kathedrale",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q151330",
+    "work": "Sanssouci",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q694382",
+    "work": "Schloss Monbijou",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q1891413",
+    "work": "Skoklosters slot",
+    "answerQid": "Q61188",
+    "answer": "Nicodemus Tessin den ældre"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q523691",
+    "work": "Slesvig Domkirke",
+    "answerQid": "Q66113",
+    "answer": "Friedrich Adler"
   },
   {
     "key": "building-architect",
@@ -864,10 +2044,40 @@
     "categoryId": "cat-58",
     "prompt": "Hvem tegnede bygningen {work}?",
     "relation": "arkitekt",
+    "workQid": "Q312576",
+    "work": "Staatsoper Unter den Linden",
+    "answerQid": "Q65901",
+    "answer": "Georg Wenceslaus von Knobelsdorff"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q842858",
+    "work": "Sveriges Nationalmuseum",
+    "answerQid": "Q61256",
+    "answer": "Friedrich August Stüler"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
     "workQid": "Q178643",
     "work": "Süleymaniye-moskéen",
     "answerQid": "Q5600",
     "answer": "Sinan"
+  },
+  {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q7666363",
+    "work": "Södra Bankohuset",
+    "answerQid": "Q61188",
+    "answer": "Nicodemus Tessin den ældre"
   },
   {
     "key": "building-architect",
@@ -900,6 +2110,16 @@
     "answer": "Le Corbusier"
   },
   {
+    "key": "building-architect",
+    "categoryId": "cat-58",
+    "prompt": "Hvem tegnede bygningen {work}?",
+    "relation": "arkitekt",
+    "workQid": "Q457453",
+    "work": "Villa Tugendhat",
+    "answerQid": "Q64648",
+    "answer": "Lilly Reich"
+  },
+  {
     "key": "cocktail-origin",
     "categoryId": "cat-44",
     "prompt": "Hvilket land forbindes cocktailen {work} med?",
@@ -914,10 +2134,40 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q352000",
+    "work": "Adams æbler",
+    "answerQid": "Q491314",
+    "answer": "Anders Thomas Jensen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q372477",
+    "work": "Agent 69 Jensen i Skyttens tegn",
+    "answerQid": "Q5796337",
+    "answer": "Werner Hedman"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1507766",
     "work": "Arn: Tempelridderen",
     "answerQid": "Q2074912",
     "answer": "Peter Flinth"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q374373",
+    "work": "Arven",
+    "answerQid": "Q3354008",
+    "answer": "Per Fly"
   },
   {
     "key": "danish-film-director",
@@ -1004,6 +2254,16 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q327681",
+    "work": "Dogville",
+    "answerQid": "Q133730",
+    "answer": "Lars von Trier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1630226",
     "work": "Drabet",
     "answerQid": "Q3354008",
@@ -1014,10 +2274,30 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q1327845",
+    "work": "Efter brylluppet",
+    "answerQid": "Q236148",
+    "answer": "Susanne Bier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1482548",
     "work": "Elsker dig for evigt",
     "answerQid": "Q236148",
     "answer": "Susanne Bier"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1306297",
+    "work": "En familie",
+    "answerQid": "Q431435",
+    "answer": "Pernille Fischer Christensen"
   },
   {
     "key": "danish-film-director",
@@ -1064,6 +2344,26 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q304394",
+    "work": "Fucking Åmål",
+    "answerQid": "Q319849",
+    "answer": "Lukas Moodysson"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1253821",
+    "work": "Gertrud",
+    "answerQid": "Q51127",
+    "answer": "Carl Th. Dreyer"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1521948",
     "work": "Ghosts of Cité Soleil",
     "answerQid": "Q724516",
@@ -1078,6 +2378,16 @@
     "work": "Guld til præriens skrappe drenge",
     "answerQid": "Q33233561",
     "answer": "Finn Karlsson"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q255181",
+    "work": "Guldregn",
+    "answerQid": "Q1244129",
+    "answer": "Søren Kragh-Jacobsen"
   },
   {
     "key": "danish-film-director",
@@ -1154,6 +2464,16 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q1249231",
+    "work": "ID A",
+    "answerQid": "Q5109556",
+    "answer": "Christian E. Christiansen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q775356",
     "work": "Idioterne",
     "answerQid": "Q133730",
@@ -1168,6 +2488,46 @@
     "work": "Jagten",
     "answerQid": "Q314287",
     "answer": "Thomas Vinterberg"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1304619",
+    "work": "Kinamand",
+    "answerQid": "Q5716496",
+    "answer": "Henrik Ruben Genz"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1319856",
+    "work": "Klatretøsen",
+    "answerQid": "Q1579416",
+    "answer": "Hans Fabian Wullenweber"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1326419",
+    "work": "Kongekabale",
+    "answerQid": "Q2867634",
+    "answer": "Nikolaj Arcel"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q342637",
+    "work": "Kunsten at græde i kor",
+    "answerQid": "Q12331721",
+    "answer": "Peter Schønau Fog"
   },
   {
     "key": "danish-film-director",
@@ -1224,6 +2584,16 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q1284216",
+    "work": "Midt i en jazztid",
+    "answerQid": "Q426241",
+    "answer": "Knud Leif Thomsen"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1245864",
     "work": "Mifunes sidste sang",
     "answerQid": "Q1244129",
@@ -1264,6 +2634,16 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q276343",
+    "work": "Mænd der hader kvinder",
+    "answerQid": "Q678310",
+    "answer": "Niels Arden Oplev"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1134037",
     "work": "Oskar & Josefine",
     "answerQid": "Q33436763",
@@ -1294,6 +2674,16 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q370707",
+    "work": "Pelle Erobreren",
+    "answerQid": "Q315062",
+    "answer": "Bille August"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1165090",
     "work": "Pigen der legede med ilden",
     "answerQid": "Q1159900",
@@ -1308,6 +2698,16 @@
     "work": "Pink Prison",
     "answerQid": "Q6558586",
     "answer": "Lisbeth Lynghøft"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q316761",
+    "work": "Pusher",
+    "answerQid": "Q359397",
+    "answer": "Nicolas Winding Refn"
   },
   {
     "key": "danish-film-director",
@@ -1364,10 +2764,30 @@
     "categoryId": "cat-18",
     "prompt": "Hvem instruerede den danske film {work}?",
     "relation": "instruktør",
+    "workQid": "Q286619",
+    "work": "Seksdagesløbet",
+    "answerQid": "Q3183909",
+    "answer": "Jørgen Roos"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
     "workQid": "Q1226345",
     "work": "Sidste time",
     "answerQid": "Q24807481",
     "answer": "Martin Schmidt"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q1321282",
+    "work": "Sult",
+    "answerQid": "Q3077730",
+    "answer": "Henning Carlsen"
   },
   {
     "key": "danish-film-director",
@@ -1388,6 +2808,16 @@
     "work": "Tempelriddernes skat",
     "answerQid": "Q6374646",
     "answer": "Kasper Barfoed"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q279255",
+    "work": "To verdener",
+    "answerQid": "Q678310",
+    "answer": "Niels Arden Oplev"
   },
   {
     "key": "danish-film-director",
@@ -1438,6 +2868,516 @@
     "work": "Ørnens øje",
     "answerQid": "Q2074912",
     "answer": "Peter Flinth"
+  },
+  {
+    "key": "danish-film-director",
+    "categoryId": "cat-18",
+    "prompt": "Hvem instruerede den danske film {work}?",
+    "relation": "instruktør",
+    "workQid": "Q312394",
+    "work": "Åndernes hus",
+    "answerQid": "Q315062",
+    "answer": "Bille August"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q790276",
+    "work": "Barbara",
+    "answerQid": "Q983195",
+    "answer": "Jørgen-Frantz Jacobsen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1192442",
+    "work": "Begrebet Angest",
+    "answerQid": "Q6512",
+    "answer": "Søren Kierkegaard"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q3289702",
+    "work": "Birdy",
+    "answerQid": "Q1391196",
+    "answer": "William Wharton"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2293255",
+    "work": "De røde Sko",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1756234",
+    "work": "Den afrikanske farm",
+    "answerQid": "Q182804",
+    "answer": "Karen Blixen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q692649",
+    "work": "Den flyvende Kuffert",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q11868",
+    "work": "Den grimme ælling",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q11859",
+    "work": "Den lille Havfrue",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2249916",
+    "work": "Den lille Idas blomster",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q11876",
+    "work": "Den lille Pige med Svovlstikkerne",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1807554",
+    "work": "Den Politiske Kandestøber",
+    "answerQid": "Q216692",
+    "answer": "Ludvig Holberg"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q11872",
+    "work": "Den standhaftige Tinsoldat",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q3365646",
+    "work": "Elverhøj",
+    "answerQid": "Q402274",
+    "answer": "Johan Ludvig Heiberg"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1152009",
+    "work": "Enten - Eller",
+    "answerQid": "Q6512",
+    "answer": "Søren Kierkegaard"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1757858",
+    "work": "Erasmus Montanus",
+    "answerQid": "Q216692",
+    "answer": "Ludvig Holberg"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1193229",
+    "work": "Frygt og Bæven",
+    "answerQid": "Q6512",
+    "answer": "Søren Kierkegaard"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q767189",
+    "work": "Frøken Smillas fornemmelse for sne",
+    "answerQid": "Q337384",
+    "answer": "Peter Høeg"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2010454",
+    "work": "Fugl Føniks",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1167862",
+    "work": "Fyrtøjet",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1434818",
+    "work": "Gengangere",
+    "answerQid": "Q36661",
+    "answer": "Henrik Ibsen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1760345",
+    "work": "Gengældelsens Veje",
+    "answerQid": "Q182804",
+    "answer": "Karen Blixen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1760337",
+    "work": "Gummi-Tarzan",
+    "answerQid": "Q1365001",
+    "answer": "Ole Lund Kirkegaard"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1985244",
+    "work": "Intet",
+    "answerQid": "Q290261",
+    "answer": "Janne Teller"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1762814",
+    "work": "Jammers Minde",
+    "answerQid": "Q262989",
+    "answer": "Leonora Christina Ulfeldt"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2180740",
+    "work": "Jeppe på Bjerget",
+    "answerQid": "Q216692",
+    "answer": "Ludvig Holberg"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2680454",
+    "work": "Julestuen",
+    "answerQid": "Q216692",
+    "answer": "Ludvig Holberg"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1758862",
+    "work": "Jæger – i krig med eliten",
+    "answerQid": "Q3366545",
+    "answer": "Thomas Rathsack"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q11866",
+    "work": "Kejserens nye klæder",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1758876",
+    "work": "Kongens Fald",
+    "answerQid": "Q159552",
+    "answer": "Johannes V. Jensen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1348207",
+    "work": "Kvinden i buret",
+    "answerQid": "Q930301",
+    "answer": "Jussi Adler-Olsen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2580273",
+    "work": "Mega",
+    "answerQid": "Q60543",
+    "answer": "Kim Dotcom"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1759251",
+    "work": "Nissen hos Spekhøkeren",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2975233",
+    "work": "Paradisets Have",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1642629",
+    "work": "Pelle Erobreren",
+    "answerQid": "Q168569",
+    "answer": "Martin Andersen Nexø"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1153168",
+    "work": "Philosophiske Smuler",
+    "answerQid": "Q6512",
+    "answer": "Søren Kierkegaard"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q11861",
+    "work": "Prindsessen paa Ærten",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1757820",
+    "work": "Præsten i Vejlbye",
+    "answerQid": "Q347953",
+    "answer": "Steen Steensen Blicher"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1771634",
+    "work": "Rasmus Klump",
+    "answerQid": "Q321545",
+    "answer": "Carla og Vilhelm Hansen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1432009",
+    "work": "Rosmersholm",
+    "answerQid": "Q36661",
+    "answer": "Henrik Ibsen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1768907",
+    "work": "Sidste Fortællinger",
+    "answerQid": "Q182804",
+    "answer": "Karen Blixen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1196629",
+    "work": "Skyggen",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q11880",
+    "work": "Snedronningen",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q2483367",
+    "work": "Sneemanden",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q861155",
+    "work": "Stadier paa Livets Vei",
+    "answerQid": "Q6512",
+    "answer": "Søren Kierkegaard"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1196800",
+    "work": "Svinedrengen",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1757894",
+    "work": "Syv fantastiske Fortællinger",
+    "answerQid": "Q182804",
+    "answer": "Karen Blixen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q22663",
+    "work": "The Pirate Bay",
+    "answerQid": "Q1838001",
+    "answer": "Gottfrid Svartholm"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1214072",
+    "work": "The Sickness Unto Death",
+    "answerQid": "Q6512",
+    "answer": "Søren Kierkegaard"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q889349",
+    "work": "Tællelyset",
+    "answerQid": "Q5673",
+    "answer": "H.C. Andersen"
+  },
+  {
+    "key": "danish-literature-author",
+    "categoryId": "cat-16",
+    "prompt": "Hvem skrev det dansksprogede værk {work}?",
+    "relation": "forfatter",
+    "workQid": "Q1755935",
+    "work": "Verdens sande tilstand",
+    "answerQid": "Q318511",
+    "answer": "Bjørn Lomborg"
   },
   {
     "key": "danish-series-creator",
@@ -1678,6 +3618,606 @@
     "work": "X Factor",
     "answerQid": "Q162629",
     "answer": "Simon Cowell"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q300613",
+    "work": "A Warrior's Call",
+    "answerQid": "Q279105",
+    "answer": "Volbeat"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q21816929",
+    "work": "C'est la vie",
+    "answerQid": "Q48214313",
+    "answer": "MellemFingaMuzik"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q901876",
+    "work": "Dansevise",
+    "answerQid": "Q241520",
+    "answer": "Grethe og Jørgen Ingmann"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q5432215",
+    "work": "Fallen",
+    "answerQid": "Q279105",
+    "answer": "Volbeat"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q10501682",
+    "work": "Forunderligt at sige",
+    "answerQid": "Q7540154",
+    "answer": "Slesvigske Musikkorps"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q16069007",
+    "work": "I skovens dybe, stille ro",
+    "answerQid": "Q12323978",
+    "answer": "Lasse og Mathilde"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q21787546",
+    "work": "Lola Montez",
+    "answerQid": "Q279105",
+    "answer": "Volbeat"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q12329345",
+    "work": "Nu falmer skoven trindt om land",
+    "answerQid": "Q12323978",
+    "answer": "Lasse og Mathilde"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q19008207",
+    "work": "The Way You Are",
+    "answerQid": "Q19008172",
+    "answer": "Anti Social Media"
+  },
+  {
+    "key": "danish-song-performer",
+    "categoryId": "cat-22",
+    "prompt": "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    "relation": "udøvende kunstner",
+    "workQid": "Q107350312",
+    "work": "Wait A Minute My Girl",
+    "answerQid": "Q279105",
+    "answer": "Volbeat"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q15786",
+    "work": "1. FC Nürnberg",
+    "answerQid": "Q152599",
+    "answer": "EasyCredit-Stadion"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q1543",
+    "work": "A.C. Milan",
+    "answerQid": "Q133566",
+    "answer": "San Siro"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18711",
+    "work": "Aston Villa F.C.",
+    "answerQid": "Q175339",
+    "answer": "Villa Park"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q1886",
+    "work": "Atalanta BC",
+    "answerQid": "Q780526",
+    "answer": "Stadio Atleti Azzurri d'Italia"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q1893",
+    "work": "Bologna FC 1909",
+    "answerQid": "Q757182",
+    "answer": "Stadio Renato Dall'Ara"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q1900",
+    "work": "Cagliari Calcio",
+    "answerQid": "Q30880646",
+    "answer": "Unipol Domus"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18662",
+    "work": "Cardiff City F.C.",
+    "answerQid": "Q867902",
+    "answer": "Cardiff City Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q2018",
+    "work": "Catania FC",
+    "answerQid": "Q769462",
+    "answer": "Stadio Angelo Massimino"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q16320",
+    "work": "Club Atlético Peñarol",
+    "answerQid": "Q16564746",
+    "answer": "Estadio Campeón del Siglo"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q15799",
+    "work": "Club Atlético River Plate",
+    "answerQid": "Q276354",
+    "answer": "Estadio Monumental Antonio Vespucio Liberti"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q17479",
+    "work": "Clube de Regatas do Flamengo",
+    "answerQid": "Q155174",
+    "answer": "Maracanã"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q17497",
+    "work": "Dynamo Moskva",
+    "answerQid": "Q1475155",
+    "answer": "VTB Arena"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q15755",
+    "work": "FC Augsburg",
+    "answerQid": "Q167418",
+    "answer": "WWK Arena"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q15789",
+    "work": "FC Bayern München",
+    "answerQid": "Q127429",
+    "answer": "Allianz Arena"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q631",
+    "work": "FC Internazionale Milano",
+    "answerQid": "Q133566",
+    "answer": "San Siro"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q59645",
+    "work": "FC Ryukyu",
+    "answerQid": "Q7082016",
+    "answer": "Okinawa Athletic Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18274",
+    "work": "FC United of Manchester",
+    "answerQid": "Q4858016",
+    "answer": "Broadhurst Park"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q24680",
+    "work": "FC Utrecht",
+    "answerQid": "Q1675996",
+    "answer": "Stadion Galgenwaard"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q54988",
+    "work": "FK Inter Baku",
+    "answerQid": "Q1138958",
+    "answer": "Tofiq Bəhramov Stadion"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q60495",
+    "work": "Flamurtari FC",
+    "answerQid": "Q60676",
+    "answer": "Flamurtari Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18708",
+    "work": "Fulham F.C.",
+    "answerQid": "Q318043",
+    "answer": "Craven Cottage"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q51974",
+    "work": "Hamburger SV",
+    "answerQid": "Q150933",
+    "answer": "Volksparkstadion"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q1422",
+    "work": "Juventus F.C.",
+    "answerQid": "Q62149",
+    "answer": "Juventus Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q16932",
+    "work": "Kashima Antlers",
+    "answerQid": "Q494769",
+    "answer": "Kashima Soccer Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q60695",
+    "work": "KS Besa Kavajë",
+    "answerQid": "Q4896162",
+    "answer": "Besa Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18232",
+    "work": "KAA Gent",
+    "answerQid": "Q1711746",
+    "answer": "Jules Ottenstadion"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q52942",
+    "work": "Lech Poznań",
+    "answerQid": "Q188699",
+    "answer": "Stadion Miejski Poznań"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18656",
+    "work": "Manchester United F.C.",
+    "answerQid": "Q83457",
+    "answer": "Old Trafford"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18661",
+    "work": "Middlesbrough F.C.",
+    "answerQid": "Q822886",
+    "answer": "Riverside Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18716",
+    "work": "Newcastle United F.C.",
+    "answerQid": "Q191774",
+    "answer": "St James' Park"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18486",
+    "work": "Northwich Victoria F.C.",
+    "answerQid": "Q619076",
+    "answer": "Marston Road"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18721",
+    "work": "Norwich City F.C.",
+    "answerQid": "Q123017",
+    "answer": "Carrow Road"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q704",
+    "work": "Olympique Lyon",
+    "answerQid": "Q8507",
+    "answer": "Parc Olympique Lyonnais"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q16344",
+    "work": "Perugia Calcio",
+    "answerQid": "Q94619",
+    "answer": "Stadio Renato Curi"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18723",
+    "work": "Queens Park Rangers F.C.",
+    "answerQid": "Q31670",
+    "answer": "Loftus Road"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q24699",
+    "work": "RKC Waalwijk",
+    "answerQid": "Q942073",
+    "answer": "Mandemakers Stadion"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q13385",
+    "work": "S.P.A.L.",
+    "answerQid": "Q1575161",
+    "answer": "Stadio Paolo Mazza"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18460",
+    "work": "Salford City F.C.",
+    "answerQid": "Q54817852",
+    "answer": "Moor Lane"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q1457",
+    "work": "Sampdoria",
+    "answerQid": "Q271568",
+    "answer": "Stadio Luigi Ferraris"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18659",
+    "work": "Swansea City A.F.C.",
+    "answerQid": "Q580480",
+    "answer": "Liberty Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q19637",
+    "work": "Tranmere Rovers F.C.",
+    "answerQid": "Q619072",
+    "answer": "Prenton Park"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q22707",
+    "work": "TSG 1899 Hoffenheim",
+    "answerQid": "Q129870",
+    "answer": "SNP Arena"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q16348",
+    "work": "U.S. Alessandria Calcio 1912",
+    "answerQid": "Q2484922",
+    "answer": "Stadio Giuseppe Moccagatta"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q13391",
+    "work": "U.S. Lecce",
+    "answerQid": "Q684727",
+    "answer": "Stadio Via del Mare"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q24689",
+    "work": "VVV-Venlo",
+    "answerQid": "Q2262017",
+    "answer": "De Koel"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q19644",
+    "work": "Walsall F.C.",
+    "answerQid": "Q609268",
+    "answer": "Bescot Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q51976",
+    "work": "Werder Bremen",
+    "answerQid": "Q154475",
+    "answer": "Weserstadion"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18528",
+    "work": "Woking F.C.",
+    "answerQid": "Q6412727",
+    "answer": "Kingfield Stadium"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q18529",
+    "work": "Wrexham F.C.",
+    "answerQid": "Q1202579",
+    "answer": "Racecourse Ground"
+  },
+  {
+    "key": "football-club-stadium",
+    "categoryId": "cat-27",
+    "prompt": "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    "relation": "hjemmebane",
+    "workQid": "Q19651",
+    "work": "Yeovil Town F.C.",
+    "answerQid": "Q177206",
+    "answer": "Huish Park"
   },
   {
     "key": "invention-inventor",
@@ -2878,5 +5418,575 @@
     "work": "Vaira Vīķe-Freiberga",
     "answerQid": "Q9418",
     "answer": "psykologi"
+  },
+  {
+    "key": "psychologist-field",
+    "categoryId": "cat-13",
+    "prompt": "Hvilket fagområde forbindes psykologen {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q125249",
+    "work": "William James",
+    "answerQid": "Q5891",
+    "answer": "filosofi"
+  },
+  {
+    "key": "scientist-field",
+    "categoryId": "cat-7",
+    "prompt": "Hvilket fagområde forbindes forskeren {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q937",
+    "work": "Albert Einstein",
+    "answerQid": "Q18362",
+    "answer": "teoretisk fysik"
+  },
+  {
+    "key": "scientist-field",
+    "categoryId": "cat-7",
+    "prompt": "Hvilket fagområde forbindes forskeren {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q76892",
+    "work": "Friedrich Carl von Savigny",
+    "answerQid": "Q4932206",
+    "answer": "retsvidenskab"
+  },
+  {
+    "key": "scientist-field",
+    "categoryId": "cat-7",
+    "prompt": "Hvilket fagområde forbindes forskeren {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q364270",
+    "work": "Gustaf de Laval",
+    "answerQid": "Q11023",
+    "answer": "ingeniørvidenskab"
+  },
+  {
+    "key": "scientist-field",
+    "categoryId": "cat-7",
+    "prompt": "Hvilket fagområde forbindes forskeren {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q2655",
+    "work": "John Franklin",
+    "answerQid": "Q441",
+    "answer": "botanik"
+  },
+  {
+    "key": "scientist-field",
+    "categoryId": "cat-7",
+    "prompt": "Hvilket fagområde forbindes forskeren {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q106399",
+    "work": "John Howard Northrop",
+    "answerQid": "Q7094",
+    "answer": "biokemi"
+  },
+  {
+    "key": "scientist-field",
+    "categoryId": "cat-7",
+    "prompt": "Hvilket fagområde forbindes forskeren {work} især med?",
+    "relation": "fagområde",
+    "workQid": "Q106746",
+    "work": "Richard Smalley",
+    "answerQid": "Q11351",
+    "answer": "organisk kemi"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q229318",
+    "work": "3C 273",
+    "answerQid": "Q8842",
+    "answer": "Jomfruen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q14276",
+    "work": "47 Tucanae",
+    "answerQid": "Q10567",
+    "answer": "Peberfuglen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q249302",
+    "work": "61 Cygni",
+    "answerQid": "Q8921",
+    "answer": "Svanen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12176",
+    "work": "Alfa Centauri",
+    "answerQid": "Q8844",
+    "answer": "Kentauren"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q2469",
+    "work": "Andromedagalaksen",
+    "answerQid": "Q9256",
+    "answer": "Andromeda"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12166",
+    "work": "Antares",
+    "answerQid": "Q8865",
+    "answer": "Skorpionen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q14268",
+    "work": "Barnards stjerne",
+    "answerQid": "Q8906",
+    "answer": "Slangeholderen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13066",
+    "work": "Bellatrix",
+    "answerQid": "Q8860",
+    "answer": "Orion"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13096",
+    "work": "Beta Ursae Majoris",
+    "answerQid": "Q8918",
+    "answer": "Store Bjørn"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12124",
+    "work": "Betelgeuse",
+    "answerQid": "Q8860",
+    "answer": "Orion"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12189",
+    "work": "Canopus",
+    "answerQid": "Q10470",
+    "answer": "Kølen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12970",
+    "work": "Capella",
+    "answerQid": "Q10476",
+    "answer": "Kusken"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q128175",
+    "work": "CFBDSIR 2149-0403",
+    "answerQid": "Q10576",
+    "answer": "Vandmanden"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q1327951",
+    "work": "Dobbelthoben i Perseus",
+    "answerQid": "Q10511",
+    "answer": "Perseus"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12185",
+    "work": "Eta Carinae",
+    "answerQid": "Q10470",
+    "answer": "Kølen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q15718",
+    "work": "Gliese 581",
+    "answerQid": "Q10580",
+    "answer": "Vægten"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q170347",
+    "work": "Gliese 581 c",
+    "answerQid": "Q10580",
+    "answer": "Vægten"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q215921",
+    "work": "Gliese 581 g",
+    "answerQid": "Q10580",
+    "answer": "Vægten"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q27015",
+    "work": "HD 10180",
+    "answerQid": "Q10416",
+    "answer": "Lille Søslange"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q136522842",
+    "work": "HD 15082",
+    "answerQid": "Q9256",
+    "answer": "Andromeda"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q1117262",
+    "work": "Hubble Deep Field syd",
+    "answerQid": "Q10567",
+    "answer": "Peberfuglen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q2307936",
+    "work": "Hul i universet",
+    "answerQid": "Q10433",
+    "answer": "Floden"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13511",
+    "work": "Hyaderne",
+    "answerQid": "Q10570",
+    "answer": "Tyren"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q22905924",
+    "work": "K2-18b",
+    "answerQid": "Q8853",
+    "answer": "Løven"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q10460",
+    "work": "Karlsvognen",
+    "answerQid": "Q8918",
+    "answer": "Store Bjørn"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q15829",
+    "work": "Katteøjetågen",
+    "answerQid": "Q8675",
+    "answer": "Dragen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q16389397",
+    "work": "Kepler-186 f",
+    "answerQid": "Q8921",
+    "answer": "Svanen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q20726281",
+    "work": "Kepler-452 b",
+    "answerQid": "Q8921",
+    "answer": "Svanen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q10934",
+    "work": "Krabbetågen",
+    "answerQid": "Q10570",
+    "answer": "Tyren"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q17863945",
+    "work": "Laniakea",
+    "answerQid": "Q10422",
+    "answer": "Sydlige Trekant"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q189698",
+    "work": "Leoniderne",
+    "answerQid": "Q8853",
+    "answer": "Løven"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q14041",
+    "work": "Messier 87",
+    "answerQid": "Q8842",
+    "answer": "Jomfruen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12965",
+    "work": "Mira",
+    "answerQid": "Q8839",
+    "answer": "Hvalfisken"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12980",
+    "work": "Nordstjernen",
+    "answerQid": "Q10478",
+    "answer": "Lille Bjørn"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q14275",
+    "work": "Omega Centauri",
+    "answerQid": "Q8844",
+    "answer": "Kentauren"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13903",
+    "work": "Oriontågen",
+    "answerQid": "Q8860",
+    "answer": "Orion"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13423",
+    "work": "Plejaderne",
+    "answerQid": "Q10570",
+    "answer": "Tyren"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13028",
+    "work": "Pollux",
+    "answerQid": "Q8923",
+    "answer": "Tvillingerne"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q14266",
+    "work": "Proxima Centauri",
+    "answerQid": "Q8844",
+    "answer": "Kentauren"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q15057245",
+    "work": "PSO J318.5-22",
+    "answerQid": "Q10535",
+    "answer": "Stenbukken"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q115379",
+    "work": "R Doradus",
+    "answerQid": "Q8837",
+    "answer": "Guldfisken"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q12126",
+    "work": "Rigel",
+    "answerQid": "Q8860",
+    "answer": "Orion"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q1151964",
+    "work": "RX J1856.5-3754",
+    "answerQid": "Q10413",
+    "answer": "Sydlige Krone"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q237284",
+    "work": "Sagittarius A*",
+    "answerQid": "Q8866",
+    "answer": "Skytten"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q1196507",
+    "work": "Sjæltågen",
+    "answerQid": "Q10464",
+    "answer": "Cassiopeia"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13008",
+    "work": "Spica",
+    "answerQid": "Q8842",
+    "answer": "Jomfruen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q13724",
+    "work": "Trekantgalaksen",
+    "answerQid": "Q10565",
+    "answer": "Trekanten"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q175760",
+    "work": "Virgo-superhoben",
+    "answerQid": "Q8842",
+    "answer": "Jomfruen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q271818",
+    "work": "Virgohoben",
+    "answerQid": "Q8842",
+    "answer": "Jomfruen"
+  },
+  {
+    "key": "space-constellation",
+    "categoryId": "cat-8",
+    "prompt": "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    "relation": "stjernebillede",
+    "workQid": "Q183349",
+    "work": "VY Canis Majoris",
+    "answerQid": "Q10538",
+    "answer": "Store Hund"
   }
 ]

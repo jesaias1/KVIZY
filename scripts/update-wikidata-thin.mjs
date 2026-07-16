@@ -83,6 +83,102 @@ const configs = [
     where:
       "?work wdt:P31 wd:Q8502; wdt:P17 ?answer. VALUES ?answer { wd:Q35 wd:Q20 wd:Q34 wd:Q33 wd:Q189 }",
   },
+  {
+    key: "danish-literature-author",
+    categoryId: "cat-16",
+    prompt: "Hvem skrev det dansksprogede værk {work}?",
+    relation: "forfatter",
+    where: "?work wdt:P407 wd:Q9035; wdt:P50 ?answer.",
+  },
+  {
+    key: "danish-song-performer",
+    categoryId: "cat-22",
+    prompt: "Hvilken dansk musiker eller gruppe fremførte {work}?",
+    relation: "udøvende kunstner",
+    where:
+      "?work wdt:P31/wdt:P279* wd:Q7366; wdt:P175 ?answer. ?answer wdt:P27|wdt:P495 wd:Q35.",
+  },
+  {
+    key: "athlete-sport",
+    categoryId: "cat-25",
+    prompt: "Hvilken sportsgren forbindes atleten {work} med?",
+    relation: "sportsgren",
+    where: "?work wdt:P31 wd:Q5; wdt:P641 ?answer.",
+  },
+  {
+    key: "danish-athlete-sport",
+    categoryId: "cat-26",
+    prompt: "Hvilken sportsgren forbindes den danske atlet {work} med?",
+    relation: "sportsgren",
+    where: "?work wdt:P31 wd:Q5; wdt:P27 wd:Q35; wdt:P641 ?answer.",
+  },
+  {
+    key: "scientist-field",
+    categoryId: "cat-7",
+    prompt: "Hvilket fagområde forbindes forskeren {work} især med?",
+    relation: "fagområde",
+    where: "?work wdt:P31 wd:Q5; wdt:P106 wd:Q901; wdt:P101 ?answer.",
+  },
+  {
+    key: "space-constellation",
+    categoryId: "cat-8",
+    prompt: "I hvilket stjernebillede ligger himmelobjektet {work}?",
+    relation: "stjernebillede",
+    where: "?work wdt:P59 ?answer.",
+  },
+  {
+    key: "danish-place-municipality",
+    categoryId: "cat-2",
+    prompt: "Hvilken kommune ligger {work} i?",
+    relation: "kommune",
+    where:
+      "?work wdt:P31/wdt:P279* wd:Q486972; wdt:P17 wd:Q35; wdt:P131 ?answer. ?answer wdt:P31 wd:Q2039348.",
+  },
+  {
+    key: "battle-country",
+    categoryId: "cat-5",
+    prompt: "I hvilket land fandt slaget ved {work} sted?",
+    relation: "land",
+    where: "?work wdt:P31/wdt:P279* wd:Q178561; wdt:P17 ?answer.",
+  },
+  {
+    key: "brand-industry",
+    categoryId: "cat-34",
+    prompt: "Hvilken branche forbindes virksomheden {work} primært med?",
+    relation: "branche",
+    where: "?work wdt:P31/wdt:P279* wd:Q4830453; wdt:P452 ?answer.",
+  },
+  {
+    key: "football-club-stadium",
+    categoryId: "cat-27",
+    prompt: "Hvilket stadion er hjemmebane for fodboldklubben {work}?",
+    relation: "hjemmebane",
+    where: "?work wdt:P31/wdt:P279* wd:Q476028; wdt:P115 ?answer.",
+  },
+  {
+    key: "danish-musician-genre",
+    categoryId: "cat-22",
+    prompt: "Hvilken musikgenre forbindes {work} med?",
+    relation: "musikgenre",
+    where:
+      "?work wdt:P31 wd:Q5; wdt:P27 wd:Q35; wdt:P106/wdt:P279* wd:Q639669; wdt:P136 ?answer.",
+  },
+  {
+    key: "nordic-author-country",
+    categoryId: "cat-15",
+    prompt: "Hvilket nordisk land kom forfatteren {work} fra?",
+    relation: "statsborgerskab",
+    where:
+      "?work wdt:P31 wd:Q5; wdt:P106 wd:Q49757; wdt:P27 ?answer. VALUES ?answer { wd:Q35 wd:Q20 wd:Q34 wd:Q33 wd:Q189 }",
+  },
+  {
+    key: "animal-class",
+    categoryId: "cat-28",
+    prompt: "Hvilken dyreklasse tilhører {work}?",
+    relation: "dyreklasse",
+    where:
+      "?work wdt:P31 wd:Q16521; wdt:P171+ ?answer. ?answer wdt:P31 wd:Q37517.",
+  },
 ];
 
 async function query(config) {
@@ -90,7 +186,7 @@ async function query(config) {
     ${config.where}
     ?article schema:about ?work; schema:isPartOf <https://da.wikipedia.org/>.
     SERVICE wikibase:label { bd:serviceParam wikibase:language "da,en". }
-  } LIMIT 60`;
+  } LIMIT 90`;
   const url = `${endpoint}?format=json&query=${encodeURIComponent(sparql)}`;
   for (let attempt = 1; attempt <= 2; attempt++) {
     const response = await fetch(url, {
@@ -113,6 +209,7 @@ try {
 const merged = new Map(
   existing.map((record) => [`${record.key}:${record.workQid}`, record]),
 );
+const missingOnly = process.argv.includes("--missing");
 async function persist() {
   const records = [...merged.values()].sort((a, b) =>
     `${a.key}:${a.work}`.localeCompare(`${b.key}:${b.work}`, "da"),
@@ -122,6 +219,13 @@ async function persist() {
 }
 
 for (const config of configs) {
+  if (
+    missingOnly &&
+    [...merged.values()].some((record) => record.key === config.key)
+  ) {
+    console.log(`${config.key}: findes allerede, springes over`);
+    continue;
+  }
   try {
     const bindings = await query(config);
     const rows = bindings.map((row) => ({
@@ -143,7 +247,7 @@ for (const config of configs) {
       .filter(
         (item) => item.work !== item.workQid && item.answer !== item.answerQid,
       )
-      .slice(0, 35);
+      .slice(0, 50);
     for (const record of clean)
       merged.set(`${record.key}:${record.workQid}`, record);
     await persist();

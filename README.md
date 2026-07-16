@@ -14,8 +14,9 @@
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 2.383 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
-- localStorage til aktivt spil, historik, indstillinger og set-historik
+- 2.782 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
+- 12 spørgsmålstyper, blandt andet rækkefølge, nærmest vinder, udsagn, beskrivelser og kategorikryds
+- localStorage til aktivt spil, historik, indstillinger, set-historik og offline spillerrapporter
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
 - Vercel AI SDK 6 `generateText` + `Output.object()` + Zod til validerede AI-batches
 - Vitest og Playwright i Chromium på mobil- og desktop-viewports
@@ -54,14 +55,24 @@ Drizzle-skemaet modellerer kategorier, spørgsmål, spil, runder, spillere, hold
 
 ## Spørgsmålsbank og import/eksport
 
-Seedbanken kombinerer 318 redaktionelle spørgsmål fra `src/data/seed-spec.ts` med 1.216 lokalt gemte landespørgsmål baseret på Wikidata CC0. De eksterne fakta ligger i `src/data/wikidata-countries.generated.json` og kan opdateres med `npm run questions:update-wikidata`. Distraktorer vælges inden for samme faktatype: eksempelvis hovedstæder mod hovedstæder og valutaer mod valutaer. Nye kategorier tilføjes i `src/lib/categories.ts`.
+Seedbanken kombinerer håndskrevne spørgsmål med lokale snapshots fra Wikidata CC0. Distraktorer vælges inden for samme faktatype: eksempelvis hovedstæder mod hovedstæder, instruktører mod instruktører og sportsgrene mod sportsgrene. Ingen kategori har færre end ti tilgængelige spørgsmål, og udvælgeren kan også bruge relevante sekundære kategorier. Nye kategorier tilføjes i `src/lib/categories.ts`.
+
+Wikidata-importerne er langsomme, genoptagelige og gemmer efter hver relation. `--missing` springer allerede hentede relationer over:
+
+```bash
+npm run questions:update-wikidata
+npm run questions:update-culture
+npm run questions:update-thin -- --missing
+```
 
 ```bash
 npm run questions:export -- eksport.json
 npm run questions:import -- eksport.json
 ```
 
-Importkommandoen Zod-validerer hele filen og afviser dublerede fingerprints. Admin på `/admin` kan søge, filtrere, eksportere, previewe AI-batches og viser AI som utilgængelig, hvis credentials mangler.
+Importkommandoen Zod-validerer hele filen og afviser dublerede fingerprints. Admin på `/admin` kan søge, filtrere, eksportere, previewe AI-batches, se automatiske kvalitetsadvarsler og læse centralt synkroniserede spillerrapporter. AI vises som utilgængelig, hvis credentials mangler.
+
+Efter hvert svar kan spilleren rapportere forkert svar, uklar formulering, forkert niveau, dårlige svarmuligheder eller forældet information. Rapporten gemmes først lokalt og synkroniseres derefter via `POST /api/reports`, når en database er tilgængelig. Generiske faktafelter skjules automatisk i spillet.
 
 ## AI-generator
 
@@ -93,7 +104,7 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 2.383 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 2.782 seedspørgsmål stadig.
 
 ## Projektstruktur
 

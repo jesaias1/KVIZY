@@ -6,6 +6,7 @@ import type {
   Question,
   SeenQuestion,
 } from "./types";
+import { effectiveQualityScore } from "./question-quality";
 
 export function normalizeText(value: string) {
   return value
@@ -95,6 +96,54 @@ export function calculatePoints(
   }
   return minus || multiplier > 1 ? -Math.round(base / 2) : 0;
 }
+export function answerIsCorrect(question: Question, answer: string) {
+  if (question.type === "ordering")
+    return answer === (question.correctOrder ?? []).join("|");
+  return answer === question.correctOptionId;
+}
+
+function numericOption(question: Question, optionId: string) {
+  const text = question.options.find((option) => option.id === optionId)?.text;
+  if (!text) return undefined;
+  const value = Number(text.replace(/[^0-9,.-]/g, "").replace(",", "."));
+  return Number.isFinite(value) ? value : undefined;
+}
+
+export function calculateQuestionPoints(
+  question: Question,
+  answer: string,
+  responseMs: number,
+  timer: boolean,
+  multiplier = 1,
+  minus = false,
+) {
+  const correct = answerIsCorrect(question, answer);
+  if (question.type !== "closest_wins")
+    return calculatePoints(
+      correct,
+      responseMs,
+      timer,
+      multiplier,
+      minus,
+      Boolean(question.finale || question.type === "finale"),
+    );
+  const chosen = numericOption(question, answer);
+  const target = numericOption(question, question.correctOptionId ?? "");
+  const distances = question.options
+    .map((option) => ({
+      id: option.id,
+      distance:
+        target === undefined || numericOption(question, option.id) === undefined
+          ? Number.POSITIVE_INFINITY
+          : Math.abs(numericOption(question, option.id)! - target),
+    }))
+    .sort((a, b) => a.distance - b.distance);
+  const rank = distances.findIndex((item) => item.id === answer);
+  const base = [1000, 700, 400, 200][rank] ?? 0;
+  const finale = question.finale ? 2 : 1;
+  if (chosen === undefined || target === undefined) return 0;
+  return base * multiplier * finale;
+}
 export function selectQuestions(
   bank: Question[],
   setup: GameSetup,
@@ -115,7 +164,10 @@ export function selectQuestions(
       .filter(
         (q) =>
           q.status === "active" &&
-          setup.categoryIds.includes(q.categoryId) &&
+          (setup.categoryIds.includes(q.categoryId) ||
+            q.secondaryCategoryIds.some((categoryId) =>
+              setup.categoryIds.includes(categoryId),
+            )) &&
           !picked.some((p) => p.id === q.id || isNearDuplicate(p, q)),
       )
       .sort((a, b) => {
@@ -127,9 +179,11 @@ export function selectQuestions(
           af +
           (as ? 100 + as.count * 8 : 0) +
           Math.abs(a.difficulty - target) * 10 -
+          effectiveQualityScore(a) * 0.08 -
           (bf +
             (bs ? 100 + bs.count * 8 : 0) +
-            Math.abs(b.difficulty - target) * 10)
+            Math.abs(b.difficulty - target) * 10 -
+            effectiveQualityScore(b) * 0.08)
         );
       });
     const recentTypes = picked.slice(-2).map((q) => q.type),
@@ -150,7 +204,7 @@ export function selectQuestions(
   }
   return picked.map((q, i) =>
     setup.finale && i >= Math.max(0, picked.length - 3)
-      ? { ...q, type: "finale", difficulty: Math.min(5, q.difficulty + 1) }
+      ? { ...q, finale: true, difficulty: Math.min(5, q.difficulty + 1) }
       : q,
   );
 }

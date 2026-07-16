@@ -39,30 +39,43 @@ const relationCopy: Record<string, string> = {
 const createdAt = "2026-07-16T00:00:00.000Z";
 
 export const WIKIDATA_CULTURE_QUESTIONS: Question[] = records.map(
-  (record, index) => ({
-    id: `wikiculture-${record.key}-${record.workQid}`,
-    prompt: record.prompt.replace("{work}", record.work),
-    type: "multiple_choice",
-    categoryId: record.categoryId,
-    secondaryCategoryIds: [],
-    difficulty: ((index + record.work.length) % 4) + 2,
-    options: optionsFor(record),
-    correctOptionId: "o1",
-    explanation: `${record.answer} er registreret som ${relationCopy[record.key]} for ${record.work}.`,
-    sourceLabel: "Wikidata (CC0)",
-    sourceUrl: `https://www.wikidata.org/wiki/${record.workQid}`,
-    tags: ["wikidata", record.key],
-    origin: "curated",
-    status: "active",
-    fingerprint: stableHash(
-      `${record.key}:${record.workQid}:${record.answerQid}`,
-    ),
-    qualityScore: 91,
-    timeSensitive: false,
-    createdAt,
-    updatedAt: createdAt,
-    playCount: 0,
-    correctRate: 0,
-    reportCount: 0,
-  }),
+  (record, index) => {
+    const relationOptions = optionsFor(record);
+    const relation = relationCopy[record.key];
+    const statementVariant = index % 8 === 0;
+    const options = statementVariant
+      ? relationOptions.map((option) => ({
+          ...option,
+          text: `${option.text} er registreret som ${relation} for ${record.work}.`,
+        }))
+      : relationOptions;
+    return {
+      id: `wikiculture-${record.key}-${record.workQid}`,
+      prompt: statementVariant
+        ? `Hvilket udsagn om ${record.work} er korrekt?`
+        : record.prompt.replace("{work}", record.work),
+      type: statementVariant ? "correct_statement" : "multiple_choice",
+      categoryId: record.categoryId,
+      secondaryCategoryIds: [],
+      difficulty: ((index + record.work.length) % 4) + 2,
+      options,
+      correctOptionId: "o1",
+      explanation: `${record.answer} er registreret som ${relation} for ${record.work}.`,
+      sourceLabel: "Wikidata (CC0)",
+      sourceUrl: `https://www.wikidata.org/wiki/${record.workQid}`,
+      tags: ["wikidata", record.key],
+      origin: "curated",
+      status: "active",
+      fingerprint: stableHash(
+        `${record.key}:${record.workQid}:${record.answerQid}`,
+      ),
+      qualityScore: 91,
+      timeSensitive: false,
+      createdAt,
+      updatedAt: createdAt,
+      playCount: 0,
+      correctRate: 0,
+      reportCount: 0,
+    } satisfies Question;
+  },
 );

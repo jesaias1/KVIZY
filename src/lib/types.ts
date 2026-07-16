@@ -13,7 +13,6 @@ export const questionTypes = [
   "ordering",
   "precise",
   "image",
-  "emoji",
   "category_cross",
   "finale",
 ] as const;
@@ -46,6 +45,7 @@ export const questionSchema = z
     validUntil: z.string().optional(),
     createdAt: z.string(),
     updatedAt: z.string(),
+    finale: z.boolean().optional(),
     modelId: z.string().optional(),
     promptVersion: z.string().optional(),
     validationStatus: z.string().optional(),
@@ -135,6 +135,22 @@ export type SeenQuestion = {
   lastSeen: string;
   count: number;
   correct: boolean;
+};
+export const questionReportReasons = [
+  "wrong_answer",
+  "unclear",
+  "difficulty",
+  "bad_options",
+  "outdated",
+] as const;
+export type QuestionReportReason = (typeof questionReportReasons)[number];
+export type LocalQuestionReport = {
+  id: string;
+  questionId: string;
+  reason: QuestionReportReason;
+  note?: string;
+  createdAt: string;
+  synced: boolean;
 };
 export type AppSettings = {
   theme: "dark" | "light";
