@@ -15,6 +15,7 @@ import {
 } from "./engine";
 import { SEED_QUESTIONS } from "@/data/questions";
 import { CATEGORIES, DEFAULT_CATEGORIES } from "./categories";
+import { ANIMAL_AVATARS } from "./config";
 import { questionSchema } from "./types";
 const setup = {
   mode: "classic" as const,
@@ -30,12 +31,19 @@ const setup = {
   finale: false,
 };
 describe("pointberegning", () => {
-  it("giver 1000 standardpoint og forståelig risiko", () => {
-    expect(calculatePoints(true, 10000, false)).toBe(1000);
-    expect(calculatePoints(true, 0, false)).toBe(1000);
-    expect(calculatePoints(true, 29000, false)).toBe(1000);
-    expect(calculatePoints(false, 10000, false, 3)).toBe(-1500);
-    expect(calculatePoints(true, 0, true)).toBe(1500);
+  it("giver 100 standardpoint og forståelig risiko", () => {
+    expect(calculatePoints(true, 10000, false)).toBe(100);
+    expect(calculatePoints(true, 0, false)).toBe(100);
+    expect(calculatePoints(true, 29000, false)).toBe(100);
+    expect(calculatePoints(false, 10000, false, 3)).toBe(-150);
+    expect(calculatePoints(true, 0, true)).toBe(150);
+  });
+});
+describe("spilleravatarer", () => {
+  it("tilbyder mange unikke dyr og giver nye spillere et gyldigt dyr", () => {
+    expect(ANIMAL_AVATARS).toHaveLength(32);
+    expect(new Set(ANIMAL_AVATARS).size).toBe(ANIMAL_AVATARS.length);
+    expect(ANIMAL_AVATARS).toContain(newPlayer("Spiller", 31).avatar);
   });
 });
 describe("sværhedsgrad", () => {
@@ -270,7 +278,7 @@ describe("specialspørgsmål", () => {
       1000,
       false,
     );
-    expect(exact).toBe(1000);
+    expect(exact).toBe(100);
     expect(other).toBeLessThan(exact);
     expect(other).toBeGreaterThan(0);
   });

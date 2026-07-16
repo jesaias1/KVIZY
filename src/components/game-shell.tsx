@@ -37,12 +37,13 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { APP_CONFIG, DIFFICULTY_LABELS } from "@/lib/config";
+import { ANIMAL_AVATARS, APP_CONFIG, DIFFICULTY_LABELS } from "@/lib/config";
 import { CATEGORIES, DEFAULT_CATEGORIES, categoryById } from "@/lib/categories";
 import {
   answerIsCorrect,
@@ -729,26 +730,47 @@ function Setup({
               {setup.players.map((p, i) => (
                 <Card key={p.id}>
                   <CardContent className="flex items-center gap-3 p-3">
-                    <button
-                      className="avatar-button"
-                      onClick={() =>
-                        setSetup({
-                          ...setup,
-                          players: setup.players.map((x) =>
-                            x.id === p.id
-                              ? {
-                                  ...x,
-                                  avatar: ["🦊", "🐻", "🦉", "🐼", "🦁", "🐙"][
-                                    (i + 1) % 6
-                                  ],
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <button
+                          className="avatar-button"
+                          aria-label={`Vælg dyr for ${p.name}`}
+                        >
+                          {p.avatar}
+                        </button>
+                      </SheetTrigger>
+                      <SheetContent
+                        side="bottom"
+                        className="pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+                      >
+                        <SheetHeader>
+                          <SheetTitle>Vælg dyr til {p.name}</SheetTitle>
+                        </SheetHeader>
+                        <div className="grid grid-cols-6 gap-2 px-4 pb-5 sm:grid-cols-8 md:grid-cols-12">
+                          {ANIMAL_AVATARS.map((avatar) => (
+                            <SheetClose asChild key={avatar}>
+                              <button
+                                className={`grid aspect-square min-h-11 min-w-11 place-items-center rounded-xl text-2xl transition hover:bg-muted ${p.avatar === avatar ? "bg-primary/15 ring-2 ring-primary" : "bg-secondary"}`}
+                                aria-label={`Vælg ${avatar}`}
+                                aria-pressed={p.avatar === avatar}
+                                onClick={() =>
+                                  setSetup({
+                                    ...setup,
+                                    players: setup.players.map((player) =>
+                                      player.id === p.id
+                                        ? { ...player, avatar }
+                                        : player,
+                                    ),
+                                  })
                                 }
-                              : x,
-                          ),
-                        })
-                      }
-                    >
-                      {p.avatar}
-                    </button>
+                              >
+                                {avatar}
+                              </button>
+                            </SheetClose>
+                          ))}
+                        </div>
+                      </SheetContent>
+                    </Sheet>
                     <Input
                       aria-label={`Navn på ${i + 1}`}
                       value={p.name}
@@ -1362,7 +1384,7 @@ function Results({
       ? `${winner.name} leverede en vaskeægte quizmester-præstation.`
       : winner.longestStreak >= 4
         ? `${winner.name} afgjorde kampen med en stærk stime på ${winner.longestStreak}.`
-        : sorted.length > 1 && winner.score - sorted[1].score <= 1000
+        : sorted.length > 1 && winner.score - sorted[1].score <= 100
           ? "Det blev afgjort på marginalerne – en revanche ligger lige for."
           : `${winner.name} holdt hovedet koldt og tog sejren.`;
   const share = async () => {
@@ -1581,7 +1603,7 @@ function Help({
           [
             "3",
             "Tænk. Vind.",
-            "Et rigtigt svar giver 1.000 point. Ekstra point kræver et aktivt tilvalg.",
+            "Et rigtigt svar giver 100 point. Ekstra point kræver et aktivt tilvalg.",
           ],
         ].map((x) => (
           <Card key={x[0]}>
@@ -1597,9 +1619,9 @@ function Help({
         <CardContent className="p-6">
           <h2 className="font-bold">Point der er nemme at forstå</h2>
           <p className="mt-2 text-muted-foreground">
-            Et korrekt svar giver som standard altid 1.000 point, uanset
+            Et korrekt svar giver som standard altid 100 point, uanset
             svartid. Hvis I aktivt vælger Tidsbonus, kan et hurtigt svar give
-            op til 500 ekstra point. Risiko og Finale ændrer kun pointene, når
+            op til 50 ekstra point. Risiko og Finale ændrer kun pointene, når
             I selv vælger de spilindstillinger.
           </p>
         </CardContent>

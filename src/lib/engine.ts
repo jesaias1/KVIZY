@@ -7,6 +7,7 @@ import type {
   SeenQuestion,
 } from "./types";
 import { effectiveQualityScore } from "./question-quality";
+import { ANIMAL_AVATARS } from "./config";
 
 export function normalizeText(value: string) {
   return value
@@ -95,10 +96,10 @@ export function calculatePoints(
   minus = false,
   finale = false,
 ) {
-  const base = 1000 * (finale ? 2 : 1) * multiplier;
+  const base = 100 * (finale ? 2 : 1) * multiplier;
   if (correct) {
     const bonus = timeBonus
-      ? Math.max(0, Math.round((1 - responseMs / 30000) * 500))
+      ? Math.max(0, Math.round((1 - responseMs / 30000) * 50))
       : 0;
     return base + bonus;
   }
@@ -147,7 +148,7 @@ export function calculateQuestionPoints(
     }))
     .sort((a, b) => a.distance - b.distance);
   const rank = distances.findIndex((item) => item.id === answer);
-  const base = [1000, 700, 400, 200][rank] ?? 0;
+  const base = [100, 70, 40, 20][rank] ?? 0;
   const finale = question.finale ? 2 : 1;
   if (chosen === undefined || target === undefined) return 0;
   return base * multiplier * finale;
@@ -160,7 +161,6 @@ function balanceFairTurnTypes(
   eligibleBank: Question[],
   setup: GameSetup,
   signatures: Map<string, Set<string>>,
-  qualityScores: Map<string, number>,
 ) {
   const playerCount = Math.max(1, setup.players.length);
   if (playerCount === 1 || picked.length < playerCount) return picked;
@@ -178,28 +178,25 @@ function balanceFairTurnTypes(
     if (remainder === 0) continue;
     for (const replaceIndex of [...typeIndexes.slice(-remainder)].reverse()) {
       const currentIds = new Set(balanced.map((question) => question.id));
-      const replacement = eligibleBank
-        .filter(
+      const currentFingerprints = new Set(
+        balanced
+          .filter((_, index) => index !== replaceIndex)
+          .map((question) => question.fingerprint),
+      );
+      const replacement = eligibleBank.find(
           (candidate) =>
             !fairTypes.has(candidate.type) &&
             !currentIds.has(candidate.id) &&
+            !currentFingerprints.has(candidate.fingerprint) &&
             !balanced.some(
               (question, index) =>
                 index !== replaceIndex &&
-                (question.fingerprint === candidate.fingerprint ||
-                  setSimilarity(
-                    signatures.get(question.id)!,
-                    signatures.get(candidate.id)!,
-                  ) > 0.9),
+                setSimilarity(
+                  signatures.get(question.id)!,
+                  signatures.get(candidate.id)!,
+                ) > 0.9,
             ),
-        )
-        .sort(
-          (a, b) =>
-            Math.abs(a.difficulty - balanced[replaceIndex].difficulty) * 10 -
-            (qualityScores.get(a.id) ?? 0) * 0.08 -
-            (Math.abs(b.difficulty - balanced[replaceIndex].difficulty) * 10 -
-              (qualityScores.get(b.id) ?? 0) * 0.08),
-        )[0];
+        );
       if (replacement) balanced[replaceIndex] = replacement;
       else balanced.splice(replaceIndex, 1);
     }
@@ -251,19 +248,21 @@ export function selectQuestions(
   random = Math.random,
 ): Question[] {
   const seenMap = new Map(seen.map((s) => [s.id, s]));
-  const randomizedBank = shuffle(bank, random).filter(
+  const eligibleBank = shuffle(bank, random).filter(
     (question) =>
       question.status === "active" &&
       setup.categoryIds.includes(question.categoryId),
   );
+  const poolSize = Math.max(600, setup.questionCount * 10);
+  const candidatePool = eligibleBank.slice(0, poolSize);
   const qualityScores = new Map(
-    randomizedBank.map((question) => [
+    candidatePool.map((question) => [
       question.id,
       effectiveQualityScore(question),
     ]),
   );
   const signatures = new Map(
-    randomizedBank.map((question) => [
+    candidatePool.map((question) => [
       question.id,
       tokenSet(
         `${question.prompt} ${question.options.find((option) => option.id === question.correctOptionId)?.text ?? ""}`,
@@ -280,7 +279,7 @@ export function selectQuestions(
       setup.difficulty,
       setup.difficultyMode,
     );
-    const candidates = randomizedBank
+    const candidates = candidatePool
       .filter(
         (q) =>
           !pickedIds.has(q.id) &&
@@ -329,10 +328,9 @@ export function selectQuestions(
   }
   const distributed = balanceFairTurnTypes(
     picked,
-    randomizedBank,
+    candidatePool,
     setup,
     signatures,
-    qualityScores,
   );
   return distributed.map((question, index) => {
     const shuffled = shuffleAnswers(question, random);
@@ -349,7 +347,7 @@ export function newPlayer(name: string, index: number): GamePlayer {
   return {
     id: crypto.randomUUID(),
     name,
-    avatar: ["🦊", "🐻", "🦉", "🐼", "🦁", "🐙"][index % 6],
+    avatar: ANIMAL_AVATARS[index % ANIMAL_AVATARS.length],
     color: ["#ff6b35", "#35c2a6", "#7c6cff", "#e6b84b"][index % 4],
     score: 0,
     correct: 0,
