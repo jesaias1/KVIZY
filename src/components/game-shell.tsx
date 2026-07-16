@@ -145,6 +145,52 @@ function load<T>(key: string, fallback: T): T {
     return fallback;
   }
 }
+function safeSet(key: string, value: string) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Spillet fortsætter, selv hvis browserens lokale lager er utilgængeligt.
+  }
+}
+function safeRemove(key: string) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Manglende lageradgang må aldrig afbryde et spil.
+  }
+}
+function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
+  const fallback = emptySetup();
+  if (
+    !saved ||
+    !Array.isArray(saved.players) ||
+    saved.players.length === 0 ||
+    !Array.isArray(saved.categoryIds)
+  )
+    return fallback;
+  const validCategoryIds = new Set(CATEGORIES.map((category) => category.id));
+  return {
+    ...fallback,
+    ...saved,
+    players: saved.players.slice(0, 12).map((player, index) => ({
+      ...newPlayer(
+        typeof player.name === "string" ? player.name : `Spiller ${index + 1}`,
+        index,
+      ),
+      ...player,
+      score: 0,
+      correct: 0,
+      answers: 0,
+      streak: 0,
+      longestStreak: 0,
+    })),
+    categoryIds: saved.categoryIds.filter((id) => validCategoryIds.has(id)),
+    favorites: Array.isArray(saved.favorites)
+      ? saved.favorites.filter((id) => validCategoryIds.has(id))
+      : [],
+    timeBonus: saved.timeBonus ?? false,
+  };
+}
 function tone(kind: "tap" | "correct" | "wrong" | "win", enabled: boolean) {
   if (!enabled) return;
   try {
@@ -186,12 +232,18 @@ export function GameShell() {
       standalone: false,
     }),
     [settings, setSettings] = useState(defaults),
+    [startError, setStartError] = useState<string | null>(null),
     [hydrated, setHydrated] = useState(false);
   const { setTheme } = useTheme();
   useEffect(() => {
     const id = window.setTimeout(() => {
       setGame(load<Game | null>(APP_CONFIG.gameKey, null));
       setHistory(load(APP_CONFIG.historyKey, []));
+      setSetup(
+        restoreSetup(
+          load<Partial<GameSetup> | null>(APP_CONFIG.setupKey, null),
+        ),
+      );
       const s = load(APP_CONFIG.settingsKey, defaults);
       setSettings(s);
       setTheme(s.theme);
@@ -251,61 +303,76 @@ export function GameShell() {
   }, []);
   useEffect(() => {
     if (!hydrated) return;
-    localStorage.setItem(APP_CONFIG.settingsKey, JSON.stringify(settings));
+    safeSet(APP_CONFIG.settingsKey, JSON.stringify(settings));
     setTheme(settings.theme);
     document.documentElement.classList.toggle(
       "contrast",
       settings.highContrast,
     );
   }, [settings, hydrated, setTheme]);
+  useEffect(() => {
+    if (!hydrated) return;
+    safeSet(APP_CONFIG.setupKey, JSON.stringify(setup));
+  }, [setup, hydrated]);
   const go = (v: View) => {
     tone("tap", settings.sound);
     setView(v);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const start = (same?: GameSetup) => {
-    const s = same ?? setup;
-    const normalized = {
-      ...s,
-      questionCount: s.mode === "quick" ? 10 : s.questionCount,
-      players: s.mode === "solo" ? [s.players[0]] : s.players,
-    };
-    const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
-    const questions = selectQuestions(questionBank, normalized, seen);
-    if (questions.length === 0)
-      return alert(
-        "Der er ikke nok spørgsmål i de valgte kategorier. Vælg mindst én kategori.",
+    try {
+      setStartError(null);
+      const s = same ?? setup;
+      const normalized = {
+        ...s,
+        questionCount: s.mode === "quick" ? 10 : s.questionCount,
+        players: s.mode === "solo" ? [s.players[0]] : s.players,
+      };
+      const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
+      const questions = selectQuestions(questionBank, normalized, seen);
+      if (questions.length === 0) {
+        setStartError(
+          "Der er ikke nok spørgsmål i de valgte kategorier. Vælg mindst én kategori.",
+        );
+        setView("setup");
+        return;
+      }
+      const g: Game = {
+        id: crypto.randomUUID(),
+        setup: {
+          ...normalized,
+          players: normalized.players.map((p) => ({
+            ...p,
+            score: 0,
+            correct: 0,
+            answers: 0,
+            streak: 0,
+            longestStreak: 0,
+          })),
+        },
+        questions,
+        index: 0,
+        activePlayerIndex: 0,
+        answers: [],
+        startedAt: new Date().toISOString(),
+        riskMultiplier: 1,
+      };
+      setGame(g);
+      safeSet(APP_CONFIG.gameKey, JSON.stringify(g));
+      go("play");
+    } catch {
+      setStartError(
+        "Spillet kunne ikke startes. Opsætningen er bevaret – prøv igen.",
       );
-    const g: Game = {
-      id: crypto.randomUUID(),
-      setup: {
-        ...normalized,
-        players: normalized.players.map((p) => ({
-          ...p,
-          score: 0,
-          correct: 0,
-          answers: 0,
-          streak: 0,
-          longestStreak: 0,
-        })),
-      },
-      questions,
-      index: 0,
-      activePlayerIndex: 0,
-      answers: [],
-      startedAt: new Date().toISOString(),
-      riskMultiplier: 1,
-    };
-    setGame(g);
-    localStorage.setItem(APP_CONFIG.gameKey, JSON.stringify(g));
-    go("play");
+      setView("setup");
+    }
   };
   const finish = (g: Game) => {
     const r = buildResult({ ...g, completedAt: new Date().toISOString() });
     const next = [r, ...history].slice(0, 30);
     setHistory(next);
-    localStorage.setItem(APP_CONFIG.historyKey, JSON.stringify(next));
-    localStorage.removeItem(APP_CONFIG.gameKey);
+    safeSet(APP_CONFIG.historyKey, JSON.stringify(next));
+    safeRemove(APP_CONFIG.gameKey);
     setGame({ ...g, completedAt: r.playedAt });
     tone("win", settings.sound);
     confetti({
@@ -365,11 +432,11 @@ export function GameShell() {
       ],
     };
     setGame(next);
-    localStorage.setItem(APP_CONFIG.gameKey, JSON.stringify(next));
+    safeSet(APP_CONFIG.gameKey, JSON.stringify(next));
     const allSeen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
     const previousSeen = allSeen.find((s) => s.id === q.id);
     const seen = allSeen.filter((s) => s.id !== q.id);
-    localStorage.setItem(
+    safeSet(
       APP_CONFIG.seenKey,
       JSON.stringify([
         ...seen,
@@ -398,7 +465,7 @@ export function GameShell() {
       synced: false,
     };
     const stored = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []);
-    localStorage.setItem(
+    safeSet(
       APP_CONFIG.reportsKey,
       JSON.stringify([report, ...stored].slice(0, 100)),
     );
@@ -413,7 +480,7 @@ export function GameShell() {
         const next = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []).map(
           (item) => (item.id === report.id ? { ...item, synced: true } : item),
         );
-        localStorage.setItem(APP_CONFIG.reportsKey, JSON.stringify(next));
+        safeSet(APP_CONFIG.reportsKey, JSON.stringify(next));
       })
       .catch(() => {
         // Offline-rapporter bliver liggende lokalt på enheden.
@@ -430,7 +497,7 @@ export function GameShell() {
       riskMultiplier: 1,
     };
     setGame(next);
-    localStorage.setItem(APP_CONFIG.gameKey, JSON.stringify(next));
+    safeSet(APP_CONFIG.gameKey, JSON.stringify(next));
     tone("tap", settings.sound);
   };
   const content =
@@ -443,6 +510,7 @@ export function GameShell() {
         step={step}
         setStep={setStep}
         start={start}
+        startError={startError}
         go={go}
       />
     ) : view === "play" && game ? (
@@ -455,7 +523,7 @@ export function GameShell() {
         setRisk={(n) => {
           const g = { ...game, riskMultiplier: n };
           setGame(g);
-          localStorage.setItem(APP_CONFIG.gameKey, JSON.stringify(g));
+          safeSet(APP_CONFIG.gameKey, JSON.stringify(g));
         }}
       />
     ) : view === "results" && game ? (
@@ -647,6 +715,7 @@ function Setup({
   step,
   setStep,
   start,
+  startError,
   go,
 }: {
   setup: GameSetup;
@@ -654,6 +723,7 @@ function Setup({
   step: number;
   setStep: (n: number) => void;
   start: (s?: GameSetup) => void;
+  startError: string | null;
   go: (v: View) => void;
 }) {
   const [search, setSearch] = useState("");
@@ -680,6 +750,15 @@ function Setup({
         onBack={() => (step ? setStep(step - 1) : go("home"))}
         kicker={`Trin ${step + 1} af 3`}
       />
+      {startError && (
+        <div
+          role="alert"
+          className="mb-5 rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm"
+        >
+          <b>Kunne ikke starte quizzen</b>
+          <p className="mt-1 text-muted-foreground">{startError}</p>
+        </div>
+      )}
       <Progress value={((step + 1) / 3) * 100} className="mb-7" />
       {step === 0 && (
         <div className="space-y-8">

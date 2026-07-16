@@ -39,14 +39,6 @@ export function similarity(a: string, b: string) {
   const inter = [...A].filter((x) => B.has(x)).length;
   return inter / (A.size + B.size - inter || 1);
 }
-function tokenSet(value: string) {
-  return new Set(normalizeText(value).split(" "));
-}
-function setSimilarity(a: Set<string>, b: Set<string>) {
-  let intersection = 0;
-  for (const token of a) if (b.has(token)) intersection++;
-  return intersection / (a.size + b.size - intersection || 1);
-}
 export function isNearDuplicate(a: Question, b: Question) {
   return (
     a.fingerprint === b.fingerprint ||
@@ -156,11 +148,24 @@ export function calculateQuestionPoints(
 
 const FAIR_TURN_TYPES = ["true_false", "ordering"] as const;
 
+function questionFactKey(question: Question) {
+  if (question.type === "true_false") return question.fingerprint;
+  const answer =
+    question.options.find(
+      (option) => option.id === question.correctOptionId,
+    )?.text ??
+    (question.correctOrder ?? [])
+      .map(
+        (id) => question.options.find((option) => option.id === id)?.text ?? id,
+      )
+      .join(" ");
+  return `${question.categoryId}:${normalizeText(answer)}:${question.tags[0] ?? ""}`;
+}
+
 function balanceFairTurnTypes(
   picked: Question[],
   eligibleBank: Question[],
   setup: GameSetup,
-  signatures: Map<string, Set<string>>,
 ) {
   const playerCount = Math.max(1, setup.players.length);
   if (playerCount === 1 || picked.length < playerCount) return picked;
@@ -183,20 +188,18 @@ function balanceFairTurnTypes(
           .filter((_, index) => index !== replaceIndex)
           .map((question) => question.fingerprint),
       );
+      const currentFacts = new Set(
+        balanced
+          .filter((_, index) => index !== replaceIndex)
+          .map(questionFactKey),
+      );
       const replacement = eligibleBank.find(
-          (candidate) =>
-            !fairTypes.has(candidate.type) &&
-            !currentIds.has(candidate.id) &&
-            !currentFingerprints.has(candidate.fingerprint) &&
-            !balanced.some(
-              (question, index) =>
-                index !== replaceIndex &&
-                setSimilarity(
-                  signatures.get(question.id)!,
-                  signatures.get(candidate.id)!,
-                ) > 0.9,
-            ),
-        );
+        (candidate) =>
+          !fairTypes.has(candidate.type) &&
+          !currentIds.has(candidate.id) &&
+          !currentFingerprints.has(candidate.fingerprint) &&
+          !currentFacts.has(questionFactKey(candidate)),
+      );
       if (replacement) balanced[replaceIndex] = replacement;
       else balanced.splice(replaceIndex, 1);
     }
@@ -255,23 +258,10 @@ export function selectQuestions(
   );
   const poolSize = Math.max(600, setup.questionCount * 10);
   const candidatePool = eligibleBank.slice(0, poolSize);
-  const qualityScores = new Map(
-    candidatePool.map((question) => [
-      question.id,
-      effectiveQualityScore(question),
-    ]),
-  );
-  const signatures = new Map(
-    candidatePool.map((question) => [
-      question.id,
-      tokenSet(
-        `${question.prompt} ${question.options.find((option) => option.id === question.correctOptionId)?.text ?? ""}`,
-      ),
-    ]),
-  );
   const picked: Question[] = [];
   const pickedIds = new Set<string>();
   const pickedFingerprints = new Set<string>();
+  const pickedFacts = new Set<string>();
   for (let i = 0; i < setup.questionCount; i++) {
     const target = difficultyFor(
       i,
@@ -279,59 +269,48 @@ export function selectQuestions(
       setup.difficulty,
       setup.difficultyMode,
     );
-    const candidates = candidatePool
-      .filter(
-        (q) =>
-          !pickedIds.has(q.id) &&
-          !pickedFingerprints.has(q.fingerprint) &&
-          !picked.some(
-            (pickedQuestion) =>
-              setSimilarity(
-                signatures.get(pickedQuestion.id)!,
-                signatures.get(q.id)!,
-              ) > 0.9,
-          ),
-      )
-      .sort((a, b) => {
-        const af = setup.favorites.includes(a.categoryId) ? -20 : 0,
-          bf = setup.favorites.includes(b.categoryId) ? -20 : 0;
-        const as = seenMap.get(a.id),
-          bs = seenMap.get(b.id);
-        return (
-          af +
-          (as ? 100 + as.count * 8 : 0) +
-          Math.abs(a.difficulty - target) * 10 -
-          (qualityScores.get(a.id) ?? 0) * 0.08 -
-          (bf +
-            (bs ? 100 + bs.count * 8 : 0) +
-            Math.abs(b.difficulty - target) * 10 -
-            (qualityScores.get(b.id) ?? 0) * 0.08)
-        );
-      });
     const recentTypes = picked.slice(-2).map((q) => q.type),
       recentCats = picked.slice(-2).map((q) => q.categoryId);
-    const chosen =
-      candidates.find(
-        (q) =>
-          !(
-            recentTypes.length === 2 && recentTypes.every((t) => t === q.type)
-          ) &&
-          !(
-            recentCats.length === 2 &&
-            recentCats.every((c) => c === q.categoryId)
-          ),
-      ) ?? candidates[0];
+    let chosen: Question | undefined;
+    let bestScore = Number.POSITIVE_INFINITY;
+    const chooseFromPool = (allowRepeatedFact: boolean) => {
+      for (const question of candidatePool) {
+        const factKey = questionFactKey(question);
+        if (
+          pickedIds.has(question.id) ||
+          pickedFingerprints.has(question.fingerprint) ||
+          (!allowRepeatedFact && pickedFacts.has(factKey))
+        )
+          continue;
+        const seen = seenMap.get(question.id);
+        const repeatedType =
+          recentTypes.length === 2 &&
+          recentTypes.every((type) => type === question.type);
+        const repeatedCategory =
+          recentCats.length === 2 &&
+          recentCats.every((category) => category === question.categoryId);
+        const score =
+          (setup.favorites.includes(question.categoryId) ? -20 : 0) +
+          (seen ? 100 + seen.count * 8 : 0) +
+          Math.abs(question.difficulty - target) * 10 +
+          (repeatedType ? 40 : 0) +
+          (repeatedCategory ? 40 : 0) -
+          effectiveQualityScore(question) * 0.08;
+        if (score < bestScore) {
+          bestScore = score;
+          chosen = question;
+        }
+      }
+    };
+    chooseFromPool(false);
+    if (!chosen) chooseFromPool(true);
     if (!chosen) break;
     picked.push(chosen);
     pickedIds.add(chosen.id);
     pickedFingerprints.add(chosen.fingerprint);
+    pickedFacts.add(questionFactKey(chosen));
   }
-  const distributed = balanceFairTurnTypes(
-    picked,
-    candidatePool,
-    setup,
-    signatures,
-  );
+  const distributed = balanceFairTurnTypes(picked, candidatePool, setup);
   return distributed.map((question, index) => {
     const shuffled = shuffleAnswers(question, random);
     return setup.finale && index >= Math.max(0, distributed.length - 3)
