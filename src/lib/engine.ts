@@ -205,7 +205,12 @@ function balanceFairTurnTypes(
     }
   }
 
-  const distributed: Array<Question | undefined> = Array(balanced.length);
+  // Array(length) creates empty slots that Array.prototype.map skips.
+  // Initialize every slot so the remaining questions are actually inserted.
+  const distributed: Array<Question | undefined> = Array.from(
+    { length: balanced.length },
+    () => undefined,
+  );
   const openSlots = Array.from({ length: playerCount }, (_, playerIndex) =>
     balanced
       .map((_, index) => index)

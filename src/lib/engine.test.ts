@@ -150,6 +150,18 @@ describe("seedbank og Zod", () => {
   });
 });
 describe("adaptiv udvælgelse", () => {
+  it("returnerer komplette spørgsmål for et normalt spil med to spillere", () => {
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      players: [newPlayer("Spiller 1", 0), newPlayer("Spiller 2", 1)],
+      questionCount: 10,
+    });
+
+    expect(chosen).toHaveLength(10);
+    expect(Object.keys(chosen)).toHaveLength(10);
+    expect(chosen.every((question) => Boolean(question?.id))).toBe(true);
+  });
+
   it("giver forskellige nye browsere forskellige startrækkefølger", () => {
     const seeded = (initial: number) => {
       let state = initial;
@@ -204,6 +216,8 @@ describe("adaptiv udvælgelse", () => {
       questionCount: 60,
     });
     const fairTypes = ["true_false", "ordering"] as const;
+    expect(Object.keys(chosen)).toHaveLength(chosen.length);
+    expect(chosen.every((question) => Boolean(question?.id))).toBe(true);
     expect(
       chosen.some(
         (question) =>
