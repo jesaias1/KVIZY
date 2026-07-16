@@ -262,9 +262,11 @@ function matchesSelectedUmbrellaCategory(
   question: Question,
   selectedCategoryIds: Set<string>,
 ) {
+  // Emnefiltre skal være strikte i blandede spil. Formkategorierne må kun
+  // hente spørgsmål fra andre emner, når brugeren har valgt dem helt alene.
+  if (selectedCategoryIds.size !== 1) return false;
   return (
-    (selectedCategoryIds.size === 1 &&
-      selectedCategoryIds.has("cat-1") &&
+    (selectedCategoryIds.has("cat-1") &&
       isGeneralKnowledgeQuestion(question)) ||
     (selectedCategoryIds.has("cat-45") &&
       ["what_came_first", "ordering"].includes(question.type)) ||

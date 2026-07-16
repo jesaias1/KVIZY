@@ -308,6 +308,22 @@ describe("adaptiv udvælgelse", () => {
       ),
     ).toBe(true);
   });
+  it("lader ikke formkategorier åbne fravalgte emner i blandede spil", () => {
+    for (const formatCategoryId of ["cat-45", "cat-46", "cat-47"]) {
+      const selectedCategoryIds = ["cat-21", formatCategoryId];
+      const chosen = selectQuestions(SEED_QUESTIONS, {
+        ...setup,
+        questionCount: 15,
+        categoryIds: selectedCategoryIds,
+      });
+      expect(chosen).toHaveLength(15);
+      expect(
+        chosen.every((question) =>
+          selectedCategoryIds.includes(question.categoryId),
+        ),
+      ).toBe(true);
+    }
+  });
   it("lader ikke store kategorier dominere et blandet spil", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,
