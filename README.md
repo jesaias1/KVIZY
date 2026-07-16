@@ -1,6 +1,6 @@
 # KVIZY
 
-**Vælg. Tænk. Vind.** KVIZY er et komplet dansk, mobil-first quizspil til venner, familier, fester, undervisning og pubquiz. Første version er lokal multiplayer på én enhed og virker uden login, database eller AI-nøgle.
+**KVIK, KVIKKERE, KVIZY.** KVIZY er et komplet dansk, mobil-first quizspil til venner, familier, fester, undervisning og pubquiz. Første version er lokal multiplayer på én enhed og virker uden login, database eller AI-nøgle.
 
 ## Produktflow
 

@@ -1,6 +1,6 @@
 export const APP_CONFIG = {
   name: "KVIZY",
-  tagline: "Vælg. Tænk. Vind.",
+  tagline: "KVIK, KVIKKERE, KVIZY",
   storageVersion: 2,
   gameKey: "kvizy-active-game-v2",
   historyKey: "kvizy-history-v1",

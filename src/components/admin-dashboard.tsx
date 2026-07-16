@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { BrandLockup } from "@/components/brand-lockup";
 import {
   Select,
   SelectContent,
@@ -176,6 +177,7 @@ export function AdminDashboard() {
     <main className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <div>
+          <BrandLockup compact className="mb-5" />
           <Badge>Beskyttet</Badge>
           <h1 className="mt-2 text-3xl font-black">Spørgsmålsadministration</h1>
           <p className="text-muted-foreground">

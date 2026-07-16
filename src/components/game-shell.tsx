@@ -28,6 +28,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandLockup } from "@/components/brand-lockup";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -357,9 +358,11 @@ export function GameShell() {
         }
       }
       if (syncedIds.size === 0) return;
-      const reports = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []).map(
-        (report) =>
-          syncedIds.has(report.id) ? { ...report, synced: true } : report,
+      const reports = load<LocalQuestionReport[]>(
+        APP_CONFIG.reportsKey,
+        [],
+      ).map((report) =>
+        syncedIds.has(report.id) ? { ...report, synced: true } : report,
       );
       safeSet(APP_CONFIG.reportsKey, JSON.stringify(reports));
     })();
@@ -631,10 +634,9 @@ function TopBar({
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
         <button
           onClick={() => go("home")}
-          className="flex min-h-11 items-center gap-2 text-xl font-black tracking-tight"
+          className="flex min-h-11 items-center text-left"
         >
-          <span className="logo-mark">K</span>
-          {APP_CONFIG.name}
+          <BrandLockup compact />
         </button>
         <div className="flex items-center gap-1">
           <Button
@@ -710,8 +712,8 @@ function Home({
           Quiz-aftenen starter <span className="text-primary">her.</span>
         </h1>
         <p className="mt-6 text-xl text-muted-foreground">
-          {APP_CONFIG.tagline} Dansk multiplayer på én skærm — uden login og
-          ventetid.
+          <strong className="text-foreground">{APP_CONFIG.tagline}.</strong>{" "}
+          Dansk multiplayer på én skærm — uden login og ventetid.
         </p>
         <div className="mt-9 grid gap-3 sm:max-w-md">
           <Button
@@ -1704,16 +1706,16 @@ function HistoryView({
                         ? `${names} delte førstepladsen`
                         : `${names} vandt`}
                     </b>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(r.playedAt).toLocaleDateString("da-DK")} ·{" "}
-                    {r.questions.length} spørgsmål
-                  </p>
-                </div>
-                <strong>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(r.playedAt).toLocaleDateString("da-DK")} ·{" "}
+                      {r.questions.length} spørgsmål
+                    </p>
+                  </div>
+                  <strong>
                     {(winners[0]?.score ?? 0).toLocaleString("da-DK")}
-                </strong>
-              </CardContent>
-            </Card>
+                  </strong>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -1772,12 +1774,11 @@ function Help({
         <CardContent className="p-6">
           <h2 className="font-bold">Point der er nemme at forstå</h2>
           <p className="mt-2 text-muted-foreground">
-            Et korrekt svar giver som standard altid 100 point, uanset
-            svartid og streak. Hvis I aktivt vælger Tidsbonus, kan et hurtigt
-            svar give op til 50 ekstra point. Streakbonus giver 25 ekstra point
-            for hvert tidligere svar i den aktuelle streak, højst 75. Risiko
-            og Finale ændrer kun pointene, når I selv vælger de
-            spilindstillinger.
+            Et korrekt svar giver som standard altid 100 point, uanset svartid
+            og streak. Hvis I aktivt vælger Tidsbonus, kan et hurtigt svar give
+            op til 50 ekstra point. Streakbonus giver 25 ekstra point for hvert
+            tidligere svar i den aktuelle streak, højst 75. Risiko og Finale
+            ændrer kun pointene, når I selv vælger de spilindstillinger.
           </p>
         </CardContent>
       </Card>

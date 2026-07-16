@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { validToken, ADMIN_COOKIE } from "@/lib/admin-auth";
 import { AdminDashboard } from "@/components/admin-dashboard";
 import Link from "next/link";
+import { BrandLockup } from "@/components/brand-lockup";
 export default async function AdminPage() {
   const jar = await cookies();
   if (!validToken(jar.get(ADMIN_COOKIE)?.value))
@@ -12,7 +13,7 @@ export default async function AdminPage() {
           method="post"
           className="w-full rounded-2xl border bg-card p-6"
         >
-          <div className="logo-mark mb-5">K</div>
+          <BrandLockup className="mb-6" />
           <h1 className="text-2xl font-black">KVIZY administration</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Indtast den server-side ADMIN_SECRET.
