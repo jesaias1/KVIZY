@@ -54,6 +54,12 @@ const names = [
   "2000’erne",
   "2010’erne",
   "Nutiden",
+  "Kroppen og sundhed",
+  "Økonomi og penge",
+  "Klima og miljø",
+  "Biler og transport",
+  "Arkitektur og design",
+  "Hverdagsviden",
 ];
 const emojis = [
   "🧠",
@@ -109,6 +115,12 @@ const emojis = [
   "📱",
   "📲",
   "🗞️",
+  "🫀",
+  "💰",
+  "🌱",
+  "🚆",
+  "🏗️",
+  "🛠️",
 ];
 const nicheIds = new Set(["cat-23"]);
 

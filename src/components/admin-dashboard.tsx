@@ -71,8 +71,8 @@ export function AdminDashboard() {
           <Badge>Beskyttet</Badge>
           <h1 className="mt-2 text-3xl font-black">Spørgsmålsadministration</h1>
           <p className="text-muted-foreground">
-            {SEED_QUESTIONS.length} aktive · 53 kategorier · {generated.length}{" "}
-            i preview
+            {SEED_QUESTIONS.length} aktive · {CATEGORIES.length} kategorier ·{" "}
+            {generated.length} i preview
           </p>
         </div>
         <div className="flex gap-2">

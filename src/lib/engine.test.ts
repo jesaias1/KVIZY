@@ -95,6 +95,22 @@ describe("seedbank og Zod", () => {
         .length,
     ).toBeGreaterThanOrEqual(60);
   });
+  it("giver de nye brede kategorier en reel startbank", () => {
+    const newCategoryIds = [
+      "cat-54",
+      "cat-55",
+      "cat-56",
+      "cat-57",
+      "cat-58",
+      "cat-59",
+    ];
+    expect(CATEGORIES).toHaveLength(59);
+    for (const categoryId of newCategoryIds) {
+      expect(
+        SEED_QUESTIONS.filter((question) => question.categoryId === categoryId),
+      ).toHaveLength(10);
+    }
+  });
 });
 describe("adaptiv udvælgelse", () => {
   it("undgår gentagelser og respekterer kategorier", () => {

@@ -5,7 +5,7 @@
 ## Produktflow
 
 1. Vælg Alle mod alle, Holdkamp, Solo, Hurtig quiz, Risiko eller Mystery Mix.
-2. Tilføj 1–12 spillere eller 2–6 hold, og vælg 53 søgbare kategorier.
+2. Tilføj 1–12 spillere eller 2–6 hold, og vælg mellem 59 søgbare kategorier.
 3. Indstil 3–100 spørgsmål, niveau 1–5, fast/blandet/stigende sværhedsgrad, timer, minuspoint og finale.
 4. Giv enheden videre. Svar låses, forklaring og point vises, og spillet gemmes løbende.
 5. Se vinder, scoreboard, svarprocent, streaks, gennemgang, historik og revanche.
@@ -14,7 +14,7 @@
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 1.534 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
+- 1.996 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
 - localStorage til aktivt spil, historik, indstillinger og set-historik
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
 - Vercel AI SDK 6 `generateText` + `Output.object()` + Zod til validerede AI-batches
@@ -93,7 +93,7 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.534 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.996 seedspørgsmål stadig.
 
 ## Projektstruktur
 

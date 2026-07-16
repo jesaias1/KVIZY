@@ -4,6 +4,7 @@ import type { Question, QuestionType } from "@/lib/types";
 import { COUNTRY_QUESTIONS } from "./country-questions";
 import { MUSIC_PRODUCTION_QUESTIONS } from "./music-production-questions";
 import { WIKIDATA_CULTURE_QUESTIONS } from "./wikidata-culture-questions";
+import { EXPANSION_QUESTIONS } from "./expansion-questions";
 import { seedSpecs } from "./seed-spec";
 
 const created = "2026-07-15T00:00:00.000Z";
@@ -200,4 +201,5 @@ export const SEED_QUESTIONS: Question[] = [
   ...COUNTRY_QUESTIONS,
   ...MUSIC_PRODUCTION_QUESTIONS,
   ...WIKIDATA_CULTURE_QUESTIONS,
+  ...EXPANSION_QUESTIONS,
 ];

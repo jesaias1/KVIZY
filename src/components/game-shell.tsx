@@ -709,7 +709,7 @@ function Setup({
             <Search className="absolute left-3 top-3 size-5 text-muted-foreground" />
             <Input
               className="pl-10"
-              placeholder="Søg i 53 kategorier"
+              placeholder="Søg i kategorier"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
