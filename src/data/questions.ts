@@ -1191,9 +1191,30 @@ const redundantQuestionIds = new Set([
   "expansion-117", // Samme Famicom/NES-fakta som q-cat-49-1.
   "expansion-173", // Samme deepfake-definition som q-cat-53-3.
   "expansion-112", // "Brun" i spørgsmålet afslører svaret brunost.
+  "variety-055",
+  "q-cat-31-2",
+  "expansion-102",
+  "expansion-115",
+  "variety-079",
+  "variety-065",
+  "variety-041",
+  "wikithin-danish-literature-author-Q1758876",
+  "expansion-088",
+  "expansion-093",
+  "expansion-098",
+  "q-cat-31-4",
+  "q-cat-32-6",
+  "expansion-129",
+  "expansion-109",
+  "expansion-164",
+  "wikithin-danish-literature-author-Q1985244",
+  "wikithin-invention-inventor-Q3134",
+  "wikithin-invention-inventor-Q3169",
+  "wikithin-invention-inventor-Q3123",
 ]);
+const retiredLowValueTags = new Set(["tld", "callingCode"]);
 
-const BASE_QUESTIONS: Question[] = [
+const rawBaseQuestions: Question[] = [
   ...CURATED_QUESTIONS,
   ...COUNTRY_QUESTIONS,
   ...MUSIC_PRODUCTION_QUESTIONS,
@@ -1204,7 +1225,35 @@ const BASE_QUESTIONS: Question[] = [
   ...CURIOSITY_ROUND_THREE_QUESTIONS,
   ...WIKIDATA_THIN_QUESTIONS,
   ...VARIETY_QUESTIONS,
-].filter((question) => !redundantQuestionIds.has(question.id));
+].filter(
+  (question) =>
+    !redundantQuestionIds.has(question.id) &&
+    !question.tags.some((tag) => retiredLowValueTags.has(tag)),
+);
+
+const countryRelationLimits = new Map([
+  ["capital", 36],
+  ["currency", 24],
+  ["language", 5],
+]);
+const retainedCountryLookupIds = new Set(
+  [...countryRelationLimits].flatMap(([relation, limit]) =>
+    rawBaseQuestions
+      .filter((question) => question.tags.includes(relation))
+      .sort((a, b) => stableHash(a.id).localeCompare(stableHash(b.id)))
+      .slice(0, limit)
+      .map((question) => question.id),
+  ),
+);
+const BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
+  const countryRelation = [
+    "capital",
+    "currency",
+    "continent",
+    "language",
+  ].find((relation) => question.tags.includes(relation));
+  return !countryRelation || retainedCountryLookupIds.has(question.id);
+});
 
 const categoryLinks: Record<string, string[]> = {
   "cat-11": ["cat-14"],
@@ -1249,6 +1298,87 @@ const personTags = new Set([
   "philosopher-movement",
   "psychologist-field",
 ]);
+const legacyOptionOverrides: Record<string, [string, string, string, string]> = {
+  "q-cat-11-3": [
+    "Erkendelsesteori",
+    "Bevidsthedsfilosofi",
+    "Videnskabsteori",
+    "Værditeori",
+  ],
+  "q-cat-26-2": [
+    "Poul-Erik Høyer Larsen",
+    "Thomas Stuer-Lauridsen",
+    "Joachim Fischer Nielsen",
+    "Kim Astrup Sørensen",
+  ],
+  "q-cat-41-5": [
+    "Et islandsk syrnet mælkeprodukt",
+    "En norsk lagret gedeost",
+    "Et svensk syrnet kornprodukt",
+    "En finsk fermenteret mælkedrik",
+  ],
+  "q-cat-34-2": [
+    "Volkswagen",
+    "Chevrolet",
+    "Mitsubishi",
+    "Alfa Romeo",
+  ],
+  "q-cat-48-5": ["Vombatten", "Næsebjørnen", "Bæltedyret", "Jærven"],
+  "expansion-156": [
+    "Blæksprutten",
+    "Kæmpekrabben",
+    "Pighajen",
+    "Søkoen",
+  ],
+  "q-cat-51-5": [
+    "Olsen Brothers",
+    "A Friend in London",
+    "Rollo & King",
+    "Lighthouse X",
+  ],
+  "q-cat-52-3": [
+    "New Horizons",
+    "Cassini-Huygens",
+    "Voyager 2",
+    "Dawn",
+  ],
+  "q-cat-53-3": [
+    "Medie manipuleret med generativ teknologi",
+    "Data skjult med moderne kryptering",
+    "Video sendt gennem et anonymt netværk",
+    "Indhold mærket med en digital signatur",
+  ],
+  "expansion-174": [
+    "Login med kryptografiske nøgler",
+    "Login med et ekstra langt brugernavn",
+    "Login med en fysisk nøgle til serveren",
+    "Login gennem et offentligt trådløst netværk",
+  ],
+  "expansion-175": [
+    "Overvågning af celler, temperatur og opladning",
+    "Styring af bilens radio, navigation og højttalere",
+    "Produktion af strøm direkte fra bilens bremsevæske",
+    "Tilpasning af dækmønsteret til vejens overflade",
+  ],
+  "variety-018": [
+    "Google blev grundlagt i Californien",
+    "Nelson Mandela blev Sydafrikas præsident",
+    "Windows 95 blev udgivet af Microsoft",
+    "Fåret Dolly blev klonet i Skotland",
+  ],
+  "variety-031": [
+    "Manchester United",
+    "Real Madrid",
+    "Bayern München",
+    "Los Angeles Lakers",
+  ],
+  "variety-115": [
+    "Operatørprofil uden et fysisk SIM-kort",
+    "Mobilforbindelse udelukkende gennem Wi-Fi",
+    "Batteriskift uden værktøj eller afbrydelse",
+    "Visning af elektronisk blæk på skærmen",
+  ],
+};
 
 const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
   const inferred = [
@@ -1262,6 +1392,7 @@ const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
   const correctAnswer = question.options.find(
     (option) => option.id === question.correctOptionId,
   )?.text;
+  const optionOverride = legacyOptionOverrides[question.id];
   const capitalizeOption = (text: string) => {
     const value = text.trim();
     if (/^(iPhone|iPad|iOS|iPod|eBay|macOS)\b/.test(value)) return value;
@@ -1277,10 +1408,27 @@ const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
   return {
     ...question,
     prompt: cleanText(question.prompt),
-    options: question.options.map((option) => ({
+    options: question.options.map((option, optionIndex) => ({
       ...option,
-      text: cleanText(capitalizeOption(option.text)),
+      text: cleanText(
+        capitalizeOption(optionOverride?.[optionIndex] ?? option.text),
+      ),
     })),
+    fingerprint: fingerprint(
+      cleanText(question.prompt),
+      cleanText(
+        capitalizeOption(
+          optionOverride?.[
+            question.options.findIndex(
+              (option) => option.id === question.correctOptionId,
+            )
+          ] ??
+            correctAnswer ??
+            "",
+        ),
+      ),
+      question.type,
+    ),
     explanation: cleanText(
       question.explanation.includes("centrale sammenhæng")
         ? `Svaret er ${correctAnswer ?? "angivet ovenfor"}.`
@@ -1316,4 +1464,17 @@ for (const question of POLISHED_QUESTIONS) {
 
 export const SEED_QUESTIONS: Question[] = [
   ...QUESTIONS_BY_PROMPT.values(),
-].filter((question) => !hasAnswerLeak(question));
+].filter((question) => {
+  if (hasAnswerLeak(question)) return false;
+  if (question.options.length < 4) return true;
+  const correct = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  );
+  if (!correct) return true;
+  const longestDistractor = Math.max(
+    ...question.options
+      .filter((option) => option.id !== question.correctOptionId)
+      .map((option) => option.text.length),
+  );
+  return correct.text.length <= longestDistractor * 1.25;
+});

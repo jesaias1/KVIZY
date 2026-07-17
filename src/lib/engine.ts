@@ -573,6 +573,8 @@ export function selectQuestions(
       return matchesSelectedUmbrellaCategory(question, selectedCategoryIds);
     return (
       selectedCategoryIds.has(question.categoryId) ||
+      (selectedCategoryIds.size === 1 &&
+        question.secondaryCategoryIds.includes(selectedOnlyCategory ?? "")) ||
       matchesSelectedUmbrellaCategory(question, selectedCategoryIds)
     );
   };
@@ -678,8 +680,13 @@ export function selectQuestions(
           (setup.favorites.includes(selectedCategory) ? -70 : 0) +
           (categoryBias.get(selectedCategory) ?? 7) +
           (randomPriority.get(question.id) ?? 20) +
-          (question.tags.includes("hverdagsforklaring") ? -25 : 0) +
-          (templateKey ? 35 : 0) +
+          (templateKey === "country-lookup"
+            ? 90
+            : templateKey === "creator-attribution"
+              ? 70
+              : templateKey
+                ? 50
+                : 0) +
           (SPECIALIST_CATEGORY_IDS.has(selectedCategory) &&
           !setup.favorites.includes(selectedCategory)
             ? 8

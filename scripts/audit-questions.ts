@@ -84,6 +84,41 @@ const explanatoryLengthOutliers = explanatoryCuriosity.filter((question) => {
     correct && correct.text.length > Math.max(...otherLengths) * 1.15,
   );
 });
+const fourOptionQuestions = SEED_QUESTIONS.filter(
+  (question) => question.options.length === 4 && question.correctOptionId,
+);
+const correctIsLongest = (question: (typeof SEED_QUESTIONS)[number]) => {
+  const correct = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  );
+  const longestDistractor = Math.max(
+    ...question.options
+      .filter((option) => option.id !== question.correctOptionId)
+      .map((option) => option.text.length),
+  );
+  return Boolean(correct && correct.text.length > longestDistractor);
+};
+const globalLengthOutliers = fourOptionQuestions.filter((question) => {
+  const correct = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  );
+  const longestDistractor = Math.max(
+    ...question.options
+      .filter((option) => option.id !== question.correctOptionId)
+      .map((option) => option.text.length),
+  );
+  return Boolean(correct && correct.text.length > longestDistractor * 1.25);
+});
+const retiredLookupQuestions = SEED_QUESTIONS.filter((question) =>
+  question.tags.some((tag) =>
+    ["tld", "callingCode", "continent"].includes(tag),
+  ),
+);
+const retainedCountryLookups = SEED_QUESTIONS.filter((question) =>
+  question.tags.some((tag) =>
+    ["capital", "currency", "language"].includes(tag),
+  ),
+);
 
 const report = {
   questions: SEED_QUESTIONS.length,
@@ -104,6 +139,15 @@ const report = {
   explanatoryCorrectLongestRate: Number(
     (explanatoryCorrectLongest.length / explanatoryCuriosity.length).toFixed(2),
   ),
+  globalLengthOutliers: globalLengthOutliers.length,
+  globalCorrectLongestRate: Number(
+    (
+      fourOptionQuestions.filter(correctIsLongest).length /
+      fourOptionQuestions.length
+    ).toFixed(2),
+  ),
+  retiredLookupQuestions: retiredLookupQuestions.length,
+  retainedCountryLookups: retainedCountryLookups.length,
   thinCategories: thinCategories.map((category) => category.name),
 };
 
@@ -119,6 +163,10 @@ if (
   report.obviousCountryAnswers > 0 ||
   report.explanatoryLengthOutliers > 0 ||
   report.explanatoryCorrectLongestRate > 0.35 ||
+  report.globalLengthOutliers > 0 ||
+  report.globalCorrectLongestRate > 0.35 ||
+  report.retiredLookupQuestions > 0 ||
+  report.retainedCountryLookups > 65 ||
   report.longestOption > 70 ||
   report.thinCategories.length > 0
 ) {

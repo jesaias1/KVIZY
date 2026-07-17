@@ -84,6 +84,22 @@ describe("automatisk spørgsmålskvalitet", () => {
     }
   });
 
+  it("har udfaset ensformige landekode-, domæne- og kontinentspørgsmål", () => {
+    const retiredTags = new Set(["callingCode", "tld", "continent"]);
+    expect(
+      SEED_QUESTIONS.some((question) =>
+        question.tags.some((tag) => retiredTags.has(tag)),
+      ),
+    ).toBe(false);
+    expect(
+      SEED_QUESTIONS.filter((question) =>
+        question.tags.some((tag) =>
+          ["capital", "currency", "language"].includes(tag),
+        ),
+      ).length,
+    ).toBeLessThanOrEqual(65);
+  });
+
   it("indeholder ingen maskinagtige udsagn eller gentagne prompts", () => {
     expect(
       SEED_QUESTIONS.some((question) =>
@@ -151,12 +167,7 @@ describe("automatisk spørgsmålskvalitet", () => {
     ).toBe(true);
 
     const japan = SEED_QUESTIONS.find((q) => q.id === "wd-Q17-tld");
-    expect(japan?.options.map((option) => option.text)).toEqual([
-      ".jp",
-      ".ja",
-      ".jn",
-      ".jo",
-    ]);
+    expect(japan).toBeUndefined();
     const redGroed = SEED_QUESTIONS.find(
       (q) => q.id === "wikiculture-food-origin-Q493749",
     );
@@ -286,9 +297,9 @@ describe("automatisk spørgsmålskvalitet", () => {
     );
     expect(golf?.options.map((option) => option.text)).toEqual([
       "Volkswagen",
-      "Ford",
-      "Opel",
-      "Peugeot",
+      "Chevrolet",
+      "Mitsubishi",
+      "Alfa Romeo",
     ]);
 
     const budapest = SEED_QUESTIONS.find((question) =>
