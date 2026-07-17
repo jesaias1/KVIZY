@@ -7,6 +7,7 @@ import {
   hasUsefulExplanation,
 } from "./question-quality";
 import { normalizeText } from "./engine";
+import { CATEGORIES, DEFAULT_CATEGORIES } from "./categories";
 
 describe("automatisk spørgsmålskvalitet", () => {
   it("skjuler generiske faktafelter", () => {
@@ -56,6 +57,42 @@ describe("automatisk spørgsmålskvalitet", () => {
     expect(
       SEED_QUESTIONS.some((question) => question.type === ("emoji" as never)),
     ).toBe(false);
+  });
+
+  it("har 30 godkendte spørgsmål i hver ny kategori", () => {
+    const expected = [
+      "Ringenes Herre",
+      "Star Wars",
+      "Disney",
+      "H.C. Andersen",
+      "Hollywood",
+      "Madlavning",
+    ];
+    for (const name of expected) {
+      const category = CATEGORIES.find((item) => item.name === name)!;
+      const available = SEED_QUESTIONS.filter(
+        (question) =>
+          question.categoryId === category.id ||
+          question.secondaryCategoryIds.includes(category.id),
+      );
+      expect(available.length).toBeGreaterThanOrEqual(30);
+    }
+  });
+
+  it("holder franchise-nicher ude af standardblandingen", () => {
+    const nicheNames = ["Harry Potter", "Ringenes Herre", "Star Wars"];
+    const defaultIds = new Set(
+      DEFAULT_CATEGORIES.map((category) => category.id),
+    );
+    for (const name of nicheNames) {
+      const category = CATEGORIES.find((item) => item.name === name)!;
+      expect(category.niche).toBe(true);
+      expect(defaultIds.has(category.id)).toBe(false);
+    }
+    for (const name of ["Disney", "H.C. Andersen", "Hollywood", "Madlavning"]) {
+      const category = CATEGORIES.find((item) => item.name === name)!;
+      expect(defaultIds.has(category.id)).toBe(true);
+    }
   });
 
   it("har korte, unikke og læsevenlige svarmuligheder", () => {

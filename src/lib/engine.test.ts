@@ -14,6 +14,7 @@ import {
   rankPlayers,
   recoverSeenFromHistory,
   reserveSeenQuestions,
+  selectReplacementQuestion,
   selectQuestions,
   shuffleAnswers,
   similarity,
@@ -179,7 +180,13 @@ describe("seedbank og Zod", () => {
     expect(q.options.map((o) => o.text)).toEqual(["6", "5", "7", "8"]);
   });
   it("holder nichekategorier ude af standard- og tilfældigpuljen", () => {
-    for (const categoryId of ["cat-13", "cat-23"]) {
+    for (const categoryId of [
+      "cat-13",
+      "cat-23",
+      "cat-33",
+      "cat-60",
+      "cat-61",
+    ]) {
       expect(
         CATEGORIES.find((category) => category.id === categoryId)?.niche,
       ).toBe(true);
@@ -204,7 +211,7 @@ describe("seedbank og Zod", () => {
       "cat-58",
       "cat-59",
     ];
-    expect(CATEGORIES).toHaveLength(59);
+    expect(CATEGORIES).toHaveLength(65);
     for (const categoryId of newCategoryIds) {
       expect(
         SEED_QUESTIONS.filter(
@@ -260,6 +267,28 @@ describe("seedbank og Zod", () => {
   });
 });
 describe("adaptiv udvælgelse", () => {
+  it("bytter et set spørgsmål uden at genbruge det aktuelle spils spørgsmål", () => {
+    const gameSetup = {
+      ...setup,
+      questionCount: 10,
+      categoryIds: ["cat-1"],
+    };
+    const gameQuestions = selectQuestions(SEED_QUESTIONS, gameSetup);
+    const replacement = selectReplacementQuestion(
+      SEED_QUESTIONS,
+      gameQuestions,
+      gameSetup,
+    );
+
+    expect(replacement).toBeDefined();
+    expect(gameQuestions.map((question) => question.id)).not.toContain(
+      replacement?.id,
+    );
+    expect(gameQuestions.map((question) => question.fingerprint)).not.toContain(
+      replacement?.fingerprint,
+    );
+  });
+
   it("returnerer komplette spørgsmål for et normalt spil med to spillere", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,
@@ -434,9 +463,9 @@ describe("adaptiv udvælgelse", () => {
       const playerQuestions = chosen.filter(
         (_, questionIndex) => questionIndex % players.length === playerIndex,
       );
-      expect(playerQuestions.filter((question) => question.finale)).toHaveLength(
-        1,
-      );
+      expect(
+        playerQuestions.filter((question) => question.finale),
+      ).toHaveLength(1);
       expect(playerQuestions.at(-1)?.finale).toBe(true);
     }
   });
@@ -635,12 +664,9 @@ describe("adaptiv udvælgelse", () => {
         categoryIds: ["cat-21"],
         difficulty: original.difficulty,
       },
-      reserveSeenQuestions(
-        [],
-        [original.id],
-        new Date().toISOString(),
-        [original],
-      ),
+      reserveSeenQuestions([], [original.id], new Date().toISOString(), [
+        original,
+      ]),
     );
     expect(chosen.map((question) => question.id)).not.toContain(
       reformulated.id,
@@ -715,8 +741,7 @@ describe("adaptiv udvælgelse", () => {
   it("giver friske enheder tydeligt forskellige spil", () => {
     const seededRandom = (seed: number) => {
       let state = seed;
-      return () =>
-        (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+      return () => (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
     };
     const first = selectQuestions(
       SEED_QUESTIONS,
@@ -777,10 +802,52 @@ describe("adaptiv udvælgelse", () => {
       ).length,
     ).toBeLessThanOrEqual(1);
     expect(
-      chosen.filter((question) =>
-        question.tags.includes("hverdagsforklaring"),
-      ).length,
+      chosen.filter((question) => question.tags.includes("hverdagsforklaring"))
+        .length,
     ).toBeGreaterThanOrEqual(4);
+  });
+  it("lader aldrig hovedstadsskabelonen dominere en ren Paratviden-runde", () => {
+    const countryLookupTags = new Set([
+      "capital",
+      "currency",
+      "continent",
+      "language",
+      "callingCode",
+      "tld",
+    ]);
+    for (let simulation = 0; simulation < 50; simulation++) {
+      const chosen = selectQuestions(SEED_QUESTIONS, {
+        ...setup,
+        questionCount: 10,
+        categoryIds: ["cat-1"],
+      });
+      const countryLookups = chosen.filter((question) =>
+        question.tags.some((tag) => countryLookupTags.has(tag)),
+      );
+      expect(chosen).toHaveLength(10);
+      expect(countryLookups.length).toBeLessThanOrEqual(1);
+    }
+  });
+  it("bruger usete Paratviden-spørgsmål på tværs af mange lokale spil", () => {
+    let seen: SeenQuestion[] = [];
+    const usedIds = new Set<string>();
+    for (let gameNumber = 0; gameNumber < 8; gameNumber++) {
+      const chosen = selectQuestions(
+        SEED_QUESTIONS,
+        { ...setup, questionCount: 10, categoryIds: ["cat-1"] },
+        seen,
+      );
+      expect(chosen).toHaveLength(10);
+      expect(chosen.every((question) => !usedIds.has(question.id))).toBe(true);
+      chosen.forEach((question) => usedIds.add(question.id));
+      seen = reserveSeenQuestions(
+        seen,
+        chosen.map((question) => question.id),
+        `2026-07-${String(10 + gameNumber).padStart(2, "0")}T12:00:00.000Z`,
+        chosen,
+      );
+    }
+    expect(usedIds.size).toBe(80);
   });
   it("gemmer valgte spørgsmål én gang pr. nyt spil på enheden", () => {
     const previous: SeenQuestion[] = [
@@ -801,16 +868,19 @@ describe("adaptiv udvælgelse", () => {
   });
   it("genskaber manglende set-historik fra afsluttede spil", () => {
     const questions = SEED_QUESTIONS.slice(0, 3);
-    const recovered = recoverSeenFromHistory([], [
-      {
-        playedAt: "2026-07-16T12:00:00.000Z",
-        questions,
-      },
-      {
-        playedAt: "2026-07-17T12:00:00.000Z",
-        questions: [questions[0]],
-      },
-    ]);
+    const recovered = recoverSeenFromHistory(
+      [],
+      [
+        {
+          playedAt: "2026-07-16T12:00:00.000Z",
+          questions,
+        },
+        {
+          playedAt: "2026-07-17T12:00:00.000Z",
+          questions: [questions[0]],
+        },
+      ],
+    );
     expect(recovered).toHaveLength(3);
     expect(recovered.find((item) => item.id === questions[0].id)).toMatchObject(
       {

@@ -290,6 +290,8 @@ const SPECIALIST_CATEGORY_IDS = new Set([
   "cat-39",
   "cat-44",
   "cat-58",
+  "cat-60",
+  "cat-61",
 ]);
 const REPEAT_COOLDOWN_MS = 90 * 24 * 60 * 60 * 1_000;
 
@@ -567,6 +569,10 @@ export function selectQuestions(
   const selectedCategoryIds = new Set(setup.categoryIds);
   const selectedOnlyCategory =
     selectedCategoryIds.size === 1 ? setup.categoryIds[0] : undefined;
+  const countryLookupLimit =
+    selectedOnlyCategory === "cat-1"
+      ? Math.max(1, Math.floor(setup.questionCount / 15))
+      : Number.POSITIVE_INFINITY;
   const matchesCategorySelection = (question: Question) => {
     if (question.status !== "active") return false;
     if (["cat-45", "cat-46", "cat-47"].includes(selectedOnlyCategory ?? ""))
@@ -664,6 +670,8 @@ export function selectQuestions(
           pickedIds.has(question.id) ||
           pickedFingerprints.has(question.fingerprint) ||
           (!allowRepeatedFact && pickedFacts.has(factKey)) ||
+          (templateKey === "country-lookup" &&
+            (templateCounts.get(templateKey) ?? 0) >= countryLookupLimit) ||
           (!allowRepeatedTemplate &&
             templateKey &&
             (templateCounts.get(templateKey) ?? 0) >= templateLimit)
@@ -759,10 +767,7 @@ export function selectQuestions(
   const categorySafeQuestions = distributed.filter(matchesCategorySelection);
   const questionsWithSelectedCategory = categorySafeQuestions.map(
     (question) => {
-      if (
-        !selectedOnlyCategory ||
-        selectedCategoryIds.has(question.categoryId)
-      )
+      if (!selectedOnlyCategory || selectedCategoryIds.has(question.categoryId))
         return question;
       return {
         ...question,
@@ -785,6 +790,37 @@ export function selectQuestions(
         }
       : shuffled;
   });
+}
+
+export function selectReplacementQuestion(
+  bank: Question[],
+  currentGameQuestions: Question[],
+  setup: GameSetup,
+  seen: SeenQuestion[] = [],
+  random = Math.random,
+) {
+  const blockedIds = new Set(
+    currentGameQuestions.map((question) => question.id),
+  );
+  const blockedFingerprints = new Set(
+    currentGameQuestions.map((question) => question.fingerprint),
+  );
+  const blockedFacts = new Set(
+    currentGameQuestions.map((question) => questionFactKey(question)),
+  );
+  const available = bank.filter(
+    (question) =>
+      !blockedIds.has(question.id) &&
+      !blockedFingerprints.has(question.fingerprint) &&
+      !blockedFacts.has(questionFactKey(question)),
+  );
+
+  return selectQuestions(
+    available,
+    { ...setup, questionCount: 1 },
+    seen,
+    random,
+  )[0];
 }
 
 export function reserveSeenQuestions(

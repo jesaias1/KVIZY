@@ -60,6 +60,12 @@ const names = [
   "Biler og transport",
   "Arkitektur og design",
   "Hverdagsviden",
+  "Ringenes Herre",
+  "Star Wars",
+  "Disney",
+  "H.C. Andersen",
+  "Hollywood",
+  "Madlavning",
 ];
 const emojis = [
   "🧠",
@@ -121,8 +127,14 @@ const emojis = [
   "🚗",
   "🏛️",
   "💡",
+  "💍",
+  "🌌",
+  "🏰",
+  "🪶",
+  "🎞️",
+  "🍳",
 ];
-const nicheIds = new Set(["cat-13", "cat-23"]);
+const nicheIds = new Set(["cat-13", "cat-23", "cat-33", "cat-60", "cat-61"]);
 
 export const CATEGORIES: Category[] = names
   .map((name, i) => {

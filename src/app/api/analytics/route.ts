@@ -7,7 +7,7 @@ import { appSettings } from "@/lib/db/schema";
 
 const eventSchema = z.object({
   event: z.enum(["game_started", "game_completed", "question_reported"]),
-  categoryIds: z.array(z.string()).max(59).default([]),
+  categoryIds: z.array(z.string()).max(100).default([]),
 });
 const validCategories = new Set(CATEGORIES.map((category) => category.id));
 const attempts = new Map<string, { count: number; reset: number }>();
@@ -35,9 +35,7 @@ export async function POST(request: Request) {
     count: previous && previous.reset > now ? previous.count + 1 : 1,
     reset: now + 60_000,
   });
-  const parsed = eventSchema.safeParse(
-    await request.json().catch(() => null),
-  );
+  const parsed = eventSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
     return NextResponse.json({ error: "Ugyldig hændelse" }, { status: 400 });
   if (!hasDatabase()) return new NextResponse(null, { status: 202 });

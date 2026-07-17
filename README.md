@@ -5,16 +5,16 @@
 ## Produktflow
 
 1. Vælg Alle mod alle, Holdkamp, Solo, Hurtig quiz, Risiko eller Mystery Mix.
-2. Tilføj 1–12 spillere eller 2–6 hold, og vælg mellem 59 søgbare kategorier.
+2. Tilføj 1–12 spillere eller 2–6 hold, og vælg mellem 65 søgbare kategorier.
 3. Indstil et retfærdigt antal spørgsmål op til 90, niveau 1–5, fast/blandet/stigende sværhedsgrad samt timer-, tidsbonus-, minuspoint- og finaleindstillinger.
-4. Giv enheden videre. Svar låses, forklaring og point vises, og spillet gemmes løbende.
+4. Giv enheden videre. Svar låses, forklaring og point vises, og spillet gemmes løbende. Et allerede set spørgsmål kan diskret byttes uden at koste turen.
 5. Se vinder, scoreboard, svarprocent, streaks, gennemgang, historik og revanche.
 
 ## Stack og arkitektur
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 1.314 kvalitetskontrollerede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
+- 1.493 kvalitetskontrollerede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
 - 12 spørgsmålstyper, blandt andet rækkefølge, nærmest vinder, udsagn, beskrivelser og kategorikryds
 - localStorage til aktivt spil, historik, indstillinger, set-historik og offline spillerrapporter
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
@@ -55,7 +55,7 @@ Drizzle-skemaet modellerer kategorier, spørgsmål, spil, runder, spillere, hold
 
 ## Spørgsmålsbank og import/eksport
 
-Seedbanken kombinerer håndskrevne spørgsmål med lokale snapshots fra Wikidata CC0. Distraktorer vælges inden for samme faktatype: eksempelvis hovedstæder mod hovedstæder, instruktører mod instruktører og sportsgrene mod sportsgrene. Alle 59 kategorier har mindst 30 semantisk relevante spørgsmål, og udvælgeren kan også bruge relevante sekundære kategorier. Nye kategorier tilføjes i `src/lib/categories.ts`.
+Seedbanken kombinerer håndskrevne spørgsmål med lokale snapshots fra Wikidata CC0. Distraktorer vælges inden for samme faktatype: eksempelvis hovedstæder mod hovedstæder, skuespillere mod skuespillere og sportsgrene mod sportsgrene. Alle 65 kategorier har mindst 30 semantisk relevante spørgsmål, og udvælgeren kan også bruge relevante sekundære kategorier. Nye kategorier tilføjes i `src/lib/categories.ts`.
 
 Wikidata-importerne er langsomme, genoptagelige og gemmer efter hver relation. `--missing` springer allerede hentede relationer over:
 
@@ -106,7 +106,7 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.314 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.493 seedspørgsmål stadig.
 
 ## Installation som mobilapp
 

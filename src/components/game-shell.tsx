@@ -60,6 +60,7 @@ import {
   rankPlayers,
   recoverSeenFromHistory,
   reserveSeenQuestions,
+  selectReplacementQuestion,
   selectQuestions,
   shuffle,
 } from "@/lib/engine";
@@ -466,8 +467,7 @@ export function GameShell() {
         setView("setup");
         return;
       }
-      const selectedPlayers =
-        s.mode === "solo" ? [s.players[0]] : s.players;
+      const selectedPlayers = s.mode === "solo" ? [s.players[0]] : s.players;
       const requestedCount = s.mode === "quick" ? 10 : s.questionCount;
       const normalized = {
         ...s,
@@ -679,6 +679,38 @@ export function GameShell() {
     safeSet(APP_CONFIG.gameKey, JSON.stringify(next));
     tone("tap", settings.sound);
   };
+  const skipSeenQuestion = () => {
+    if (!game) return false;
+    const currentQuestion = game.questions[game.index];
+    if (game.answers.some((answer) => answer.questionId === currentQuestion.id))
+      return false;
+    const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
+    const replacement = selectReplacementQuestion(
+      questionBank,
+      game.questions,
+      game.setup,
+      seen,
+    );
+    if (!replacement) return false;
+    const questions = [...game.questions];
+    questions[game.index] = {
+      ...replacement,
+      finale: currentQuestion.finale,
+    };
+    const next = { ...game, questions, hiddenOptionIds: [] };
+    setGame(next);
+    safeSet(APP_CONFIG.gameKey, JSON.stringify(next));
+    safeSet(
+      APP_CONFIG.seenKey,
+      JSON.stringify(
+        reserveSeenQuestions(seen, [replacement.id], new Date().toISOString(), [
+          replacement,
+        ]),
+      ),
+    );
+    tone("tap", settings.sound);
+    return true;
+  };
   const useLifeline = () => {
     if (!game || !game.setup.lifelines) return;
     const question = game.questions[game.index];
@@ -736,6 +768,7 @@ export function GameShell() {
         answer={answer}
         next={nextQuestion}
         report={reportQuestion}
+        skip={skipSeenQuestion}
         useLifeline={useLifeline}
         setRisk={(n) => {
           const g = { ...game, riskMultiplier: n };
@@ -776,7 +809,9 @@ export function GameShell() {
       />
     );
   return (
-    <main className={`min-h-dvh safe-shell ${view === "play" ? "playing" : ""}`}>
+    <main
+      className={`min-h-dvh safe-shell ${view === "play" ? "playing" : ""}`}
+    >
       <TopBar settings={settings} setSettings={setSettings} go={go} />
       {view === "home" && (
         <div className="home-ambient" aria-hidden="true">
@@ -999,7 +1034,11 @@ function Setup({
         <div className="space-y-8">
           <section>
             <Label className="mb-3 block text-base">Spilleform</Label>
-            <div className="mode-grid" role="radiogroup" aria-label="Spilleform">
+            <div
+              className="mode-grid"
+              role="radiogroup"
+              aria-label="Spilleform"
+            >
               {modes.map((m) => (
                 <button
                   type="button"
@@ -1241,7 +1280,8 @@ function Setup({
                 </Button>
               ))}
               <p className="col-span-3 mt-1 text-center text-xs text-muted-foreground">
-                {displayedQuestionCount / setup.players.length} spørgsmål pr. {setup.mode === "teams" ? "hold" : "spiller"}
+                {displayedQuestionCount / setup.players.length} spørgsmål pr.{" "}
+                {setup.mode === "teams" ? "hold" : "spiller"}
               </p>
             </CardContent>
           </Card>
@@ -1275,8 +1315,12 @@ function Setup({
                     size="sm"
                     key={option.id}
                     className="w-full px-2"
-                    variant={setup.difficultyMode === option.id ? "secondary" : "ghost"}
-                    onClick={() => setSetup({ ...setup, difficultyMode: option.id })}
+                    variant={
+                      setup.difficultyMode === option.id ? "secondary" : "ghost"
+                    }
+                    onClick={() =>
+                      setSetup({ ...setup, difficultyMode: option.id })
+                    }
                   >
                     {option.label}
                   </Button>
@@ -1378,11 +1422,13 @@ function Play({
   next,
   setRisk,
   report,
+  skip,
   useLifeline,
 }: {
   game: Game;
   answer: (id: string, ms: number) => void;
   next: () => void;
+  skip: () => boolean;
   setRisk: (n: number) => void;
   useLifeline: () => void;
   report: (
@@ -1413,6 +1459,7 @@ function Play({
     [reportReason, setReportReason] = useState<QuestionReportReason>("unclear"),
     [reportNote, setReportNote] = useState(""),
     [reportSent, setReportSent] = useState(false),
+    [skipUnavailable, setSkipUnavailable] = useState(false),
     [secondsLeft, setSecondsLeft] = useState(30);
   useEffect(() => {
     started.current = Date.now();
@@ -1510,7 +1557,7 @@ function Play({
       )}
       <Card className="question-card mt-6">
         <CardHeader>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge style={{ borderColor: cat?.color }} variant="outline">
               {game.setup.mode === "mystery" && !given
                 ? "🎁 Mystery Mix"
@@ -1525,7 +1572,25 @@ function Play({
             {(q.finale || q.type === "finale") && (
               <Badge>Finale · dobbelt point</Badge>
             )}
+            {!given && (
+              <Button
+                aria-label="Byt et spørgsmål, I allerede har set"
+                className="ml-auto h-8 min-h-8 gap-1 px-2 text-xs text-muted-foreground opacity-55 hover:opacity-100"
+                size="sm"
+                title="Behold turen og få et nyt spørgsmål"
+                variant="ghost"
+                onClick={() => setSkipUnavailable(!skip())}
+              >
+                <RefreshCw className="size-3" />
+                Set før? Byt
+              </Button>
+            )}
           </div>
+          {skipUnavailable && (
+            <small className="text-right text-muted-foreground" role="status">
+              Der er ikke et andet ubrugt spørgsmål i den valgte pulje.
+            </small>
+          )}
           <CardTitle className="pt-4 text-2xl leading-tight sm:text-4xl">
             {q.prompt}
           </CardTitle>

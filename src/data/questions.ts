@@ -15,6 +15,8 @@ import { FORMAT_DEPTH_QUESTIONS } from "./format-depth-questions";
 import { ERA_DEPTH_QUESTIONS } from "./era-depth-questions";
 import { WIKIDATA_THIN_QUESTIONS } from "./wikidata-thin-questions";
 import { VARIETY_QUESTIONS } from "./variety-questions";
+import { FRANCHISE_QUESTIONS } from "./franchise-questions";
+import { CULTURE_AND_COOKING_QUESTIONS } from "./culture-and-cooking-questions";
 import { seedSpecs } from "./seed-spec";
 
 const created = "2026-07-15T00:00:00.000Z";
@@ -1233,6 +1235,8 @@ const rawBaseQuestions: Question[] = [
   ...ERA_DEPTH_QUESTIONS,
   ...WIKIDATA_THIN_QUESTIONS,
   ...VARIETY_QUESTIONS,
+  ...FRANCHISE_QUESTIONS,
+  ...CULTURE_AND_COOKING_QUESTIONS,
 ].filter(
   (question) =>
     !redundantQuestionIds.has(question.id) &&
@@ -1254,12 +1258,9 @@ const retainedCountryLookupIds = new Set(
   ),
 );
 const BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
-  const countryRelation = [
-    "capital",
-    "currency",
-    "continent",
-    "language",
-  ].find((relation) => question.tags.includes(relation));
+  const countryRelation = ["capital", "currency", "continent", "language"].find(
+    (relation) => question.tags.includes(relation),
+  );
   return !countryRelation || retainedCountryLookupIds.has(question.id);
 });
 
@@ -1292,36 +1293,136 @@ const typeLinks: Partial<Record<Question["type"], string>> = {
 };
 
 const semanticRules: { categoryId: string; pattern: RegExp }[] = [
-  { categoryId: "cat-3", pattern: /folketing|grundlov|statsminister|kommunalvalg|folkeafstemning|mandat|koalition|ministeransvar|stemmehemmelighed|magtens deling/u },
-  { categoryId: "cat-4", pattern: /\bfn\b|europa-parlament|sikkerhedsråd|nato|international politik|diplomati|sanktion|traktat|suverænitet/u },
-  { categoryId: "cat-8", pattern: /planet|måne|solen|stjerne|galakse|asteroide|komet|rumfart|kredsløb|atmosfære|tyngdekraft/u },
-  { categoryId: "cat-10", pattern: /internet|browser|webside|hjemmeside|wifi|wi-fi|https|url|domæne|cookie|streaming|server|datapakke|qr-kode|søgemaskine/u },
-  { categoryId: "cat-11", pattern: /filosof|etik|moral|erkendelse|fri vilje|determinisme|eksistential|utilitar|platon|aristoteles|kant|sokrates/u },
-  { categoryId: "cat-12", pattern: /psykolog|hukommelse|opmærksomhed|bias|adfærd|følelse|motivation|placebo|forventning|gruppepres|beslutning/u },
-  { categoryId: "cat-14", pattern: /livets mening|fri vilje|identitet|bevidsthed|lykke|døden|moralsk|tankeeksperiment|theseus|uvidenhedens slør/u },
-  { categoryId: "cat-24", pattern: /computerspil|videospil|spilkonsol|playstation|xbox|nintendo|minecraft|zelda|mario|gaming|billedfrekvens|latency/u },
-  { categoryId: "cat-27", pattern: /fodbold|målmand|straffespark|offside|premier league|champions league|verdensmesterskab|vm-finale/u },
-  { categoryId: "cat-28", pattern: /pattedyr|fugl|fisk|insekt|dyr|pels|vinge|næb|hale|rovdyr|planteæder/u },
-  { categoryId: "cat-29", pattern: /rensdyr|elg|los|polarræv|isbjørn|sæl|marsvin|hugorm|nordiske dyr|skandinaviske dyr/u },
-  { categoryId: "cat-30", pattern: /nordisk natur|skandinav|fjord|birk|gran|mos|tundra|nordlys|midnatssol|løvfald|sne/u },
-  { categoryId: "cat-34", pattern: /(?<!\p{L})(?:brand|mærke|produktnavn|varemærke|slogan|model|modellen|lego|ikea|nike|adidas|apple|volkswagen)(?!\p{L})/u },
-  { categoryId: "cat-35", pattern: /(?<!\p{L})(?:logo|virksomhed|firma|grundlagt|hovedsæde|branche|koncern|varemærke|brand)(?!\p{L})/u },
-  { categoryId: "cat-37", pattern: /kunst|maleri|maler|skulptur|museum|perspektiv|farvelære|lærred|portræt/u },
-  { categoryId: "cat-38", pattern: /sprog|ordet|udtryk|stavning|grammatik|dialekt|alfabet|vokal|konsonant|betydning|læseretning/u },
-  { categoryId: "cat-39", pattern: /opfind|patent|udviklede den første|prototyp|telegraf|telefon|lynlås|glødepære/u },
-  { categoryId: "cat-41", pattern: /rugbrød|smørrebrød|skyr|brunost|gravlaks|surströmming|nordisk mad|rødgrød|frikadelle/u },
-  { categoryId: "cat-43", pattern: /(?<!\p{L})(?:bagning|dej|gær|gluten|mel|kage|brød|marengs|hæve)(?!\p{L})|temperere chokolade/u },
-  { categoryId: "cat-44", pattern: /(?<!\p{L})(?:cocktail|spiritus|vin|øl|whisky|rom|gin|vodka|bitter|mousserende|alkohol)(?!\p{L})/u },
-  { categoryId: "cat-48", pattern: /mærkelig|overraskende|usædvanlig|kan leve uden|større end|længere end|eneste dyr|særpræg/u },
-  { categoryId: "cat-54", pattern: /krop|blod|hjerte|hjerne|hud|muskel|knogle|immun|sundhed|søvn|vitamin|smerte|vejrtræk/u },
-  { categoryId: "cat-56", pattern: /klima|miljø|drivhus|kulstof|co2|genbrug|vedvarende|havstigning|tørke|vådområde|varmeø/u },
-  { categoryId: "cat-57", pattern: /(?<!\p{L})(?:bil|motor|dæk|bremse|tog|cykel|fly|transport|trafik|vej|brændstof|gear)(?!\p{L})/u },
-  { categoryId: "cat-58", pattern: /(?<!\p{L})(?:arkitektur|bygning|design|konstruktion|bro|tag|beton|mursten|akustik|fundament|facade)(?!\p{L})/u },
+  {
+    categoryId: "cat-3",
+    pattern:
+      /folketing|grundlov|statsminister|kommunalvalg|folkeafstemning|mandat|koalition|ministeransvar|stemmehemmelighed|magtens deling/u,
+  },
+  {
+    categoryId: "cat-4",
+    pattern:
+      /\bfn\b|europa-parlament|sikkerhedsråd|nato|international politik|diplomati|sanktion|traktat|suverænitet/u,
+  },
+  {
+    categoryId: "cat-8",
+    pattern:
+      /planet|måne|solen|stjerne|galakse|asteroide|komet|rumfart|kredsløb|atmosfære|tyngdekraft/u,
+  },
+  {
+    categoryId: "cat-10",
+    pattern:
+      /internet|browser|webside|hjemmeside|wifi|wi-fi|https|url|domæne|cookie|streaming|server|datapakke|qr-kode|søgemaskine/u,
+  },
+  {
+    categoryId: "cat-11",
+    pattern:
+      /filosof|etik|moral|erkendelse|fri vilje|determinisme|eksistential|utilitar|platon|aristoteles|kant|sokrates/u,
+  },
+  {
+    categoryId: "cat-12",
+    pattern:
+      /psykolog|hukommelse|opmærksomhed|bias|adfærd|følelse|motivation|placebo|forventning|gruppepres|beslutning/u,
+  },
+  {
+    categoryId: "cat-14",
+    pattern:
+      /livets mening|fri vilje|identitet|bevidsthed|lykke|døden|moralsk|tankeeksperiment|theseus|uvidenhedens slør/u,
+  },
+  {
+    categoryId: "cat-24",
+    pattern:
+      /computerspil|videospil|spilkonsol|playstation|xbox|nintendo|minecraft|zelda|mario|gaming|billedfrekvens|latency/u,
+  },
+  {
+    categoryId: "cat-27",
+    pattern:
+      /fodbold|målmand|straffespark|offside|premier league|champions league|verdensmesterskab|vm-finale/u,
+  },
+  {
+    categoryId: "cat-28",
+    pattern:
+      /pattedyr|fugl|fisk|insekt|dyr|pels|vinge|næb|hale|rovdyr|planteæder/u,
+  },
+  {
+    categoryId: "cat-29",
+    pattern:
+      /rensdyr|elg|los|polarræv|isbjørn|sæl|marsvin|hugorm|nordiske dyr|skandinaviske dyr/u,
+  },
+  {
+    categoryId: "cat-30",
+    pattern:
+      /nordisk natur|skandinav|fjord|birk|gran|mos|tundra|nordlys|midnatssol|løvfald|sne/u,
+  },
+  {
+    categoryId: "cat-34",
+    pattern:
+      /(?<!\p{L})(?:brand|mærke|produktnavn|varemærke|slogan|model|modellen|lego|ikea|nike|adidas|apple|volkswagen)(?!\p{L})/u,
+  },
+  {
+    categoryId: "cat-35",
+    pattern:
+      /(?<!\p{L})(?:logo|virksomhed|firma|grundlagt|hovedsæde|branche|koncern|varemærke|brand)(?!\p{L})/u,
+  },
+  {
+    categoryId: "cat-37",
+    pattern:
+      /kunst|maleri|maler|skulptur|museum|perspektiv|farvelære|lærred|portræt/u,
+  },
+  {
+    categoryId: "cat-38",
+    pattern:
+      /sprog|ordet|udtryk|stavning|grammatik|dialekt|alfabet|vokal|konsonant|betydning|læseretning/u,
+  },
+  {
+    categoryId: "cat-39",
+    pattern:
+      /opfind|patent|udviklede den første|prototyp|telegraf|telefon|lynlås|glødepære/u,
+  },
+  {
+    categoryId: "cat-41",
+    pattern:
+      /rugbrød|smørrebrød|skyr|brunost|gravlaks|surströmming|nordisk mad|rødgrød|frikadelle/u,
+  },
+  {
+    categoryId: "cat-43",
+    pattern:
+      /(?<!\p{L})(?:bagning|dej|gær|gluten|mel|kage|brød|marengs|hæve)(?!\p{L})|temperere chokolade/u,
+  },
+  {
+    categoryId: "cat-44",
+    pattern:
+      /(?<!\p{L})(?:cocktail|spiritus|vin|øl|whisky|rom|gin|vodka|bitter|mousserende|alkohol)(?!\p{L})/u,
+  },
+  {
+    categoryId: "cat-48",
+    pattern:
+      /mærkelig|overraskende|usædvanlig|kan leve uden|større end|længere end|eneste dyr|særpræg/u,
+  },
+  {
+    categoryId: "cat-54",
+    pattern:
+      /krop|blod|hjerte|hjerne|hud|muskel|knogle|immun|sundhed|søvn|vitamin|smerte|vejrtræk/u,
+  },
+  {
+    categoryId: "cat-56",
+    pattern:
+      /klima|miljø|drivhus|kulstof|co2|genbrug|vedvarende|havstigning|tørke|vådområde|varmeø/u,
+  },
+  {
+    categoryId: "cat-57",
+    pattern:
+      /(?<!\p{L})(?:bil|motor|dæk|bremse|tog|cykel|fly|transport|trafik|vej|brændstof|gear)(?!\p{L})/u,
+  },
+  {
+    categoryId: "cat-58",
+    pattern:
+      /(?<!\p{L})(?:arkitektur|bygning|design|konstruktion|bro|tag|beton|mursten|akustik|fundament|facade)(?!\p{L})/u,
+  },
 ];
 
 const decadeCategory = (text: string) => {
-  const years = [...text.matchAll(/\b(19[89]\d|20[012]\d)\b/gu)].map(
-    (match) => Number(match[1]),
+  const years = [...text.matchAll(/\b(19[89]\d|20[012]\d)\b/gu)].map((match) =>
+    Number(match[1]),
   );
   if (years.some((year) => year >= 1980 && year <= 1989)) return "cat-49";
   if (years.some((year) => year >= 1990 && year <= 1999)) return "cat-50";
@@ -1345,87 +1446,73 @@ const personTags = new Set([
   "philosopher-movement",
   "psychologist-field",
 ]);
-const legacyOptionOverrides: Record<string, [string, string, string, string]> = {
-  "q-cat-11-3": [
-    "Erkendelsesteori",
-    "Bevidsthedsfilosofi",
-    "Videnskabsteori",
-    "Værditeori",
-  ],
-  "q-cat-26-2": [
-    "Poul-Erik Høyer Larsen",
-    "Thomas Stuer-Lauridsen",
-    "Joachim Fischer Nielsen",
-    "Kim Astrup Sørensen",
-  ],
-  "q-cat-41-5": [
-    "Et islandsk syrnet mælkeprodukt",
-    "En norsk lagret gedeost",
-    "Et svensk syrnet kornprodukt",
-    "En finsk fermenteret mælkedrik",
-  ],
-  "q-cat-34-2": [
-    "Volkswagen",
-    "Chevrolet",
-    "Mitsubishi",
-    "Alfa Romeo",
-  ],
-  "q-cat-48-5": ["Vombatten", "Næsebjørnen", "Bæltedyret", "Jærven"],
-  "expansion-156": [
-    "Blæksprutten",
-    "Kæmpekrabben",
-    "Pighajen",
-    "Søkoen",
-  ],
-  "q-cat-51-5": [
-    "Olsen Brothers",
-    "A Friend in London",
-    "Rollo & King",
-    "Lighthouse X",
-  ],
-  "q-cat-52-3": [
-    "New Horizons",
-    "Cassini-Huygens",
-    "Voyager 2",
-    "Dawn",
-  ],
-  "q-cat-53-3": [
-    "Medie manipuleret med generativ teknologi",
-    "Data skjult med moderne kryptering",
-    "Video sendt gennem et anonymt netværk",
-    "Indhold mærket med en digital signatur",
-  ],
-  "expansion-174": [
-    "Login med kryptografiske nøgler",
-    "Login med et ekstra langt brugernavn",
-    "Login med en fysisk nøgle til serveren",
-    "Login gennem et offentligt trådløst netværk",
-  ],
-  "expansion-175": [
-    "Overvågning af celler, temperatur og opladning",
-    "Styring af bilens radio, navigation og højttalere",
-    "Produktion af strøm direkte fra bilens bremsevæske",
-    "Tilpasning af dækmønsteret til vejens overflade",
-  ],
-  "variety-018": [
-    "Google blev grundlagt i Californien",
-    "Nelson Mandela blev Sydafrikas præsident",
-    "Windows 95 blev udgivet af Microsoft",
-    "Fåret Dolly blev klonet i Skotland",
-  ],
-  "variety-031": [
-    "Manchester United",
-    "Real Madrid",
-    "Bayern München",
-    "Los Angeles Lakers",
-  ],
-  "variety-115": [
-    "Operatørprofil uden et fysisk SIM-kort",
-    "Mobilforbindelse udelukkende gennem Wi-Fi",
-    "Batteriskift uden værktøj eller afbrydelse",
-    "Visning af elektronisk blæk på skærmen",
-  ],
-};
+const legacyOptionOverrides: Record<string, [string, string, string, string]> =
+  {
+    "q-cat-11-3": [
+      "Erkendelsesteori",
+      "Bevidsthedsfilosofi",
+      "Videnskabsteori",
+      "Værditeori",
+    ],
+    "q-cat-26-2": [
+      "Poul-Erik Høyer Larsen",
+      "Thomas Stuer-Lauridsen",
+      "Joachim Fischer Nielsen",
+      "Kim Astrup Sørensen",
+    ],
+    "q-cat-41-5": [
+      "Et islandsk syrnet mælkeprodukt",
+      "En norsk lagret gedeost",
+      "Et svensk syrnet kornprodukt",
+      "En finsk fermenteret mælkedrik",
+    ],
+    "q-cat-34-2": ["Volkswagen", "Chevrolet", "Mitsubishi", "Alfa Romeo"],
+    "q-cat-48-5": ["Vombatten", "Næsebjørnen", "Bæltedyret", "Jærven"],
+    "expansion-156": ["Blæksprutten", "Kæmpekrabben", "Pighajen", "Søkoen"],
+    "q-cat-51-5": [
+      "Olsen Brothers",
+      "A Friend in London",
+      "Rollo & King",
+      "Lighthouse X",
+    ],
+    "q-cat-52-3": ["New Horizons", "Cassini-Huygens", "Voyager 2", "Dawn"],
+    "q-cat-53-3": [
+      "Medie manipuleret med generativ teknologi",
+      "Data skjult med moderne kryptering",
+      "Video sendt gennem et anonymt netværk",
+      "Indhold mærket med en digital signatur",
+    ],
+    "expansion-174": [
+      "Login med kryptografiske nøgler",
+      "Login med et ekstra langt brugernavn",
+      "Login med en fysisk nøgle til serveren",
+      "Login gennem et offentligt trådløst netværk",
+    ],
+    "expansion-175": [
+      "Overvågning af celler, temperatur og opladning",
+      "Styring af bilens radio, navigation og højttalere",
+      "Produktion af strøm direkte fra bilens bremsevæske",
+      "Tilpasning af dækmønsteret til vejens overflade",
+    ],
+    "variety-018": [
+      "Google blev grundlagt i Californien",
+      "Nelson Mandela blev Sydafrikas præsident",
+      "Windows 95 blev udgivet af Microsoft",
+      "Fåret Dolly blev klonet i Skotland",
+    ],
+    "variety-031": [
+      "Manchester United",
+      "Real Madrid",
+      "Bayern München",
+      "Los Angeles Lakers",
+    ],
+    "variety-115": [
+      "Operatørprofil uden et fysisk SIM-kort",
+      "Mobilforbindelse udelukkende gennem Wi-Fi",
+      "Batteriskift uden værktøj eller afbrydelse",
+      "Visning af elektronisk blæk på skærmen",
+    ],
+  };
 
 const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
   const searchableText = normalizeText(
