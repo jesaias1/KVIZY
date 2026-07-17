@@ -765,6 +765,281 @@ const specs: Spec[] = [
   },
 ];
 
+const balancedOptions: Partial<
+  Record<number, [string, string, string, string]>
+> = {
+  1: [
+    "Vanddamp bliver til bittesmå dråber",
+    "Kulden fryser små dråber fra munden",
+    "Lungerne udskiller mere vand i kulde",
+    "Varm luft gør støv i luften synligt",
+  ],
+  4: [
+    "Det varme luftlag ved huden blæses væk",
+    "Lavere lufttryk trækker varme ud af huden",
+    "Kold luft presses gennem hudens yderste lag",
+    "Bevægelsen sænker selve luftens temperatur",
+  ],
+  7: [
+    "Omgivelserne får hjernen til at fejlbedømme synsindtrykket",
+    "Atmosfæren virker som en kraftig linse ved horisonten",
+    "Afstanden til Månen er mindst ved horisonten",
+    "Øjets nethinde forstørrer lys tæt på jorden",
+  ],
+  8: [
+    "Nerver får blodkar under huden til at trække sig sammen",
+    "Det yderste hudlag suger vand og udvider sig ujævnt",
+    "Vandtrykket presser vævet ind mellem fingerens furer",
+    "Kulden får fedtlaget under huden til at krympe",
+  ],
+  9: [
+    "Capsaicin aktiverer kroppens irritationsnerver",
+    "Varmen udvider blodkar i næsens slimhinder",
+    "Smagsstoffer sætter gang i en almindelig spytrefleks",
+    "Stærk mad øger trykket i næsens bihuler",
+  ],
+  10: [
+    "Blodkar ved ganen trækker sig sammen og udvider sig",
+    "Kulden stimulerer følenerverne i de øverste tænder",
+    "Ganens muskler får en kortvarig kuldekrampe",
+    "Trykket i bihulerne falder pludseligt",
+  ],
+  11: [
+    "Sociale signaler udløser automatisk efterligning",
+    "Lyden af et gab aktiverer kæbens strækrefleks",
+    "Et gab sænker kortvarigt iltniveauet i rummet",
+    "Ansigtsbevægelsen får øjnene til at tørre",
+  ],
+  12: [
+    "Slimhinderne følger en skiftende næsecyklus",
+    "Næseskillevæggen flytter sig en smule gennem dagen",
+    "Lungerne fordeler luft til ét næsebor ad gangen",
+    "Tyngdekraften lukker skiftevis hver side",
+  ],
+  13: [
+    "Usikkerhed holder opmærksomheden på tiden",
+    "Stress får hjernens indre ur til at gå hurtigere",
+    "Ukendt ventetid lagres som flere små minder",
+    "Kedsomhed sænker kroppens normale reaktionstid",
+  ],
+  14: [
+    "De yderste punkter får hver sin hukommelsesfordel",
+    "Øjet læser listens yderste punkter langsommere",
+    "Midterpunkterne bliver forvekslet med hinanden",
+    "Opmærksomheden er højest ved hvert linjeskift",
+  ],
+  15: [
+    "Hjernen gentager et letgenkendeligt mønster",
+    "Ørets hårceller fortsætter med at svinge efter musikken",
+    "Uafsluttede melodier lagres som en motorisk refleks",
+    "Musikkens tempo overtager hjernens normale rytme",
+  ],
+  16: [
+    "Gluten slapper af, så dejen bliver lettere at forme",
+    "Melet optager ilt, så dejen bliver mindre elastisk",
+    "Gæren standser kortvarigt og fordeler sig i dejen",
+    "Saltet synker ud i dejen og løsner proteinerne",
+  ],
+  18: [
+    "Strukturen er endnu ikke fast nok til at bære gassen",
+    "Temperaturfaldet får bagepulveret til at danne ekstra gas",
+    "Kold luft får melets stivelse til at trække sig sammen",
+    "Dampen forlader kagen hurtigere gennem overfladen",
+  ],
+  19: [
+    "Varme frigiver flere flygtige aromastoffer",
+    "Kulde binder tomatens syrer til frugtkødet",
+    "Køleskabet nedbryder en del af tomatens sukker",
+    "Varmen danner nye smagsstoffer i tomatens kerner",
+  ],
+  20: [
+    "Overfladens stivelse bliver et klæbrigt lag",
+    "Afkøling får glutenproteinerne til at gribe sammen",
+    "Saltkrystaller binder pastastykkerne ved overfladen",
+    "Vandet mellem stykkerne skaber undertryk",
+  ],
+  22: [
+    "Syre, salt eller sukker hæmmer mikroorganismer",
+    "Krydderier lukker mikroorganismernes adgang til ilt",
+    "Glasset trækker al tilgængelig væske ud af maden",
+    "Den lave temperatur i lagen standser nedbrydning",
+  ],
+  24: [
+    "Rystning danner mange små steder, hvor bobler kan vokse",
+    "Bevægelsen opvarmer vinen og får alkoholen til at koge",
+    "Rystningen presser luft gennem proppen og ned i væsken",
+    "Sukkeret samler sig omkring flaskens inderside",
+  ],
+  25: [
+    "Systemet flytter data mellem RAM og lagerdrevet",
+    "Processoren sænker sin hastighed for at beskytte RAM",
+    "Skærmen overtager en del af arbejdshukommelsen",
+    "Operativsystemet komprimerer alle åbne programmer",
+  ],
+  27: [
+    "Modfase får trykbølger til delvis at ophæve hinanden",
+    "Ørepuderne flytter støjen over høregrænsen",
+    "Mikrofonen filtrerer motorlyden ud af øret",
+    "Hovedtelefonerne udligner trykket omkring trommehinden",
+  ],
+  29: [
+    "Browseren gemmer en lokal identifikator",
+    "Routeren husker varerne for hvert tilsluttet apparat",
+    "Siden genkender telefonens skærm og opløsning",
+    "Søgemaskinen opbevarer en kopi af indkøbskurven",
+  ],
+  31: [
+    "Forbindelsen til serveren er krypteret",
+    "Sidens indhold er faktatjekket af browseren",
+    "Serveren er fysisk placeret i samme land",
+    "Webadressen skjules for internetudbyderen",
+  ],
+  32: [
+    "Afspilleren henter de næste sekunder i en buffer",
+    "Browseren springer billeder over, som endnu ikke er hentet",
+    "Serveren sender videofilens slutning før begyndelsen",
+    "Lyden gemmes lokalt, mens billedet streames direkte",
+  ],
+  33: [
+    "Det spreder luftpust fra hårde konsonanter",
+    "Det absorberer rummets refleksioner bag mikrofonen",
+    "Det dæmper konstant støj fra computer og ventilation",
+    "Det udligner forskelle mellem høje og lave toner",
+  ],
+  34: [
+    "Bølgerne forstærker og dæmper skiftevis hinanden",
+    "Øret skifter hurtigt mellem de to tonehøjder",
+    "Den dybe tone modulerer højttalerens lydstyrke",
+    "Tonerne skaber et ekko med skiftende forsinkelse",
+  ],
+  35: [
+    "Det afslører, hvilke elementer der dominerer balancen",
+    "Det gør alle frekvensområder lige tydelige for øret",
+    "Det viser, hvordan mixet lyder efter datakomprimering",
+    "Det fjerner rummets påvirkning af højttalerne",
+  ],
+  36: [
+    "Forskellen mellem kraftige og svage passager mindskes",
+    "De højeste frekvenser dæmpes mere end resten af lyden",
+    "Små timingforskelle mellem instrumenterne fjernes",
+    "Stereobilledet samles gradvist omkring midten",
+  ],
+  37: [
+    "Det udjævner overgangen og forebygger klik",
+    "Det matcher automatisk tonehøjden i de to klip",
+    "Det skjuler en forskel i klippenes samplefrekvens",
+    "Det flytter begge lydstykker mod midten af stereo",
+  ],
+  38: [
+    "Rotationen slynger vandet effektivt af pelsen",
+    "Bevægelsen varmer vandet, så det fordamper hurtigere",
+    "Rystelsen presser vandet fra hårene ned mod huden",
+    "Pelsens naturlige fedt fordeles og opsuger dråberne",
+  ],
+  39: [
+    "Den drejer for- og bagkrop modsat hinanden",
+    "Halen trækker kroppens tungeste side nedad",
+    "Poterne har større massefylde end resten af katten",
+    "Den brede pels skaber løft under kroppens underside",
+  ],
+  42: [
+    "Nålene begrænser vandtab og tåler frost",
+    "Harpiksen producerer varme omkring de grønne nåle",
+    "Nålene optager vinterens fugt direkte fra sneen",
+    "Den smalle form forhindrer pigmenterne i at fryse",
+  ],
+  45: [
+    "Solenergi lagres, mens fordampningen er lav",
+    "Høje bygninger er mærkbart tættere på Solen",
+    "Trafikken fjerner den kølige ilt mellem bygningerne",
+    "Asfalt standser kold luft fra jorden i at stige op",
+  ],
+  46: [
+    "Døde planter nedbrydes langsomt i iltfattig jord",
+    "Mos omdanner atmosfærens kuldioxid direkte til tørv",
+    "Vandet transporterer kulstof dybt ned i undergrunden",
+    "Tørvemoser mangler de mikroorganismer, der nedbryder planter",
+  ],
+  49: [
+    "Lav rullemodstand og fælles luftmodstand",
+    "Elektriske motorer har slet intet energitab",
+    "Skinnerne trækker toget frem gennem magnetisme",
+    "Passagerernes vægt fordeles direkte ned i jorden",
+  ],
+  52: [
+    "Udgiften for at disponere over pengene vokser",
+    "Lånebeløbet bliver automatisk større hver måned",
+    "Banken forkorter lånets løbetid uden at spørge",
+    "Inflationen lægges direkte oven i restgælden",
+  ],
+  54: [
+    "Et enkelt dårligt resultat får mindre betydning",
+    "Alle investeringerne får dermed samme forventede afkast",
+    "Fonden undgår udsving, når blot den ejer nok værdipapirer",
+    "Gevinster fra én investering betaler altid tab på en anden",
+  ],
+  58: [
+    "Havstrømme og vestenvinde fører varme mod Europa",
+    "Europas bjerge opvarmer luften fra Atlanterhavet",
+    "Canada modtager mindre sollys på samme breddegrad",
+    "Jordens rotation holder kold luft samlet over Canada",
+  ],
+  60: [
+    "Lande tilpasser tiden til praktiske forhold",
+    "Jordens rotation varierer mellem verdensdelene",
+    "Bjergkæder forskyder tidspunktet for middagssolen",
+    "Kompasretningen ændrer sig ved politiske grænser",
+  ],
+  62: [
+    "Arrangement, register og dynamik udvides",
+    "Tempoet stiger umærkeligt i hvert omkvæd",
+    "Alle instrumenter spiller samme tone i begyndelsen",
+    "Sangeren optages altid tættere på mikrofonen",
+  ],
+  63: [
+    "Rotation skaber forskelligt lufttryk omkring bolden",
+    "Boldens syninger trækker bevægelsen mod sparkets retning",
+    "Tyngdekraften påvirker den ene side mere end den anden",
+    "Luften rammer kun den side af bolden, der bevæger sig fremad",
+  ],
+  66: [
+    "Vakuum hæmmer både ledning og luftstrøm",
+    "Det tætte låg øger væskens normale kogepunkt",
+    "Blankt metal sender kulde tilbage mod omgivelserne",
+    "Glasvæggene omdanner varmestråling til synligt lys",
+  ],
+  69: [
+    "Fremspringende dele knækker lettere over tid",
+    "Næser blev normalt fremstillet i et andet materiale",
+    "Museer fjernede dem tidligere for at datere statuerne",
+    "Ansigtets midte blev slebet væk ved religiøse ritualer",
+  ],
+  71: [
+    "Tætte spor spreder farver i forskellige retninger",
+    "Plastens lag indeholder hver sit farvede pigment",
+    "Lagrede data udsender forskelligt lys fra overfladen",
+    "Den blanke bagside spejler farver fra omgivelserne",
+  ],
+  72: [
+    "Refleksioner i den tynde film påvirker hinanden",
+    "Sæben opdeler vandet i dråber med hver sin farve",
+    "Luften indeni bryder lyset som et trekantet prisme",
+    "Boblens krumning spejler forskellige dele af himlen",
+  ],
+  73: [
+    "Varmebehandling og tæt lukning hindrer ny vækst",
+    "Dåsens metal frigiver stoffer, som dræber alle bakterier",
+    "Mørket får mikroorganismer til at gå i permanent dvale",
+    "Trykket i beholderen fjerner alt vand fra maden",
+  ],
+  74: [
+    "Billederne fanger egerne i næsten samme position",
+    "Objektivet vender retningen på hurtige bevægelser",
+    "Hjulets underside bevæger sig faktisk baglæns",
+    "Kameraets lukker skifter retning mellem hvert billede",
+  ],
+};
+
 const createdAt = "2026-07-17T12:00:00.000Z";
 
 export const CURIOSITY_EXPANSION_QUESTIONS: Question[] = specs.map(
@@ -775,7 +1050,7 @@ export const CURIOSITY_EXPANSION_QUESTIONS: Question[] = specs.map(
     categoryId,
     secondaryCategoryIds: secondary ?? ["cat-59"],
     difficulty,
-    options: [correct, ...distractors].map((text, optionIndex) => ({
+    options: (balancedOptions[index + 1] ?? [correct, ...distractors]).map((text, optionIndex) => ({
       id: `o${optionIndex + 1}`,
       text,
     })),
@@ -785,7 +1060,11 @@ export const CURIOSITY_EXPANSION_QUESTIONS: Question[] = specs.map(
     tags: ["hverdagsforklaring", "redaktionel", tag],
     origin: "curated",
     status: "active",
-    fingerprint: fingerprint(prompt, correct, "multiple_choice"),
+    fingerprint: fingerprint(
+      prompt,
+      balancedOptions[index + 1]?.[0] ?? correct,
+      "multiple_choice",
+    ),
     qualityScore: 99,
     timeSensitive: false,
     createdAt,

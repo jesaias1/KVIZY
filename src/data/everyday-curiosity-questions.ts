@@ -718,6 +718,137 @@ const specs: Spec[] = [
 
 const createdAt = "2026-07-17T00:00:00.000Z";
 
+const balancedOptions: Partial<
+  Record<number, [string, string, string, string]>
+> = {
+  2: [
+    "Hånden mister energi hurtigere gennem materialet",
+    "Metal holder altid en lavere overfladetemperatur",
+    "Træets luftlommer producerer en smule varme",
+    "Metal afkøler luften lige over overfladen",
+  ],
+  3: [
+    "Luftmolekyler spreder især det blå lys",
+    "Atmosfæren spejler farven fra verdenshavene",
+    "Solen udsender en større mængde blåt lys",
+    "Ozonlaget absorberer alle andre synlige farver",
+  ],
+  5: [
+    "Den faste form har en lavere massefylde",
+    "Overfladespændingen bærer den frosne klump",
+    "Luftbobler bliver fanget under selve frysningen",
+    "Det koldeste vand bliver altid presset opad",
+  ],
+  6: [
+    "Punktformet lys påvirkes tydeligere af urolig luft",
+    "Planeternes atmosfære stabiliserer lyset på vejen",
+    "Stjerner skifter reelt lysstyrke mange gange i sekundet",
+    "Jordens rotation påvirker kun lyset fra stjerner",
+  ],
+  11: [
+    "Vanddamp fortættes på den kølige glasflade",
+    "Glasset trækker fugt ud gennem væggens overflade",
+    "Sæberester bliver synlige ved den høje temperatur",
+    "Spejlets metalbelægning afgiver fine dråber",
+  ],
+  13: [
+    "Jordaksens hældning ændrer sollysets vinkel",
+    "Afstanden til Solen ændrer sig kraftigt gennem året",
+    "Solens energi falder regelmæssigt hvert halve år",
+    "Månens bane skygger forskelligt for hver halvkugle",
+  ],
+  14: [
+    "Egenrotationen varer lige så længe som kredsløbet",
+    "Bagsiden har større masse og vender derfor væk",
+    "Månen roterer ikke omkring sin egen akse",
+    "Jordens skygge skjuler løbende den anden side",
+  ],
+  15: [
+    "Mineraler tilføres, mens fordampning fjerner vand",
+    "Havdyr udskiller gradvist salt til oceanerne",
+    "Bølgernes bevægelse omdanner sten til køkkensalt",
+    "Salt fra havbunden opløses hurtigere end det dannes",
+  ],
+  22: [
+    "Varme får proteinerne til at danne et fast netværk",
+    "Kogningen presser vandet helt ud gennem skallen",
+    "Blommen opsuger fedt og gør hviden mere kompakt",
+    "Skallens udvidelse presser indholdet tættere sammen",
+  ],
+  25: [
+    "Capsaicin aktiverer receptorer, der registrerer varme",
+    "Krydderiet hæver slimhindens temperatur direkte",
+    "Chiliens syre aktiverer mundens almindelige smertereceptorer",
+    "Den røde farve får hjernen til at forvente høj temperatur",
+  ],
+  26: [
+    "Stoffet aktiverer kuldefølsomme nervereceptorer",
+    "Det fordamper og sænker mundens faktiske temperatur",
+    "Det hæmmer blodgennemstrømningen i tungens overflade",
+    "Det blokerer receptorer, der normalt registrerer varme",
+  ],
+  30: [
+    "Materialerne skal kunne ændre længde med temperaturen",
+    "Samlingerne leder regnvand væk fra broens kørebane",
+    "Konstruktionen skal kunne følge tidevandets højde",
+    "Mellemrummene dæmper vibrationer fra tung trafik",
+  ],
+  31: [
+    "Fødderne befinder sig ved næsten samme spænding",
+    "Fjerdragten isolerer fuldstændigt mod elektricitet",
+    "Fuglens vægt afbryder strømmen gennem ledningen",
+    "Strømmen løber kun i ledningens nederste halvdel",
+  ],
+  35: [
+    "Maden flyttes gennem felter med forskellig styrke",
+    "Rotationen hjælper magnetronen med at danne bølger",
+    "Tallerkenen fordeler varm luft som en ventilator",
+    "Bevægelsen forhindrer vand i at forlade maden",
+  ],
+  38: [
+    "Dråberne spreder lyset tilbage mod føreren",
+    "Vanddampen absorberer især forlygternes røde lys",
+    "Den kraftige stråle opvarmer tågen foran bilen",
+    "Lyset får pupillerne til at lukke næsten helt",
+  ],
+  39: [
+    "Små prismer sender lyset tilbage mod lyskilden",
+    "Materialet lagrer dagslys og frigiver det om natten",
+    "Bilens vindtryk danner strøm i skiltets overflade",
+    "Belægningen forstørrer bogstaverne for føreren",
+  ],
+  46: [
+    "Netværkets ejer kan stadig registrere trafikken",
+    "Browseren gemmer stadig historikken efter lukning",
+    "Private cookies overføres til normale browservinduer",
+    "Andre profiler kan automatisk se alle søgninger",
+  ],
+  50: [
+    "Rejste hår holder på et isolerende lag luft",
+    "Hudens porer lukkes og gør kroppen vandtæt",
+    "Blodet optager mere ilt tæt under hudens overflade",
+    "Pelsen bliver lettere og forbedrer dyrets flugt",
+  ],
+  51: [
+    "Mellemgulvet laver en ufrivillig sammentrækning",
+    "Luftrøret lukker kortvarigt under udåndingen",
+    "Spiserøret trækker luft ned mod mavesækken",
+    "Hjertet springer et slag over og flytter lungerne",
+  ],
+  53: [
+    "Dråberne spreder mange farver af synligt lys",
+    "Iskrystallerne filtrerer alle mørke farver fra",
+    "Skyerne indeholder lyst støv fra jordoverfladen",
+    "Solen overbelyser vandet mod den mørke himmel",
+  ],
+  54: [
+    "Mørkt stof absorberer en større del af sollyset",
+    "Sort farvestof danner ekstra varme ved en kemisk reaktion",
+    "Hvidt stof køler overfladen gennem hurtigere fordampning",
+    "Mørke flader tiltrækker mere infrarød stråling fra luften",
+  ],
+};
+
 export const EVERYDAY_CURIOSITY_QUESTIONS: Question[] = specs.map(
   (
     [categoryId, prompt, correct, distractors, explanation, difficulty, tag],
@@ -729,7 +860,7 @@ export const EVERYDAY_CURIOSITY_QUESTIONS: Question[] = specs.map(
     categoryId,
     secondaryCategoryIds: categoryId === "cat-59" ? ["cat-1"] : ["cat-59"],
     difficulty,
-    options: [correct, ...distractors].map((text, optionIndex) => ({
+    options: (balancedOptions[index + 1] ?? [correct, ...distractors]).map((text, optionIndex) => ({
       id: `o${optionIndex + 1}`,
       text,
     })),
@@ -739,7 +870,11 @@ export const EVERYDAY_CURIOSITY_QUESTIONS: Question[] = specs.map(
     tags: ["hverdagsforklaring", tag],
     origin: "curated",
     status: "active",
-    fingerprint: fingerprint(prompt, correct, "multiple_choice"),
+    fingerprint: fingerprint(
+      prompt,
+      balancedOptions[index + 1]?.[0] ?? correct,
+      "multiple_choice",
+    ),
     qualityScore: 99,
     timeSensitive: false,
     createdAt,

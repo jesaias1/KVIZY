@@ -61,6 +61,29 @@ const thinCategories = CATEGORIES.filter(
         question.secondaryCategoryIds.includes(category.id),
     ).length < 10,
 );
+const explanatoryCuriosity = SEED_QUESTIONS.filter((question) =>
+  question.tags.includes("hverdagsforklaring"),
+);
+const explanatoryCorrectLongest = explanatoryCuriosity.filter((question) => {
+  const correct = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  );
+  const otherLengths = question.options
+    .filter((option) => option.id !== question.correctOptionId)
+    .map((option) => option.text.length);
+  return Boolean(correct && correct.text.length > Math.max(...otherLengths));
+});
+const explanatoryLengthOutliers = explanatoryCuriosity.filter((question) => {
+  const correct = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  );
+  const otherLengths = question.options
+    .filter((option) => option.id !== question.correctOptionId)
+    .map((option) => option.text.length);
+  return Boolean(
+    correct && correct.text.length > Math.max(...otherLengths) * 1.15,
+  );
+});
 
 const report = {
   questions: SEED_QUESTIONS.length,
@@ -77,6 +100,10 @@ const report = {
       question.options.map((option) => option.text.length),
     ),
   ),
+  explanatoryLengthOutliers: explanatoryLengthOutliers.length,
+  explanatoryCorrectLongestRate: Number(
+    (explanatoryCorrectLongest.length / explanatoryCuriosity.length).toFixed(2),
+  ),
   thinCategories: thinCategories.map((category) => category.name),
 };
 
@@ -90,6 +117,8 @@ if (
   report.lowercaseOptions > 0 ||
   report.answerLeaks > 0 ||
   report.obviousCountryAnswers > 0 ||
+  report.explanatoryLengthOutliers > 0 ||
+  report.explanatoryCorrectLongestRate > 0.35 ||
   report.longestOption > 70 ||
   report.thinCategories.length > 0
 ) {

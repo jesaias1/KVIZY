@@ -35,6 +35,23 @@ describe("automatisk spørgsmålskvalitet", () => {
     expect(effectiveQualityScore(weak)).toBeLessThan(70);
   });
 
+  it("markerer et korrekt svar, der skiller sig ud ved længden", () => {
+    const base = SEED_QUESTIONS[0];
+    const biased = {
+      ...base,
+      options: [
+        { id: "o1", text: "En forklaring der er tydeligt meget længere" },
+        { id: "o2", text: "En kort teori" },
+        { id: "o3", text: "En anden idé" },
+        { id: "o4", text: "En mulig årsag" },
+      ],
+      correctOptionId: "o1",
+    };
+    expect(auditQuestion(biased).map((issue) => issue.code)).toContain(
+      "answer_length_bias",
+    );
+  });
+
   it("banken indeholder ingen emoji-gæt", () => {
     expect(
       SEED_QUESTIONS.some((question) => question.type === ("emoji" as never)),

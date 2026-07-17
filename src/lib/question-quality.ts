@@ -157,7 +157,7 @@ export function auditQuestion(question: Question): QualityIssue[] {
   if (
     correct &&
     otherLengths.length > 1 &&
-    correct.text.length > Math.max(...otherLengths) * 1.8
+    correct.text.length > Math.max(...otherLengths) * 1.25
   )
     issues.push({
       code: "answer_length_bias",
