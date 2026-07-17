@@ -586,12 +586,15 @@
   height: 1.05rem;
 }
 .info-hint p {
-  position: absolute;
-  z-index: 50;
-  top: calc(100% + 0.25rem);
-  right: 0;
-  width: min(17rem, calc(100vw - 3rem));
-  padding: 0.75rem;
+  position: fixed;
+  z-index: 60;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  left: max(1rem, env(safe-area-inset-left));
+  width: auto;
+  max-width: 30rem;
+  margin-inline: auto;
+  padding: 0.85rem 1rem;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   background: var(--popover);
@@ -599,6 +602,11 @@
   box-shadow: 0 12px 28px #0007;
   font-size: 0.78rem;
   line-height: 1.35;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+.info-hint[open] summary {
+  color: var(--primary);
 }
 .avatar-button {
   display: grid;

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import confetti from "canvas-confetti";
 import { motion } from "motion/react";
@@ -2141,12 +2141,35 @@ function Toggle({
   );
 }
 function InfoHint({ text, label }: { text: string; label: string }) {
+  const id = useId();
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const closeOtherHint = (event: Event) => {
+      const openedId = (event as CustomEvent<string>).detail;
+      if (openedId !== id && detailsRef.current?.open) {
+        detailsRef.current.open = false;
+      }
+    };
+    window.addEventListener("kvizy-info-open", closeOtherHint);
+    return () => window.removeEventListener("kvizy-info-open", closeOtherHint);
+  }, [id]);
   return (
-    <details className="info-hint">
+    <details
+      ref={detailsRef}
+      name="kvizy-info"
+      className="info-hint"
+      onToggle={(event) => {
+        if (event.currentTarget.open) {
+          window.dispatchEvent(
+            new CustomEvent<string>("kvizy-info-open", { detail: id }),
+          );
+        }
+      }}
+    >
       <summary aria-label={label}>
         <CircleHelp aria-hidden="true" />
       </summary>
-      <p>{text}</p>
+      <p role="status">{text}</p>
     </details>
   );
 }
