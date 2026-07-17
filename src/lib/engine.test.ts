@@ -583,13 +583,17 @@ describe("adaptiv udvælgelse", () => {
       chosen.some((q) => SEED_QUESTIONS.slice(300).some((x) => x.id === q.id)),
     ).toBe(true);
   });
-  it("gentager aldrig spørgsmål i nye spil på samme enhed", () => {
+  it("gentager aldrig spørgsmål i nye standardspil på samme enhed", () => {
     let seen: SeenQuestion[] = [];
     const allIds = new Set<string>();
-    for (let gameNumber = 0; gameNumber < 8; gameNumber++) {
+    for (let gameNumber = 0; gameNumber < 12; gameNumber++) {
       const game = selectQuestions(
         SEED_QUESTIONS,
-        { ...setup, questionCount: 30 },
+        {
+          ...setup,
+          questionCount: 30,
+          categoryIds: DEFAULT_CATEGORIES.map((category) => category.id),
+        },
         seen,
       );
       expect(game).toHaveLength(30);
@@ -601,7 +605,42 @@ describe("adaptiv udvælgelse", () => {
         `2026-07-16T${String(gameNumber).padStart(2, "0")}:00:00.000Z`,
       );
     }
-    expect(allIds.size).toBe(240);
+    expect(allIds.size).toBe(360);
+  });
+  it("behandler samme fingerprint som allerede set", () => {
+    const original = SEED_QUESTIONS.find(
+      (question) => question.categoryId === "cat-21",
+    )!;
+    const reformulated = {
+      ...original,
+      id: `${original.id}-ny-formulering`,
+      prompt: `${original.prompt} `,
+    };
+    const categoryBank = [
+      reformulated,
+      ...SEED_QUESTIONS.filter(
+        (question) =>
+          question.categoryId === "cat-21" && question.id !== original.id,
+      ),
+    ];
+    const chosen = selectQuestions(
+      categoryBank,
+      {
+        ...setup,
+        questionCount: 5,
+        categoryIds: ["cat-21"],
+        difficulty: original.difficulty,
+      },
+      reserveSeenQuestions(
+        [],
+        [original.id],
+        new Date().toISOString(),
+        [original],
+      ),
+    );
+    expect(chosen.map((question) => question.id)).not.toContain(
+      reformulated.id,
+    );
   });
   it("genbruger spørgsmål, når den valgte pulje er gennemspillet", () => {
     const smallBank = SEED_QUESTIONS.slice(0, 12);

@@ -487,6 +487,7 @@ export function GameShell() {
             seen,
             questions.map((question) => question.id),
             g.startedAt,
+            questions,
           ),
         ),
       );
@@ -578,6 +579,8 @@ export function GameShell() {
           lastSeen: new Date().toISOString(),
           count: previousSeen?.count ?? 1,
           correct,
+          fingerprint: previousSeen?.fingerprint ?? q.fingerprint,
+          factKey: previousSeen?.factKey,
         },
       ]),
     );

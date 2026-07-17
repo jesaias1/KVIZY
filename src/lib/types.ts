@@ -140,6 +140,8 @@ export type SeenQuestion = {
   lastSeen: string;
   count: number;
   correct: boolean;
+  fingerprint?: string;
+  factKey?: string;
 };
 export const questionReportReasons = [
   "wrong_answer",

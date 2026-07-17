@@ -325,12 +325,18 @@ function balanceFairTurnTypes(
   picked: Question[],
   eligibleBank: Question[],
   setup: GameSetup,
+  historicallySeenIds: Set<string>,
 ) {
   const playerCount = Math.max(1, setup.players.length);
   if (playerCount === 1 || picked.length < playerCount) return picked;
 
   const fairTypes = new Set<Question["type"]>(FAIR_TURN_TYPES);
   const balanced = [...picked];
+  const allowSeenFallback =
+    picked.length > 0 &&
+    picked.every((question) => historicallySeenIds.has(question.id));
+  const isAvailableByHistory = (question: Question) =>
+    allowSeenFallback || !historicallySeenIds.has(question.id);
 
   // I længere blandede spil skal mindst én hel spillerunde af hver fair
   // specialtype med, hvis banken kan levere den. Ellers kunne et enkelt valgt
@@ -348,6 +354,7 @@ function balanceFairTurnTypes(
         .filter(
           (candidate) =>
             candidate.type === type &&
+            isAvailableByHistory(candidate) &&
             Math.abs(candidate.difficulty - setup.difficulty) <= 1 &&
             !usedIds.has(candidate.id) &&
             !usedFingerprints.has(candidate.fingerprint),
@@ -387,6 +394,7 @@ function balanceFairTurnTypes(
       );
       const canReplace = (candidate: Question) =>
         !fairTypes.has(candidate.type) &&
+        isAvailableByHistory(candidate) &&
         !currentIds.has(candidate.id) &&
         !currentFingerprints.has(candidate.fingerprint) &&
         !currentFacts.has(questionFactKey(candidate));
@@ -522,6 +530,29 @@ export function selectQuestions(
   random = Math.random,
 ): Question[] {
   const seenMap = new Map(seen.map((s) => [s.id, s]));
+  const seenByFingerprint = new Map<string, SeenQuestion>();
+  const seenByFact = new Map<string, SeenQuestion>();
+  for (const seenQuestion of seen) {
+    if (seenQuestion.fingerprint)
+      seenByFingerprint.set(seenQuestion.fingerprint, seenQuestion);
+    if (seenQuestion.factKey)
+      seenByFact.set(seenQuestion.factKey, seenQuestion);
+  }
+  for (const question of bank) {
+    const seenQuestion = seenMap.get(question.id);
+    if (!seenQuestion) continue;
+    seenByFingerprint.set(question.fingerprint, seenQuestion);
+    seenByFact.set(questionFactKey(question), seenQuestion);
+  }
+  const seenRecordFor = (question: Question) =>
+    seenMap.get(question.id) ??
+    seenByFingerprint.get(question.fingerprint) ??
+    seenByFact.get(questionFactKey(question));
+  const historicallySeenIds = new Set(
+    bank
+      .filter((question) => Boolean(seenRecordFor(question)))
+      .map((question) => question.id),
+  );
   const selectedCategoryIds = new Set(setup.categoryIds);
   const selectedOnlyCategory =
     selectedCategoryIds.size === 1 ? setup.categoryIds[0] : undefined;
@@ -602,7 +633,7 @@ export function selectQuestions(
       for (const question of candidatePool) {
         const factKey = questionFactKey(question);
         const templateKey = repetitiveTemplateKey(question);
-        const seenQuestion = seenMap.get(question.id);
+        const seenQuestion = seenRecordFor(question);
         const seenAt = seenQuestion
           ? Date.parse(seenQuestion.lastSeen)
           : Number.NaN;
@@ -633,7 +664,7 @@ export function selectQuestions(
           recentCats.length === 2 &&
           recentCats.every((category) => category === question.categoryId);
         const score =
-          (setup.favorites.includes(selectedCategory) ? -30 : 0) +
+          (setup.favorites.includes(selectedCategory) ? -70 : 0) +
           (categoryBias.get(selectedCategory) ?? 7) +
           (randomPriority.get(question.id) ?? 20) +
           (templateKey ? 18 : 0) +
@@ -698,6 +729,7 @@ export function selectQuestions(
     picked,
     candidatePool,
     setup,
+    historicallySeenIds,
   );
   const distributed = balancePlayerDifficulties(
     fairTypesDistributed,
@@ -740,15 +772,22 @@ export function reserveSeenQuestions(
   seen: SeenQuestion[],
   questionIds: string[],
   lastSeen = new Date().toISOString(),
+  questions: Question[] = [],
 ) {
   const byId = new Map(seen.map((item) => [item.id, item]));
+  const questionsById = new Map(
+    questions.map((question) => [question.id, question]),
+  );
   for (const id of new Set(questionIds)) {
     const previous = byId.get(id);
+    const question = questionsById.get(id);
     byId.set(id, {
       id,
       lastSeen,
       count: (previous?.count ?? 0) + 1,
       correct: previous?.correct ?? false,
+      fingerprint: question?.fingerprint ?? previous?.fingerprint,
+      factKey: question ? questionFactKey(question) : previous?.factKey,
     });
   }
   return [...byId.values()];
