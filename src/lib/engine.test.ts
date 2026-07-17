@@ -752,7 +752,32 @@ describe("adaptiv udvælgelse", () => {
       chosen.filter((question) =>
         question.tags.some((tag) => creatorTags.has(tag)),
       ).length,
-    ).toBeLessThanOrEqual(2);
+    ).toBeLessThanOrEqual(1);
+  });
+  it("begrænser landopslag og prioriterer forklarende hverdagsviden", () => {
+    const countryLookupTags = new Set([
+      "capital",
+      "currency",
+      "continent",
+      "language",
+      "callingCode",
+      "tld",
+    ]);
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 30,
+      categoryIds: DEFAULT_CATEGORIES.map((category) => category.id),
+    });
+    expect(
+      chosen.filter((question) =>
+        question.tags.some((tag) => countryLookupTags.has(tag)),
+      ).length,
+    ).toBeLessThanOrEqual(1);
+    expect(
+      chosen.filter((question) =>
+        question.tags.includes("hverdagsforklaring"),
+      ).length,
+    ).toBeGreaterThanOrEqual(4);
   });
   it("gemmer valgte spørgsmål én gang pr. nyt spil på enheden", () => {
     const previous: SeenQuestion[] = [

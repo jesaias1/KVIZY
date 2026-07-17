@@ -6,6 +6,7 @@ import { COUNTRY_QUESTIONS } from "./country-questions";
 import { MUSIC_PRODUCTION_QUESTIONS } from "./music-production-questions";
 import { WIKIDATA_CULTURE_QUESTIONS } from "./wikidata-culture-questions";
 import { EXPANSION_QUESTIONS } from "./expansion-questions";
+import { EVERYDAY_CURIOSITY_QUESTIONS } from "./everyday-curiosity-questions";
 import { WIKIDATA_THIN_QUESTIONS } from "./wikidata-thin-questions";
 import { VARIETY_QUESTIONS } from "./variety-questions";
 import { seedSpecs } from "./seed-spec";
@@ -1196,6 +1197,7 @@ const BASE_QUESTIONS: Question[] = [
   ...MUSIC_PRODUCTION_QUESTIONS,
   ...WIKIDATA_CULTURE_QUESTIONS,
   ...EXPANSION_QUESTIONS,
+  ...EVERYDAY_CURIOSITY_QUESTIONS,
   ...WIKIDATA_THIN_QUESTIONS,
   ...VARIETY_QUESTIONS,
 ].filter((question) => !redundantQuestionIds.has(question.id));

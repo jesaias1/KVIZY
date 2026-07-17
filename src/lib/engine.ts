@@ -269,6 +269,14 @@ const CREATOR_ATTRIBUTION_TAGS = new Set([
   "novel-author",
   "danish-song-performer",
 ]);
+const COUNTRY_LOOKUP_TAGS = new Set([
+  "capital",
+  "currency",
+  "continent",
+  "language",
+  "callingCode",
+  "tld",
+]);
 
 const SPECIALIST_CATEGORY_IDS = new Set([
   "cat-11",
@@ -289,6 +297,7 @@ export function isGeneralKnowledgeQuestion(question: Question) {
   return (
     question.categoryId === "cat-1" ||
     question.categoryId === "cat-59" ||
+    question.tags.includes("hverdagsforklaring") ||
     (question.tags.includes("varieret") &&
       question.categoryId !== "cat-23" &&
       question.type !== "ordering" &&
@@ -318,6 +327,8 @@ function matchesSelectedUmbrellaCategory(
 function repetitiveTemplateKey(question: Question) {
   if (question.tags.some((tag) => CREATOR_ATTRIBUTION_TAGS.has(tag)))
     return "creator-attribution";
+  if (question.tags.some((tag) => COUNTRY_LOOKUP_TAGS.has(tag)))
+    return "country-lookup";
   return question.tags.find((tag) => REPETITIVE_TEMPLATE_TAGS.has(tag));
 }
 
@@ -585,7 +596,7 @@ export function selectQuestions(
   const pickedFacts = new Set<string>();
   const categoryCounts = new Map<string, number>();
   const templateCounts = new Map<string, number>();
-  const templateLimit = Math.max(1, Math.ceil(setup.questionCount / 20));
+  const templateLimit = 1;
   const categoryLimit = Math.max(
     2,
     Math.ceil(setup.questionCount / Math.max(1, selectedCategoryIds.size)),
@@ -667,7 +678,8 @@ export function selectQuestions(
           (setup.favorites.includes(selectedCategory) ? -70 : 0) +
           (categoryBias.get(selectedCategory) ?? 7) +
           (randomPriority.get(question.id) ?? 20) +
-          (templateKey ? 18 : 0) +
+          (question.tags.includes("hverdagsforklaring") ? -25 : 0) +
+          (templateKey ? 35 : 0) +
           (SPECIALIST_CATEGORY_IDS.has(selectedCategory) &&
           !setup.favorites.includes(selectedCategory)
             ? 8
