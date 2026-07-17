@@ -30,36 +30,48 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const standaloneNavigator = navigator as Navigator & {
       standalone?: boolean;
     };
-    const standalone =
+    const installed =
       window.matchMedia("(display-mode: standalone)").matches ||
+      window.matchMedia("(display-mode: fullscreen)").matches ||
       Boolean(standaloneNavigator.standalone);
-    if (!standalone) return;
-    const landscapeQuery = window.matchMedia("(orientation: landscape)");
+    const landscapePhoneQuery = window.matchMedia(
+      "(orientation: landscape) and (max-height: 600px) and (pointer: coarse)",
+    );
     const orientation = (screen.orientation ?? undefined) as
       | (ScreenOrientation & {
           lock?: (value: "portrait") => Promise<void>;
         })
       | undefined;
     const lockPortrait = () => {
-      if (document.visibilityState === "visible") {
+      if (installed && document.visibilityState === "visible") {
         void orientation?.lock?.("portrait").catch(() => undefined);
       }
     };
     const enforcePortrait = () => {
-      setShowPortraitGuard(landscapeQuery.matches);
+      const blocked = landscapePhoneQuery.matches;
+      setShowPortraitGuard(blocked);
+      document.documentElement.toggleAttribute(
+        "data-phone-landscape",
+        blocked,
+      );
       lockPortrait();
     };
     enforcePortrait();
     document.addEventListener("visibilitychange", lockPortrait);
     window.addEventListener("pageshow", enforcePortrait);
+    window.addEventListener("resize", enforcePortrait);
+    window.addEventListener("orientationchange", enforcePortrait);
     window.addEventListener("pointerdown", lockPortrait, { passive: true });
-    landscapeQuery.addEventListener("change", enforcePortrait);
+    landscapePhoneQuery.addEventListener("change", enforcePortrait);
     orientation?.addEventListener("change", enforcePortrait);
     return () => {
+      document.documentElement.removeAttribute("data-phone-landscape");
       document.removeEventListener("visibilitychange", lockPortrait);
       window.removeEventListener("pageshow", enforcePortrait);
+      window.removeEventListener("resize", enforcePortrait);
+      window.removeEventListener("orientationchange", enforcePortrait);
       window.removeEventListener("pointerdown", lockPortrait);
-      landscapeQuery.removeEventListener("change", enforcePortrait);
+      landscapePhoneQuery.removeEventListener("change", enforcePortrait);
       orientation?.removeEventListener("change", enforcePortrait);
     };
   }, []);

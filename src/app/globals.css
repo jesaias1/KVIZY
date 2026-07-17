@@ -113,6 +113,11 @@
   color: var(--foreground);
   text-align: center;
 }
+html[data-phone-landscape],
+html[data-phone-landscape] body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 .portrait-guard div {
   display: grid;
   justify-items: center;

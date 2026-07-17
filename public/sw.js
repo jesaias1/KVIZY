@@ -1,4 +1,4 @@
-const CACHE = "kvizy-v13";
+const CACHE = "kvizy-v14";
 const CORE = [
   "/",
   "/manifest.webmanifest",
