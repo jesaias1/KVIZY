@@ -91,9 +91,9 @@ export function difficultyFor(
 }
 
 export function fairQuestionCounts(playerCount: number) {
-  const players = Math.max(1, Math.floor(playerCount));
+  const players = Math.max(1, Math.min(90, Math.floor(playerCount)));
   const multiples = Array.from(
-    { length: Math.floor(100 / players) },
+    { length: Math.floor(90 / players) },
     (_, index) => (index + 1) * players,
   );
   const closest = (target: number) =>
@@ -103,7 +103,7 @@ export function fairQuestionCounts(playerCount: number) {
     )[0];
   return [
     ...new Set(
-      Array.from({ length: 10 }, (_, index) => closest((index + 1) * 10)),
+      Array.from({ length: 9 }, (_, index) => closest((index + 1) * 10)),
     ),
   ].sort((left, right) => left - right);
 }

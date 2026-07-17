@@ -416,7 +416,7 @@ describe("adaptiv udvælgelse", () => {
       newPlayer(`Spiller ${index + 1}`, index),
     );
     expect(fairQuestionCounts(players.length)).toEqual([
-      9, 21, 30, 39, 51, 60, 69, 81, 90, 99,
+      9, 21, 30, 39, 51, 60, 69, 81, 90,
     ]);
     expect(closestFairQuestionCount(10, players.length)).toBe(9);
     const chosen = selectQuestions(SEED_QUESTIONS, {

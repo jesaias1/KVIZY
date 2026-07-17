@@ -132,18 +132,15 @@ const typeLabels: Partial<Record<Question["type"], string>> = {
 const difficultyModes = [
   {
     id: "fixed",
-    label: "Fast niveau",
-    info: "Holder spørgsmålene på det valgte niveau.",
+    label: "Fast",
   },
   {
     id: "mixed",
-    label: "Blandet niveau",
-    info: "Blander spørgsmål fra niveauet lige under, det valgte niveau og niveauet lige over.",
+    label: "Blandet",
   },
   {
     id: "rising",
-    label: "Stigende niveau",
-    info: "Starter lidt lettere og bliver gradvist sværere, men holder sig tæt på det valgte niveau.",
+    label: "Stigende",
   },
 ] as const;
 const emptySetup = (): GameSetup => ({
@@ -1187,25 +1184,31 @@ function Setup({
             <CardHeader>
               <CardTitle>Antal spørgsmål</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-wrap gap-2">
+            <CardContent className="grid grid-cols-3 gap-2">
               {questionCounts.map((n) => (
                 <Button
                   key={n}
-                  className="h-auto min-w-16 flex-col gap-0.5 py-2"
+                  className="h-10"
                   variant={displayedQuestionCount === n ? "default" : "outline"}
                   onClick={() => setSetup({ ...setup, questionCount: n })}
                 >
-                  <b>{n}</b>
-                  <small className="text-[0.65rem] font-normal opacity-75">
-                    {n / setup.players.length} pr. {setup.mode === "teams" ? "hold" : "spiller"}
-                  </small>
+                  {n}
                 </Button>
               ))}
+              <p className="col-span-3 mt-1 text-center text-xs text-muted-foreground">
+                {displayedQuestionCount / setup.players.length} spørgsmål pr. {setup.mode === "teams" ? "hold" : "spiller"}
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Sværhedsgrad</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Sværhedsgrad</CardTitle>
+                <InfoHint
+                  label="Om sværhedsforløb"
+                  text="Fast holder samme niveau. Blandet varierer mellem niveauet lige under, det valgte niveau og niveauet lige over. Stigende starter lidt lettere og bliver gradvist sværere."
+                />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="mb-3 flex items-end justify-between">
@@ -1223,17 +1226,15 @@ function Setup({
               />
               <div className="mt-8 grid grid-cols-3 gap-2">
                 {difficultyModes.map((option) => (
-                  <div className="difficulty-mode-option" key={option.id}>
-                    <Button
-                      size="sm"
-                      className="w-full px-2"
-                      variant={setup.difficultyMode === option.id ? "secondary" : "ghost"}
-                      onClick={() => setSetup({ ...setup, difficultyMode: option.id })}
-                    >
-                      {option.label}
-                    </Button>
-                    <InfoHint text={option.info} label={`Om ${option.label}`} />
-                  </div>
+                  <Button
+                    size="sm"
+                    key={option.id}
+                    className="w-full px-2"
+                    variant={setup.difficultyMode === option.id ? "secondary" : "ghost"}
+                    onClick={() => setSetup({ ...setup, difficultyMode: option.id })}
+                  >
+                    {option.label}
+                  </Button>
                 ))}
               </div>
             </CardContent>

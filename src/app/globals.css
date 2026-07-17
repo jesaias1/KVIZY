@@ -565,13 +565,6 @@
   margin-top: 0.2rem;
   color: var(--muted-foreground);
 }
-.difficulty-mode-option {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-  min-width: 0;
-}
 .info-hint {
   position: relative;
   flex: 0 0 auto;
