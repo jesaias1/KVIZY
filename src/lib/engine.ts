@@ -6,7 +6,10 @@ import type {
   Question,
   SeenQuestion,
 } from "./types";
-import { effectiveQualityScore } from "./question-quality";
+import {
+  effectiveQualityScore,
+  questionOptionSetKey,
+} from "./question-quality";
 import { ANIMAL_AVATARS } from "./config";
 
 export function normalizeText(value: string) {
@@ -224,7 +227,11 @@ function spreadFairTypes(questions: Question[], playerCount: number) {
   return spread;
 }
 
+const factKeyCache = new WeakMap<Question, string>();
+
 function questionFactKey(question: Question) {
+  const cached = factKeyCache.get(question);
+  if (cached) return cached;
   if (question.type === "true_false") return question.fingerprint;
   const answer =
     question.options.find((option) => option.id === question.correctOptionId)
@@ -234,7 +241,9 @@ function questionFactKey(question: Question) {
         (id) => question.options.find((option) => option.id === id)?.text ?? id,
       )
       .join(" ");
-  return `${question.categoryId}:${normalizeText(answer)}:${question.tags[0] ?? ""}`;
+  const key = `${question.categoryId}:${normalizeText(answer)}:${question.tags[0] ?? ""}`;
+  factKeyCache.set(question, key);
+  return key;
 }
 
 const REPETITIVE_TEMPLATE_TAGS = new Set([
@@ -326,12 +335,23 @@ function matchesSelectedUmbrellaCategory(
   );
 }
 
-function repetitiveTemplateKey(question: Question) {
+const templateKeyCache = new WeakMap<Question, string | undefined>();
+
+export function questionTemplateKey(question: Question) {
+  if (templateKeyCache.has(question)) return templateKeyCache.get(question);
+  let key: string | undefined;
   if (question.tags.some((tag) => CREATOR_ATTRIBUTION_TAGS.has(tag)))
-    return "creator-attribution";
-  if (question.tags.some((tag) => COUNTRY_LOOKUP_TAGS.has(tag)))
-    return "country-lookup";
-  return question.tags.find((tag) => REPETITIVE_TEMPLATE_TAGS.has(tag));
+    key = "creator-attribution";
+  else if (question.tags.some((tag) => COUNTRY_LOOKUP_TAGS.has(tag)))
+    key = "country-lookup";
+  else if (
+    question.tags.includes("redaktionel-matrix") ||
+    question.tags.includes("redaktionel-æra")
+  )
+    key = `${question.tags[0]}:${question.tags[1] ?? "ukendt"}`;
+  else key = question.tags.find((tag) => REPETITIVE_TEMPLATE_TAGS.has(tag));
+  templateKeyCache.set(question, key);
+  return key;
 }
 
 function balanceFairTurnTypes(
@@ -414,7 +434,7 @@ function balanceFairTurnTypes(
       const replacement =
         eligibleBank.find(
           (candidate) =>
-            canReplace(candidate) && !repetitiveTemplateKey(candidate),
+            canReplace(candidate) && !questionTemplateKey(candidate),
         ) ?? eligibleBank.find(canReplace);
       if (replacement) balanced[replaceIndex] = replacement;
       else balanced.splice(replaceIndex, 1);
@@ -545,22 +565,38 @@ export function selectQuestions(
   const seenMap = new Map(seen.map((s) => [s.id, s]));
   const seenByFingerprint = new Map<string, SeenQuestion>();
   const seenByFact = new Map<string, SeenQuestion>();
+  const seenByOptionSet = new Map<string, SeenQuestion>();
+  const seenByTemplate = new Map<string, SeenQuestion>();
   for (const seenQuestion of seen) {
     if (seenQuestion.fingerprint)
       seenByFingerprint.set(seenQuestion.fingerprint, seenQuestion);
     if (seenQuestion.factKey)
       seenByFact.set(seenQuestion.factKey, seenQuestion);
+    if (seenQuestion.optionSetKey)
+      seenByOptionSet.set(seenQuestion.optionSetKey, seenQuestion);
+    if (seenQuestion.templateKey)
+      seenByTemplate.set(seenQuestion.templateKey, seenQuestion);
   }
   for (const question of bank) {
     const seenQuestion = seenMap.get(question.id);
     if (!seenQuestion) continue;
     seenByFingerprint.set(question.fingerprint, seenQuestion);
     seenByFact.set(questionFactKey(question), seenQuestion);
+    const optionSetKey = questionOptionSetKey(question);
+    if (optionSetKey) seenByOptionSet.set(optionSetKey, seenQuestion);
+    const templateKey = questionTemplateKey(question);
+    if (templateKey) seenByTemplate.set(templateKey, seenQuestion);
   }
-  const seenRecordFor = (question: Question) =>
+  const resolveSeenRecord = (question: Question) =>
     seenMap.get(question.id) ??
     seenByFingerprint.get(question.fingerprint) ??
-    seenByFact.get(questionFactKey(question));
+    seenByFact.get(questionFactKey(question)) ??
+    seenByOptionSet.get(questionOptionSetKey(question) ?? "") ??
+    seenByTemplate.get(questionTemplateKey(question) ?? "");
+  const seenRecords = new Map(
+    bank.map((question) => [question.id, resolveSeenRecord(question)]),
+  );
+  const seenRecordFor = (question: Question) => seenRecords.get(question.id);
   const historicallySeenIds = new Set(
     bank
       .filter((question) => Boolean(seenRecordFor(question)))
@@ -602,6 +638,8 @@ export function selectQuestions(
   const pickedIds = new Set<string>();
   const pickedFingerprints = new Set<string>();
   const pickedFacts = new Set<string>();
+  const pickedOptionSets = new Set<string>();
+  const pickedOptionTexts = new Map<string, number>();
   const categoryCounts = new Map<string, number>();
   const templateCounts = new Map<string, number>();
   const templateLimit = 1;
@@ -617,6 +655,51 @@ export function selectQuestions(
   // men undgår at den samme marginalt højest vurderede pulje altid vinder.
   const randomPriority = new Map(
     candidatePool.map((question) => [question.id, random() * 40]),
+  );
+  const optionSetKeys = new Map(
+    candidatePool.map((question) => [
+      question.id,
+      questionOptionSetKey(question),
+    ]),
+  );
+  const optionTextKeys = new Map(
+    candidatePool.map((question) => [
+      question.id,
+      question.options.map((option) => normalizeText(option.text)),
+    ]),
+  );
+  const recentSeenOptionTexts = new Set(
+    seen
+      .filter((item) => {
+        const seenAt = Date.parse(item.lastSeen);
+        return (
+          Number.isFinite(seenAt) && Date.now() - seenAt < REPEAT_COOLDOWN_MS
+        );
+      })
+      .flatMap((item) => item.optionTexts ?? []),
+  );
+  const factKeys = new Map(
+    candidatePool.map((question) => [question.id, questionFactKey(question)]),
+  );
+  const templateKeys = new Map(
+    candidatePool.map((question) => [
+      question.id,
+      questionTemplateKey(question),
+    ]),
+  );
+  const qualityScores = new Map(
+    candidatePool.map((question) => [
+      question.id,
+      effectiveQualityScore(question),
+    ]),
+  );
+  const recentHistoryOptionReuse = new Map(
+    candidatePool.map((question) => [
+      question.id,
+      (optionTextKeys.get(question.id) ?? []).filter((option) =>
+        recentSeenOptionTexts.has(option),
+      ).length,
+    ]),
   );
   const generalQuota = selectedCategoryIds.has("cat-1")
     ? Math.max(2, Math.round(setup.questionCount * 0.2))
@@ -650,8 +733,16 @@ export function selectQuestions(
       seenPolicy: "unseen" | "old" | "any",
     ) => {
       for (const question of candidatePool) {
-        const factKey = questionFactKey(question);
-        const templateKey = repetitiveTemplateKey(question);
+        const factKey = factKeys.get(question.id) ?? "";
+        const templateKey = templateKeys.get(question.id);
+        const optionSetKey = optionSetKeys.get(question.id);
+        const normalizedOptionTexts = optionTextKeys.get(question.id) ?? [];
+        const currentGameOptionReuse = normalizedOptionTexts.reduce(
+          (sum, option) => sum + (pickedOptionTexts.get(option) ?? 0),
+          0,
+        );
+        const historicalOptionReuse =
+          recentHistoryOptionReuse.get(question.id) ?? 0;
         const seenQuestion = seenRecordFor(question);
         const seenAt = seenQuestion
           ? Date.parse(seenQuestion.lastSeen)
@@ -669,6 +760,7 @@ export function selectQuestions(
             (categoryCounts.get(question.categoryId) ?? 0) >= categoryLimit) ||
           pickedIds.has(question.id) ||
           pickedFingerprints.has(question.fingerprint) ||
+          (optionSetKey && pickedOptionSets.has(optionSetKey)) ||
           (!allowRepeatedFact && pickedFacts.has(factKey)) ||
           (templateKey === "country-lookup" &&
             (templateCounts.get(templateKey) ?? 0) >= countryLookupLimit) ||
@@ -710,9 +802,11 @@ export function selectQuestions(
           (inDifficultyBand(question) ? 0 : 1_000) +
           Math.abs(question.difficulty - target) * 10 +
           (categoryCounts.get(selectedCategory) ?? 0) * 45 +
+          currentGameOptionReuse * 55 +
+          historicalOptionReuse * 10 +
           (repeatedType ? 40 : 0) +
           (repeatedCategory ? 40 : 0) -
-          effectiveQualityScore(question) * 0.08;
+          (qualityScores.get(question.id) ?? 0) * 0.08;
         if (score < bestScore) {
           bestScore = score;
           chosen = question;
@@ -740,7 +834,12 @@ export function selectQuestions(
     pickedIds.add(chosen.id);
     pickedFingerprints.add(chosen.fingerprint);
     pickedFacts.add(questionFactKey(chosen));
-    const templateKey = repetitiveTemplateKey(chosen);
+    const optionSetKey = questionOptionSetKey(chosen);
+    if (optionSetKey) pickedOptionSets.add(optionSetKey);
+    for (const key of optionTextKeys.get(chosen.id) ?? []) {
+      pickedOptionTexts.set(key, (pickedOptionTexts.get(key) ?? 0) + 1);
+    }
+    const templateKey = questionTemplateKey(chosen);
     if (templateKey)
       templateCounts.set(
         templateKey,
@@ -843,6 +942,15 @@ export function reserveSeenQuestions(
       correct: previous?.correct ?? false,
       fingerprint: question?.fingerprint ?? previous?.fingerprint,
       factKey: question ? questionFactKey(question) : previous?.factKey,
+      optionSetKey: question
+        ? questionOptionSetKey(question)
+        : previous?.optionSetKey,
+      optionTexts: question
+        ? question.options.map((option) => normalizeText(option.text))
+        : previous?.optionTexts,
+      templateKey: question
+        ? questionTemplateKey(question)
+        : previous?.templateKey,
     });
   }
   return [...byId.values()];
@@ -877,6 +985,13 @@ export function recoverSeenFromHistory(
         ...previous,
         fingerprint: previous.fingerprint ?? history.question.fingerprint,
         factKey: previous.factKey ?? questionFactKey(history.question),
+        optionSetKey:
+          previous.optionSetKey ?? questionOptionSetKey(history.question),
+        optionTexts:
+          previous.optionTexts ??
+          history.question.options.map((option) => normalizeText(option.text)),
+        templateKey:
+          previous.templateKey ?? questionTemplateKey(history.question),
       });
       continue;
     }
@@ -887,6 +1002,11 @@ export function recoverSeenFromHistory(
       correct: false,
       fingerprint: history.question.fingerprint,
       factKey: questionFactKey(history.question),
+      optionSetKey: questionOptionSetKey(history.question),
+      optionTexts: history.question.options.map((option) =>
+        normalizeText(option.text),
+      ),
+      templateKey: questionTemplateKey(history.question),
     });
   }
   return [...recovered.values()];

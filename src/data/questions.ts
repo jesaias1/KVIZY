@@ -17,6 +17,7 @@ import { WIKIDATA_THIN_QUESTIONS } from "./wikidata-thin-questions";
 import { VARIETY_QUESTIONS } from "./variety-questions";
 import { FRANCHISE_QUESTIONS } from "./franchise-questions";
 import { CULTURE_AND_COOKING_QUESTIONS } from "./culture-and-cooking-questions";
+import { DECADE_QUALITY_QUESTIONS } from "./decade-quality-questions";
 import { seedSpecs } from "./seed-spec";
 
 const created = "2026-07-15T00:00:00.000Z";
@@ -1220,6 +1221,152 @@ const redundantQuestionIds = new Set([
 ]);
 const retiredLowValueTags = new Set(["tld", "callingCode"]);
 
+// Wikidata er nyttig som rå faktakilde, men hele skabelonserier giver et
+// ensformigt spil. Kun de emner, der er genkendelige og redaktionelt vurderet,
+// bliver i den aktive bank. Resten kan stadig genimporteres senere efter en
+// egentlig omskrivning.
+const reviewedGeneratedIds = new Set([
+  "wikiculture-film-director-Q2345",
+  "wikiculture-film-director-Q19355",
+  "wikiculture-film-director-Q20456",
+  "wikiculture-film-director-Q32303",
+  "wikiculture-film-director-Q4941",
+  "wikiculture-film-director-Q6074",
+  "wikiculture-film-director-Q32433",
+  "wikiculture-film-director-Q11621",
+  "wikiculture-film-director-Q45602",
+  "wikiculture-film-director-Q12018",
+  "wikiculture-film-director-Q17738",
+  "wikiculture-film-director-Q60072",
+  "wikiculture-album-artist-Q8360",
+  "wikiculture-album-artist-Q27166",
+  "wikiculture-album-artist-Q17444",
+  "wikiculture-album-artist-Q113189",
+  "wikiculture-album-artist-Q131182",
+  "wikiculture-album-artist-Q131977",
+  "wikiculture-album-artist-Q19003",
+  "wikiculture-painting-artist-Q1061035",
+  "wikiculture-painting-artist-Q1091086",
+  "wikiculture-painting-artist-Q1170315",
+  "wikiculture-painting-artist-Q1142058",
+  "wikiculture-painting-artist-Q12334558",
+  "wikiculture-painting-artist-Q12418",
+  "wikiculture-painting-artist-Q151047",
+  "wikiculture-painting-artist-Q175036",
+  "wikiculture-series-creator-Q35791",
+  "wikiculture-series-creator-Q1077",
+  "wikiculture-series-creator-Q1079",
+  "wikiculture-series-creator-Q183513",
+  "wikiculture-series-creator-Q189350",
+  "wikiculture-series-creator-Q2744",
+  "wikiculture-series-creator-Q13979",
+  "wikiculture-series-creator-Q80044",
+  "wikiculture-series-creator-Q199853",
+  "wikiculture-food-origin-Q203925",
+  "wikiculture-food-origin-Q275621",
+  "wikiculture-food-origin-Q493749",
+  "wikiculture-food-origin-Q920940",
+  "wikiculture-food-origin-Q85772622",
+  "wikithin-athlete-sport-Q10125",
+  "wikithin-athlete-sport-Q1002293",
+  "wikithin-athlete-sport-Q1009230",
+  "wikithin-athlete-sport-Q100074",
+  "wikithin-athlete-sport-Q1000592",
+  "wikithin-battle-country-Q153376",
+  "wikithin-battle-country-Q154182",
+  "wikithin-battle-country-Q38789",
+  "wikithin-battle-country-Q184320",
+  "wikithin-battle-country-Q27759",
+  "wikithin-battle-country-Q33132",
+  "wikithin-battle-country-Q31900",
+  "wikithin-battle-country-Q132568",
+  "wikithin-battle-country-Q131969",
+  "wikithin-battle-country-Q130847",
+  "wikithin-danish-film-director-Q352000",
+  "wikithin-danish-film-director-Q110365",
+  "wikithin-danish-film-director-Q196103",
+  "wikithin-danish-film-director-Q1327845",
+  "wikithin-danish-film-director-Q775356",
+  "wikithin-danish-film-director-Q1326419",
+  "wikithin-danish-film-director-Q370707",
+  "wikithin-danish-film-director-Q316761",
+  "wikithin-danish-film-director-Q312394",
+  "wikithin-danish-literature-author-Q1192442",
+  "wikithin-danish-literature-author-Q1756234",
+  "wikithin-danish-literature-author-Q11868",
+  "wikithin-danish-literature-author-Q11859",
+  "wikithin-danish-literature-author-Q11876",
+  "wikithin-danish-literature-author-Q1807554",
+  "wikithin-danish-literature-author-Q11872",
+  "wikithin-danish-literature-author-Q1152009",
+  "wikithin-danish-literature-author-Q1757858",
+  "wikithin-danish-literature-author-Q767189",
+  "wikithin-danish-literature-author-Q2180740",
+  "wikithin-danish-literature-author-Q1642629",
+  "wikithin-danish-literature-author-Q1757820",
+  "wikithin-danish-literature-author-Q11880",
+  "wikithin-danish-literature-author-Q1757894",
+  "wikithin-danish-series-creator-Q1211796",
+  "wikithin-danish-series-creator-Q956446",
+  "wikithin-danish-series-creator-Q1782870",
+  "wikithin-danish-series-creator-Q1275157",
+  "wikithin-danish-series-creator-Q1331994",
+  "wikithin-danish-series-creator-Q12333582",
+  "wikithin-invention-inventor-Q2270",
+  "wikithin-invention-inventor-Q143",
+  "wikithin-invention-inventor-Q3143",
+  "wikithin-invention-inventor-Q43484",
+  "wikithin-invention-inventor-Q10693",
+  "wikithin-invention-inventor-Q2294",
+  "wikithin-invention-inventor-Q144334",
+  "wikithin-invention-inventor-Q6368",
+  "wikithin-nordic-mountain-country-Q1018862",
+  "wikithin-nordic-mountain-country-Q1420616",
+  "wikithin-nordic-mountain-country-Q1496308",
+  "wikithin-nordic-mountain-country-Q1547402",
+  "wikithin-nordic-mountain-country-Q1477173",
+  "wikithin-nordic-mountain-country-Q1315012",
+  "wikithin-nordic-mountain-country-Q1637507",
+  "wikithin-nordic-mountain-country-Q138114",
+]);
+
+function passesEditorialReview(question: Question) {
+  if (question.id.startsWith("era-")) return false;
+  if (
+    question.id.startsWith("wikiculture-") ||
+    question.id.startsWith("wikithin-")
+  )
+    return reviewedGeneratedIds.has(question.id);
+  return true;
+}
+
+function applyEditorialRewrite(question: Question): Question {
+  const prompt = question.prompt
+    .replace(/^Hvem skrev det dansksprogede værk /, "Hvem skrev ")
+    .replace(
+      /^Hvilken kunstner eller gruppe udgav albummet /,
+      "Hvem udgav albummet ",
+    )
+    .replace(
+      /^Hvilken sportsgren forbindes atleten (.+) med\?$/,
+      "Hvilken sportsgren er $1 kendt for?",
+    )
+    .replace(
+      /^Hvilket land forbindes (.+) med som oprindelsesland\?$/,
+      "Hvilket land forbindes retten $1 især med?",
+    );
+  if (prompt === question.prompt) return question;
+  const answer =
+    question.options.find((option) => option.id === question.correctOptionId)
+      ?.text ?? "";
+  return {
+    ...question,
+    prompt,
+    fingerprint: fingerprint(prompt, answer, question.type),
+    updatedAt: "2026-07-18T00:00:00.000Z",
+  };
+}
+
 const rawBaseQuestions: Question[] = [
   ...CURATED_QUESTIONS,
   ...COUNTRY_QUESTIONS,
@@ -1237,11 +1384,15 @@ const rawBaseQuestions: Question[] = [
   ...VARIETY_QUESTIONS,
   ...FRANCHISE_QUESTIONS,
   ...CULTURE_AND_COOKING_QUESTIONS,
-].filter(
-  (question) =>
-    !redundantQuestionIds.has(question.id) &&
-    !question.tags.some((tag) => retiredLowValueTags.has(tag)),
-);
+  ...DECADE_QUALITY_QUESTIONS,
+]
+  .filter(
+    (question) =>
+      passesEditorialReview(question) &&
+      !redundantQuestionIds.has(question.id) &&
+      !question.tags.some((tag) => retiredLowValueTags.has(tag)),
+  )
+  .map(applyEditorialRewrite);
 
 const countryRelationLimits = new Map([
   ["capital", 36],

@@ -142,6 +142,9 @@ export type SeenQuestion = {
   correct: boolean;
   fingerprint?: string;
   factKey?: string;
+  optionSetKey?: string;
+  optionTexts?: string[];
+  templateKey?: string;
 };
 export const questionReportReasons = [
   "wrong_answer",

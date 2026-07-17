@@ -1,7 +1,11 @@
 import { SEED_QUESTIONS } from "../src/data/questions";
 import { CATEGORIES } from "../src/lib/categories";
 import { normalizeText } from "../src/lib/engine";
-import { hasAnswerLeak } from "../src/lib/question-quality";
+import {
+  auditQuestion,
+  hasAnswerLeak,
+  questionOptionSetKey,
+} from "../src/lib/question-quality";
 import { questionSchema } from "../src/lib/types";
 
 const promptKeys = SEED_QUESTIONS.map((question) =>
@@ -34,6 +38,19 @@ const lowercaseOptions = SEED_QUESTIONS.filter((question) =>
   ),
 );
 const answerLeaks = SEED_QUESTIONS.filter(hasAnswerLeak);
+const editorialErrors = SEED_QUESTIONS.flatMap((question) =>
+  auditQuestion(question)
+    .filter((issue) => issue.severity === "error")
+    .map((issue) => ({ id: question.id, code: issue.code })),
+);
+const optionSetCounts = new Map<string, number>();
+for (const question of SEED_QUESTIONS) {
+  const key = questionOptionSetKey(question);
+  if (key) optionSetCounts.set(key, (optionSetCounts.get(key) ?? 0) + 1);
+}
+const repeatedOptionSets = [...optionSetCounts.values()].filter(
+  (count) => count > 1,
+).length;
 const obviousCountryAnswers = SEED_QUESTIONS.filter((question) => {
   if (!/-(capital|currency|language)$/.test(question.id)) return false;
   const country = question.tags[2];
@@ -129,6 +146,8 @@ const report = {
   machineCopy: machineCopy.length,
   lowercaseOptions: lowercaseOptions.length,
   answerLeaks: answerLeaks.length,
+  editorialErrors: editorialErrors.length,
+  repeatedOptionSets,
   obviousCountryAnswers: obviousCountryAnswers.length,
   longestOption: Math.max(
     ...SEED_QUESTIONS.flatMap((question) =>
@@ -160,6 +179,7 @@ if (
   report.machineCopy > 0 ||
   report.lowercaseOptions > 0 ||
   report.answerLeaks > 0 ||
+  report.editorialErrors > 0 ||
   report.obviousCountryAnswers > 0 ||
   report.explanatoryLengthOutliers > 0 ||
   report.explanatoryCorrectLongestRate > 0.35 ||

@@ -5,11 +5,28 @@ import {
   effectiveQualityScore,
   hasAnswerLeak,
   hasUsefulExplanation,
+  questionOptionSetKey,
 } from "./question-quality";
 import { normalizeText } from "./engine";
 import { CATEGORIES, DEFAULT_CATEGORIES } from "./categories";
 
 describe("automatisk spørgsmålskvalitet", () => {
+  it("har ingen alvorlige redaktionelle fejl i den aktive bank", () => {
+    const errors = SEED_QUESTIONS.flatMap((question) =>
+      auditQuestion(question)
+        .filter((issue) => issue.severity === "error")
+        .map((issue) => `${question.id}:${issue.code}`),
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("danner en stabil nøgle for genbrugte svarpuljer", () => {
+    const question = SEED_QUESTIONS.find(
+      (item) => item.options.length === 4 && item.type !== "true_false",
+    );
+    expect(question && questionOptionSetKey(question)).toBeTruthy();
+  });
+
   it("skjuler generiske faktafelter", () => {
     expect(
       hasUsefulExplanation(

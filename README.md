@@ -14,7 +14,7 @@
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 1.493 kvalitetskontrollerede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
+- 1.412 kvalitetskontrollerede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
 - 12 spørgsmålstyper, blandt andet rækkefølge, nærmest vinder, udsagn, beskrivelser og kategorikryds
 - localStorage til aktivt spil, historik, indstillinger, set-historik og offline spillerrapporter
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
@@ -74,6 +74,8 @@ Importkommandoen Zod-validerer hele filen og afviser dublerede fingerprints. Den
 
 Efter hvert svar kan spilleren rapportere forkert svar, uklar formulering, forkert niveau, dårlige svarmuligheder eller forældet information. Rapporten gemmes først lokalt og synkroniseres derefter via `POST /api/reports`, når en database er tilgængelig. Ved tre rapporter sættes spørgsmålet automatisk i karantæne, indtil det gennemgås i admin. Generiske faktafelter skjules automatisk i spillet.
 
+Den redaktionelle kvalitetspakke kontrollerer hvert aktivt spørgsmål for kunstigt maskinsprog, gentagelser, svarlæk, forkerte svartypekombinationer, dubletter og længdebias. Ens skabeloner og identiske svarpuljer begrænses i selve udvælgelsen og huskes på tværs af spil. Importerede Wikidata-spørgsmål kræver en eksplicit redaktionel godkendelse, før de kommer med i den aktive bank.
+
 I Indstillinger kan spilleren oprette en etårig backupkode til set-historik og seneste opsætning. Koden gør det muligt at bevare anti-repeat efter geninstallation. Brugsstatistik gemmes kun som samlede dagstællere for startede/gennemførte spil, rapporter og valgte kategorier; der bruges ingen tracking-cookie eller enhedsprofil.
 
 ## AI-generator
@@ -106,7 +108,7 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.493 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. Uden en produktionsdatabase bliver rapporter på spillerens enhed og forsøges synkroniseret igen senere. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.412 seedspørgsmål stadig.
 
 ## Installation som mobilapp
 

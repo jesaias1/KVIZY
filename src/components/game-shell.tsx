@@ -57,6 +57,8 @@ import {
   closestFairQuestionCount,
   fairQuestionCounts,
   newPlayer,
+  normalizeText,
+  questionTemplateKey,
   rankPlayers,
   recoverSeenFromHistory,
   reserveSeenQuestions,
@@ -75,7 +77,11 @@ import type {
   QuestionReportReason,
   SeenQuestion,
 } from "@/lib/types";
-import { hasPublicSource, hasUsefulExplanation } from "@/lib/question-quality";
+import {
+  hasPublicSource,
+  hasUsefulExplanation,
+  questionOptionSetKey,
+} from "@/lib/question-quality";
 
 type View =
   | "home"
@@ -619,6 +625,11 @@ export function GameShell() {
           correct,
           fingerprint: previousSeen?.fingerprint ?? q.fingerprint,
           factKey: previousSeen?.factKey,
+          optionSetKey: previousSeen?.optionSetKey ?? questionOptionSetKey(q),
+          optionTexts:
+            previousSeen?.optionTexts ??
+            q.options.map((option) => normalizeText(option.text)),
+          templateKey: previousSeen?.templateKey ?? questionTemplateKey(q),
         },
       ]),
     );

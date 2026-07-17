@@ -5,6 +5,8 @@ export type QualityIssueCode =
   | "missing_source"
   | "option_pattern"
   | "answer_length_bias"
+  | "awkward_wording"
+  | "option_type_mismatch"
   | "time_sensitive_without_expiry"
   | "weak_quality_score";
 
@@ -97,13 +99,14 @@ export function hasAnswerLeak(question: Question) {
   if (!answer) return false;
   const normalizedPrompt = normalizeForAudit(question.prompt);
   const normalizedAnswer = normalizeForAudit(answer);
-  if (normalizedAnswer.length >= 4 && normalizedPrompt.includes(normalizedAnswer))
+  if (
+    normalizedAnswer.length >= 4 &&
+    normalizedPrompt.includes(normalizedAnswer)
+  )
     return true;
   const answerTokens = normalizedAnswer
     .split(" ")
-    .filter(
-      (token) => token.length >= 4 && !ANSWER_LEAK_STOP_WORDS.has(token),
-    );
+    .filter((token) => token.length >= 4 && !ANSWER_LEAK_STOP_WORDS.has(token));
   if (answerTokens.length === 0) return false;
   const promptTokens = new Set(normalizedPrompt.split(" "));
   const overlap = answerTokens.filter((token) => promptTokens.has(token));
@@ -111,7 +114,9 @@ export function hasAnswerLeak(question: Question) {
 
   // Fang morfologiske giveaways som Platon/platonisme og bøg/bøgeskov.
   // Lange ordstammer begrænser falske positiver fra almindelige korte ord.
-  const promptTokenList = [...promptTokens].filter((token) => token.length >= 5);
+  const promptTokenList = [...promptTokens].filter(
+    (token) => token.length >= 5,
+  );
   return answerTokens.some((answerToken) =>
     promptTokenList.some((promptToken) => {
       const shortest = Math.min(answerToken.length, promptToken.length);
@@ -173,6 +178,27 @@ export function auditQuestion(question: Question): QualityIssue[] {
       label: "Tidsfølsomt spørgsmål mangler kilde eller udløbsdato",
       severity: "error",
     });
+  if (
+    /registreret som|centrale sammenhæng|slaget ved\s+slaget ved|dansksprogede værk|forbindes .+ med dette gennembrud|hvilken betydning havde eller har|hvilket sted forbindes især|forbindes atleten/i.test(
+      `${question.prompt} ${question.explanation}`,
+    )
+  )
+    issues.push({
+      code: "awkward_wording",
+      label: "Spørgsmålet bruger en kunstig eller gentaget formulering",
+      severity: "error",
+    });
+  if (/^I hvilket år\b/i.test(question.prompt)) {
+    const numericOptions = question.options.filter((option) =>
+      /^\d{3,4}(?:'erne)?$/.test(option.text),
+    ).length;
+    if (numericOptions !== question.options.length)
+      issues.push({
+        code: "option_type_mismatch",
+        label: "Årstalsspørgsmålet blander forskellige typer svar",
+        severity: "error",
+      });
+  }
   if (question.qualityScore < 80)
     issues.push({
       code: "weak_quality_score",
@@ -180,6 +206,19 @@ export function auditQuestion(question: Question): QualityIssue[] {
       severity: "warning",
     });
   return issues;
+}
+
+const optionSetKeyCache = new WeakMap<Question, string | undefined>();
+
+export function questionOptionSetKey(question: Question) {
+  if (optionSetKeyCache.has(question)) return optionSetKeyCache.get(question);
+  if (question.type === "true_false") return undefined;
+  const key = question.options
+    .map((option) => normalizeForAudit(option.text))
+    .sort()
+    .join("|");
+  optionSetKeyCache.set(question, key);
+  return key;
 }
 
 export function effectiveQualityScore(question: Question) {

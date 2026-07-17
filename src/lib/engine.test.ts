@@ -24,6 +24,7 @@ import { SEED_QUESTIONS } from "@/data/questions";
 import { CATEGORIES, DEFAULT_CATEGORIES } from "./categories";
 import { ANIMAL_AVATARS } from "./config";
 import { questionSchema, type SeenQuestion } from "./types";
+import { questionOptionSetKey } from "./question-quality";
 const setup = {
   mode: "classic" as const,
   players: [],
@@ -226,7 +227,7 @@ describe("seedbank og Zod", () => {
     const thinQuestions = SEED_QUESTIONS.filter((question) =>
       question.id.startsWith("wikithin-"),
     );
-    expect(thinQuestions.length).toBeGreaterThanOrEqual(75);
+    expect(thinQuestions.length).toBeGreaterThanOrEqual(55);
     expect(
       thinQuestions.every(
         (question) =>
@@ -267,6 +268,45 @@ describe("seedbank og Zod", () => {
   });
 });
 describe("adaptiv udvælgelse", () => {
+  it("viser ikke den samme pulje af svarmuligheder to gange i et spil", () => {
+    for (let simulation = 0; simulation < 5; simulation++) {
+      const chosen = selectQuestions(SEED_QUESTIONS, {
+        ...setup,
+        questionCount: 30,
+      });
+      const keys = chosen
+        .map(questionOptionSetKey)
+        .filter((key): key is string => Boolean(key));
+      expect(new Set(keys).size).toBe(keys.length);
+    }
+  });
+
+  it("nedprioriterer også en svarpulje, der blev set i et tidligere spil", () => {
+    const first = SEED_QUESTIONS.find(
+      (question) => question.id === "matrix-cat-20-tv-debut-1",
+    )!;
+    const repeatedKey = questionOptionSetKey(first);
+    const chosen = selectQuestions(
+      SEED_QUESTIONS,
+      { ...setup, questionCount: 1, categoryIds: ["cat-20"] },
+      reserveSeenQuestions([], [first.id], new Date().toISOString(), [first]),
+    );
+    expect(chosen).toHaveLength(1);
+    expect(questionOptionSetKey(chosen[0])).not.toBe(repeatedKey);
+  });
+
+  it("begrænser hver redaktionel matrixskabelon til én variant pr. spil", () => {
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 10,
+      categoryIds: ["cat-20"],
+    });
+    const matrixTags = chosen
+      .filter((question) => question.tags.includes("redaktionel-matrix"))
+      .map((question) => question.tags[1]);
+    expect(new Set(matrixTags).size).toBe(matrixTags.length);
+  });
+
   it("bytter et set spørgsmål uden at genbruge det aktuelle spils spørgsmål", () => {
     const gameSetup = {
       ...setup,
