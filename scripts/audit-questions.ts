@@ -59,7 +59,7 @@ const thinCategories = CATEGORIES.filter(
       (question) =>
         question.categoryId === category.id ||
         question.secondaryCategoryIds.includes(category.id),
-    ).length < 10,
+    ).length < 30,
 );
 const explanatoryCuriosity = SEED_QUESTIONS.filter((question) =>
   question.tags.includes("hverdagsforklaring"),

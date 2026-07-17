@@ -212,7 +212,7 @@ describe("seedbank og Zod", () => {
             question.categoryId === categoryId ||
             question.secondaryCategoryIds.includes(categoryId),
         ).length,
-      ).toBeGreaterThanOrEqual(10);
+      ).toBeGreaterThanOrEqual(30);
     }
   });
   it("har en valideret Wikidata-udvidelse til tynde kategorier", () => {
@@ -228,7 +228,7 @@ describe("seedbank og Zod", () => {
       ),
     ).toBe(true);
   });
-  it("giver hver kategori mindst ti semantisk relevante spørgsmål", () => {
+  it("giver hver kategori mindst 30 semantisk relevante spørgsmål", () => {
     for (const category of CATEGORIES) {
       expect(
         SEED_QUESTIONS.filter(
@@ -236,7 +236,7 @@ describe("seedbank og Zod", () => {
             question.categoryId === category.id ||
             question.secondaryCategoryIds.includes(category.id),
         ).length,
-      ).toBeGreaterThanOrEqual(10);
+      ).toBeGreaterThanOrEqual(30);
     }
   });
   it("kan fylde et normalt spil fra hver almindelig emnekategori", () => {
@@ -255,7 +255,7 @@ describe("seedbank og Zod", () => {
             question.secondaryCategoryIds.includes(category.id),
         ).length,
         category.name,
-      ).toBeGreaterThanOrEqual(10);
+      ).toBeGreaterThanOrEqual(30);
     }
   });
 });

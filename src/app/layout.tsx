@@ -7,10 +7,6 @@ export const metadata: Metadata = {
   title: `${APP_CONFIG.name} – ${APP_CONFIG.tagline}`,
   description: `${APP_CONFIG.tagline}. Det danske quizspil til venner, familie og fest.`,
   manifest: "/manifest.webmanifest",
-  icons: {
-    icon: "/brand/kvizy-icon-192.png",
-    apple: "/brand/kvizy-apple-touch.png",
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

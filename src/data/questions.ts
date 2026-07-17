@@ -9,6 +9,10 @@ import { EXPANSION_QUESTIONS } from "./expansion-questions";
 import { EVERYDAY_CURIOSITY_QUESTIONS } from "./everyday-curiosity-questions";
 import { CURIOSITY_EXPANSION_QUESTIONS } from "./curiosity-expansion-questions";
 import { CURIOSITY_ROUND_THREE_QUESTIONS } from "./curiosity-round-three-questions";
+import { CATEGORY_DEPTH_QUESTIONS } from "./category-depth-questions";
+import { CATEGORY_MATRIX_QUESTIONS } from "./category-matrix-questions";
+import { FORMAT_DEPTH_QUESTIONS } from "./format-depth-questions";
+import { ERA_DEPTH_QUESTIONS } from "./era-depth-questions";
 import { WIKIDATA_THIN_QUESTIONS } from "./wikidata-thin-questions";
 import { VARIETY_QUESTIONS } from "./variety-questions";
 import { seedSpecs } from "./seed-spec";
@@ -1223,6 +1227,10 @@ const rawBaseQuestions: Question[] = [
   ...EVERYDAY_CURIOSITY_QUESTIONS,
   ...CURIOSITY_EXPANSION_QUESTIONS,
   ...CURIOSITY_ROUND_THREE_QUESTIONS,
+  ...CATEGORY_DEPTH_QUESTIONS,
+  ...CATEGORY_MATRIX_QUESTIONS,
+  ...FORMAT_DEPTH_QUESTIONS,
+  ...ERA_DEPTH_QUESTIONS,
   ...WIKIDATA_THIN_QUESTIONS,
   ...VARIETY_QUESTIONS,
 ].filter(
@@ -1281,6 +1289,45 @@ const typeLinks: Partial<Record<Question["type"], string>> = {
   what_came_first: "cat-45",
   ordering: "cat-45",
   incorrect_statement: "cat-46",
+};
+
+const semanticRules: { categoryId: string; pattern: RegExp }[] = [
+  { categoryId: "cat-3", pattern: /folketing|grundlov|statsminister|kommunalvalg|folkeafstemning|mandat|koalition|ministeransvar|stemmehemmelighed|magtens deling/u },
+  { categoryId: "cat-4", pattern: /\bfn\b|europa-parlament|sikkerhedsråd|nato|international politik|diplomati|sanktion|traktat|suverænitet/u },
+  { categoryId: "cat-8", pattern: /planet|måne|solen|stjerne|galakse|asteroide|komet|rumfart|kredsløb|atmosfære|tyngdekraft/u },
+  { categoryId: "cat-10", pattern: /internet|browser|webside|hjemmeside|wifi|wi-fi|https|url|domæne|cookie|streaming|server|datapakke|qr-kode|søgemaskine/u },
+  { categoryId: "cat-11", pattern: /filosof|etik|moral|erkendelse|fri vilje|determinisme|eksistential|utilitar|platon|aristoteles|kant|sokrates/u },
+  { categoryId: "cat-12", pattern: /psykolog|hukommelse|opmærksomhed|bias|adfærd|følelse|motivation|placebo|forventning|gruppepres|beslutning/u },
+  { categoryId: "cat-14", pattern: /livets mening|fri vilje|identitet|bevidsthed|lykke|døden|moralsk|tankeeksperiment|theseus|uvidenhedens slør/u },
+  { categoryId: "cat-24", pattern: /computerspil|videospil|spilkonsol|playstation|xbox|nintendo|minecraft|zelda|mario|gaming|billedfrekvens|latency/u },
+  { categoryId: "cat-27", pattern: /fodbold|målmand|straffespark|offside|premier league|champions league|verdensmesterskab|vm-finale/u },
+  { categoryId: "cat-28", pattern: /pattedyr|fugl|fisk|insekt|dyr|pels|vinge|næb|hale|rovdyr|planteæder/u },
+  { categoryId: "cat-29", pattern: /rensdyr|elg|los|polarræv|isbjørn|sæl|marsvin|hugorm|nordiske dyr|skandinaviske dyr/u },
+  { categoryId: "cat-30", pattern: /nordisk natur|skandinav|fjord|birk|gran|mos|tundra|nordlys|midnatssol|løvfald|sne/u },
+  { categoryId: "cat-34", pattern: /(?<!\p{L})(?:brand|mærke|produktnavn|varemærke|slogan|model|modellen|lego|ikea|nike|adidas|apple|volkswagen)(?!\p{L})/u },
+  { categoryId: "cat-35", pattern: /(?<!\p{L})(?:logo|virksomhed|firma|grundlagt|hovedsæde|branche|koncern|varemærke|brand)(?!\p{L})/u },
+  { categoryId: "cat-37", pattern: /kunst|maleri|maler|skulptur|museum|perspektiv|farvelære|lærred|portræt/u },
+  { categoryId: "cat-38", pattern: /sprog|ordet|udtryk|stavning|grammatik|dialekt|alfabet|vokal|konsonant|betydning|læseretning/u },
+  { categoryId: "cat-39", pattern: /opfind|patent|udviklede den første|prototyp|telegraf|telefon|lynlås|glødepære/u },
+  { categoryId: "cat-41", pattern: /rugbrød|smørrebrød|skyr|brunost|gravlaks|surströmming|nordisk mad|rødgrød|frikadelle/u },
+  { categoryId: "cat-43", pattern: /(?<!\p{L})(?:bagning|dej|gær|gluten|mel|kage|brød|marengs|hæve)(?!\p{L})|temperere chokolade/u },
+  { categoryId: "cat-44", pattern: /(?<!\p{L})(?:cocktail|spiritus|vin|øl|whisky|rom|gin|vodka|bitter|mousserende|alkohol)(?!\p{L})/u },
+  { categoryId: "cat-48", pattern: /mærkelig|overraskende|usædvanlig|kan leve uden|større end|længere end|eneste dyr|særpræg/u },
+  { categoryId: "cat-54", pattern: /krop|blod|hjerte|hjerne|hud|muskel|knogle|immun|sundhed|søvn|vitamin|smerte|vejrtræk/u },
+  { categoryId: "cat-56", pattern: /klima|miljø|drivhus|kulstof|co2|genbrug|vedvarende|havstigning|tørke|vådområde|varmeø/u },
+  { categoryId: "cat-57", pattern: /(?<!\p{L})(?:bil|motor|dæk|bremse|tog|cykel|fly|transport|trafik|vej|brændstof|gear)(?!\p{L})/u },
+  { categoryId: "cat-58", pattern: /(?<!\p{L})(?:arkitektur|bygning|design|konstruktion|bro|tag|beton|mursten|akustik|fundament|facade)(?!\p{L})/u },
+];
+
+const decadeCategory = (text: string) => {
+  const years = [...text.matchAll(/\b(19[89]\d|20[012]\d)\b/gu)].map(
+    (match) => Number(match[1]),
+  );
+  if (years.some((year) => year >= 1980 && year <= 1989)) return "cat-49";
+  if (years.some((year) => year >= 1990 && year <= 1999)) return "cat-50";
+  if (years.some((year) => year >= 2000 && year <= 2009)) return "cat-51";
+  if (years.some((year) => year >= 2010 && year <= 2019)) return "cat-52";
+  return undefined;
 };
 const personTags = new Set([
   "novel-author",
@@ -1381,6 +1428,15 @@ const legacyOptionOverrides: Record<string, [string, string, string, string]> = 
 };
 
 const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
+  const searchableText = normalizeText(
+    [
+      question.prompt,
+      question.explanation,
+      ...question.options.map((option) => option.text),
+      ...question.tags,
+    ].join(" "),
+  );
+  const inferredDecade = decadeCategory(searchableText);
   const inferred = [
     ...(categoryLinks[question.categoryId] ?? []),
     ...(typeLinks[question.type] ? [typeLinks[question.type]!] : []),
@@ -1388,6 +1444,10 @@ const POLISHED_QUESTIONS: Question[] = BASE_QUESTIONS.map((question) => {
     ...(question.categoryId === "cat-1" && question.difficulty <= 2
       ? ["cat-59"]
       : []),
+    ...semanticRules
+      .filter((rule) => rule.pattern.test(searchableText))
+      .map((rule) => rule.categoryId),
+    ...(inferredDecade ? [inferredDecade] : []),
   ];
   const correctAnswer = question.options.find(
     (option) => option.id === question.correctOptionId,
