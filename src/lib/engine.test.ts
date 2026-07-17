@@ -12,6 +12,7 @@ import {
   newPlayer,
   normalizeText,
   rankPlayers,
+  recoverSeenFromHistory,
   reserveSeenQuestions,
   selectQuestions,
   shuffleAnswers,
@@ -769,6 +770,27 @@ describe("adaptiv udvælgelse", () => {
     );
     expect(next.find((item) => item.id === "q-1")?.count).toBe(3);
     expect(next.find((item) => item.id === "q-2")?.count).toBe(1);
+  });
+  it("genskaber manglende set-historik fra afsluttede spil", () => {
+    const questions = SEED_QUESTIONS.slice(0, 3);
+    const recovered = recoverSeenFromHistory([], [
+      {
+        playedAt: "2026-07-16T12:00:00.000Z",
+        questions,
+      },
+      {
+        playedAt: "2026-07-17T12:00:00.000Z",
+        questions: [questions[0]],
+      },
+    ]);
+    expect(recovered).toHaveLength(3);
+    expect(recovered.find((item) => item.id === questions[0].id)).toMatchObject(
+      {
+        count: 2,
+        lastSeen: "2026-07-17T12:00:00.000Z",
+        fingerprint: questions[0].fingerprint,
+      },
+    );
   });
 });
 describe("kategori-vægtning", () => {

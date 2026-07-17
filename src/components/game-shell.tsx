@@ -56,6 +56,7 @@ import {
   fairQuestionCounts,
   newPlayer,
   rankPlayers,
+  recoverSeenFromHistory,
   reserveSeenQuestions,
   selectQuestions,
   shuffle,
@@ -278,8 +279,15 @@ export function GameShell() {
   const { setTheme } = useTheme();
   useEffect(() => {
     const id = window.setTimeout(() => {
-      setGame(load<Game | null>(APP_CONFIG.gameKey, null));
-      setHistory(load(APP_CONFIG.historyKey, []));
+      const storedGame = load<Game | null>(APP_CONFIG.gameKey, null);
+      const storedHistory = load<GameResult[]>(APP_CONFIG.historyKey, []);
+      const recoveredSeen = recoverSeenFromHistory(
+        load<SeenQuestion[]>(APP_CONFIG.seenKey, []),
+        storedHistory,
+      );
+      safeSet(APP_CONFIG.seenKey, JSON.stringify(recoveredSeen));
+      setGame(storedGame);
+      setHistory(storedHistory);
       setSetup(
         restoreSetup(
           load<Partial<GameSetup> | null>(APP_CONFIG.setupKey, null),

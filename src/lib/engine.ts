@@ -792,6 +792,50 @@ export function reserveSeenQuestions(
   }
   return [...byId.values()];
 }
+
+export function recoverSeenFromHistory(
+  seen: SeenQuestion[],
+  results: Array<Pick<GameResult, "playedAt" | "questions">>,
+) {
+  const recovered = new Map(seen.map((item) => [item.id, item]));
+  const historyById = new Map<
+    string,
+    { question: Question; lastSeen: string; count: number }
+  >();
+  for (const result of results) {
+    for (const question of result.questions) {
+      const previous = historyById.get(question.id);
+      historyById.set(question.id, {
+        question,
+        lastSeen:
+          !previous || result.playedAt > previous.lastSeen
+            ? result.playedAt
+            : previous.lastSeen,
+        count: (previous?.count ?? 0) + 1,
+      });
+    }
+  }
+  for (const [id, history] of historyById) {
+    const previous = recovered.get(id);
+    if (previous) {
+      recovered.set(id, {
+        ...previous,
+        fingerprint: previous.fingerprint ?? history.question.fingerprint,
+        factKey: previous.factKey ?? questionFactKey(history.question),
+      });
+      continue;
+    }
+    recovered.set(id, {
+      id,
+      lastSeen: history.lastSeen,
+      count: history.count,
+      correct: false,
+      fingerprint: history.question.fingerprint,
+      factKey: questionFactKey(history.question),
+    });
+  }
+  return [...recovered.values()];
+}
 export function newPlayer(name: string, index: number): GamePlayer {
   return {
     id: crypto.randomUUID(),
