@@ -6,7 +6,7 @@
 
 1. Vælg Alle mod alle, Holdkamp, Solo, Hurtig quiz, Risiko eller Mystery Mix.
 2. Tilføj 1–12 spillere eller 2–6 hold, og vælg mellem 59 søgbare kategorier.
-3. Indstil 3–100 spørgsmål, niveau 1–5, fast/blandet/stigende sværhedsgrad samt valgfrie timer-, tidsbonus-, minuspoint- og finaleindstillinger.
+3. Indstil et retfærdigt antal spørgsmål op til 90, niveau 1–5, fast/blandet/stigende sværhedsgrad samt timer-, tidsbonus-, minuspoint- og finaleindstillinger.
 4. Giv enheden videre. Svar låses, forklaring og point vises, og spillet gemmes løbende.
 5. Se vinder, scoreboard, svarprocent, streaks, gennemgang, historik og revanche.
 
@@ -14,7 +14,7 @@
 
 - Next.js 16 App Router, React 19.2 og strict TypeScript
 - Tailwind CSS 4, shadcn/ui, Motion og AI Elements
-- 2.982 indbyggede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
+- 1.314 kvalitetskontrollerede spørgsmål med plausible, type-matchende svarmuligheder; offline kernespil og PWA-service worker
 - 12 spørgsmålstyper, blandt andet rækkefølge, nærmest vinder, udsagn, beskrivelser og kategorikryds
 - localStorage til aktivt spil, historik, indstillinger, set-historik og offline spillerrapporter
 - Drizzle ORM + valgfri Neon PostgreSQL med lazy klientinitialisering
@@ -55,7 +55,7 @@ Drizzle-skemaet modellerer kategorier, spørgsmål, spil, runder, spillere, hold
 
 ## Spørgsmålsbank og import/eksport
 
-Seedbanken kombinerer håndskrevne spørgsmål med lokale snapshots fra Wikidata CC0. Distraktorer vælges inden for samme faktatype: eksempelvis hovedstæder mod hovedstæder, instruktører mod instruktører og sportsgrene mod sportsgrene. Ingen kategori har færre end ti tilgængelige spørgsmål, og udvælgeren kan også bruge relevante sekundære kategorier. Nye kategorier tilføjes i `src/lib/categories.ts`.
+Seedbanken kombinerer håndskrevne spørgsmål med lokale snapshots fra Wikidata CC0. Distraktorer vælges inden for samme faktatype: eksempelvis hovedstæder mod hovedstæder, instruktører mod instruktører og sportsgrene mod sportsgrene. Alle 59 kategorier har mindst 30 semantisk relevante spørgsmål, og udvælgeren kan også bruge relevante sekundære kategorier. Nye kategorier tilføjes i `src/lib/categories.ts`.
 
 Wikidata-importerne er langsomme, genoptagelige og gemmer efter hver relation. `--missing` springer allerede hentede relationer over:
 
@@ -70,9 +70,11 @@ npm run questions:export -- eksport.json
 npm run questions:import -- eksport.json
 ```
 
-Importkommandoen Zod-validerer hele filen og afviser dublerede fingerprints. Admin på `/admin` kan søge, filtrere, redigere, aktivere/deaktivere, eksportere, previewe AI-batches, se automatiske kvalitetsadvarsler og læse centralt synkroniserede spillerrapporter. Databaseændringer hentes som små overrides ved appstart; den komplette indbyggede bank forbliver offline-fallback. AI vises som utilgængelig, hvis credentials mangler.
+Importkommandoen Zod-validerer hele filen og afviser dublerede fingerprints. Den ikke-linkede adminside på `/admin` kan søge, filtrere, redigere, aktivere/deaktivere, eksportere, previewe AI-batches, se kvalitetsadvarsler, privat aggregeret statistik og centralt synkroniserede spillerrapporter. Spørgsmålsbanken hentes serverfiltreret efter de valgte kategorier og gemmes som offline-fallback på enheden. AI vises som utilgængelig, hvis credentials mangler.
 
-Efter hvert svar kan spilleren rapportere forkert svar, uklar formulering, forkert niveau, dårlige svarmuligheder eller forældet information. Rapporten gemmes først lokalt og synkroniseres derefter via `POST /api/reports`, når en database er tilgængelig. Generiske faktafelter skjules automatisk i spillet.
+Efter hvert svar kan spilleren rapportere forkert svar, uklar formulering, forkert niveau, dårlige svarmuligheder eller forældet information. Rapporten gemmes først lokalt og synkroniseres derefter via `POST /api/reports`, når en database er tilgængelig. Ved tre rapporter sættes spørgsmålet automatisk i karantæne, indtil det gennemgås i admin. Generiske faktafelter skjules automatisk i spillet.
+
+I Indstillinger kan spilleren oprette en etårig backupkode til set-historik og seneste opsætning. Koden gør det muligt at bevare anti-repeat efter geninstallation. Brugsstatistik gemmes kun som samlede dagstællere for startede/gennemførte spil, rapporter og valgte kategorier; der bruges ingen tracking-cookie eller enhedsprofil.
 
 ## AI-generator
 
@@ -104,7 +106,7 @@ vercel env add DATABASE_URL production  # valgfri
 vercel --prod
 ```
 
-Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 2.982 seedspørgsmål stadig.
+Kør migration og seed mod produktions-`DATABASE_URL` før adminaktivering. AI Gateway kan bruge Vercel OIDC; uden AI-adgang fungerer alle 1.314 seedspørgsmål stadig.
 
 ## Installation som mobilapp
 

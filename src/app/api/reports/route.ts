@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { eq, sql } from "drizzle-orm";
 import { SEED_QUESTIONS } from "@/data/questions";
 import { getDb, hasDatabase } from "@/lib/db";
-import { questionReports } from "@/lib/db/schema";
+import { questionReports, questions } from "@/lib/db/schema";
 import { questionReportReasons } from "@/lib/types";
 
 const reportSchema = z.object({
@@ -45,6 +46,14 @@ export async function POST(request: Request) {
           ? `${parsed.data.reason}:${parsed.data.note}`
           : parsed.data.reason,
       });
+    await getDb()
+      .update(questions)
+      .set({
+        reportCount: sql`${questions.reportCount} + 1`,
+        status: sql`CASE WHEN ${questions.reportCount} + 1 >= 3 THEN 'reported' ELSE ${questions.status} END`,
+        updatedAt: new Date(),
+      })
+      .where(eq(questions.id, parsed.data.questionId));
     return NextResponse.json({ accepted: true, stored: true });
   } catch {
     return NextResponse.json(

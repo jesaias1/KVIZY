@@ -8,6 +8,7 @@ export const APP_CONFIG = {
   settingsKey: "kvizy-settings-v1",
   setupKey: "kvizy-setup-v1",
   reportsKey: "kvizy-question-reports-v1",
+  questionCacheKey: "kvizy-question-cache-v1",
 } as const;
 
 export const DIFFICULTY_LABELS = [

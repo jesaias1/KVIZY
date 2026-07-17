@@ -33,6 +33,12 @@ type ServerReport = {
   reason: string;
   createdAt: string;
 };
+type AggregateAnalytics = {
+  gamesStarted: number;
+  gamesCompleted: number;
+  reports: number;
+  categories: Record<string, number>;
+};
 const reportLabels: Record<string, string> = {
   wrong_answer: "Forkert svar",
   unclear: "Uklart spørgsmål",
@@ -46,6 +52,12 @@ export function AdminDashboard() {
     [generated, setGenerated] = useState<Question[]>([]),
     [managed, setManaged] = useState<Question[]>(SEED_QUESTIONS),
     [reports, setReports] = useState<ServerReport[]>([]),
+    [analytics, setAnalytics] = useState<AggregateAnalytics>({
+      gamesStarted: 0,
+      gamesCompleted: 0,
+      reports: 0,
+      categories: {},
+    }),
     [editing, setEditing] = useState<Question | null>(null),
     [reviewOnly, setReviewOnly] = useState(false),
     [databaseReady, setDatabaseReady] = useState(false),
@@ -70,6 +82,10 @@ export function AdminDashboard() {
           setManaged(data.questions);
       })
       .catch(() => setDatabaseReady(false));
+    fetch("/api/admin/analytics", { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => data && setAnalytics(data))
+      .catch(() => undefined);
     return () => controller.abort();
   }, []);
   const flaggedQuestions = useMemo(
@@ -87,6 +103,13 @@ export function AdminDashboard() {
             .includes(search.toLocaleLowerCase("da")),
       ),
     [cat, generated, managed, reviewOnly, search],
+  );
+  const popularCategories = useMemo(
+    () =>
+      Object.entries(analytics.categories)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3),
+    [analytics.categories],
   );
   const generate = async () => {
     setBusy(true);
@@ -205,7 +228,7 @@ export function AdminDashboard() {
           <CardContent className="p-4 text-destructive">{error}</CardContent>
         </Card>
       )}{" "}
-      <div className="mb-6 grid gap-3 sm:grid-cols-2">
+      <div className="mb-6 grid gap-3 sm:grid-cols-3">
         <Card>
           <CardContent className="flex items-center gap-4 p-4">
             <TriangleAlert className="text-amber-500" />
@@ -226,6 +249,22 @@ export function AdminDashboard() {
                 Seneste rapporter fra den centrale database
               </p>
             </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <b>{analytics.gamesCompleted} gennemførte spil</b>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {analytics.gamesStarted} startet de seneste 30 dage
+            </p>
+            {popularCategories.length > 0 && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Mest valgte: {popularCategories
+                  .map(([id]) => categoryById(id)?.name)
+                  .filter(Boolean)
+                  .join(", ")}
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>

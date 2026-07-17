@@ -1,4 +1,4 @@
-const CACHE = "kvizy-v17";
+const CACHE = "kvizy-v18";
 const CORE = [
   "/",
   "/manifest.webmanifest",
@@ -70,7 +70,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname !== "/api/questions") return;
+  if (url.pathname !== "/api/question-bank") return;
   event.respondWith(
     fetch(event.request)
       .then((response) => {
@@ -85,7 +85,7 @@ self.addEventListener("fetch", (event) => {
       .catch(async () => {
         const cached = await caches.match(event.request);
         if (cached) return cached;
-        return new Response(JSON.stringify({ overrides: [] }), {
+        return new Response(JSON.stringify({ questions: [] }), {
           status: 503,
           headers: { "content-type": "application/json; charset=utf-8" },
         });

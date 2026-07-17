@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import confetti from "canvas-confetti";
 import { motion } from "motion/react";
@@ -10,7 +10,9 @@ import {
   Check,
   CircleHelp,
   Clock3,
-  Crown,
+  CloudDownload,
+  CloudUpload,
+  Copy,
   Download,
   Flag,
   Gamepad2,
@@ -182,6 +184,17 @@ function safeRemove(key: string) {
     // Manglende lageradgang må aldrig afbryde et spil.
   }
 }
+function trackEvent(
+  event: "game_started" | "game_completed" | "question_reported",
+  categoryIds: string[] = [],
+) {
+  void fetch("/api/analytics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ event, categoryIds }),
+    keepalive: true,
+  }).catch(() => undefined);
+}
 function formatNames(names: string[]) {
   if (names.length < 2) return names[0] ?? "Ingen";
   return `${names.slice(0, -1).join(", ")} og ${names.at(-1)}`;
@@ -265,6 +278,8 @@ export function GameShell() {
     [game, setGame] = useState<Game | null>(null),
     [history, setHistory] = useState<GameResult[]>([]),
     [questionBank, setQuestionBank] = useState<Question[]>([]),
+    [questionBankSignature, setQuestionBankSignature] = useState(""),
+    [questionBankLoading, setQuestionBankLoading] = useState(false),
     [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(
       null,
     ),
@@ -276,6 +291,7 @@ export function GameShell() {
     [settings, setSettings] = useState(defaults),
     [startError, setStartError] = useState<string | null>(null),
     [hydrated, setHydrated] = useState(false);
+  const startBusy = useRef(false);
   const { setTheme } = useTheme();
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -286,6 +302,14 @@ export function GameShell() {
         storedHistory,
       );
       safeSet(APP_CONFIG.seenKey, JSON.stringify(recoveredSeen));
+      const cachedBank = load<{
+        signature: string;
+        questions: Question[];
+      } | null>(APP_CONFIG.questionCacheKey, null);
+      if (cachedBank?.questions?.length) {
+        setQuestionBank(cachedBank.questions);
+        setQuestionBankSignature(cachedBank.signature);
+      }
       setGame(storedGame);
       setHistory(storedHistory);
       setSetup(
@@ -300,40 +324,39 @@ export function GameShell() {
     }, 0);
     return () => window.clearTimeout(id);
   }, [setTheme]);
-  useEffect(() => {
-    const controller = new AbortController();
-    let cancelled = false;
-    void import("@/data/questions")
-      .then(async ({ SEED_QUESTIONS }) => {
-        if (cancelled) return;
-        setQuestionBank(SEED_QUESTIONS);
-        const response = await fetch("/api/questions", {
-          signal: controller.signal,
-        });
-        const data = response.ok ? await response.json() : { overrides: [] };
-        if (
-          cancelled ||
-          !Array.isArray(data.overrides) ||
-          data.overrides.length === 0
-        )
-          return;
-        const overrides = new Map<string, Question>(
-          data.overrides.map((question: Question) => [question.id, question]),
+  const loadQuestionBank = useCallback(
+    async (categoryIds: string[]) => {
+      const signature = [...new Set(categoryIds)].sort().join(",");
+      if (signature === questionBankSignature && questionBank.length > 0)
+        return questionBank;
+      setQuestionBankLoading(true);
+      try {
+        const response = await fetch(
+          `/api/question-bank?categories=${encodeURIComponent(signature)}`,
         );
-        setQuestionBank(
-          SEED_QUESTIONS.map(
-            (question) => overrides.get(question.id) ?? question,
-          ).filter((question) => question.status === "active"),
+        const data = response.ok ? await response.json() : null;
+        if (!Array.isArray(data?.questions) || data.questions.length === 0)
+          throw new Error("Tom spørgsmålsbank");
+        const loaded = data.questions as Question[];
+        setQuestionBank(loaded);
+        setQuestionBankSignature(signature);
+        safeSet(
+          APP_CONFIG.questionCacheKey,
+          JSON.stringify({ signature, questions: loaded }),
         );
-      })
-      .catch(() => {
-        // Den indbyggede bank er den fulde offline-fallback.
-      });
-    return () => {
-      cancelled = true;
-      controller.abort();
-    };
-  }, []);
+        return loaded;
+      } catch {
+        const cached = load<{
+          signature: string;
+          questions: Question[];
+        } | null>(APP_CONFIG.questionCacheKey, null);
+        return cached?.questions ?? questionBank;
+      } finally {
+        setQuestionBankLoading(false);
+      }
+    },
+    [questionBank, questionBankSignature],
+  );
   useEffect(() => {
     const detect = window.setTimeout(() => {
       const navigatorWithStandalone = navigator as Navigator & {
@@ -429,17 +452,20 @@ export function GameShell() {
     setView(v);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const start = (same?: GameSetup) => {
+  const start = async (same?: GameSetup) => {
+    if (startBusy.current) return;
+    startBusy.current = true;
     try {
       setStartError(null);
-      if (questionBank.length === 0) {
+      const s = same ?? setup;
+      const availableQuestions = await loadQuestionBank(s.categoryIds);
+      if (availableQuestions.length === 0) {
         setStartError(
-          "Spørgsmålene gøres stadig klar. Prøv igen om et øjeblik.",
+          "Spørgsmålene kunne ikke hentes. Tjek forbindelsen, eller prøv den senest gemte kategoriopsætning.",
         );
         setView("setup");
         return;
       }
-      const s = same ?? setup;
       const selectedPlayers =
         s.mode === "solo" ? [s.players[0]] : s.players;
       const requestedCount = s.mode === "quick" ? 10 : s.questionCount;
@@ -452,7 +478,7 @@ export function GameShell() {
         players: selectedPlayers,
       };
       const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
-      const questions = selectQuestions(questionBank, normalized, seen);
+      const questions = selectQuestions(availableQuestions, normalized, seen);
       if (questions.length < normalized.questionCount) {
         setStartError(
           questions.length === 0
@@ -499,12 +525,15 @@ export function GameShell() {
           ),
         ),
       );
+      trackEvent("game_started", normalized.categoryIds);
       go("play");
     } catch {
       setStartError(
         "Spillet kunne ikke startes. Opsætningen er bevaret – prøv igen.",
       );
       setView("setup");
+    } finally {
+      startBusy.current = false;
     }
   };
   const finish = (g: Game) => {
@@ -513,6 +542,7 @@ export function GameShell() {
     setHistory(next);
     safeSet(APP_CONFIG.historyKey, JSON.stringify(next));
     safeRemove(APP_CONFIG.gameKey);
+    trackEvent("game_completed", g.setup.categoryIds);
     setGame({ ...g, completedAt: r.playedAt });
     tone("win", settings.sound);
     confetti({
@@ -600,6 +630,10 @@ export function GameShell() {
     reason: QuestionReportReason,
     note?: string,
   ) => {
+    trackEvent("question_reported", [
+      game?.questions.find((question) => question.id === questionId)
+        ?.categoryId ?? "",
+    ]);
     const report: LocalQuestionReport = {
       id: crypto.randomUUID(),
       questionId,
@@ -692,7 +726,7 @@ export function GameShell() {
         setStep={setStep}
         start={start}
         startError={startError}
-        questionsReady={questionBank.length > 0}
+        questionsReady={!questionBankLoading}
         go={go}
       />
     ) : view === "play" && game ? (
@@ -717,7 +751,13 @@ export function GameShell() {
       <SettingsView
         value={settings}
         onChange={setSettings}
-        questions={questionBank}
+        setup={setup}
+        onRestore={(payload) => {
+          const restored = restoreSetup(payload.setup);
+          setSetup(restored);
+          safeSet(APP_CONFIG.setupKey, JSON.stringify(restored));
+          safeSet(APP_CONFIG.seenKey, JSON.stringify(payload.seen));
+        }}
         go={go}
       />
     ) : view === "review" && game ? (
@@ -821,12 +861,6 @@ function TopBar({
                   <Settings />
                   Indstillinger
                 </Button>
-                <Button variant="ghost" className="justify-start" asChild>
-                  <a href="/admin">
-                    <Crown />
-                    Administration
-                  </a>
-                </Button>
               </nav>
             </SheetContent>
           </Sheet>
@@ -917,7 +951,7 @@ function Setup({
   setSetup: (s: GameSetup) => void;
   step: number;
   setStep: (n: number) => void;
-  start: (s?: GameSetup) => void;
+  start: (s?: GameSetup) => Promise<void>;
   startError: string | null;
   questionsReady: boolean;
   go: (v: View) => void;
@@ -2025,34 +2059,74 @@ function Help({
 function SettingsView({
   value,
   onChange,
-  questions,
+  setup,
+  onRestore,
   go,
 }: {
   value: AppSettings;
   onChange: (s: AppSettings) => void;
-  questions: Question[];
+  setup: GameSetup;
+  onRestore: (payload: {
+    seen: SeenQuestion[];
+    setup: Partial<GameSetup>;
+  }) => void;
   go: (v: View) => void;
 }) {
-  const localReports = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []);
-  const downloadReports = () => {
-    const data = localReports.map((report) => {
-      const question = questions.find((item) => item.id === report.questionId);
-      return {
-        ...report,
-        prompt: question?.prompt,
-        options: question?.options,
-        correctOptionId: question?.correctOptionId,
-        explanation: question?.explanation,
-      };
-    });
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json",
-    });
-    const anchor = document.createElement("a");
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = "kvizy-lokale-rapporter.json";
-    anchor.click();
-    URL.revokeObjectURL(anchor.href);
+  const [backupCode, setBackupCode] = useState("");
+  const [restoreCode, setRestoreCode] = useState("");
+  const [backupStatus, setBackupStatus] = useState("");
+  const [backupBusy, setBackupBusy] = useState(false);
+  const createBackup = async () => {
+    setBackupBusy(true);
+    setBackupStatus("");
+    try {
+      const response = await fetch("/api/backup", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          action: "create",
+          payload: {
+            seen: load<SeenQuestion[]>(APP_CONFIG.seenKey, []).slice(-2_000),
+            setup,
+          },
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      setBackupCode(result.code);
+      setBackupStatus("Backupen er klar. Gem koden et sikkert sted.");
+    } catch (error) {
+      setBackupStatus(
+        error instanceof Error ? error.message : "Backup kunne ikke oprettes.",
+      );
+    } finally {
+      setBackupBusy(false);
+    }
+  };
+  const restoreBackup = async () => {
+    setBackupBusy(true);
+    setBackupStatus("");
+    try {
+      const response = await fetch("/api/backup", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ action: "restore", code: restoreCode.trim() }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      if (!Array.isArray(result.payload?.seen) || !result.payload?.setup)
+        throw new Error("Backupen har et ukendt format.");
+      onRestore(result.payload);
+      setBackupStatus(
+        `Gendannet: ${result.payload.seen.length} tidligere spørgsmål og jeres seneste opsætning.`,
+      );
+    } catch (error) {
+      setBackupStatus(
+        error instanceof Error ? error.message : "Backup kunne ikke gendannes.",
+      );
+    } finally {
+      setBackupBusy(false);
+    }
   };
   return (
     <>
@@ -2089,21 +2163,60 @@ function SettingsView({
       </Card>
       <Card className="mt-6">
         <CardContent className="p-5">
-          <h2 className="font-bold">Dine spørgsmålsrapporter</h2>
+          <h2 className="font-bold">Backup af seneste spørgsmål</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Rapporterne gemmes på denne enhed, indtil en central database er
-            tilsluttet. Eksporten indeholder spørgsmål og svar, men ingen
-            adgangskoder.
+            Gem historikken over sete spørgsmål og jeres seneste opsætning. Så
+            undgår I unødige gentagelser, selv efter en geninstallation. Koden
+            udløber efter ét år og indeholder ingen rapporter eller svar.
           </p>
           <Button
             className="mt-4 w-full"
             variant="outline"
-            disabled={localReports.length === 0}
-            onClick={downloadReports}
+            disabled={backupBusy}
+            onClick={createBackup}
           >
-            <Download />
-            Eksportér {localReports.length} rapporter
+            <CloudUpload />
+            {backupBusy ? "Arbejder…" : "Opret backupkode"}
           </Button>
+          {backupCode && (
+            <div className="mt-4 flex gap-2">
+              <Input value={backupCode} readOnly aria-label="Din backupkode" />
+              <Button
+                size="icon"
+                variant="secondary"
+                aria-label="Kopiér backupkode"
+                onClick={() => void navigator.clipboard.writeText(backupCode)}
+              >
+                <Copy />
+              </Button>
+            </div>
+          )}
+          <div className="mt-6 border-t pt-5">
+            <Label htmlFor="backup-code">Gendan med backupkode</Label>
+            <Input
+              id="backup-code"
+              className="mt-2 uppercase"
+              autoCapitalize="characters"
+              autoCorrect="off"
+              placeholder="KVIZY-XXXX-XXXX-XXXX"
+              value={restoreCode}
+              onChange={(event) => setRestoreCode(event.target.value)}
+            />
+            <Button
+              className="mt-3 w-full"
+              variant="secondary"
+              disabled={backupBusy || restoreCode.trim().length < 8}
+              onClick={restoreBackup}
+            >
+              <CloudDownload />
+              Gendan backup
+            </Button>
+          </div>
+          {backupStatus && (
+            <p className="mt-4 text-sm" role="status">
+              {backupStatus}
+            </p>
+          )}
         </CardContent>
       </Card>
     </>

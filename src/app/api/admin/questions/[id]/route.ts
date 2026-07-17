@@ -38,6 +38,7 @@ export async function PATCH(
       .update(questions)
       .set({
         ...parsed.data,
+        reportCount: parsed.data.status === "active" ? 0 : undefined,
         validationStatus: "admin-edited",
         updatedAt: new Date(),
       })
