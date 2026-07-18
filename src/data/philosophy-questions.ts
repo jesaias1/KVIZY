@@ -95,7 +95,7 @@ const specs = [
   },
   {
     prompt: "Hvad adskiller den regelbaserede tilgang fra den handlingsbaserede?",
-    correct: "Den vurderer regler efter deres samlede følger frem for hver handling",
+    correct: "Den bedømmer faste retningslinjer efter deres samlede følger",
     distractors: [
       "Den vurderer hensigten bag en handling frem for dens konsekvenser",
       "Den giver den enkeltes rettigheder forrang for fælles velfærd",
