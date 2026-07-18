@@ -567,6 +567,50 @@ function spreadCategoriesAcrossTurns(
     return questions;
   const spread = [...questions];
   const players = Math.max(1, playerCount);
+  if (players === 1) {
+    const remaining = [...spread];
+    const ordered: Question[] = [];
+    while (remaining.length > 0) {
+      const previous = ordered.at(-1);
+      const previousTwo = new Set(
+        ordered.slice(-2).map((question) => question.categoryId),
+      );
+      const categoryCounts = new Map<string, number>();
+      for (const question of remaining) {
+        categoryCounts.set(
+          question.categoryId,
+          (categoryCounts.get(question.categoryId) ?? 0) + 1,
+        );
+      }
+      const hasAlternative = remaining.some(
+        (question) => question.categoryId !== previous?.categoryId,
+      );
+      let bestIndex = 0;
+      let bestScore = Number.POSITIVE_INFINITY;
+      for (let index = 0; index < remaining.length; index++) {
+        const candidate = remaining[index];
+        if (
+          hasAlternative &&
+          candidate.categoryId === previous?.categoryId
+        )
+          continue;
+        const score =
+          (previousTwo.has(candidate.categoryId) ? 100 : 0) -
+          (categoryCounts.get(candidate.categoryId) ?? 0) * 20 +
+          (ordered.at(-1)?.type === candidate.type &&
+          ordered.at(-2)?.type === candidate.type
+            ? 12
+            : 0) +
+          Math.abs(candidate.difficulty - (previous?.difficulty ?? candidate.difficulty));
+        if (score < bestScore) {
+          bestScore = score;
+          bestIndex = index;
+        }
+      }
+      ordered.push(remaining.splice(bestIndex, 1)[0]);
+    }
+    return ordered;
+  }
   for (let index = 1; index < spread.length; index++) {
     const previousCategory = spread[index - 1]?.categoryId;
     const previousTwoCategories = new Set(

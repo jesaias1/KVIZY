@@ -437,6 +437,13 @@ describe("automatisk spørgsmålskvalitet", () => {
     const retiredIds = [
       "matrix-cat-18-dkfilm-object-6",
       "matrix-cat-3-dkpol-basis-5",
+      "era-cat-49-era-impact-4",
+      "era-cat-51-era-impact-4",
+      "era-cat-51-era-place-1",
+      "era-cat-51-era-place-2",
+      "era-cat-51-era-place-5",
+      "era-cat-53-era-impact-1",
+      "era-cat-53-era-place-6",
     ];
     expect(
       retiredIds.every(
@@ -445,9 +452,22 @@ describe("automatisk spørgsmålskvalitet", () => {
     ).toBe(true);
 
     const expectedPrompts: Record<string, string> = {
-      "curiosity-023": "Hvorfor bruser en sodavand, når flasken åbnes?",
+      "curiosity-023":
+        "Hvad får boblerne til at dannes, når en sodavandsflaske åbnes?",
       "curiosity-expansion-005":
         "Hvorfor kan almindelig lyd næsten ikke udbrede sig i det ydre rum?",
+      "curiosity-expansion-016":
+        "En nyæltet brøddej trækker sig sammen under formning. Hvorfor hjælper en kort hvile?",
+      "curiosity-expansion-057":
+        "Hvad er den vigtigste læsemæssige fordel ved mellemrum mellem ord?",
+      "curiosity-expansion-062":
+        "Hvilken ændring kan give et omkvæd mere løft end verset?",
+      "curiosity-expansion-070":
+        "Hvilken retning vender et almindeligt spejl egentlig om?",
+      "curiosity-expansion-074":
+        "Hvad skaber illusionen af, at et hjul på film drejer baglæns?",
+      "curiosity-expansion-075":
+        "Hvordan kan et publikum spontant begynde at klappe i samme takt?",
       "matrix-cat-58-architecture-force-2":
         "Hvorfor består et fagværk ofte af trekanter?",
       "depth-029":
@@ -464,6 +484,18 @@ describe("automatisk spørgsmålskvalitet", () => {
       expect(question?.options.every((option) => option.text.length > 5)).toBe(
         true,
       );
+    }
+
+    const expectedCategories: Record<string, string> = {
+      "curiosity-expansion-062": "cat-23",
+      "curiosity-expansion-070": "cat-7",
+      "curiosity-expansion-074": "cat-17",
+      "curiosity-expansion-075": "cat-12",
+    };
+    for (const [id, categoryId] of Object.entries(expectedCategories)) {
+      expect(
+        SEED_QUESTIONS.find((question) => question.id === id)?.categoryId,
+      ).toBe(categoryId);
     }
   });
 

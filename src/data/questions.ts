@@ -18,6 +18,8 @@ import { VARIETY_QUESTIONS } from "./variety-questions";
 import { FRANCHISE_QUESTIONS } from "./franchise-questions";
 import { CULTURE_AND_COOKING_QUESTIONS } from "./culture-and-cooking-questions";
 import { DECADE_QUALITY_QUESTIONS } from "./decade-quality-questions";
+import { PHILOSOPHY_QUESTIONS } from "./philosophy-questions";
+import { EDITORIAL_FILL_QUESTIONS } from "./editorial-fill-questions";
 import { seedSpecs } from "./seed-spec";
 
 const created = "2026-07-15T00:00:00.000Z";
@@ -1378,27 +1380,29 @@ type EditorialQuestionFix = {
   options: [string, string, string, string];
   explanation: string;
   difficulty?: number;
+  categoryId?: string;
+  secondaryCategoryIds?: string[];
 };
 
 const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
   "curiosity-023": {
-    prompt: "Hvorfor bruser en sodavand, når flasken åbnes?",
+    prompt: "Hvad får boblerne til at dannes, når en sodavandsflaske åbnes?",
     options: [
-      "Trykket falder, så opløst kuldioxid danner bobler",
-      "Luftens ilt reagerer med sukkeret i drikken",
-      "Flasken trækker varme ind, så væsken begynder at koge",
-      "Væsken udvider sig, fordi låget ikke længere presser den sammen",
+      "Trykfaldet gør den opløste kuldioxid mindre stabil i væsken",
+      "Luften over væsken trækker kuldioxid op gennem sodavanden",
+      "Temperaturen stiger straks og får kuldioxiden til at udvide sig",
+      "Ilt fra luften reagerer med kuldioxiden og danner skum",
     ],
     explanation:
       "Under tryk kan mere kuldioxid være opløst i sodavanden. Når flasken åbnes, falder trykket, og gassen slipper ud som bobler.",
   },
   "curiosity-expansion-057": {
-    prompt: "Hvorfor gør mellemrum en tekst lettere at læse?",
+    prompt: "Hvad er den vigtigste læsemæssige fordel ved mellemrum mellem ord?",
     options: [
-      "De viser tydeligt, hvor ét ord slutter, og det næste begynder",
-      "De får øjet til at holde en fast pause efter hvert ord",
-      "De gør bogstaverne større uden at ændre skriftstørrelsen",
-      "De får hjernen til at læse hvert ord som et samlet billede",
+      "De gør ordgrænserne hurtigere at genkende",
+      "De viser, hvilke stavelser der skal have tryk",
+      "De holder afstanden mellem alle bogstaver ens",
+      "De angiver, hvor læseren skal trække vejret",
     ],
     explanation:
       "Tydelige ordgrænser gør det hurtigere at genkende ord. I oldtidens tekster skrev man ofte uden faste mellemrum, hvilket krævede mere af læseren.",
@@ -1415,8 +1419,8 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
       "Lyd er mekaniske svingninger og kræver et medium som luft, vand eller metal. Det næsten tomme rum kan derfor ikke føre almindelige lydbølger.",
   },
   "format-depth-016": {
-    prompt: "Hvilken passer ikke ind blandt disse sproglige begreber?",
-    options: ["Stavelse", "Navneord", "Udsagnsord", "Tillægsord"],
+    prompt: "Hvilket af disse sproglige begreber er ikke en ordklasse?",
+    options: ["Stavelse", "Biord", "Stedord", "Forholdsord"],
     explanation:
       "En stavelse er en lydenhed i et ord. De tre andre svar er ordklasser.",
     difficulty: 2,
@@ -1424,10 +1428,10 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
   "matrix-cat-58-architecture-force-2": {
     prompt: "Hvorfor består et fagværk ofte af trekanter?",
     options: [
-      "De fordeler kræfter uden let at deformeres",
-      "De samler belastningen i konstruktionens midte",
-      "De fører hovedsageligt belastningen lodret ned",
-      "De gør samlingerne mindre udsatte for vridning",
+      "Formen ændres kun, hvis en stang ændrer længde",
+      "Tre sider bruger altid mindre materiale end en enkelt bjælke",
+      "En trekant leder hele belastningen lodret gennem midten",
+      "Tre samlinger kan være stabile uden at blive fastgjort",
     ],
     explanation:
       "En trekant er geometrisk stabil. I et fagværk bliver belastningen især fordelt som træk og tryk gennem stængerne.",
@@ -1465,12 +1469,12 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
     prompt: "Hvorfor kan nye skove ikke alene standse klimaforandringerne?",
     options: [
       "Arealet og træernes samlede kulstoflager er begrænset",
-      "Optaget i skovene udlignes af jordens naturlige udledning",
-      "Nye skove optager mest ilt, mens de vokser",
-      "Kulstoffet forsvinder fra atmosfæren, men ikke fra klimasystemet",
+      "Efter de første år bliver træernes kulstofoptag meget lille",
+      "Om vinteren frigiver skoven omtrent årets samlede optag",
+      "Kulstof i træ forbliver bundet, selv hvis skoven brænder",
     ],
     explanation:
-      "Skove lagrer kulstof, men der er begrænset plads, og lageret kan gå tabt ved brand eller fældning. Udledningerne skal derfor også reduceres.",
+      "Skove lagrer kulstof, men der er begrænset plads, og lageret kan gå tabt ved skovbrand eller fældning. Udledningerne skal derfor også reduceres.",
   },
   "format-depth-070": {
     prompt: "Hvad kendetegner en overvejende indre kontrolplacering?",
@@ -1538,6 +1542,75 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
     ],
     explanation:
       "En Dry Martini omrøres med is og sies normalt i et afkølet cocktailglas. Isen bruges til afkøling og fortynding, men følger ikke med i glasset.",
+  },
+  "curiosity-expansion-016": {
+    prompt:
+      "En nyæltet brøddej trækker sig sammen under formning. Hvorfor hjælper en kort hvile?",
+    options: [
+      "Glutennetværket bliver mere eftergiveligt",
+      "Gæren standser og gør dejen mindre elastisk",
+      "Stivelsen størkner og holder formen bedre",
+      "Saltet nedbryder de stramme glutenproteiner",
+    ],
+    explanation:
+      "Æltning spænder glutennetværket. Under hvilen fordeles fugten, og gluten bliver mere eftergiveligt, så dejen lettere kan formes uden at trække sig tilbage.",
+    difficulty: 3,
+  },
+  "curiosity-expansion-062": {
+    prompt: "Hvilken ændring kan give et omkvæd mere løft end verset?",
+    options: [
+      "Flere lydlag, bredere register og større intensitet",
+      "Smallere stereobillede og færre instrumenter",
+      "Lavere toneart og kortere toner i alle spor",
+      "Samme arrangement afspillet ved lavere lydstyrke",
+    ],
+    explanation:
+      "Et omkvæd kan løftes med ekstra stemmer og instrumenter, et bredere frekvensområde og mere dynamisk intensitet. Kontrasten til verset er afgørende.",
+    difficulty: 3,
+    categoryId: "cat-23",
+    secondaryCategoryIds: ["cat-21", "cat-59"],
+  },
+  "curiosity-expansion-070": {
+    prompt: "Hvilken retning vender et almindeligt spejl egentlig om?",
+    options: [
+      "Dybdeaksen: fremad og bagud",
+      "Den vandrette akse fra venstre mod højre",
+      "Den lodrette akse fra top mod bund",
+      "Både den vandrette og den lodrette retning",
+    ],
+    explanation:
+      "Spejlet vender dybderetningen: Det, der peger ind mod spejlet, ser ud til at pege ud. Højre og venstre virker ombyttet, fordi vi forestiller os at dreje os ind i spejlbilledets position.",
+    difficulty: 4,
+    categoryId: "cat-7",
+    secondaryCategoryIds: ["cat-48", "cat-59"],
+  },
+  "curiosity-expansion-074": {
+    prompt: "Hvad skaber illusionen af, at et hjul på film drejer baglæns?",
+    options: [
+      "Egerne optages næsten samme sted i hvert billede",
+      "Lukkertiden spejlvender hurtige bevægelser",
+      "Objektivet forsinker hjulets øverste halvdel",
+      "Billedsensoren aflæser rotationen i omvendt rækkefølge",
+    ],
+    explanation:
+      "Film viser en række enkeltbilleder. Hvis en eger næsten når den forrige egers position mellem to billeder, oplever vi den korteste bevægelse som baglæns rotation.",
+    difficulty: 3,
+    categoryId: "cat-17",
+    secondaryCategoryIds: ["cat-7", "cat-9", "cat-59"],
+  },
+  "curiosity-expansion-075": {
+    prompt: "Hvordan kan et publikum spontant begynde at klappe i samme takt?",
+    options: [
+      "Folk justerer ubevidst timingen efter hinanden",
+      "Rummets ekko flytter alle klap ind på samme slag",
+      "Publikums gennemsnitlige puls bestemmer tempoet",
+      "De højeste klap skjuler alle slag uden for takten",
+    ],
+    explanation:
+      "Når mennesker hører hinandens klap, foretager de små tidsmæssige justeringer. Den gensidige påvirkning kan gradvist samle gruppen om en fælles puls.",
+    difficulty: 3,
+    categoryId: "cat-12",
+    secondaryCategoryIds: ["cat-21", "cat-36", "cat-59"],
   },
 };
 
@@ -1657,11 +1730,6 @@ const plausibleDistractorFixes: Record<string, [string, string, string]> = {
     "Sprognævn fordeler nye betydninger, når samfundet ændrer sig",
     "Ændret udtale får ordets betydning til at følge lyden",
   ],
-  "curiosity-expansion-062": [
-    "Omkvædet får normalt en anelse højere tempo end verset",
-    "En længere rumklang får alle instrumenter til at virke tættere på",
-    "Sangstemmen placeres smallere i stereo end i verset",
-  ],
   "curiosity-expansion-065": [
     "Hvirvler fra den forreste rytter skubber direkte på baghjulet",
     "Den forreste cykels bevægelse øger dæktrykket hos de næste",
@@ -1718,6 +1786,9 @@ function applyReportedQuestionFix(question: Question): Question {
     correctOptionId: options[0].id,
     explanation: fix.explanation,
     difficulty: fix.difficulty ?? question.difficulty,
+    categoryId: fix.categoryId ?? question.categoryId,
+    secondaryCategoryIds:
+      fix.secondaryCategoryIds ?? question.secondaryCategoryIds,
     fingerprint: fingerprint(fix.prompt, options[0].text, question.type),
     updatedAt: "2026-07-18T00:00:00.000Z",
   };
@@ -1760,6 +1831,8 @@ const rawBaseQuestions: Question[] = [
   ...FRANCHISE_QUESTIONS,
   ...CULTURE_AND_COOKING_QUESTIONS,
   ...DECADE_QUALITY_QUESTIONS,
+  ...PHILOSOPHY_QUESTIONS,
+  ...EDITORIAL_FILL_QUESTIONS,
 ]
   .filter(
     (question) =>
@@ -1822,6 +1895,7 @@ const categoryLinks: Record<string, string[]> = {
   "cat-11": ["cat-14"],
   "cat-12": ["cat-13"],
   "cat-13": ["cat-12"],
+  "cat-14": ["cat-11"],
   "cat-16": ["cat-2", "cat-15", "cat-36"],
   "cat-17": ["cat-36"],
   "cat-18": ["cat-2", "cat-17", "cat-36"],
@@ -1870,7 +1944,7 @@ const semanticRules: { categoryId: string; pattern: RegExp }[] = [
   {
     categoryId: "cat-11",
     pattern:
-      /filosof|etik|moral|erkendelse|fri vilje|determinisme|eksistential|utilitar|platon|aristoteles|kant|sokrates/u,
+      /filosof|etik|moral|erkendelse|fri vilje|determinisme|eksistential|utilitar|platon|aristoteles|(?<!\p{L})kant(?!\p{L})|sokrates/u,
   },
   {
     categoryId: "cat-12",
