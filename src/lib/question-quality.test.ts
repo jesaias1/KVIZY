@@ -432,4 +432,38 @@ describe("automatisk spørgsmålskvalitet", () => {
       "I hvilket land fandt slaget ved Gettysburg sted?",
     );
   });
+
+  it("fastholder rettelserne fra mobilrapporterne 18. juli", () => {
+    const retiredIds = [
+      "matrix-cat-18-dkfilm-object-6",
+      "matrix-cat-3-dkpol-basis-5",
+    ];
+    expect(
+      retiredIds.every(
+        (id) => !SEED_QUESTIONS.some((question) => question.id === id),
+      ),
+    ).toBe(true);
+
+    const expectedPrompts: Record<string, string> = {
+      "curiosity-023": "Hvorfor bruser en sodavand, når flasken åbnes?",
+      "curiosity-expansion-005":
+        "Hvorfor kan almindelig lyd næsten ikke udbrede sig i det ydre rum?",
+      "matrix-cat-58-architecture-force-2":
+        "Hvorfor består et fagværk ofte af trekanter?",
+      "depth-029":
+        "Hvad gør Ratatosk i fortællingerne om verdenstræet Yggdrasil?",
+      "format-depth-047":
+        "Hvilken del af kroppen analyserer de duftpartikler, en slange samler med tungen?",
+      "matrix-cat-4-intpol-decision-6":
+        "Hvad er en central opgave for Verdenshandelsorganisationen, WTO?",
+    };
+    for (const [id, prompt] of Object.entries(expectedPrompts)) {
+      const question = SEED_QUESTIONS.find((candidate) => candidate.id === id);
+      expect(question?.prompt).toBe(prompt);
+      expect(question?.options).toHaveLength(4);
+      expect(question?.options.every((option) => option.text.length > 5)).toBe(
+        true,
+      );
+    }
+  });
 });

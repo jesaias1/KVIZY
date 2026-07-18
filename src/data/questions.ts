@@ -1193,6 +1193,8 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
 );
 
 const redundantQuestionIds = new Set([
+  "matrix-cat-18-dkfilm-object-6",
+  "matrix-cat-3-dkpol-basis-5",
   "variety-072", // Samme volleyballfakta som q-cat-25-6.
   "expansion-105", // Samme Just Do It-fakta som q-cat-34-1.
   "expansion-117", // Samme Famicom/NES-fakta som q-cat-49-1.
@@ -1367,6 +1369,193 @@ function applyEditorialRewrite(question: Question): Question {
   };
 }
 
+type EditorialQuestionFix = {
+  prompt: string;
+  options: [string, string, string, string];
+  explanation: string;
+  difficulty?: number;
+};
+
+const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
+  "curiosity-023": {
+    prompt: "Hvorfor bruser en sodavand, når flasken åbnes?",
+    options: [
+      "Trykket falder, så opløst kuldioxid danner bobler",
+      "Luftens ilt reagerer med sukkeret i drikken",
+      "Flasken trækker varme ind, så væsken begynder at koge",
+      "Væsken udvider sig, fordi låget ikke længere presser den sammen",
+    ],
+    explanation:
+      "Under tryk kan mere kuldioxid være opløst i sodavanden. Når flasken åbnes, falder trykket, og gassen slipper ud som bobler.",
+  },
+  "curiosity-expansion-057": {
+    prompt: "Hvorfor gør mellemrum en tekst lettere at læse?",
+    options: [
+      "De viser tydeligt, hvor ét ord slutter, og det næste begynder",
+      "De får øjet til at holde en fast pause efter hvert ord",
+      "De gør bogstaverne større uden at ændre skriftstørrelsen",
+      "De får hjernen til at læse hvert ord som et samlet billede",
+    ],
+    explanation:
+      "Tydelige ordgrænser gør det hurtigere at genkende ord. I oldtidens tekster skrev man ofte uden faste mellemrum, hvilket krævede mere af læseren.",
+  },
+  "curiosity-expansion-005": {
+    prompt: "Hvorfor kan almindelig lyd næsten ikke udbrede sig i det ydre rum?",
+    options: [
+      "Der mangler stof, som lydbølger kan bevæge sig igennem",
+      "Den lave temperatur gør lydbølgerne for langsomme",
+      "Solens stråling overdøver alle andre vibrationer",
+      "Den svage tyngdekraft bøjer lyden væk fra astronauter",
+    ],
+    explanation:
+      "Lyd er mekaniske svingninger og kræver et medium som luft, vand eller metal. Det næsten tomme rum kan derfor ikke føre almindelige lydbølger.",
+  },
+  "format-depth-016": {
+    prompt: "Hvilken passer ikke ind blandt disse sproglige begreber?",
+    options: ["Stavelse", "Navneord", "Udsagnsord", "Tillægsord"],
+    explanation:
+      "En stavelse er en lydenhed i et ord. De tre andre svar er ordklasser.",
+    difficulty: 2,
+  },
+  "matrix-cat-58-architecture-force-2": {
+    prompt: "Hvorfor består et fagværk ofte af trekanter?",
+    options: [
+      "De fordeler kræfter uden let at deformeres",
+      "De får materialet til at veje mindre",
+      "De leder altid hele belastningen lodret ned",
+      "De fjerner behovet for samlinger mellem delene",
+    ],
+    explanation:
+      "En trekant er geometrisk stabil. I et fagværk bliver belastningen især fordelt som træk og tryk gennem stængerne.",
+    difficulty: 3,
+  },
+  "depth-019": {
+    prompt: "Hvilken konflikt blev ifølge myten udløst af striden om et gyldent æble?",
+    options: [
+      "Den trojanske krig",
+      "Krigen mellem titanerne og guderne",
+      "Krigen mellem lapitherne og kentaurerne",
+      "Felttoget De syv mod Theben",
+    ],
+    explanation:
+      "Paris gav æblet 'til den skønneste' til Afrodite. Hendes løfte om Helena blev begyndelsen på konflikten, der førte til den trojanske krig.",
+  },
+  "depth-029": {
+    prompt: "Hvad gør Ratatosk i fortællingerne om verdenstræet Yggdrasil?",
+    options: [
+      "Bringer fornærmelser mellem ørnen og dragen Nidhug",
+      "Vogter gudernes æbler mod jætterne",
+      "Varsler Ragnarok ved at gale fra trækronen",
+      "Gnaver den lænke over, som holder Fenrisulven",
+    ],
+    explanation:
+      "Egernet Ratatosk løber op og ned ad Yggdrasil med hånlige beskeder mellem ørnen i kronen og Nidhug ved roden.",
+  },
+  "matrix-cat-22-music-origin-5": {
+    prompt: "I hvilken dansk by blev bandet TV-2 dannet?",
+    options: ["Aarhus", "Odense", "Aalborg", "Esbjerg"],
+    explanation:
+      "TV-2 blev dannet i Aarhus i 1980 på resterne af gruppen Taurus.",
+  },
+  "curiosity-round-3-023": {
+    prompt: "Hvorfor kan nye skove ikke alene standse klimaforandringerne?",
+    options: [
+      "Arealet og træernes samlede kulstoflager er begrænset",
+      "Træer optager kun kuldioxid i deres første leveår",
+      "Skove flytter blot kuldioxiden til andre lande",
+      "Træer holder helt op med at optage kulstof om vinteren",
+    ],
+    explanation:
+      "Skove lagrer kulstof, men der er begrænset plads, og lageret kan gå tabt ved brand eller fældning. Udledningerne skal derfor også reduceres.",
+  },
+  "format-depth-070": {
+    prompt: "Hvad kendetegner en overvejende indre kontrolplacering?",
+    options: [
+      "Personen forbinder ofte udfald med egne valg og handlinger",
+      "Personen forklarer især udfald med held og tilfældigheder",
+      "Personen forventer, at autoriteter bestemmer alle udfald",
+      "Personen undgår situationer, hvor udfaldet er usikkert",
+    ],
+    explanation:
+      "Indre kontrolplacering betyder, at man i relativt høj grad oplever egne handlinger som betydningsfulde for det, der sker.",
+  },
+  "matrix-cat-43-bake-technique-2": {
+    prompt: "Hvordan skabes de mange tynde lag i en croissant?",
+    options: [
+      "Dejen foldes flere gange omkring lag af koldt smør",
+      "Dejen piskes luftig, før melet tilsættes",
+      "Smørret smeltes og røres helt ind i dejen",
+      "Den formede dej koges kort før bagning",
+    ],
+    explanation:
+      "Ved laminering foldes dej og koldt smør i mange lag. Under bagningen bliver vand til damp, som løfter lagene fra hinanden.",
+  },
+  "format-depth-047": {
+    prompt: "Hvilken del af kroppen analyserer de duftpartikler, en slange samler med tungen?",
+    options: [
+      "Jacobsons organ i ganen",
+      "Smagsløg langs tungens spids",
+      "Lugteceller i slangens lunger",
+      "Et sanseorgan bag trommehinden",
+    ],
+    explanation:
+      "Tungen opsamler kemiske partikler og afleverer dem til Jacobsons organ i ganen, også kaldet det vomeronasale organ.",
+  },
+  "curiosity-round-3-034": {
+    prompt: "Hvorfor ser fjerne bjerge ofte mere blålige ud end landskabet tæt på?",
+    options: [
+      "Lys spredt i luften dæmper kontraster og giver et blåligt skær",
+      "Fjerne overflader reflekterer en større del af himlen",
+      "Øjet bliver gradvist mindre følsomt for rødt med afstanden",
+      "Vanddamp absorberer kun de grønne og gule farver",
+    ],
+    explanation:
+      "Luft og små partikler mellem os og motivet spreder lys. Effekten kaldes atmosfærisk perspektiv og bruges også bevidst i malerier.",
+  },
+  "matrix-cat-4-intpol-decision-6": {
+    prompt: "Hvad er en central opgave for Verdenshandelsorganisationen, WTO?",
+    options: [
+      "At administrere handelsregler og behandle tvister mellem lande",
+      "At fastsætte medlemslandenes renter og valutakurser",
+      "At vedtage bindende klimalove for alle verdens lande",
+      "At lede fredsbevarende militære operationer",
+    ],
+    explanation:
+      "WTO danner ramme om internationale handelsaftaler og har et system til behandling af handelstvister mellem medlemmerne.",
+    difficulty: 2,
+  },
+  "matrix-cat-44-drink-serve-6": {
+    prompt: "Hvordan serveres en klassisk Dry Martini efter omrøring?",
+    options: [
+      "Siet i et afkølet cocktailglas uden is",
+      "I et højt glas fyldt med knust is",
+      "I et kort glas over en stor isterning",
+      "Usiet i et varmt cocktailglas",
+    ],
+    explanation:
+      "En Dry Martini omrøres med is og sies normalt i et afkølet cocktailglas. Isen bruges til afkøling og fortynding, men følger ikke med i glasset.",
+  },
+};
+
+function applyReportedQuestionFix(question: Question): Question {
+  const fix = reportedQuestionFixes[question.id];
+  if (!fix) return question;
+  const options = fix.options.map((text, index) => ({
+    id: `o${index + 1}`,
+    text,
+  }));
+  return {
+    ...question,
+    prompt: fix.prompt,
+    options,
+    correctOptionId: options[0].id,
+    explanation: fix.explanation,
+    difficulty: fix.difficulty ?? question.difficulty,
+    fingerprint: fingerprint(fix.prompt, options[0].text, question.type),
+    updatedAt: "2026-07-18T00:00:00.000Z",
+  };
+}
+
 const rawBaseQuestions: Question[] = [
   ...CURATED_QUESTIONS,
   ...COUNTRY_QUESTIONS,
@@ -1392,7 +1581,8 @@ const rawBaseQuestions: Question[] = [
       !redundantQuestionIds.has(question.id) &&
       !question.tags.some((tag) => retiredLowValueTags.has(tag)),
   )
-  .map(applyEditorialRewrite);
+  .map(applyEditorialRewrite)
+  .map(applyReportedQuestionFix);
 
 const countryRelationLimits = new Map([
   ["capital", 36],

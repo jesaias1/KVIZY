@@ -180,6 +180,23 @@ html[data-phone-landscape] body {
   font-size: 0.48rem;
   letter-spacing: 0.075em;
 }
+.home-hero-brand {
+  width: fit-content;
+  margin-bottom: 2rem;
+  transform-origin: left center;
+  will-change: transform;
+}
+.home-hero-brand .brand-mark {
+  width: clamp(5.25rem, 12vw, 8rem);
+  height: clamp(5.25rem, 12vw, 8rem);
+}
+.home-hero-brand .brand-wordmark {
+  width: clamp(11rem, 27vw, 17rem);
+}
+.home-hero-brand .brand-copy small {
+  margin-top: 0.45rem;
+  font-size: clamp(0.56rem, 1.2vw, 0.78rem);
+}
 .brand-loading-screen {
   position: relative;
   display: flex;

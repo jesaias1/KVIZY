@@ -83,7 +83,6 @@ import {
   hasUsefulExplanation,
   questionOptionSetKey,
 } from "@/lib/question-quality";
-import { serializeLocalReports } from "@/lib/report-export";
 
 type View =
   | "home"
@@ -769,7 +768,12 @@ export function GameShell() {
   };
   const content =
     view === "home" ? (
-      <Home game={game} history={history} go={go} />
+      <Home
+        game={game}
+        history={history}
+        reducedMotion={settings.reducedMotion}
+        go={go}
+      />
     ) : view === "setup" ? (
       <Setup
         setup={setup}
@@ -805,7 +809,6 @@ export function GameShell() {
         value={settings}
         onChange={setSettings}
         setup={setup}
-        questions={questionBank}
         onRestore={(payload) => {
           const restored = restoreSetup(payload.setup);
           setSetup(restored);
@@ -833,7 +836,12 @@ export function GameShell() {
     <main
       className={`min-h-dvh safe-shell ${view === "play" ? "playing" : ""}`}
     >
-      <TopBar settings={settings} setSettings={setSettings} go={go} />
+      <TopBar
+        view={view}
+        settings={settings}
+        setSettings={setSettings}
+        go={go}
+      />
       {view === "home" && (
         <div className="home-ambient" aria-hidden="true">
           <span />
@@ -856,23 +864,31 @@ export function GameShell() {
 }
 
 function TopBar({
+  view,
   settings,
   setSettings,
   go,
 }: {
+  view: View;
   settings: AppSettings;
   setSettings: (s: AppSettings) => void;
   go: (v: View) => void;
 }) {
   return (
     <header className="app-topbar sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
-      <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:px-6">
-        <button
-          onClick={() => go("home")}
-          className="flex min-h-11 items-center text-left"
-        >
-          <BrandLockup compact />
-        </button>
+      <div
+        className={`mx-auto flex h-20 max-w-5xl items-center px-4 sm:px-6 ${
+          view === "home" ? "justify-end" : "justify-between"
+        }`}
+      >
+        {view !== "home" && (
+          <button
+            onClick={() => go("home")}
+            className="flex min-h-11 items-center text-left"
+          >
+            <BrandLockup compact />
+          </button>
+        )}
         <div className="flex items-center gap-1">
           <Button
             size="icon"
@@ -888,7 +904,7 @@ function TopBar({
                 <Menu />
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className="border-border/25">
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
@@ -928,15 +944,24 @@ function TopBar({
 function Home({
   game,
   history,
+  reducedMotion,
   go,
 }: {
   game: Game | null;
   history: GameResult[];
+  reducedMotion: boolean;
   go: (v: View) => void;
 }) {
   return (
     <div className="home-grid">
       <section className="relative z-10 mx-auto w-full max-w-5xl py-10 sm:py-20">
+        <motion.div
+          className="home-hero-brand"
+          animate={reducedMotion ? undefined : { y: [0, -5, 0] }}
+          transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <BrandLockup />
+        </motion.div>
         <h1 className="max-w-2xl text-5xl font-black leading-[.95] tracking-[-.055em] sm:text-7xl">
           Quiz-aftenen starter <span className="text-primary">her.</span>
         </h1>
@@ -2169,14 +2194,12 @@ function SettingsView({
   value,
   onChange,
   setup,
-  questions,
   onRestore,
   go,
 }: {
   value: AppSettings;
   onChange: (s: AppSettings) => void;
   setup: GameSetup;
-  questions: Question[];
   onRestore: (payload: {
     seen: SeenQuestion[];
     setup: Partial<GameSetup>;
@@ -2187,24 +2210,6 @@ function SettingsView({
   const [restoreCode, setRestoreCode] = useState("");
   const [backupStatus, setBackupStatus] = useState("");
   const [backupBusy, setBackupBusy] = useState(false);
-  const [localReports] = useState(() =>
-    load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []),
-  );
-  const [reportCopyStatus, setReportCopyStatus] = useState("");
-  const copyReports = async () => {
-    try {
-      await navigator.clipboard.writeText(
-        serializeLocalReports(localReports, questions),
-      );
-      setReportCopyStatus(
-        `${localReports.length} rapporter er kopieret. Indsæt dem direkte i Codex.`,
-      );
-    } catch {
-      setReportCopyStatus(
-        "Telefonen tillod ikke kopiering. Åbn /admin i denne installation og vælg Hent JSON.",
-      );
-    }
-  };
   const createBackup = async () => {
     setBackupBusy(true);
     setBackupStatus("");
@@ -2290,30 +2295,6 @@ function SettingsView({
           </div>
         </CardContent>
       </Card>
-      {localReports.length > 0 && (
-        <Card className="mt-6 border-primary/30">
-          <CardContent className="p-5">
-            <h2 className="font-bold">Dine fejlrapporter</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {localReports.length} rapporter ligger kun på denne enhed. Kopiér
-              dem, og indsæt teksten direkte i Codex.
-            </p>
-            <Button
-              className="mt-4 w-full"
-              variant="outline"
-              onClick={() => void copyReports()}
-            >
-              <Copy />
-              Kopiér fejlrapporter
-            </Button>
-            {reportCopyStatus && (
-              <p className="mt-3 text-sm" role="status">
-                {reportCopyStatus}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      )}
       <Card className="mt-6">
         <CardContent className="p-5">
           <h2 className="font-bold">Backup af seneste spørgsmål</h2>
