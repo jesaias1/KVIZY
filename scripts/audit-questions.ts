@@ -101,6 +101,35 @@ const explanatoryLengthOutliers = explanatoryCuriosity.filter((question) => {
     correct && correct.text.length > Math.max(...otherLengths) * 1.15,
   );
 });
+const absoluteDistractorPattern =
+  /\b(?:altid|aldrig|kun|helt|automatisk|præcis)\b/i;
+const stackedAbsoluteDistractors = explanatoryCuriosity.filter(
+  (question) =>
+    question.options.filter(
+      (option) =>
+        option.id !== question.correctOptionId &&
+        absoluteDistractorPattern.test(option.text),
+    ).length >= 2,
+);
+const repetitiveTemplateCaps = new Map([
+  ["capital", 18],
+  ["currency", 21],
+  ["film-director", 8],
+  ["danish-film-director", 9],
+  ["series-creator", 7],
+  ["danish-series-creator", 6],
+  ["album-artist", 6],
+  ["painting-artist", 5],
+]);
+const repetitiveTemplateCounts = Object.fromEntries(
+  [...repetitiveTemplateCaps].map(([tag]) => [
+    tag,
+    SEED_QUESTIONS.filter((question) => question.tags.includes(tag)).length,
+  ]),
+);
+const excessiveRepetitiveTemplates = [...repetitiveTemplateCaps].filter(
+  ([tag, limit]) => (repetitiveTemplateCounts[tag] ?? 0) > limit,
+);
 const fourOptionQuestions = SEED_QUESTIONS.filter(
   (question) => question.options.length === 4 && question.correctOptionId,
 );
@@ -155,6 +184,7 @@ const report = {
     ),
   ),
   explanatoryLengthOutliers: explanatoryLengthOutliers.length,
+  stackedAbsoluteDistractors: stackedAbsoluteDistractors.length,
   explanatoryCorrectLongestRate: Number(
     (explanatoryCorrectLongest.length / explanatoryCuriosity.length).toFixed(2),
   ),
@@ -167,6 +197,8 @@ const report = {
   ),
   retiredLookupQuestions: retiredLookupQuestions.length,
   retainedCountryLookups: retainedCountryLookups.length,
+  repetitiveTemplateCounts,
+  excessiveRepetitiveTemplates: excessiveRepetitiveTemplates.length,
   thinCategories: thinCategories.map((category) => category.name),
 };
 
@@ -182,11 +214,13 @@ if (
   report.editorialErrors > 0 ||
   report.obviousCountryAnswers > 0 ||
   report.explanatoryLengthOutliers > 0 ||
+  report.stackedAbsoluteDistractors > 0 ||
   report.explanatoryCorrectLongestRate > 0.35 ||
   report.globalLengthOutliers > 0 ||
   report.globalCorrectLongestRate > 0.35 ||
   report.retiredLookupQuestions > 0 ||
   report.retainedCountryLookups > 65 ||
+  report.excessiveRepetitiveTemplates > 0 ||
   report.longestOption > 70 ||
   report.thinCategories.length > 0
 ) {

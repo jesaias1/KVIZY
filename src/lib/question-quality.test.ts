@@ -466,4 +466,51 @@ describe("automatisk spørgsmålskvalitet", () => {
       );
     }
   });
+
+  it("begrænser ensformige opslagsskabeloner på tværs af hele banken", () => {
+    const caps: Record<string, number> = {
+      capital: 18,
+      currency: 21,
+      "film-director": 8,
+      "danish-film-director": 9,
+      "series-creator": 7,
+      "danish-series-creator": 6,
+      "album-artist": 6,
+      "painting-artist": 5,
+    };
+    for (const [tag, limit] of Object.entries(caps)) {
+      expect(
+        SEED_QUESTIONS.filter((question) => question.tags.includes(tag)).length,
+        tag,
+      ).toBeLessThanOrEqual(limit);
+    }
+  });
+
+  it("bruger ikke bunker af åbenlyst absolutte distraktorer", () => {
+    const absolute = /\b(?:altid|aldrig|kun|helt|automatisk|præcis)\b/i;
+    const offenders = SEED_QUESTIONS.filter(
+      (question) =>
+        question.tags.includes("hverdagsforklaring") &&
+        question.options.filter(
+          (option) =>
+            option.id !== question.correctOptionId &&
+            absolute.test(option.text),
+        ).length >= 2,
+    );
+    expect(offenders.map((question) => question.id)).toEqual([]);
+  });
+
+  it("udelukker tvetydige forklaringsspørgsmål fra den brede scanning", () => {
+    const retiredIds = [
+      "curiosity-008",
+      "curiosity-expansion-053",
+      "curiosity-round-3-049",
+      "curiosity-round-3-056",
+    ];
+    expect(
+      retiredIds.every(
+        (id) => !SEED_QUESTIONS.some((question) => question.id === id),
+      ),
+    ).toBe(true);
+  });
 });

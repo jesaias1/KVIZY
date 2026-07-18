@@ -613,7 +613,7 @@ const specs: Spec[] = [
   [
     "cat-54",
     "Hvad fortæller solcremens SPF-tal primært noget om?",
-    "Beskyttelsen mod den UVB-stråling, der giver solskoldning",
+    "Beskyttelsen mod UVB-stråling, som giver solskoldning",
     [
       "Hvor mange timer cremen altid virker",
       "Hvor meget huden bliver kølet",

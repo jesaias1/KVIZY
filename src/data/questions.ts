@@ -1193,6 +1193,10 @@ const CURATED_QUESTIONS: Question[] = seedSpecs.flatMap((spec) =>
 );
 
 const redundantQuestionIds = new Set([
+  "curiosity-008",
+  "curiosity-expansion-053",
+  "curiosity-round-3-049",
+  "curiosity-round-3-056",
   "matrix-cat-18-dkfilm-object-6",
   "matrix-cat-3-dkpol-basis-5",
   "variety-072", // Samme volleyballfakta som q-cat-25-6.
@@ -1421,9 +1425,9 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
     prompt: "Hvorfor består et fagværk ofte af trekanter?",
     options: [
       "De fordeler kræfter uden let at deformeres",
-      "De får materialet til at veje mindre",
-      "De leder altid hele belastningen lodret ned",
-      "De fjerner behovet for samlinger mellem delene",
+      "De samler belastningen i konstruktionens midte",
+      "De fører hovedsageligt belastningen lodret ned",
+      "De gør samlingerne mindre udsatte for vridning",
     ],
     explanation:
       "En trekant er geometrisk stabil. I et fagværk bliver belastningen især fordelt som træk og tryk gennem stængerne.",
@@ -1461,9 +1465,9 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
     prompt: "Hvorfor kan nye skove ikke alene standse klimaforandringerne?",
     options: [
       "Arealet og træernes samlede kulstoflager er begrænset",
-      "Træer optager kun kuldioxid i deres første leveår",
-      "Skove flytter blot kuldioxiden til andre lande",
-      "Træer holder helt op med at optage kulstof om vinteren",
+      "Optaget i skovene udlignes af jordens naturlige udledning",
+      "Nye skove optager mest ilt, mens de vokser",
+      "Kulstoffet forsvinder fra atmosfæren, men ikke fra klimasystemet",
     ],
     explanation:
       "Skove lagrer kulstof, men der er begrænset plads, og lageret kan gå tabt ved brand eller fældning. Udledningerne skal derfor også reduceres.",
@@ -1537,6 +1541,169 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
   },
 };
 
+const plausibleDistractorFixes: Record<string, [string, string, string]> = {
+  "music-production-014": [
+    "Den opfanger primært lyd lige forfra",
+    "Den opfanger lyd forfra og bagfra, men ikke fra siderne",
+    "Den danner automatisk et stereosignal",
+  ],
+  "music-production-020": [
+    "1 dB ekstra ind giver cirka 4 dB ekstra ud",
+    "Signalet sænkes med 4 dB, så snart threshold nås",
+    "Threshold flyttes 4 dB for hvert decibel over grænsen",
+  ],
+  "music-production-053": [
+    "De forstærker især de frekvenser, signalerne har fælles",
+    "De bliver forskudt i tid, men beholder samme lydstyrke",
+    "De samles til et stereosignal med bredere panorering",
+  ],
+  "music-production-073": [
+    "Den valgte kontrol kopieres til alle patterns i Playlist",
+    "Kontrollens nuværende værdi gemmes som en ny mixer-preset",
+    "Den valgte kontrol kobles direkte til projektets mastertempo",
+  ],
+  "music-production-075": [
+    "Noter uden velocity vises som halvgennemsigtige",
+    "Tidligere slettede noter vises, indtil projektet gemmes",
+    "Noter uden for den valgte skala skjules i baggrunden",
+  ],
+  "music-production-087": [
+    "Eksporten bruger en større buffer, men afspiller stadig i realtid",
+    "Effekter med stor latenstid springes over under eksporten",
+    "Projektet eksporteres ved lavere samplerate end afspilningen",
+  ],
+  "curiosity-002": [
+    "Metallet har mindre varmekapacitet og er derfor reelt koldere",
+    "Den blanke overflade sender mere varmestråling væk fra hånden",
+    "Træets fibre holder på varmen fra den omgivende luft",
+  ],
+  "curiosity-005": [
+    "Overfladespændingen bærer den frosne klump",
+    "Små luftlommer i isen giver den tilstrækkelig opdrift",
+    "Det kolde vand under isen presser den mod overfladen",
+  ],
+  "curiosity-012": [
+    "Kulden får elektroner til at bevæge sig hurtigere gennem huden",
+    "Vintertøj leder ladningen hurtigere fra kroppen til luften",
+    "Opvarmet indeluft tilfører kroppen en svag elektrisk ladning",
+  ],
+  "curiosity-021": [
+    "Luft i kornet udvider sig og river skallen op",
+    "Olien trænger ind og får stivelsen til at svulme",
+    "Skallen trækker sig hurtigt sammen omkring den varme kerne",
+  ],
+  "curiosity-028": [
+    "Det ekstra glas reflekterer det meste af varmen tilbage i rummet",
+    "To tynde ruder leder samlet mindre varme end én tyk rude",
+    "Trykket mellem ruderne holder den indvendige rude varm",
+  ],
+  "curiosity-033": [
+    "Rummet bliver gradvist køligere, fordi kulden slipper ud",
+    "Temperaturen forbliver omtrent uændret, fordi døren står åben",
+    "Luften køles, mens vægge og møbler beholder samme temperatur",
+  ],
+  "curiosity-044": [
+    "Satellitsignalerne bliver upræcise, når telefonen står stille",
+    "Telefonen kan kun beregne positionen, hvis kompasset peger nord",
+    "Bygningens wi-fi-signaler bruger samme frekvens som GPS",
+  ],
+  "curiosity-045": [
+    "De vigtigste felter er gemt to gange i hver sin halvdel",
+    "Kameraet rekonstruerer skaden ud fra QR-kodens kantmønster",
+    "Den beskadigede del erstattes med data fra en central database",
+  ],
+  "curiosity-046": [
+    "Websteder kan ikke længere se enhedens IP-adresse",
+    "Internetudbyderen modtager kun krypterede domænenavne",
+    "Arbejdsgiverens netværk registrerer ikke trafik fra private vinduer",
+  ],
+  "curiosity-047": [
+    "Hvor længe cremen er vandfast efter badning",
+    "Hvor godt cremen beskytter mod UVA-stråling",
+    "Hvor mange minutter der bør gå mellem påføringer",
+  ],
+  "curiosity-expansion-002": [
+    "Den indeholder mere ilt og trækkes derfor mod højere luftlag",
+    "Lufttrykket under den varme luft bliver lavere end over den",
+    "Tyngdekraften påvirker varm luft mindre end kold luft",
+  ],
+  "curiosity-expansion-023": [
+    "En stor isterning er tættere og holder derfor bedre på kulden",
+    "Den store isterning indeholder mindre luft end mange små",
+    "Små isterninger smelter først, når drinken bliver omrørt",
+  ],
+  "curiosity-expansion-037": [
+    "Det udligner automatisk lydstyrken mellem de to klip",
+    "Det flytter klippene, så deres bølgeformer begynder samme sted",
+    "Det tilpasser tonehøjden i det ene klip til det andet",
+  ],
+  "curiosity-expansion-042": [
+    "Nålenes vokslag gør fotosyntesen mere effektiv i frostvejr",
+    "Harpiksen transporterer varme fra stammen ud til nålene",
+    "Den smalle form gør, at sneen tilfører nålene nok vand",
+  ],
+  "curiosity-expansion-052": [
+    "Banken lægger rentestigningen direkte oven i restgælden",
+    "Afdragene bliver mindre, så lånet automatisk løber længere",
+    "Lånets gebyrer vokser i samme forhold som markedsrenten",
+  ],
+  "curiosity-expansion-054": [
+    "Alle værdipapirerne får dermed omtrent samme forventede afkast",
+    "Fonden kan bruge gevinster til straks at annullere enkelte tab",
+    "Kursudsving udlignes, når fonden ejer et bestemt minimumsantal",
+  ],
+  "curiosity-expansion-056": [
+    "Stavereformer giver automatisk gamle ord en ny definition",
+    "Sprognævn fordeler nye betydninger, når samfundet ændrer sig",
+    "Ændret udtale får ordets betydning til at følge lyden",
+  ],
+  "curiosity-expansion-062": [
+    "Omkvædet får normalt en anelse højere tempo end verset",
+    "En længere rumklang får alle instrumenter til at virke tættere på",
+    "Sangstemmen placeres smallere i stereo end i verset",
+  ],
+  "curiosity-expansion-065": [
+    "Hvirvler fra den forreste rytter skubber direkte på baghjulet",
+    "Den forreste cykels bevægelse øger dæktrykket hos de næste",
+    "Rytterne deler bevægelsesenergi, når afstanden bliver lille",
+  ],
+  "curiosity-expansion-067": [
+    "Skyderen presser tænderne flade, så de ligger oven på hinanden",
+    "Friktion opvarmer tænderne, så de kortvarigt binder sammen",
+    "Skyderen strammer stoffet, mens tandrækkerne forbliver adskilt",
+  ],
+  "curiosity-round-3-006": [
+    "Programmet samler optagelserne til én tonefast version",
+    "Hvert nyt lag dæmper fasefejl i den foregående optagelse",
+    "Mikrofonens frekvensområde udvides for hver ekstra optagelse",
+  ],
+  "curiosity-round-3-027": [
+    "Korttidshukommelsen fortsætter med at afprøve løsninger uændret",
+    "En pause flytter automatisk problemet til langtidshukommelsen",
+    "Synet bliver mere præcist, når opgaven ikke betragtes et stykke tid",
+  ],
+  "curiosity-round-3-045": [
+    "Skrå stænger fordeler automatisk vægten ligeligt i alle retninger",
+    "En trekant fører hele belastningen direkte ned i fundamentet",
+    "Tre samlinger kræver mindre materiale end andre former med samme areal",
+  ],
+  "curiosity-round-3-047": [
+    "Om ejerskabet følger den ældste del af en genstand",
+    "Om en nøjagtig kopi arver originalens historie",
+    "Om materialets alder alene bestemmer en genstands værdi",
+  ],
+  "format-depth-060": [
+    "Elementer tæt på hinanden opfattes som en gruppe",
+    "Elementer med samme form opfattes som sammenhørende",
+    "Et motiv opfattes som adskilt fra sin baggrund",
+  ],
+  "format-depth-073": [
+    "Små formater øger automatisk kontrasten mellem farverne",
+    "Skærmen fremhæver tynde detaljer, når logoet skaleres ned",
+    "Bogstaver bliver lettere at læse, jo tættere de står",
+  ],
+};
+
 function applyReportedQuestionFix(question: Question): Question {
   const fix = reportedQuestionFixes[question.id];
   if (!fix) return question;
@@ -1552,6 +1719,25 @@ function applyReportedQuestionFix(question: Question): Question {
     explanation: fix.explanation,
     difficulty: fix.difficulty ?? question.difficulty,
     fingerprint: fingerprint(fix.prompt, options[0].text, question.type),
+    updatedAt: "2026-07-18T00:00:00.000Z",
+  };
+}
+
+function applyPlausibleDistractorFix(question: Question): Question {
+  const distractors = plausibleDistractorFixes[question.id];
+  if (!distractors) return question;
+  const correct = question.options.find(
+    (option) => option.id === question.correctOptionId,
+  );
+  if (!correct) return question;
+  const options = [correct.text, ...distractors].map((text, index) => ({
+    id: `o${index + 1}`,
+    text,
+  }));
+  return {
+    ...question,
+    options,
+    correctOptionId: options[0].id,
     updatedAt: "2026-07-18T00:00:00.000Z",
   };
 }
@@ -1582,11 +1768,12 @@ const rawBaseQuestions: Question[] = [
       !question.tags.some((tag) => retiredLowValueTags.has(tag)),
   )
   .map(applyEditorialRewrite)
-  .map(applyReportedQuestionFix);
+  .map(applyReportedQuestionFix)
+  .map(applyPlausibleDistractorFix);
 
 const countryRelationLimits = new Map([
-  ["capital", 36],
-  ["currency", 24],
+  ["capital", 18],
+  ["currency", 21],
   ["language", 5],
 ]);
 const retainedCountryLookupIds = new Set(
@@ -1598,11 +1785,37 @@ const retainedCountryLookupIds = new Set(
       .map((question) => question.id),
   ),
 );
+const repetitiveRelationLimits = [
+  { tags: ["film-director"], limit: 8 },
+  { tags: ["danish-film-director"], limit: 9 },
+  { tags: ["series-creator"], limit: 7 },
+  { tags: ["danish-series-creator"], limit: 6 },
+  { tags: ["album-artist"], limit: 6 },
+  { tags: ["painting-artist"], limit: 5 },
+];
+const retainedRepetitiveRelationIds = new Set(
+  repetitiveRelationLimits.flatMap(({ tags, limit }) =>
+    rawBaseQuestions
+      .filter((question) => tags.some((tag) => question.tags.includes(tag)))
+      .sort((a, b) => stableHash(a.id).localeCompare(stableHash(b.id)))
+      .slice(0, limit)
+      .map((question) => question.id),
+  ),
+);
+const repetitiveRelationTags = new Set(
+  repetitiveRelationLimits.flatMap(({ tags }) => tags),
+);
 const BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
   const countryRelation = ["capital", "currency", "continent", "language"].find(
     (relation) => question.tags.includes(relation),
   );
-  return !countryRelation || retainedCountryLookupIds.has(question.id);
+  if (countryRelation && !retainedCountryLookupIds.has(question.id)) return false;
+  const repetitiveRelation = question.tags.some((tag) =>
+    repetitiveRelationTags.has(tag),
+  );
+  return (
+    !repetitiveRelation || retainedRepetitiveRelationIds.has(question.id)
+  );
 });
 
 const categoryLinks: Record<string, string[]> = {
