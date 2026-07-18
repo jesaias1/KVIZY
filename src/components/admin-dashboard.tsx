@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   CheckCheck,
+  Copy,
   Download,
   Flag,
   Search,
@@ -24,8 +25,14 @@ import {
 } from "@/components/ui/select";
 import { SEED_QUESTIONS } from "@/data/questions";
 import { CATEGORIES, categoryById } from "@/lib/categories";
-import type { Question, QuestionType } from "@/lib/types";
+import { APP_CONFIG } from "@/lib/config";
+import type {
+  LocalQuestionReport,
+  Question,
+  QuestionType,
+} from "@/lib/types";
 import { auditQuestion } from "@/lib/question-quality";
+import { serializeLocalReports } from "@/lib/report-export";
 
 type ServerReport = {
   id: string;
@@ -52,6 +59,8 @@ export function AdminDashboard() {
     [generated, setGenerated] = useState<Question[]>([]),
     [managed, setManaged] = useState<Question[]>(SEED_QUESTIONS),
     [reports, setReports] = useState<ServerReport[]>([]),
+    [localReports, setLocalReports] = useState<LocalQuestionReport[]>([]),
+    [localExportStatus, setLocalExportStatus] = useState(""),
     [analytics, setAnalytics] = useState<AggregateAnalytics>({
       gamesStarted: 0,
       gamesCompleted: 0,
@@ -66,6 +75,16 @@ export function AdminDashboard() {
     [error, setError] = useState("");
   useEffect(() => {
     const controller = new AbortController();
+    const localReportTimer = window.setTimeout(() => {
+      try {
+        const stored = JSON.parse(
+          localStorage.getItem(APP_CONFIG.reportsKey) ?? "[]",
+        );
+        setLocalReports(Array.isArray(stored) ? stored : []);
+      } catch {
+        setLocalReports([]);
+      }
+    }, 0);
     fetch("/api/admin/reports", { signal: controller.signal })
       .then((response) => (response.ok ? response.json() : { reports: [] }))
       .then((data) => setReports(data.reports ?? []))
@@ -86,7 +105,10 @@ export function AdminDashboard() {
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => data && setAnalytics(data))
       .catch(() => undefined);
-    return () => controller.abort();
+    return () => {
+      window.clearTimeout(localReportTimer);
+      controller.abort();
+    };
   }, []);
   const flaggedQuestions = useMemo(
     () => managed.filter((question) => auditQuestion(question).length),
@@ -162,6 +184,31 @@ export function AdminDashboard() {
     anchor.download = "kvizy-rapporter.json";
     anchor.click();
     URL.revokeObjectURL(anchor.href);
+  };
+  const localReportJson = () =>
+    serializeLocalReports(localReports, SEED_QUESTIONS);
+  const downloadLocalReports = () => {
+    const blob = new Blob([localReportJson()], {
+      type: "application/json;charset=utf-8",
+    });
+    const anchor = document.createElement("a");
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = `kvizy-lokale-rapporter-${new Date().toISOString().slice(0, 10)}.json`;
+    anchor.click();
+    URL.revokeObjectURL(anchor.href);
+    setLocalExportStatus(`${localReports.length} rapporter blev hentet.`);
+  };
+  const copyLocalReports = async () => {
+    try {
+      await navigator.clipboard.writeText(localReportJson());
+      setLocalExportStatus(
+        `${localReports.length} rapporter er kopieret og kan indsættes direkte i Codex.`,
+      );
+    } catch {
+      setLocalExportStatus(
+        "Browseren tillod ikke kopiering. Brug Hent JSON i stedet.",
+      );
+    }
   };
   const updateQuestion = async (
     question: Question,
@@ -268,6 +315,48 @@ export function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+      <Card className="mb-6 border-primary/30">
+        <CardHeader>
+          <CardTitle>Rapporter på denne enhed</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            {localReports.length > 0
+              ? `${localReports.length} lokale rapporter fundet i denne browser eller PWA.`
+              : "Ingen lokale rapporter fundet i denne browser eller PWA."}
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Lokale rapporter kan være adskilt mellem Safari, Chrome og en
+            installeret PWA. Eksportér derfor fra den installation, hvor
+            rapporterne blev sendt.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={localReports.length === 0}
+              onClick={() => void copyLocalReports()}
+            >
+              <Copy />
+              Kopiér til Codex
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={localReports.length === 0}
+              onClick={downloadLocalReports}
+            >
+              <Download />
+              Hent JSON
+            </Button>
+          </div>
+          {localExportStatus && (
+            <p className="mt-3 text-sm" role="status">
+              {localExportStatus}
+            </p>
+          )}
+        </CardContent>
+      </Card>
       {reports.length > 0 && (
         <Card className="mb-6">
           <CardHeader>

@@ -161,6 +161,10 @@ export type LocalQuestionReport = {
   note?: string;
   createdAt: string;
   synced: boolean;
+  prompt?: string;
+  options?: Question["options"];
+  correctOptionId?: string;
+  explanation?: string;
 };
 export type AppSettings = {
   theme: "dark" | "light";

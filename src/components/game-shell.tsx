@@ -83,6 +83,7 @@ import {
   hasUsefulExplanation,
   questionOptionSetKey,
 } from "@/lib/question-quality";
+import { serializeLocalReports } from "@/lib/report-export";
 
 type View =
   | "home"
@@ -646,6 +647,9 @@ export function GameShell() {
       game?.questions.find((question) => question.id === questionId)
         ?.categoryId ?? "",
     ]);
+    const reportedQuestion = game?.questions.find(
+      (question) => question.id === questionId,
+    );
     const report: LocalQuestionReport = {
       id: crypto.randomUUID(),
       questionId,
@@ -653,6 +657,10 @@ export function GameShell() {
       note: note?.trim() || undefined,
       createdAt: new Date().toISOString(),
       synced: false,
+      prompt: reportedQuestion?.prompt,
+      options: reportedQuestion?.options,
+      correctOptionId: reportedQuestion?.correctOptionId,
+      explanation: reportedQuestion?.explanation,
     };
     const stored = load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []);
     safeSet(
@@ -797,6 +805,7 @@ export function GameShell() {
         value={settings}
         onChange={setSettings}
         setup={setup}
+        questions={questionBank}
         onRestore={(payload) => {
           const restored = restoreSetup(payload.setup);
           setSetup(restored);
@@ -2160,12 +2169,14 @@ function SettingsView({
   value,
   onChange,
   setup,
+  questions,
   onRestore,
   go,
 }: {
   value: AppSettings;
   onChange: (s: AppSettings) => void;
   setup: GameSetup;
+  questions: Question[];
   onRestore: (payload: {
     seen: SeenQuestion[];
     setup: Partial<GameSetup>;
@@ -2176,6 +2187,24 @@ function SettingsView({
   const [restoreCode, setRestoreCode] = useState("");
   const [backupStatus, setBackupStatus] = useState("");
   const [backupBusy, setBackupBusy] = useState(false);
+  const [localReports] = useState(() =>
+    load<LocalQuestionReport[]>(APP_CONFIG.reportsKey, []),
+  );
+  const [reportCopyStatus, setReportCopyStatus] = useState("");
+  const copyReports = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        serializeLocalReports(localReports, questions),
+      );
+      setReportCopyStatus(
+        `${localReports.length} rapporter er kopieret. Indsæt dem direkte i Codex.`,
+      );
+    } catch {
+      setReportCopyStatus(
+        "Telefonen tillod ikke kopiering. Åbn /admin i denne installation og vælg Hent JSON.",
+      );
+    }
+  };
   const createBackup = async () => {
     setBackupBusy(true);
     setBackupStatus("");
@@ -2261,6 +2290,30 @@ function SettingsView({
           </div>
         </CardContent>
       </Card>
+      {localReports.length > 0 && (
+        <Card className="mt-6 border-primary/30">
+          <CardContent className="p-5">
+            <h2 className="font-bold">Dine fejlrapporter</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {localReports.length} rapporter ligger kun på denne enhed. Kopiér
+              dem, og indsæt teksten direkte i Codex.
+            </p>
+            <Button
+              className="mt-4 w-full"
+              variant="outline"
+              onClick={() => void copyReports()}
+            >
+              <Copy />
+              Kopiér fejlrapporter
+            </Button>
+            {reportCopyStatus && (
+              <p className="mt-3 text-sm" role="status">
+                {reportCopyStatus}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
       <Card className="mt-6">
         <CardContent className="p-5">
           <h2 className="font-bold">Backup af seneste spørgsmål</h2>
