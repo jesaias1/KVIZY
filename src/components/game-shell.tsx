@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import confetti from "canvas-confetti";
 import { motion } from "motion/react";
@@ -18,6 +19,7 @@ import {
   Gamepad2,
   Heart,
   History,
+  KeyRound,
   LifeBuoy,
   Menu,
   RefreshCw,
@@ -2335,6 +2337,16 @@ function SettingsView({
           )}
         </CardContent>
       </Card>
+      <div className="mt-8 flex justify-center" aria-label="Admin-genvej">
+        <Link
+          href="/admin"
+          prefetch={false}
+          aria-label="Åbn administration"
+          className="flex size-11 items-center justify-center rounded-full text-muted-foreground/15 transition-colors hover:text-muted-foreground/35 focus-visible:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <KeyRound className="size-3" aria-hidden="true" />
+        </Link>
+      </div>
     </>
   );
 }
