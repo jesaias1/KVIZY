@@ -409,6 +409,33 @@ describe("adaptiv udvælgelse", () => {
       chosen.every((q) => selectedCategoryIds.includes(q.categoryId)),
     ).toBe(true);
   });
+  it("spreder valgte kategorier gennem spillet uden nabogentagelser", () => {
+    const selectedCategoryIds = ["cat-1", "cat-2", "cat-5", "cat-6", "cat-21"];
+    for (let seed = 1; seed <= 30; seed++) {
+      let state = seed;
+      const random = () =>
+        (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+      const chosen = selectQuestions(
+        SEED_QUESTIONS,
+        {
+          ...setup,
+          questionCount: 30,
+          categoryIds: selectedCategoryIds,
+        },
+        [],
+        random,
+      );
+      expect(chosen).toHaveLength(30);
+      expect(
+        chosen.some(
+          (question, index) =>
+            index > 0 &&
+            question.categoryId === chosen[index - 1].categoryId,
+        ),
+        `seed ${seed}`,
+      ).toBe(false);
+    }
+  });
   it("holder musikproduktion ude, når kategorien er fravalgt", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,

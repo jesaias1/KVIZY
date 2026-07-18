@@ -556,6 +556,59 @@ function balancePlayerDifficulties(questions: Question[], playerCount: number) {
   return balanced;
 }
 
+function spreadCategoriesAcrossTurns(
+  questions: Question[],
+  playerCount: number,
+) {
+  if (
+    questions.length < 3 ||
+    new Set(questions.map((question) => question.categoryId)).size < 2
+  )
+    return questions;
+  const spread = [...questions];
+  const players = Math.max(1, playerCount);
+  for (let index = 1; index < spread.length; index++) {
+    const previousCategory = spread[index - 1]?.categoryId;
+    const previousTwoCategories = new Set(
+      spread
+        .slice(Math.max(0, index - 2), index)
+        .map((question) => question.categoryId),
+    );
+    if (!previousTwoCategories.has(spread[index].categoryId)) continue;
+
+    let bestIndex = index;
+    let bestScore = Number.POSITIVE_INFINITY;
+    for (
+      let candidateIndex = index;
+      candidateIndex < spread.length;
+      candidateIndex += players
+    ) {
+      const candidate = spread[candidateIndex];
+      const categoryPenalty =
+        (candidate.categoryId === previousCategory ? 1_000 : 0) +
+        (previousTwoCategories.has(candidate.categoryId) ? 180 : 0);
+      const typePenalty =
+        spread[index - 1]?.type === candidate.type &&
+        spread[index - 2]?.type === candidate.type
+          ? 40
+          : 0;
+      const difficultyPenalty =
+        Math.abs(candidate.difficulty - spread[index].difficulty) * 12;
+      const distancePenalty = (candidateIndex - index) * 0.05;
+      const score =
+        categoryPenalty + typePenalty + difficultyPenalty + distancePenalty;
+      if (score < bestScore) {
+        bestScore = score;
+        bestIndex = candidateIndex;
+      }
+    }
+    if (bestIndex !== index) {
+      [spread[index], spread[bestIndex]] = [spread[bestIndex], spread[index]];
+    }
+  }
+  return spread;
+}
+
 export function selectQuestions(
   bank: Question[],
   setup: GameSetup,
@@ -902,8 +955,12 @@ export function selectQuestions(
     setup,
     historicallySeenIds,
   );
-  const distributed = balancePlayerDifficulties(
+  const difficultyBalanced = balancePlayerDifficulties(
     fairTypesDistributed,
+    Math.max(1, setup.players.length),
+  );
+  const distributed = spreadCategoriesAcrossTurns(
+    difficultyBalanced,
     Math.max(1, setup.players.length),
   );
   // Sidste sikkerhedsnet: ingen senere balancering må nogensinde kunne føre et

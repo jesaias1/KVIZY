@@ -79,7 +79,6 @@ import type {
   SeenQuestion,
 } from "@/lib/types";
 import {
-  hasPublicSource,
   hasUsefulExplanation,
   questionOptionSetKey,
 } from "@/lib/question-quality";
@@ -1736,23 +1735,6 @@ function Play({
                   )
                   .join(" → ")}
               </p>
-            )}
-            {hasPublicSource(q) && (
-              <small>
-                Kilde:{" "}
-                {q.sourceUrl ? (
-                  <a
-                    className="underline"
-                    href={q.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {q.sourceLabel}
-                  </a>
-                ) : (
-                  q.sourceLabel
-                )}
-              </small>
             )}
           </div>
           <div className="feedback-actions grid gap-2">
