@@ -8,8 +8,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [showPortraitGuard, setShowPortraitGuard] = useState(false);
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
+    const hadControllerAtStartup = Boolean(navigator.serviceWorker.controller);
     let reloading = false;
     const useNewVersion = () => {
+      // En førstegangsinstallation overtager siden via clients.claim(). Det er
+      // ikke en opdatering og må derfor ikke ligne en ekstra genindlæsning.
+      if (!hadControllerAtStartup) return;
       if (reloading) return;
       reloading = true;
       window.location.reload();

@@ -55,7 +55,7 @@ export async function GET(request: Request) {
   );
 
   return NextResponse.json(
-    { questions: bank, version: "2026-07-18.1" },
+    { questions: bank, version: "2026-07-18.2" },
     {
       headers: {
         "Cache-Control":

@@ -626,14 +626,11 @@ export function selectQuestions(
   const inDifficultyBand = (question: Question) =>
     question.difficulty >= minimumDifficulty &&
     question.difficulty <= maximumDifficulty;
-  const strictEdgeLevel = setup.difficulty === 1 || setup.difficulty === 5;
   const inBandBank = eligibleBank.filter(inDifficultyBand);
-  const candidatePool = strictEdgeLevel
-    ? inBandBank
-    : [
-        ...inBandBank,
-        ...eligibleBank.filter((question) => !inDifficultyBand(question)),
-      ];
+  const candidatePool = [
+    ...inBandBank,
+    ...eligibleBank.filter((question) => !inDifficultyBand(question)),
+  ];
   const picked: Question[] = [];
   const pickedIds = new Set<string>();
   const pickedFingerprints = new Set<string>();
@@ -731,6 +728,7 @@ export function selectQuestions(
       requireGeneralKnowledge: boolean,
       allowRepeatedCategory: boolean,
       seenPolicy: "unseen" | "old" | "any",
+      difficultyPolicy: "selected-band" | "fallback",
     ) => {
       for (const question of candidatePool) {
         const factKey = factKeys.get(question.id) ?? "";
@@ -755,6 +753,8 @@ export function selectQuestions(
           (seenPolicy === "old" &&
             (!seenQuestion || seenAge < REPEAT_COOLDOWN_MS)) ||
           (seenPolicy === "any" && !seenQuestion) ||
+          (difficultyPolicy === "selected-band" &&
+            !inDifficultyBand(question)) ||
           (requireGeneralKnowledge && !isGeneralKnowledgeQuestion(question)) ||
           (!allowRepeatedCategory &&
             (categoryCounts.get(question.categoryId) ?? 0) >= categoryLimit) ||
@@ -814,19 +814,64 @@ export function selectQuestions(
       }
     };
     const requireGeneralKnowledge = generalSlots.has(i);
-    const chooseWithSeenPolicy = (policy: "unseen" | "old" | "any") => {
-      chooseFromPool(false, false, requireGeneralKnowledge, false, policy);
+    const chooseWithSeenPolicy = (
+      policy: "unseen" | "old" | "any",
+      difficultyPolicy: "selected-band" | "fallback",
+    ) => {
+      chooseFromPool(
+        false,
+        false,
+        requireGeneralKnowledge,
+        false,
+        policy,
+        difficultyPolicy,
+      );
       if (!chosen)
-        chooseFromPool(true, false, requireGeneralKnowledge, false, policy);
+        chooseFromPool(
+          true,
+          false,
+          requireGeneralKnowledge,
+          false,
+          policy,
+          difficultyPolicy,
+        );
       if (!chosen)
-        chooseFromPool(true, true, requireGeneralKnowledge, false, policy);
+        chooseFromPool(
+          true,
+          true,
+          requireGeneralKnowledge,
+          false,
+          policy,
+          difficultyPolicy,
+        );
       if (!chosen && requireGeneralKnowledge)
-        chooseFromPool(false, false, false, false, policy);
-      if (!chosen) chooseFromPool(true, true, false, true, policy);
+        chooseFromPool(
+          false,
+          false,
+          false,
+          false,
+          policy,
+          difficultyPolicy,
+        );
+      if (!chosen)
+        chooseFromPool(
+          true,
+          true,
+          false,
+          true,
+          policy,
+          difficultyPolicy,
+        );
     };
-    chooseWithSeenPolicy("unseen");
-    if (!chosen) chooseWithSeenPolicy("old");
-    if (!chosen) chooseWithSeenPolicy("any");
+    // GennemgÃ¥ hele historikprioriteten inden for Â±1 niveau, fÃ¸r banken
+    // overhovedet mÃ¥ udvide. Et Ã¦ldre niveau 3-spÃ¸rgsmÃ¥l er bedre end et
+    // helt nyt niveau 1-spÃ¸rgsmÃ¥l, nÃ¥r spilleren har valgt niveau 4.
+    chooseWithSeenPolicy("unseen", "selected-band");
+    if (!chosen) chooseWithSeenPolicy("old", "selected-band");
+    if (!chosen) chooseWithSeenPolicy("any", "selected-band");
+    if (!chosen) chooseWithSeenPolicy("unseen", "fallback");
+    if (!chosen) chooseWithSeenPolicy("old", "fallback");
+    if (!chosen) chooseWithSeenPolicy("any", "fallback");
     // Usete kommer altid først. Derefter vælges de ældst sete spørgsmål,
     // så en gennemspillet kategori fortsat kan bruges uden gentagelser i spillet.
     if (!chosen) break;

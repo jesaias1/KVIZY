@@ -268,6 +268,46 @@ describe("seedbank og Zod", () => {
   });
 });
 describe("adaptiv udvælgelse", () => {
+  it("bruger ældre spørgsmål inden for ±1 niveau før nye spørgsmål udenfor", () => {
+    const oldSeen: SeenQuestion[] = SEED_QUESTIONS.filter(
+      (question) => question.difficulty >= 3 && question.difficulty <= 5,
+    ).map((question) => ({
+      id: question.id,
+      lastSeen: "2025-01-01T00:00:00.000Z",
+      count: 1,
+      correct: false,
+    }));
+    const chosen = selectQuestions(
+      SEED_QUESTIONS,
+      { ...setup, questionCount: 30, difficulty: 4, difficultyMode: "fixed" },
+      oldSeen,
+    );
+
+    expect(chosen).toHaveLength(30);
+    expect(
+      chosen.every(
+        (question) => question.difficulty >= 3 && question.difficulty <= 5,
+      ),
+    ).toBe(true);
+  });
+
+  it("kan fylde en svær Hollywood-runde uden lette spørgsmål", () => {
+    const chosen = selectQuestions(SEED_QUESTIONS, {
+      ...setup,
+      questionCount: 10,
+      difficulty: 4,
+      difficultyMode: "fixed",
+      categoryIds: ["cat-64"],
+    });
+
+    expect(chosen).toHaveLength(10);
+    expect(
+      chosen.every(
+        (question) => question.difficulty >= 3 && question.difficulty <= 5,
+      ),
+    ).toBe(true);
+  });
+
   it("viser ikke den samme pulje af svarmuligheder to gange i et spil", () => {
     for (let simulation = 0; simulation < 5; simulation++) {
       const chosen = selectQuestions(SEED_QUESTIONS, {

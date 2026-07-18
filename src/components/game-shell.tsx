@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-lockup";
+import { QuizText } from "@/components/quiz-text";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -1011,6 +1012,10 @@ function Setup({
     setup.mode === "quick" ? 10 : setup.questionCount,
     setup.players.length,
   );
+  const questionCountIndex = Math.max(
+    0,
+    questionCounts.indexOf(displayedQuestionCount),
+  );
   const add = () =>
     setSetup({
       ...setup,
@@ -1279,21 +1284,33 @@ function Setup({
             <CardHeader>
               <CardTitle>Antal spørgsmål</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-3 gap-2">
-              {questionCounts.map((n) => (
-                <Button
-                  key={n}
-                  className="h-10"
-                  variant={displayedQuestionCount === n ? "default" : "outline"}
-                  onClick={() => setSetup({ ...setup, questionCount: n })}
-                >
-                  {n}
-                </Button>
-              ))}
-              <p className="col-span-3 mt-1 text-center text-xs text-muted-foreground">
-                {displayedQuestionCount / setup.players.length} spørgsmål pr.{" "}
-                {setup.mode === "teams" ? "hold" : "spiller"}
-              </p>
+            <CardContent>
+              <div className="mb-3 flex items-end justify-between gap-4">
+                <b className="text-4xl">{displayedQuestionCount}</b>
+                <span className="text-right text-sm text-muted-foreground">
+                  {displayedQuestionCount / setup.players.length} spørgsmål pr.{" "}
+                  {setup.mode === "teams" ? "hold" : "spiller"}
+                </span>
+              </div>
+              <Slider
+                aria-label="Antal spørgsmål"
+                min={0}
+                max={Math.max(0, questionCounts.length - 1)}
+                step={1}
+                value={[questionCountIndex]}
+                disabled={questionCounts.length < 2}
+                onValueChange={([index]) =>
+                  setSetup({
+                    ...setup,
+                    questionCount:
+                      questionCounts[index] ?? displayedQuestionCount,
+                  })
+                }
+              />
+              <div className="mt-3 flex justify-between text-xs text-muted-foreground">
+                <span>{questionCounts[0]}</span>
+                <span>{questionCounts.at(-1)}</span>
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -1497,15 +1514,14 @@ function Play({
           </h2>
         </div>
         <div className="flex gap-2">
-          {game.setup.players.map((x) => (
-            <div
-              key={x.id}
-              className={`score-pill ${x.id === p.id ? "active" : ""}`}
-            >
-              <span>{x.avatar}</span>
-              <b>{x.score.toLocaleString("da-DK")}</b>
-            </div>
-          ))}
+          <div
+            className="score-pill active"
+            role="status"
+            aria-label={`${p.name}s point`}
+          >
+            <span>{p.avatar}</span>
+            <b>{p.score.toLocaleString("da-DK")}</b>
+          </div>
         </div>
       </div>
       <Progress value={((game.index + 1) / game.questions.length) * 100} />
@@ -1603,7 +1619,7 @@ function Play({
             </small>
           )}
           <CardTitle className="pt-4 text-2xl leading-tight sm:text-4xl">
-            {q.prompt}
+            <QuizText>{q.prompt}</QuizText>
           </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3">
@@ -1632,7 +1648,9 @@ function Play({
                     ? orderIndex + 1
                     : String.fromCharCode(65 + i)}
                 </span>
-                <b>{o.text}</b>
+                <b>
+                  <QuizText>{o.text}</QuizText>
+                </b>
                 {given && correct && <Check className="ml-auto" />}
                 {given && selected && !correct && <X className="ml-auto" />}
               </Button>
@@ -1670,7 +1688,11 @@ function Play({
               {given.points > 0 ? "+" : ""}
               {given.points.toLocaleString("da-DK")} point
             </b>
-            {hasUsefulExplanation(q.explanation) && <p>{q.explanation}</p>}
+            {hasUsefulExplanation(q.explanation) && (
+              <p>
+                <QuizText>{q.explanation}</QuizText>
+              </p>
+            )}
             {q.type === "ordering" && q.correctOrder && (
               <p>
                 Korrekt rækkefølge:{" "}
@@ -1973,10 +1995,12 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                     {a?.correct ? "Rigtigt" : "Forkert"}
                   </Badge>
                 </div>
-                <h3 className="mt-3 font-bold">{q.prompt}</h3>
+                <h3 className="mt-3 font-bold">
+                  <QuizText>{q.prompt}</QuizText>
+                </h3>
                 {hasUsefulExplanation(q.explanation) && (
                   <p className="mt-2 text-sm text-muted-foreground">
-                    {q.explanation}
+                    <QuizText>{q.explanation}</QuizText>
                   </p>
                 )}
               </CardContent>

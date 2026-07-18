@@ -96,6 +96,26 @@ describe("automatisk spørgsmålskvalitet", () => {
     }
   });
 
+  it("lader Hollywood handle bredt om både film og skuespillere", () => {
+    const hollywoodId = CATEGORIES.find(
+      (category) => category.name === "Hollywood",
+    )!.id;
+    const hollywood = SEED_QUESTIONS.filter(
+      (question) => question.categoryId === hollywoodId,
+    );
+    expect(hollywood.length).toBeGreaterThanOrEqual(45);
+    expect(
+      hollywood.filter((question) => question.prompt.includes("«")).length,
+    ).toBeGreaterThanOrEqual(25);
+    expect(
+      hollywood.filter((question) =>
+        /hvem spiller|hvilken skuespiller|hvem har spillet/i.test(
+          question.prompt,
+        ),
+      ).length,
+    ).toBeGreaterThanOrEqual(10);
+  });
+
   it("holder franchise-nicher ude af standardblandingen", () => {
     const nicheNames = ["Harry Potter", "Ringenes Herre", "Star Wars"];
     const defaultIds = new Set(
