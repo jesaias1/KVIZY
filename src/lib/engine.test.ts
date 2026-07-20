@@ -5,6 +5,7 @@ import {
   calculatePoints,
   closestFairQuestionCount,
   difficultyFor,
+  difficultyPlan,
   fairQuestionCounts,
   fingerprint,
   isGeneralKnowledgeQuestion,
@@ -122,6 +123,19 @@ describe("sværhedsgrad", () => {
     expect(difficultyFor(9, 10, 1, "rising")).toBe(2);
     expect(difficultyFor(0, 10, 5, "rising")).toBe(4);
     expect(difficultyFor(9, 10, 5, "rising")).toBe(5);
+  });
+  it("giver Blandet en garanteret kerne og variation på alle fem niveauer", () => {
+    for (const base of [1, 2, 3, 4, 5]) {
+      let state = base * 17;
+      const random = () =>
+        (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+      const plan = difficultyPlan(30, base, "mixed", random);
+      expect(plan).toHaveLength(30);
+      expect(plan.every((level) => Math.abs(level - base) <= 1)).toBe(true);
+      expect(plan.filter((level) => level === base).length).toBeGreaterThan(15);
+      if (base > 1) expect(plan).toContain(base - 1);
+      if (base < 5) expect(plan).toContain(base + 1);
+    }
   });
   it("klassificerer kernefakta efter indhold og ikke placering", () => {
     expect(
@@ -338,7 +352,7 @@ describe("adaptiv udvælgelse", () => {
   it("begrænser hver redaktionel matrixskabelon til én variant pr. spil", () => {
     const chosen = selectQuestions(SEED_QUESTIONS, {
       ...setup,
-      questionCount: 10,
+      questionCount: 9,
       categoryIds: ["cat-20"],
     });
     const matrixTags = chosen
@@ -429,8 +443,7 @@ describe("adaptiv udvælgelse", () => {
       expect(
         chosen.some(
           (question, index) =>
-            index > 0 &&
-            question.categoryId === chosen[index - 1].categoryId,
+            index > 0 && question.categoryId === chosen[index - 1].categoryId,
         ),
         `seed ${seed}`,
       ).toBe(false);
@@ -521,6 +534,60 @@ describe("adaptiv udvælgelse", () => {
       expect(
         chosen.filter((question) => question.tags.includes(tag)).length,
       ).toBeLessThanOrEqual(2);
+    }
+  });
+  it("spreder kategorier på tværs af tilfældige spil – også med favoritter", () => {
+    for (let seed = 1; seed <= 12; seed++) {
+      let state = seed;
+      const random = () =>
+        (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+      const chosen = selectQuestions(
+        SEED_QUESTIONS,
+        {
+          ...setup,
+          questionCount: 30,
+          favorites: ["cat-11", "cat-64"],
+        },
+        [],
+        random,
+      );
+      const categoryCounts = Object.values(
+        Object.groupBy(chosen, (question) => question.categoryId),
+      ).map((questions) => questions?.length ?? 0);
+      expect(
+        new Set(chosen.map((question) => question.categoryId)).size,
+      ).toBeGreaterThanOrEqual(15);
+      expect(Math.max(...categoryCounts)).toBeLessThanOrEqual(2);
+    }
+  });
+  it("rammer de planlagte niveauer i blandede spil", () => {
+    for (const difficulty of [1, 2, 3, 4, 5]) {
+      let state = difficulty * 101;
+      const random = () =>
+        (state = (state * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+      const chosen = selectQuestions(
+        SEED_QUESTIONS,
+        { ...setup, questionCount: 30, difficulty, difficultyMode: "mixed" },
+        [],
+        random,
+      );
+      expect(chosen).toHaveLength(30);
+      expect(
+        chosen.every(
+          (question) => Math.abs(question.difficulty - difficulty) <= 1,
+        ),
+      ).toBe(true);
+      expect(
+        chosen.filter((question) => question.difficulty === difficulty).length,
+      ).toBeGreaterThan(difficulty === 1 || difficulty === 5 ? 8 : 12);
+      if (difficulty > 1)
+        expect(
+          chosen.some((question) => question.difficulty === difficulty - 1),
+        ).toBe(true);
+      if (difficulty < 5)
+        expect(
+          chosen.some((question) => question.difficulty === difficulty + 1),
+        ).toBe(true);
     }
   });
   it("fordeler bred paratviden gennem hele et standardspil", () => {

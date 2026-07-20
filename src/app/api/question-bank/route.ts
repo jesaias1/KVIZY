@@ -6,6 +6,7 @@ import { getDb, hasDatabase } from "@/lib/db";
 import { questions } from "@/lib/db/schema";
 import { serializeQuestionRow } from "@/lib/db/question-rows";
 import type { Question } from "@/lib/types";
+import { APP_CONFIG } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -55,11 +56,11 @@ export async function GET(request: Request) {
   );
 
   return NextResponse.json(
-    { questions: bank, version: "2026-07-18.2" },
+    { questions: bank, version: APP_CONFIG.questionBankVersion },
     {
       headers: {
         "Cache-Control":
-          "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+          "public, max-age=0, s-maxage=300, stale-while-revalidate=3600",
       },
     },
   );

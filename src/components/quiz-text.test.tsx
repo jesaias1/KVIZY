@@ -1,6 +1,11 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { markQuizTitles, QuizText } from "./quiz-text";
+import {
+  markQuizOptionTitle,
+  markQuizTitles,
+  QuizOptionText,
+  QuizText,
+} from "./quiz-text";
 
 describe("QuizText", () => {
   it("viser markerede værktitler i kursiv med tegnsætningen bevaret", () => {
@@ -23,5 +28,29 @@ describe("QuizText", () => {
     expect(markQuizTitles("Hvad gør filmen spændende?")).toBe(
       "Hvad gør filmen spændende?",
     );
+  });
+
+  it("markerer svar, der er værktitler, uden at kursivere ophavsnavnet", () => {
+    expect(
+      markQuizOptionTitle(
+        "Aquarium af Aqua",
+        "Hvilken dansk musikudgivelse kom først?",
+      ),
+    ).toBe("«Aquarium» af Aqua");
+    const html = renderToStaticMarkup(
+      <QuizOptionText prompt="Hvilken film vandt prisen?">
+        The Godfather
+      </QuizOptionText>,
+    );
+    expect(html).toBe("<em>«The Godfather»</em>");
+  });
+
+  it("kursiverer ikke personnavne i instruktørspørgsmål", () => {
+    expect(
+      markQuizOptionTitle(
+        "Francis Ford Coppola",
+        "Hvem instruerede filmen The Godfather?",
+      ),
+    ).toBe("Francis Ford Coppola");
   });
 });

@@ -35,7 +35,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-lockup";
-import { QuizText } from "@/components/quiz-text";
+import { QuizOptionText, QuizText } from "@/components/quiz-text";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -312,10 +312,14 @@ export function GameShell() {
       );
       safeSet(APP_CONFIG.seenKey, JSON.stringify(recoveredSeen));
       const cachedBank = load<{
+        version?: string;
         signature: string;
         questions: Question[];
       } | null>(APP_CONFIG.questionCacheKey, null);
-      if (cachedBank?.questions?.length) {
+      if (
+        cachedBank?.version === APP_CONFIG.questionBankVersion &&
+        cachedBank.questions?.length
+      ) {
         setQuestionBank(cachedBank.questions);
         setQuestionBankSignature(cachedBank.signature);
       }
@@ -341,7 +345,8 @@ export function GameShell() {
       setQuestionBankLoading(true);
       try {
         const response = await fetch(
-          `/api/question-bank?categories=${encodeURIComponent(signature)}`,
+          `/api/question-bank?categories=${encodeURIComponent(signature)}&v=${APP_CONFIG.questionBankVersion}`,
+          { cache: "no-store" },
         );
         const data = response.ok ? await response.json() : null;
         if (!Array.isArray(data?.questions) || data.questions.length === 0)
@@ -351,15 +356,22 @@ export function GameShell() {
         setQuestionBankSignature(signature);
         safeSet(
           APP_CONFIG.questionCacheKey,
-          JSON.stringify({ signature, questions: loaded }),
+          JSON.stringify({
+            version: APP_CONFIG.questionBankVersion,
+            signature,
+            questions: loaded,
+          }),
         );
         return loaded;
       } catch {
         const cached = load<{
+          version?: string;
           signature: string;
           questions: Question[];
         } | null>(APP_CONFIG.questionCacheKey, null);
-        return cached?.questions ?? questionBank;
+        return cached?.version === APP_CONFIG.questionBankVersion
+          ? cached.questions
+          : questionBank;
       } finally {
         setQuestionBankLoading(false);
       }
@@ -1684,7 +1696,7 @@ function Play({
                     : String.fromCharCode(65 + i)}
                 </span>
                 <b>
-                  <QuizText>{o.text}</QuizText>
+                  <QuizOptionText prompt={q.prompt}>{o.text}</QuizOptionText>
                 </b>
                 {given && correct && <Check className="ml-auto" />}
                 {given && selected && !correct && <X className="ml-auto" />}
@@ -2004,6 +2016,15 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
       <div className="grid gap-4">
         {game.questions.map((q, i) => {
           const a = game.answers.find((x) => x.questionId === q.id);
+          const player = game.setup.players.find(
+            (candidate) => candidate.id === a?.playerId,
+          );
+          const selectedOption = q.options.find(
+            (option) => option.id === a?.optionId,
+          );
+          const correctOption = q.options.find(
+            (option) => option.id === q.correctOptionId,
+          );
           return (
             <Card key={q.id}>
               <CardContent className="p-5">
@@ -2016,6 +2037,27 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                 <h3 className="mt-3 font-bold">
                   <QuizText>{q.prompt}</QuizText>
                 </h3>
+                {player && (
+                  <p className="mt-3 text-sm font-semibold">
+                    {player.avatar} {player.name}
+                  </p>
+                )}
+                {selectedOption && (
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Svarede:{" "}
+                    <QuizOptionText prompt={q.prompt}>
+                      {selectedOption.text}
+                    </QuizOptionText>
+                  </p>
+                )}
+                {!a?.correct && correctOption && (
+                  <p className="mt-1 text-sm text-foreground">
+                    Rigtigt svar:{" "}
+                    <QuizOptionText prompt={q.prompt}>
+                      {correctOption.text}
+                    </QuizOptionText>
+                  </p>
+                )}
                 {hasUsefulExplanation(q.explanation) && (
                   <p className="mt-2 text-sm text-muted-foreground">
                     <QuizText>{q.explanation}</QuizText>

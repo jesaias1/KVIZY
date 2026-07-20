@@ -93,6 +93,32 @@ export function difficultyFor(
   return base;
 }
 
+export function difficultyPlan(
+  total: number,
+  base: number,
+  mode: GameSetup["difficultyMode"],
+  random = Math.random,
+) {
+  if (mode !== "mixed" || total < 3)
+    return Array.from({ length: total }, (_, index) =>
+      difficultyFor(index, total, base, mode, random),
+    );
+
+  const lower = Math.max(1, base - 1);
+  const upper = Math.min(5, base + 1);
+  const sideCount = Math.max(1, Math.round(total * 0.2));
+  const plan = Array.from({ length: total }, () => base);
+  let cursor = 0;
+  if (lower !== base) {
+    plan.fill(lower, cursor, Math.min(total, cursor + sideCount));
+    cursor += sideCount;
+  }
+  if (upper !== base) {
+    plan.fill(upper, cursor, Math.min(total, cursor + sideCount));
+  }
+  return shuffle(plan, random);
+}
+
 export function fairQuestionCounts(playerCount: number) {
   const players = Math.max(1, Math.min(90, Math.floor(playerCount)));
   const multiples = Array.from(
@@ -340,15 +366,17 @@ const templateKeyCache = new WeakMap<Question, string | undefined>();
 export function questionTemplateKey(question: Question) {
   if (templateKeyCache.has(question)) return templateKeyCache.get(question);
   let key: string | undefined;
-  if (question.tags.some((tag) => CREATOR_ATTRIBUTION_TAGS.has(tag)))
-    key = "creator-attribution";
-  else if (question.tags.some((tag) => COUNTRY_LOOKUP_TAGS.has(tag)))
-    key = "country-lookup";
-  else if (
+  if (
     question.tags.includes("redaktionel-matrix") ||
     question.tags.includes("redaktionel-æra")
   )
     key = `${question.tags[0]}:${question.tags[1] ?? "ukendt"}`;
+  else if (/gutenberg|bogtryk|trykpresse/iu.test(question.prompt))
+    key = "printing-press";
+  else if (question.tags.some((tag) => CREATOR_ATTRIBUTION_TAGS.has(tag)))
+    key = "creator-attribution";
+  else if (question.tags.some((tag) => COUNTRY_LOOKUP_TAGS.has(tag)))
+    key = "country-lookup";
   else key = question.tags.find((tag) => REPETITIVE_TEMPLATE_TAGS.has(tag));
   templateKeyCache.set(question, key);
   return key;
@@ -589,10 +617,7 @@ function spreadCategoriesAcrossTurns(
       let bestScore = Number.POSITIVE_INFINITY;
       for (let index = 0; index < remaining.length; index++) {
         const candidate = remaining[index];
-        if (
-          hasAlternative &&
-          candidate.categoryId === previous?.categoryId
-        )
+        if (hasAlternative && candidate.categoryId === previous?.categoryId)
           continue;
         const score =
           (previousTwo.has(candidate.categoryId) ? 100 : 0) -
@@ -601,7 +626,10 @@ function spreadCategoriesAcrossTurns(
           ordered.at(-2)?.type === candidate.type
             ? 12
             : 0) +
-          Math.abs(candidate.difficulty - (previous?.difficulty ?? candidate.difficulty));
+          Math.abs(
+            candidate.difficulty -
+              (previous?.difficulty ?? candidate.difficulty),
+          );
         if (score < bestScore) {
           bestScore = score;
           bestIndex = index;
@@ -807,14 +835,14 @@ export function selectQuestions(
     ),
   );
   const selectedCategoryFor = (question: Question) => question.categoryId;
+  const plannedDifficulties = difficultyPlan(
+    setup.questionCount,
+    setup.difficulty,
+    setup.difficultyMode,
+    random,
+  );
   for (let i = 0; i < setup.questionCount; i++) {
-    const target = difficultyFor(
-      i,
-      setup.questionCount,
-      setup.difficulty,
-      setup.difficultyMode,
-      random,
-    );
+    const target = plannedDifficulties[i];
     const recentTypes = picked.slice(-2).map((q) => q.type),
       recentCats = picked.slice(-2).map((q) => q.categoryId);
     let chosen: Question | undefined;
@@ -897,7 +925,7 @@ export function selectQuestions(
               Math.min(365, seenAge / (24 * 60 * 60 * 1_000)) * 25
             : 0) +
           (inDifficultyBand(question) ? 0 : 1_000) +
-          Math.abs(question.difficulty - target) * 10 +
+          Math.abs(question.difficulty - target) * 120 +
           (categoryCounts.get(selectedCategory) ?? 0) * 45 +
           currentGameOptionReuse * 55 +
           historicalOptionReuse * 10 +
@@ -942,23 +970,9 @@ export function selectQuestions(
           difficultyPolicy,
         );
       if (!chosen && requireGeneralKnowledge)
-        chooseFromPool(
-          false,
-          false,
-          false,
-          false,
-          policy,
-          difficultyPolicy,
-        );
+        chooseFromPool(false, false, false, false, policy, difficultyPolicy);
       if (!chosen)
-        chooseFromPool(
-          true,
-          true,
-          false,
-          true,
-          policy,
-          difficultyPolicy,
-        );
+        chooseFromPool(true, true, false, true, policy, difficultyPolicy);
     };
     // GennemgÃ¥ hele historikprioriteten inden for Â±1 niveau, fÃ¸r banken
     // overhovedet mÃ¥ udvide. Et Ã¦ldre niveau 3-spÃ¸rgsmÃ¥l er bedre end et

@@ -1201,6 +1201,7 @@ const redundantQuestionIds = new Set([
   "curiosity-round-3-056",
   "matrix-cat-18-dkfilm-object-6",
   "matrix-cat-3-dkpol-basis-5",
+  "q-cat-39-5", // Overlapper flere Gutenberg-/bogtrykspørgsmål og blander århundrede med årtier.
   "variety-072", // Samme volleyballfakta som q-cat-25-6.
   "expansion-105", // Samme Just Do It-fakta som q-cat-34-1.
   "expansion-117", // Samme Famicom/NES-fakta som q-cat-49-1.
@@ -1384,7 +1385,118 @@ type EditorialQuestionFix = {
   secondaryCategoryIds?: string[];
 };
 
+const reportedDifficultyFixes: Record<string, number> = {
+  "variety-035": 3,
+  "expansion-067": 4,
+  "curiosity-expansion-067": 3,
+};
+
 const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
+  "q-cat-48-2": {
+    prompt: "Hvilken af disse frugter er botanisk set et bær?",
+    options: ["Bananen", "Æblet", "Ferskenen", "Ananassen"],
+    explanation:
+      "En banan udvikles fra én blomst med ét frugtanlæg og regnes botanisk som et bær. Et æble er en kernefrugt, en fersken er en stenfrugt, og en ananas er en sammensat frugt.",
+    difficulty: 2,
+  },
+  "curiosity-expansion-038": {
+    prompt: "Hvad gør en hunds rystetur så effektiv til at fjerne vand?",
+    options: [
+      "Den hurtige rotation giver dråberne stor acceleration",
+      "Hårene leder vandet mod pelsspidsen ved kapillærkraft",
+      "Underulden presses sammen og skubber vand gennem dækhårene",
+      "Kropsvarmen øger fordampningen under den hurtige bevægelse",
+    ],
+    explanation:
+      "Hundens hud og pels skifter hurtigt retning under rysteturen. Dråberne kan ikke følge bevægelsen og slynges fri; det kræver langt mindre energi end at fordampe vandet.",
+    difficulty: 3,
+  },
+  "curiosity-expansion-048": {
+    prompt: "Hvorfor dannes der ofte dug på bilrudens inderside om vinteren?",
+    options: [
+      "Den kolde rude køler fugtig kabineluft under dugpunktet",
+      "Trykforskellen trækker fugt gennem glasset udefra",
+      "Varm luft fra blæseren frigiver vand, når den rammer ruden",
+      "Kold udeluft optager fugt fra glasset og afsætter den indvendigt",
+    ],
+    explanation:
+      "Passagerernes ånde og vådt tøj tilfører fugt. Når kabineluften afkøles ved den kolde rude til under sit dugpunkt, fortættes vanddampen på glasset.",
+    difficulty: 2,
+  },
+  "curiosity-expansion-055": {
+    prompt: "Hvorfor har beslægtede sprog ofte systematiske ligheder?",
+    options: [
+      "De har udviklet sig fra et fælles historisk modersprog",
+      "De har lånt de fleste grundord fra det samme moderne sprog",
+      "Ens klima får talelydene til at udvikle sig på samme måde",
+      "Samme alfabet får grammatikken til at følge de samme regler",
+    ],
+    explanation:
+      "Beslægtede sprog er forgreninger af et fælles ophav. Regelmæssige lydændringer kan derfor spores i ord og grammatik, selv efter lang tids adskillelse.",
+    difficulty: 3,
+  },
+  "curiosity-expansion-059": {
+    prompt: "Hvorfor falder lufttemperaturen typisk med højden i troposfæren?",
+    options: [
+      "Luften udvider sig ved lavere tryk og afkøles",
+      "Den tynde luft absorberer mindre varme direkte fra Solen",
+      "Vanddamp fryser i højden og køler resten af luften",
+      "Tyngdekraften trækker de varmeste luftmolekyler nedad",
+    ],
+    explanation:
+      "Lufttrykket falder med højden. Når stigende luft udvider sig under det lavere tryk, bruger den energi og bliver koldere; processen kaldes adiabatisk afkøling.",
+    difficulty: 3,
+  },
+  "variety-102": {
+    prompt:
+      "Hvad fremhæver social læringsteori som en vigtig vej til ny adfærd?",
+    options: [
+      "At observere andre og følgerne af deres handlinger",
+      "Kun selv at modtage belønninger og straffe",
+      "At bearbejde ubevidste konflikter fra barndommen",
+      "At gennemløbe faste tankestadier uafhængigt af miljøet",
+    ],
+    explanation:
+      "Albert Banduras socialkognitive teori viser, at mennesker kan lære ved at observere modeller og se, hvilke konsekvenser deres handlinger får.",
+    difficulty: 3,
+  },
+  "curiosity-expansion-017": {
+    prompt:
+      "Hvorfor er en nybagt småkage ofte blød, men bliver sprød under afkøling?",
+    options: [
+      "Fedt og sukker stivner, mens fugt forlader overfladen",
+      "Stivelsen fortsætter med at gelatinisere ved stuetemperatur",
+      "Gluten trækker sig sammen, når bagepulverets gas forsvinder",
+      "Sukkeret optager fugt fra luften og danner en hård skorpe",
+    ],
+    explanation:
+      "I den varme småkage er fedt og sukker stadig blødt, og der findes mere damp i strukturen. Under afkøling stivner den, mens noget fugt slipper væk.",
+    difficulty: 2,
+  },
+  "curiosity-expansion-022": {
+    prompt: "Hvordan kan syltning forlænge madens holdbarhed?",
+    options: [
+      "Syre, salt eller sukker hæmmer væksten af mange mikrober",
+      "Lagen fjerner al ilt og steriliserer dermed maden",
+      "Krydderier neutraliserer de enzymer, som skaber bakterier",
+      "Glasset trækker fugten ud og tørrer maden indefra",
+    ],
+    explanation:
+      "Lav pH og en høj koncentration af salt eller sukker gør miljøet vanskeligere for mange mikroorganismer. Ren opbevaring og korrekt varmebehandling er også vigtige.",
+    difficulty: 2,
+  },
+  "curiosity-expansion-067": {
+    prompt: "Hvad gør den Y-formede kanal i en lynlåsskyder?",
+    options: [
+      "Den fører tandrækkerne sammen, så elementerne griber ind",
+      "Den presser tænderne flade, så friktion holder rækkerne samlet",
+      "Den trækker stoffet tættere uden at flytte selve tænderne",
+      "Den drejer hver anden tand, så den hægter sig bag den næste",
+    ],
+    explanation:
+      "Skyderens kileformede kanaler fører tænder eller spiraler ind i en position, hvor de griber ind i hinanden. I den modsatte retning skilles de igen.",
+    difficulty: 3,
+  },
   "curiosity-023": {
     prompt: "Hvad får boblerne til at dannes, når en sodavandsflaske åbnes?",
     options: [
@@ -1397,7 +1509,8 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
       "Under tryk kan mere kuldioxid være opløst i sodavanden. Når flasken åbnes, falder trykket, og gassen slipper ud som bobler.",
   },
   "curiosity-expansion-057": {
-    prompt: "Hvad er den vigtigste læsemæssige fordel ved mellemrum mellem ord?",
+    prompt:
+      "Hvad er den vigtigste læsemæssige fordel ved mellemrum mellem ord?",
     options: [
       "De gør ordgrænserne hurtigere at genkende",
       "De viser, hvilke stavelser der skal have tryk",
@@ -1408,7 +1521,8 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
       "Tydelige ordgrænser gør det hurtigere at genkende ord. I oldtidens tekster skrev man ofte uden faste mellemrum, hvilket krævede mere af læseren.",
   },
   "curiosity-expansion-005": {
-    prompt: "Hvorfor kan almindelig lyd næsten ikke udbrede sig i det ydre rum?",
+    prompt:
+      "Hvorfor kan almindelig lyd næsten ikke udbrede sig i det ydre rum?",
     options: [
       "Der mangler stof, som lydbølger kan bevæge sig igennem",
       "Den lave temperatur gør lydbølgerne for langsomme",
@@ -1438,7 +1552,8 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
     difficulty: 3,
   },
   "depth-019": {
-    prompt: "Hvilken konflikt blev ifølge myten udløst af striden om et gyldent æble?",
+    prompt:
+      "Hvilken konflikt blev ifølge myten udløst af striden om et gyldent æble?",
     options: [
       "Den trojanske krig",
       "Krigen mellem titanerne og guderne",
@@ -1499,7 +1614,8 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
       "Ved laminering foldes dej og koldt smør i mange lag. Under bagningen bliver vand til damp, som løfter lagene fra hinanden.",
   },
   "format-depth-047": {
-    prompt: "Hvilken del af kroppen analyserer de duftpartikler, en slange samler med tungen?",
+    prompt:
+      "Hvilken del af kroppen analyserer de duftpartikler, en slange samler med tungen?",
     options: [
       "Jacobsons organ i ganen",
       "Smagsløg langs tungens spids",
@@ -1510,7 +1626,8 @@ const reportedQuestionFixes: Record<string, EditorialQuestionFix> = {
       "Tungen opsamler kemiske partikler og afleverer dem til Jacobsons organ i ganen, også kaldet det vomeronasale organ.",
   },
   "curiosity-round-3-034": {
-    prompt: "Hvorfor ser fjerne bjerge ofte mere blålige ud end landskabet tæt på?",
+    prompt:
+      "Hvorfor ser fjerne bjerge ofte mere blålige ud end landskabet tæt på?",
     options: [
       "Lys spredt i luften dæmper kontraster og giver et blåligt skær",
       "Fjerne overflader reflekterer en større del af himlen",
@@ -1735,7 +1852,7 @@ const plausibleDistractorFixes: Record<string, [string, string, string]> = {
     "Den forreste cykels bevægelse øger dæktrykket hos de næste",
     "Rytterne deler bevægelsesenergi, når afstanden bliver lille",
   ],
-  "curiosity-expansion-067": [
+  "curiosity-expansion-067-retired": [
     "Skyderen presser tænderne flade, så de ligger oven på hinanden",
     "Friktion opvarmer tænderne, så de kortvarigt binder sammen",
     "Skyderen strammer stoffet, mens tandrækkerne forbliver adskilt",
@@ -1774,7 +1891,15 @@ const plausibleDistractorFixes: Record<string, [string, string, string]> = {
 
 function applyReportedQuestionFix(question: Question): Question {
   const fix = reportedQuestionFixes[question.id];
-  if (!fix) return question;
+  const reportedDifficulty = reportedDifficultyFixes[question.id];
+  if (!fix)
+    return reportedDifficulty === undefined
+      ? question
+      : {
+          ...question,
+          difficulty: reportedDifficulty,
+          updatedAt: "2026-07-20T00:00:00.000Z",
+        };
   const options = fix.options.map((text, index) => ({
     id: `o${index + 1}`,
     text,
@@ -1785,12 +1910,12 @@ function applyReportedQuestionFix(question: Question): Question {
     options,
     correctOptionId: options[0].id,
     explanation: fix.explanation,
-    difficulty: fix.difficulty ?? question.difficulty,
+    difficulty: fix.difficulty ?? reportedDifficulty ?? question.difficulty,
     categoryId: fix.categoryId ?? question.categoryId,
     secondaryCategoryIds:
       fix.secondaryCategoryIds ?? question.secondaryCategoryIds,
     fingerprint: fingerprint(fix.prompt, options[0].text, question.type),
-    updatedAt: "2026-07-18T00:00:00.000Z",
+    updatedAt: "2026-07-20T00:00:00.000Z",
   };
 }
 
@@ -1882,13 +2007,12 @@ const BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
   const countryRelation = ["capital", "currency", "continent", "language"].find(
     (relation) => question.tags.includes(relation),
   );
-  if (countryRelation && !retainedCountryLookupIds.has(question.id)) return false;
+  if (countryRelation && !retainedCountryLookupIds.has(question.id))
+    return false;
   const repetitiveRelation = question.tags.some((tag) =>
     repetitiveRelationTags.has(tag),
   );
-  return (
-    !repetitiveRelation || retainedRepetitiveRelationIds.has(question.id)
-  );
+  return !repetitiveRelation || retainedRepetitiveRelationIds.has(question.id);
 });
 
 const categoryLinks: Record<string, string[]> = {
