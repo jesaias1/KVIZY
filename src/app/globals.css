@@ -1415,7 +1415,7 @@ html[data-phone-landscape] body {
   gap: 0.6rem;
   margin-bottom: 0.65rem;
 }
-.category-group h3 {
+.category-group h2 {
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -1558,6 +1558,56 @@ html[data-phone-landscape] body {
 .level-nudge p {
   font-size: 0.92rem;
   font-weight: 600;
+}
+/* Statistik */
+.stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+@media (min-width: 600px) {
+  .stat-tiles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.stat-tiles > * {
+  animation: rise-in 0.3s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+}
+.stat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 9.5rem) 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  animation: rise-in 0.3s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 25ms + 0.1s);
+}
+@media (min-width: 600px) {
+  .stat-row {
+    grid-template-columns: minmax(0, 14rem) 1fr auto;
+  }
+}
+.stat-row small {
+  min-width: 2.6rem;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.stat-bar {
+  display: block;
+  height: 0.55rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--secondary);
+}
+.stat-bar b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+  transform-origin: left;
+  animation: bar-grow 0.6s 0.15s var(--ease-out) both;
 }
 .review-card {
   border-left: 4px solid var(--border);

@@ -64,6 +64,42 @@ test("dagens quiz kan kun spilles én gang pr. dag og giver en stime", async ({
   await expect(done).toBeVisible();
   await expect(done).toBeDisabled();
 });
+test("statistik vises efter et spil og kan starte træning", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /Hurtigt spil/ }).click();
+  for (let i = 0; i < 10; i++) await answerAndContinue(page);
+  await page.getByRole("button", { name: /Til forsiden/ }).click();
+  await page.getByRole("button", { name: "Åbn menu" }).click();
+  await page.getByRole("button", { name: "Statistik" }).click();
+  await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
+  await expect(page.getByText("Efter kategori")).toBeVisible();
+  await expect(page.getByText("længste stime")).toBeVisible();
+});
+test("holdkamp giver holdnavne i stedet for spillernavne", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /Start nyt spil/ }).click();
+  await page.getByRole("radio", { name: /Hold mod hold/ }).click();
+  await expect(page.getByLabel("Navn på 1")).toHaveValue("Hold 1");
+  await page.getByRole("radio", { name: /Alle mod alle/ }).click();
+  await expect(page.getByLabel("Navn på 1")).toHaveValue("Spiller 1");
+});
+test("spillet kan starte offline efter det første besøg", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/");
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.getByRole("button", { name: /Hurtigt spil/ }).click();
+  await expect(page.getByText(/Spørgsmål 1 af 10/)).toBeVisible();
+  await page.reload();
+  await context.setOffline(true);
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: /Quiz-aftenen/ }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /Hurtigt spil/ }).click();
+  await expect(page.getByText(/Spørgsmål 1 af 10/)).toBeVisible();
+});
 test("tom kategori blokerer sikkert", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: /Start nyt spil/ }).click();
