@@ -11,6 +11,12 @@ import {
   isGeneralKnowledgeQuestion,
   isNearDuplicate,
   newPlayer,
+  mulberry32,
+  dailySeed,
+  recordDaily,
+  emptyDailyProgress,
+  activeDailyStreak,
+  previousDateKey,
   questionTopicKey,
   normalizeText,
   rankPlayers,
@@ -1155,5 +1161,50 @@ describe("kategorigrupper", () => {
     const grouped = CATEGORY_GROUPS.flatMap((group) => group.ids);
     expect(new Set(grouped).size).toBe(grouped.length);
     expect([...grouped].sort()).toEqual(CATEGORIES.map((c) => c.id).sort());
+  });
+});
+
+describe("dagens quiz", () => {
+  const players = [newPlayer("A", 0)];
+  const dailySetup = {
+    mode: "solo" as const,
+    players,
+    questionCount: 10,
+    difficulty: 3,
+    difficultyMode: "rising" as const,
+    categoryIds: DEFAULT_CATEGORIES.map((category) => category.id),
+    favorites: [],
+    timer: false,
+    timeBonus: false,
+    streakBonus: false,
+    minusPoints: false,
+    finale: false,
+    lifelines: false,
+  };
+  it("giver samme spørgsmål og svarrækkefølge på samme dato", () => {
+    const pick = (key: string) =>
+      selectQuestions(
+        SEED_QUESTIONS,
+        dailySetup,
+        [],
+        mulberry32(dailySeed(key)),
+      ).map((question) => `${question.id}:${question.options.map((o) => o.id).join("")}`);
+    expect(pick("2026-10-03")).toEqual(pick("2026-10-03"));
+    expect(pick("2026-10-03")).not.toEqual(pick("2026-10-04"));
+    expect(pick("2026-10-03")).toHaveLength(10);
+  });
+  it("tæller dage i træk og nulstiller efter en pause", () => {
+    const result = { correct: 7, total: 10, score: 700 };
+    let progress = recordDaily(emptyDailyProgress(), "2026-10-01", result);
+    progress = recordDaily(progress, "2026-10-02", result);
+    expect(progress.streak).toBe(2);
+    expect(recordDaily(progress, "2026-10-02", result)).toBe(progress);
+    expect(activeDailyStreak(progress, "2026-10-03")).toBe(2);
+    expect(activeDailyStreak(progress, "2026-10-04")).toBe(0);
+    expect(recordDaily(progress, "2026-10-05", result).streak).toBe(1);
+  });
+  it("finder gårsdagen over månedsskiftet", () => {
+    expect(previousDateKey("2026-03-01")).toBe("2026-02-28");
+    expect(previousDateKey("2027-01-01")).toBe("2026-12-31");
   });
 });

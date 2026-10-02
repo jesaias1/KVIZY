@@ -1208,3 +1208,66 @@ export function buildResult(game: Game): GameResult {
     questions: game.questions,
   };
 }
+
+// ── Dagens quiz ──────────────────────────────────────────────
+// Alle spillere får de samme ti spørgsmål på samme dato. Valget er styret af
+// en seedet tilfældighedsgenerator, og spillerens egen historik ignoreres.
+
+/** Lille, hurtig generator med fast udfald for samme seed. */
+export function mulberry32(seed: number) {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+export function localDateKey(date = new Date()) {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+export function previousDateKey(key: string) {
+  const [year, month, day] = key.split("-").map(Number);
+  return localDateKey(new Date(year, month - 1, day - 1));
+}
+export function dailySeed(key: string) {
+  return Number.parseInt(stableHash(`kvizy-daily-${key}`), 36) >>> 0;
+}
+export type DailyResult = { correct: number; total: number; score: number };
+export type DailyProgress = {
+  lastKey?: string;
+  streak: number;
+  results: Record<string, DailyResult>;
+};
+export const emptyDailyProgress = (): DailyProgress => ({
+  streak: 0,
+  results: {},
+});
+/** Registrerer dagens resultat. Et allerede registreret døgn ændres ikke. */
+export function recordDaily(
+  progress: DailyProgress,
+  key: string,
+  result: DailyResult,
+): DailyProgress {
+  if (progress.results[key]) return progress;
+  const streak = progress.lastKey === previousDateKey(key) ? progress.streak + 1 : 1;
+  const keep = Object.keys(progress.results).sort().slice(-29);
+  return {
+    lastKey: key,
+    streak,
+    results: Object.fromEntries([
+      ...keep.map((day) => [day, progress.results[day]] as const),
+      [key, result] as const,
+    ]),
+  };
+}
+/** Antal dage i træk, som stadig kan forlænges i dag. */
+export function activeDailyStreak(progress: DailyProgress, todayKey: string) {
+  return progress.lastKey === todayKey ||
+    progress.lastKey === previousDateKey(todayKey)
+    ? progress.streak
+    : 0;
+}

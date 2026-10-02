@@ -48,6 +48,22 @@ test("hurtigt spil fra forsiden ender på et resultat med Spil igen", async ({
   await page.getByRole("button", { name: /Spil igen/ }).click();
   await expect(page.getByText(/Spørgsmål 1 af 10/)).toBeVisible();
 });
+test("dagens quiz kan kun spilles én gang pr. dag og giver en stime", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /Dagens quiz/ }).click();
+  await expect(page.getByText(/Spørgsmål 1 af 10/)).toBeVisible();
+  for (let i = 0; i < 10; i++) await answerAndContinue(page);
+  await expect(page.getByText(/Dagens quiz/).first()).toBeVisible();
+  await page.getByRole("button", { name: /Gennemgå svar/ }).click();
+  await expect(page.getByRole("button", { name: /Kun forkerte/ })).toBeVisible();
+  await page.getByRole("button", { name: "Tilbage" }).click();
+  await page.getByRole("button", { name: /Til forsiden/ }).click();
+  const done = page.getByRole("button", { name: /Dagens quiz klaret/ });
+  await expect(done).toBeVisible();
+  await expect(done).toBeDisabled();
+});
 test("tom kategori blokerer sikkert", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: /Start nyt spil/ }).click();

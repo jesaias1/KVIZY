@@ -11,6 +11,7 @@ export const APP_CONFIG = {
   questionBankVersion: "2026-10-03.1",
   questionCacheKey: "kvizy-question-cache-v2",
   bestKey: "kvizy-best-v1",
+  dailyKey: "kvizy-daily-v1",
 } as const;
 
 export const DIFFICULTY_LABELS = [

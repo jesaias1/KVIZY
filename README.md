@@ -4,6 +4,7 @@
 
 ## Produktflow
 
+0. Tryk på Dagens quiz for ti ens spørgsmål til alle spillere hver dag, med stime-tæller og delbart emoji-resultat.
 1. Vælg Alle mod alle, Holdkamp, Solo, Hurtig quiz, Risiko eller Mystery Mix.
 2. Tilføj 1–12 spillere eller 2–6 hold, og vælg mellem 65 søgbare kategorier.
 3. Indstil et retfærdigt antal spørgsmål op til 90, niveau 1–5, fast/blandet/stigende sværhedsgrad samt timer-, tidsbonus-, minuspoint- og finaleindstillinger.
