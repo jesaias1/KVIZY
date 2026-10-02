@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  CalendarCheck,
   Check,
   CircleHelp,
   Clock3,
@@ -62,20 +63,27 @@ import {
   categoryById,
 } from "@/lib/categories";
 import {
+  activeDailyStreak,
   answerIsCorrect,
   buildResult,
   calculateQuestionPoints,
   closestFairQuestionCount,
+  dailySeed,
+  emptyDailyProgress,
   fairQuestionCounts,
+  localDateKey,
+  mulberry32,
   newPlayer,
   normalizeText,
   questionTemplateKey,
   rankPlayers,
+  recordDaily,
   recoverSeenFromHistory,
   reserveSeenQuestions,
   selectReplacementQuestion,
   selectQuestions,
   shuffle,
+  type DailyProgress,
 } from "@/lib/engine";
 import type {
   AppSettings,
@@ -314,6 +322,8 @@ export function GameShell() {
     [startError, setStartError] = useState<string | null>(null),
     [record, setRecord] = useState<RecordInfo>(null),
     [bests, setBests] = useState<Record<string, BestScore>>({}),
+    [daily, setDaily] = useState<DailyProgress | null>(null),
+    [todayKey, setTodayKey] = useState(""),
     [hydrated, setHydrated] = useState(false);
   const startBusy = useRef(false);
   const { setTheme } = useTheme();
@@ -341,6 +351,8 @@ export function GameShell() {
       setGame(storedGame);
       setHistory(storedHistory);
       setBests(load<Record<string, BestScore>>(APP_CONFIG.bestKey, {}));
+      setDaily(load<DailyProgress>(APP_CONFIG.dailyKey, emptyDailyProgress()));
+      setTodayKey(localDateKey());
       setSetup(
         restoreSetup(
           load<Partial<GameSetup> | null>(APP_CONFIG.setupKey, null),
@@ -493,7 +505,7 @@ export function GameShell() {
     setView(v);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const start = async (same?: GameSetup) => {
+  const start = async (same?: GameSetup, options?: { daily?: string }) => {
     if (startBusy.current) return;
     startBusy.current = true;
     try {
@@ -517,8 +529,16 @@ export function GameShell() {
         ),
         players: selectedPlayers,
       };
-      const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
-      const questions = selectQuestions(availableQuestions, normalized, seen);
+      const seenHistory = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
+      // Dagens quiz er ens for alle: fast seed og ingen personlig historik.
+      const questions = options?.daily
+        ? selectQuestions(
+            availableQuestions,
+            normalized,
+            [],
+            mulberry32(dailySeed(options.daily)),
+          )
+        : selectQuestions(availableQuestions, normalized, seenHistory);
       if (questions.length < normalized.questionCount) {
         setStartError(
           questions.length === 0
@@ -551,6 +571,7 @@ export function GameShell() {
           normalized.players.map((player) => [player.id, 3]),
         ),
         hiddenOptionIds: [],
+        dailyKey: options?.daily,
       };
       setGame(g);
       setRecord(null);
@@ -559,7 +580,7 @@ export function GameShell() {
         APP_CONFIG.seenKey,
         JSON.stringify(
           reserveSeenQuestions(
-            seen,
+            seenHistory,
             questions.map((question) => question.id),
             g.startedAt,
             questions,
@@ -589,7 +610,16 @@ export function GameShell() {
     const rate = leader.correct / Math.max(1, leader.answers);
     const soloRound = g.setup.players.length === 1;
     let isRecord = false;
-    if (soloRound) {
+    if (g.dailyKey) {
+      const updated = recordDaily(daily ?? emptyDailyProgress(), g.dailyKey, {
+        correct: leader.correct,
+        total: g.questions.length,
+        score: leader.score,
+      });
+      setDaily(updated);
+      safeSet(APP_CONFIG.dailyKey, JSON.stringify(updated));
+      setRecord(null);
+    } else if (soloRound) {
       const key = `solo-${g.questions.length}`;
       const previous = bests[key];
       const better =
@@ -625,6 +655,34 @@ export function GameShell() {
       });
     setView("results");
     window.scrollTo({ top: 0 });
+  };
+  const playDaily = () => {
+    const key = localDateKey();
+    if (daily?.results[key]) return;
+    void start(
+      {
+        ...setup,
+        mode: "solo",
+        players: [setup.players[0] ?? newPlayer("Spiller 1", 0)],
+        questionCount: 10,
+        difficulty: 3,
+        difficultyMode: "rising",
+        categoryIds: DEFAULT_CATEGORIES.map((category) => category.id),
+        favorites: [],
+        timer: false,
+        timeBonus: false,
+        streakBonus: false,
+        minusPoints: false,
+        finale: false,
+        lifelines: false,
+      },
+      { daily: key },
+    );
+  };
+  const playLevel = (level: number) => {
+    if (!game) return;
+    setSetup((current) => ({ ...current, difficulty: level }));
+    void start({ ...game.setup, difficulty: level });
   };
   const quick = () => {
     // Ét tryk fra forsiden: ti blandede spørgsmål med de senest valgte
@@ -861,6 +919,9 @@ export function GameShell() {
         reducedMotion={settings.reducedMotion}
         go={go}
         quick={quick}
+        playDaily={playDaily}
+        daily={daily}
+        todayKey={todayKey}
         busy={questionBankLoading}
         best={bests["solo-10"]}
       />
@@ -879,6 +940,7 @@ export function GameShell() {
       <Play
         key={game.questions[game.index].id}
         game={game}
+        sound={settings.sound}
         answer={answer}
         next={nextQuestion}
         report={reportQuestion}
@@ -895,8 +957,10 @@ export function GameShell() {
         key={game.id}
         game={game}
         go={go}
-        replay={() => start(game.setup)}
+        replay={() => (game.dailyKey ? quick() : void start(game.setup))}
+        playLevel={playLevel}
         record={record}
+        streak={daily ? activeDailyStreak(daily, game.dailyKey ?? todayKey) : 0}
         busy={questionBankLoading}
       />
     ) : view === "history" ? (
@@ -1043,12 +1107,52 @@ function TopBar({
     </header>
   );
 }
+function DailyButton({
+  daily,
+  todayKey,
+  busy,
+  onClick,
+}: {
+  daily: DailyProgress;
+  todayKey: string;
+  busy: boolean;
+  onClick: () => void;
+}) {
+  const done = daily.results[todayKey];
+  const streak = activeDailyStreak(daily, todayKey);
+  return (
+    <Button
+      size="lg"
+      variant={done ? "ghost" : "secondary"}
+      className={`daily-button h-14 text-base ${done ? "done" : ""}`}
+      disabled={busy || Boolean(done)}
+      onClick={onClick}
+    >
+      <CalendarCheck />
+      {done
+        ? `Dagens quiz klaret · ${done.correct}/${done.total}`
+        : "Dagens quiz"}
+      {!done && (
+        <small className="daily-sub">samme ti til alle</small>
+      )}
+      {streak > 0 && (
+        <span className="daily-streak" aria-label={`${streak} dage i træk`}>
+          <Flame aria-hidden="true" />
+          {streak}
+        </span>
+      )}
+    </Button>
+  );
+}
 function Home({
   game,
   history,
   reducedMotion,
   go,
   quick,
+  playDaily,
+  daily,
+  todayKey,
   busy,
   best,
 }: {
@@ -1057,6 +1161,9 @@ function Home({
   reducedMotion: boolean;
   go: (v: View) => void;
   quick: () => void;
+  playDaily: () => void;
+  daily: DailyProgress | null;
+  todayKey: string;
   busy: boolean;
   best?: BestScore;
 }) {
@@ -1097,6 +1204,14 @@ function Home({
               <RefreshCw />
               Fortsæt spil · {game.index + 1}/{game.questions.length}
             </Button>
+          )}
+          {daily && todayKey && (
+            <DailyButton
+              daily={daily}
+              todayKey={todayKey}
+              busy={busy}
+              onClick={playDaily}
+            />
           )}
           <Button
             size="lg"
@@ -1748,6 +1863,7 @@ function lineFor(lines: string[], seed: string) {
 }
 function Play({
   game,
+  sound,
   answer,
   next,
   setRisk,
@@ -1756,6 +1872,7 @@ function Play({
   useLifeline,
 }: {
   game: Game;
+  sound: boolean;
   answer: (id: string, ms: number) => void;
   next: () => void;
   skip: () => boolean;
@@ -1813,6 +1930,11 @@ function Play({
     }, 250);
     return () => window.clearInterval(interval);
   }, [game.setup.timer, game.setup.timeBonus, given]);
+  useEffect(() => {
+    // Et diskret tik i de sidste fem sekunder, når nedtællingen er slået til.
+    if (!(game.setup.timer || game.setup.timeBonus) || given) return;
+    if (secondsLeft > 0 && secondsLeft <= 5) tone("tick", sound);
+  }, [secondsLeft, game.setup.timer, game.setup.timeBonus, given, sound]);
   const answered = Boolean(given);
   useEffect(() => {
     if (!answered) return;
@@ -2106,6 +2228,11 @@ function Play({
           )}
         </CardContent>
       </Card>
+      {q.type !== "ordering" && (
+        <p className="key-hint" aria-hidden="true">
+          Tryk 1–4 for at svare · Enter for næste spørgsmål
+        </p>
+      )}
       {given && (
         <div
           ref={feedback}
@@ -2246,15 +2373,20 @@ function Results({
   game,
   go,
   replay,
+  playLevel,
   record,
+  streak,
   busy,
 }: {
   game: Game;
   go: (v: View) => void;
   replay: () => void;
+  playLevel: (level: number) => void;
   record: RecordInfo;
+  streak: number;
   busy: boolean;
 }) {
+  const isDaily = Boolean(game.dailyKey);
   const standings = rankPlayers(game.setup.players),
     sorted = standings.map(({ player }) => player),
     winners = standings
@@ -2339,12 +2471,43 @@ function Results({
     // Enter starter en ny runde med det samme, uden at siden ruller ned.
     replayButton.current?.focus({ preventScroll: true });
   }, []);
+  const grid = (() => {
+    const marks = game.questions.map((question) => {
+      const given = game.answers.find((a) => a.questionId === question.id);
+      return given ? (given.correct ? "🟩" : "🟥") : "⬜";
+    });
+    const rows: string[] = [];
+    for (let i = 0; i < marks.length; i += 10)
+      rows.push(marks.slice(i, i + 10).join(""));
+    return rows.join("\n");
+  })();
+  const overallRate =
+    total > 0 ? game.answers.filter((a) => a.correct).length / total : 0;
+  const level = game.setup.difficulty;
+  const nudge =
+    !isDaily && total >= 8
+      ? overallRate >= 0.85 && level < 5
+        ? {
+            level: level + 1,
+            text: `${Math.round(overallRate * 100)} % rigtige – klar til noget sværere?`,
+          }
+        : overallRate <= 0.3 && level > 1
+          ? {
+              level: level - 1,
+              text: "Det var en hård omgang. Prøv et lidt lettere niveau?",
+            }
+          : null
+      : null;
   const share = async () => {
-    const text = solo
-      ? `${APP_CONFIG.name}: ${winner.correct} af ${total} rigtige og ${winner.score.toLocaleString("da-DK")} point. Kan du slå det?`
-      : sharedWin
-        ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${winner.score.toLocaleString("da-DK")} point!`
-        : `${APP_CONFIG.name}: ${winner.name} vandt med ${winner.score.toLocaleString("da-DK")} point!`;
+    const score = winner.score.toLocaleString("da-DK");
+    const [, month, day] = (game.dailyKey ?? "").split("-");
+    const text = isDaily
+      ? `${APP_CONFIG.name} Dagens quiz ${Number(day)}/${Number(month)}\n${winner.correct}/${total} · ${score} point${streak > 1 ? ` · ${streak} dage i træk` : ""}\n${grid}\nwww.kvizy.dk`
+      : solo
+        ? `${APP_CONFIG.name} · ${winner.correct}/${total} · ${score} point\n${grid}\nKan du slå det? www.kvizy.dk`
+        : sharedWin
+          ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${score} point!`
+          : `${APP_CONFIG.name}: ${winner.name} vandt med ${score} point!`;
     try {
       if (navigator.share)
         await navigator.share({ title: APP_CONFIG.name, text });
@@ -2401,7 +2564,12 @@ function Results({
           <p className="reveal mx-auto mt-2 max-w-xl text-muted-foreground">
             {soloText}
           </p>
-          {record?.isRecord ? (
+          {isDaily ? (
+            <p className="record-badge new">
+              <Flame aria-hidden="true" />
+              Dagens quiz{streak > 1 ? ` · ${streak} dage i træk` : " klaret"}
+            </p>
+          ) : record?.isRecord ? (
             <p className="record-badge new">
               <Trophy aria-hidden="true" />
               Ny personlig rekord!
@@ -2511,6 +2679,19 @@ function Results({
           ))}
         </div>
       )}
+      {nudge && (
+        <div className="level-nudge">
+          <p>{nudge.text}</p>
+          <Button
+            size="sm"
+            variant="secondary"
+            disabled={busy}
+            onClick={() => playLevel(nudge.level)}
+          >
+            Prøv niveau «{DIFFICULTY_LABELS[nudge.level].toLowerCase()}»
+          </Button>
+        </div>
+      )}
       <div className="result-actions grid gap-3 sm:grid-cols-2">
         <Button
           size="lg"
@@ -2520,7 +2701,13 @@ function Results({
           onClick={replay}
         >
           <RefreshCw />
-          {busy ? "Finder nye spørgsmål…" : solo ? "Spil igen" : "Revanche"}
+          {busy
+            ? "Finder nye spørgsmål…"
+            : isDaily
+              ? "Spil et hurtigt spil"
+              : solo
+                ? "Spil igen"
+                : "Revanche"}
         </Button>
         <Button size="lg" variant="secondary" onClick={() => go("review")}>
           <BookOpen />
@@ -2565,12 +2752,36 @@ function ResultStat({
   );
 }
 function Review({ game, go }: { game: Game; go: (v: View) => void }) {
+  const [onlyWrong, setOnlyWrong] = useState(false);
+  const rows = game.questions.map((q, index) => ({
+    q,
+    index,
+    a: game.answers.find((x) => x.questionId === q.id),
+  }));
+  const wrongCount = rows.filter(({ a }) => a?.correct === false).length;
+  const shown = onlyWrong ? rows.filter(({ a }) => a?.correct === false) : rows;
   return (
     <>
       <PageHead title="Gennemgang" onBack={() => go("results")} />
-      <div className="grid gap-4">
-        {game.questions.map((q, i) => {
-          const a = game.answers.find((x) => x.questionId === q.id);
+      <div className="mb-4 flex flex-wrap gap-2" role="group" aria-label="Filter">
+        <Button
+          size="sm"
+          variant={onlyWrong ? "outline" : "default"}
+          onClick={() => setOnlyWrong(false)}
+        >
+          Alle ({rows.length})
+        </Button>
+        <Button
+          size="sm"
+          variant={onlyWrong ? "default" : "outline"}
+          disabled={wrongCount === 0}
+          onClick={() => setOnlyWrong(true)}
+        >
+          Kun forkerte ({wrongCount})
+        </Button>
+      </div>
+      <div className="grid gap-3">
+        {shown.map(({ q, index, a }) => {
           const player = game.setup.players.find(
             (candidate) => candidate.id === a?.playerId,
           );
@@ -2580,37 +2791,65 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
           const correctOption = q.options.find(
             (option) => option.id === q.correctOptionId,
           );
+          const category = categoryById(q.categoryId);
           return (
-            <Card key={q.id}>
+            <Card
+              key={q.id}
+              className={`review-card ${a?.correct ? "good" : "bad"}`}
+            >
               <CardContent className="p-5">
-                <div className="flex justify-between">
-                  <Badge variant="secondary">{i + 1}</Badge>
-                  <Badge variant={a?.correct ? "default" : "destructive"}>
-                    {a?.correct ? "Rigtigt" : "Forkert"}
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary">{index + 1}</Badge>
+                  <Badge variant="outline">
+                    {category?.emoji} {category?.name}
                   </Badge>
+                  <Badge variant="outline">
+                    {DIFFICULTY_LABELS[q.difficulty]}
+                  </Badge>
+                  <span
+                    className={`review-verdict ${a?.correct ? "good" : "bad"}`}
+                  >
+                    {a?.correct ? <Check /> : <X />}
+                    {a?.correct ? "Rigtigt" : "Forkert"}
+                  </span>
                 </div>
                 <h3 className="mt-3 font-bold">
                   <QuizText>{q.prompt}</QuizText>
                 </h3>
-                {player && (
-                  <p className="mt-3 text-sm font-semibold">
+                {player && game.setup.players.length > 1 && (
+                  <p className="mt-2 text-sm font-semibold">
                     {player.avatar} {player.name}
                   </p>
                 )}
-                {selectedOption && (
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Svarede:{" "}
+                {!a?.correct && selectedOption && (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Dit svar:{" "}
                     <QuizOptionText prompt={q.prompt}>
                       {selectedOption.text}
                     </QuizOptionText>
                   </p>
                 )}
-                {!a?.correct && correctOption && (
-                  <p className="mt-1 text-sm text-foreground">
+                {correctOption && (
+                  <p className="mt-1 text-sm">
                     Rigtigt svar:{" "}
-                    <QuizOptionText prompt={q.prompt}>
-                      {correctOption.text}
-                    </QuizOptionText>
+                    <strong>
+                      <QuizOptionText prompt={q.prompt}>
+                        {correctOption.text}
+                      </QuizOptionText>
+                    </strong>
+                  </p>
+                )}
+                {q.type === "ordering" && q.correctOrder && (
+                  <p className="mt-1 text-sm">
+                    Rigtig rækkefølge:{" "}
+                    <strong>
+                      {q.correctOrder
+                        .map(
+                          (id) =>
+                            q.options.find((option) => option.id === id)?.text,
+                        )
+                        .join(" → ")}
+                    </strong>
                   </p>
                 )}
                 {hasUsefulExplanation(q.explanation) && (

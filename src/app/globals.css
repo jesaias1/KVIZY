@@ -1481,3 +1481,108 @@ html[data-phone-landscape] body {
   color: var(--muted-foreground);
   font-size: 0.85rem;
 }
+
+/* Dagens quiz */
+.daily-button {
+  position: relative;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  border: 1.5px solid color-mix(in oklab, var(--primary) 45%, transparent);
+}
+.daily-button.done {
+  border-color: var(--border);
+  color: var(--muted-foreground);
+  opacity: 1;
+}
+.daily-button:disabled {
+  opacity: 1;
+}
+.daily-sub {
+  color: var(--muted-foreground);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+.home-actions {
+  grid-template-columns: minmax(0, 1fr);
+}
+.daily-button {
+  min-width: 0;
+  overflow: hidden;
+}
+.daily-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-left: auto;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 18%, transparent);
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+.daily-streak svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Tastaturtip vises kun, hvor der er mus og tastatur */
+.key-hint {
+  display: none;
+  margin-top: 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+  text-align: center;
+  opacity: 0.8;
+}
+@media (hover: hover) and (pointer: fine) {
+  .key-hint {
+    display: block;
+  }
+}
+
+/* Resultat: niveauforslag og gennemgang */
+.level-nudge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px dashed color-mix(in oklab, var(--primary) 50%, var(--border));
+  border-radius: var(--radius);
+  text-align: left;
+  animation: rise-in 0.36s 0.4s var(--ease-out) both;
+}
+.level-nudge p {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.review-card {
+  border-left: 4px solid var(--border);
+}
+.review-card.good {
+  border-left-color: var(--good);
+}
+.review-card.bad {
+  border-left-color: var(--bad);
+}
+.review-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+.review-verdict svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+.review-verdict.good {
+  color: var(--good);
+}
+.review-verdict.bad {
+  color: var(--bad);
+}

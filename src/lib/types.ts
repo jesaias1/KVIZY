@@ -126,6 +126,8 @@ export type Game = {
   riskMultiplier: number;
   lifelinesRemaining?: Record<string, number>;
   hiddenOptionIds?: string[];
+  /** Datonøgle (åååå-mm-dd), hvis spillet er dagens quiz. */
+  dailyKey?: string;
 };
 export type GameResult = {
   id: string;
