@@ -153,3 +153,39 @@ export const DEFAULT_CATEGORIES = CATEGORIES.filter(
   (category) => !category.niche,
 );
 export const categoryById = (id: string) => CATEGORIES.find((c) => c.id === id);
+
+export type CategoryGroup = { name: string; emoji: string; ids: string[] };
+const ids = (...numbers: number[]) => numbers.map((n) => `cat-${n}`);
+
+// Kategorierne vises i emnegrupper i opsætningen. Hver kategori indgår i
+// netop én gruppe.
+export const CATEGORY_GROUPS: CategoryGroup[] = [
+  { name: "Danmark og samfund", emoji: "🇩🇰", ids: ids(2, 3, 4, 5, 6) },
+  {
+    name: "Videnskab og teknologi",
+    emoji: "🔬",
+    ids: ids(7, 8, 9, 10, 39, 54, 56, 57),
+  },
+  { name: "Sind og tanker", emoji: "💭", ids: ids(11, 12, 13, 14) },
+  {
+    name: "Film, tv og bøger",
+    emoji: "🎬",
+    ids: ids(15, 16, 17, 18, 19, 20, 64),
+  },
+  { name: "Musik og spil", emoji: "🎵", ids: ids(21, 22, 23, 24) },
+  { name: "Sport", emoji: "🏅", ids: ids(25, 26, 27) },
+  { name: "Natur og dyr", emoji: "🌲", ids: ids(28, 29, 30) },
+  {
+    name: "Kultur og kunst",
+    emoji: "🎨",
+    ids: ids(31, 32, 36, 37, 38, 40, 58, 63),
+  },
+  { name: "Mad og drikke", emoji: "🍽️", ids: ids(41, 42, 43, 44, 65) },
+  { name: "Penge og brands", emoji: "💰", ids: ids(34, 35, 55) },
+  { name: "Nostalgi og nutid", emoji: "📼", ids: ids(49, 50, 51, 52, 53) },
+  { name: "Universer og fans", emoji: "🪄", ids: ids(33, 60, 61, 62) },
+  { name: "Quizformater", emoji: "🧩", ids: ids(1, 45, 46, 47, 48, 59) },
+];
+
+/** Genvej i opsætningen: kategorier med dansk vinkel. */
+export const DANISH_CATEGORY_IDS = ids(2, 3, 16, 18, 20, 22, 26, 29, 41, 63);

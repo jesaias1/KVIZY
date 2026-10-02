@@ -54,7 +54,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ANIMAL_AVATARS, APP_CONFIG, DIFFICULTY_LABELS } from "@/lib/config";
-import { CATEGORIES, DEFAULT_CATEGORIES, categoryById } from "@/lib/categories";
+import {
+  CATEGORIES,
+  CATEGORY_GROUPS,
+  DANISH_CATEGORY_IDS,
+  DEFAULT_CATEGORIES,
+  categoryById,
+} from "@/lib/categories";
 import {
   answerIsCorrect,
   buildResult,
@@ -146,6 +152,13 @@ const typeLabels: Partial<Record<Question["type"], string>> = {
   ordering: "Korrekt rækkefølge",
   category_cross: "Kategorikryds",
 };
+const LEVEL_HINTS: Record<number, string> = {
+  1: "Spørgsmål, de fleste kan svare på uden at tænke sig om.",
+  2: "Almen viden, som du sikkert har hørt før.",
+  3: "Du kender emnet, men skal tænke dig om.",
+  4: "Her skal du faktisk vide noget – eller kunne regne det ud.",
+  5: "Til de rigtige quiznørder. Gæt er tilladt.",
+};
 const difficultyModes = [
   {
     id: "fixed",
@@ -208,6 +221,15 @@ function trackEvent(
     body: JSON.stringify({ event, categoryIds }),
     keepalive: true,
   }).catch(() => undefined);
+}
+// Konfetti uden web worker: sidens indholdspolitik tillader ikke blob-workers.
+let confettiCannon: ReturnType<typeof confetti.create> | null = null;
+function fireConfetti(options: Parameters<typeof confetti>[0]) {
+  confettiCannon ??= confetti.create(undefined, {
+    resize: true,
+    useWorker: false,
+  });
+  void confettiCannon(options);
 }
 function formatNames(names: string[]) {
   if (names.length < 2) return names[0] ?? "Ingen";
@@ -594,7 +616,7 @@ export function GameShell() {
     const celebrate = !soloRound || rate >= 0.6 || isRecord;
     tone(celebrate ? "win" : "done", settings.sound);
     if (celebrate && !settings.reducedMotion)
-      confetti({
+      fireConfetti({
         particleCount: isRecord || rate >= 0.9 ? 160 : 90,
         spread: 70,
         origin: { y: 0.65 },
@@ -1162,6 +1184,51 @@ function Setup({
     0,
     questionCounts.indexOf(displayedQuestionCount),
   );
+  const renderCategory = (c: (typeof CATEGORIES)[number]) => {
+    const selected = setup.categoryIds.includes(c.id),
+      fav = setup.favorites.includes(c.id);
+    return (
+      <div
+        key={c.id}
+        className={`category-card ${selected ? "selected" : ""}`}
+      >
+        <button
+          aria-pressed={selected}
+          onClick={() =>
+            setSetup({
+              ...setup,
+              categoryIds: selected
+                ? setup.categoryIds.filter((x) => x !== c.id)
+                : [...setup.categoryIds, c.id],
+            })
+          }
+        >
+          <span>{c.emoji}</span>
+          <b>{c.name}</b>
+          {c.niche && <small>Nichekategori · vælg selv</small>}
+          {selected && (
+            <i className="category-check" aria-hidden="true">
+              <Check />
+            </i>
+          )}
+        </button>
+        <button
+          className={`fav ${fav ? "active" : ""}`}
+          aria-label={`Favorit: ${c.name}`}
+          onClick={() =>
+            setSetup({
+              ...setup,
+              favorites: fav
+                ? setup.favorites.filter((x) => x !== c.id)
+                : [...setup.favorites, c.id],
+            })
+          }
+        >
+          <Heart fill={fav ? "currentColor" : "none"} />
+        </button>
+      </div>
+    );
+  };
   const add = () =>
     setSetup({
       ...setup,
@@ -1367,6 +1434,15 @@ function Setup({
               <Shuffle />
               Tilfældig blanding
             </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                setSetup({ ...setup, categoryIds: DANISH_CATEGORY_IDS })
+              }
+            >
+              🇩🇰 Kun dansk
+            </Button>
           </div>
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
@@ -1377,53 +1453,59 @@ function Setup({
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="category-grid">
-            {filtered.map((c) => {
-              const selected = setup.categoryIds.includes(c.id),
-                fav = setup.favorites.includes(c.id);
-              return (
-                <div
-                  key={c.id}
-                  className={`category-card ${selected ? "selected" : ""}`}
-                >
-                  <button
-                    aria-pressed={selected}
-                    onClick={() =>
-                      setSetup({
-                        ...setup,
-                        categoryIds: selected
-                          ? setup.categoryIds.filter((x) => x !== c.id)
-                          : [...setup.categoryIds, c.id],
-                      })
-                    }
-                  >
-                    <span>{c.emoji}</span>
-                    <b>{c.name}</b>
-                    {c.niche && <small>Nichekategori · vælg selv</small>}
-                    {selected && (
-                      <i className="category-check" aria-hidden="true">
-                        <Check />
-                      </i>
-                    )}
-                  </button>
-                  <button
-                    className={`fav ${fav ? "active" : ""}`}
-                    aria-label={`Favorit: ${c.name}`}
-                    onClick={() =>
-                      setSetup({
-                        ...setup,
-                        favorites: fav
-                          ? setup.favorites.filter((x) => x !== c.id)
-                          : [...setup.favorites, c.id],
-                      })
-                    }
-                  >
-                    <Heart fill={fav ? "currentColor" : "none"} />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+          {search.trim() ? (
+            <div className="category-grid">
+              {filtered.map(renderCategory)}
+            </div>
+          ) : (
+            <div className="grid gap-7">
+              {CATEGORY_GROUPS.map((group) => {
+                const members = group.ids
+                  .map((id) => CATEGORIES.find((c) => c.id === id))
+                  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+                const picked = members.filter((c) =>
+                  setup.categoryIds.includes(c.id),
+                ).length;
+                const all = picked === members.length;
+                return (
+                  <section key={group.name} className="category-group">
+                    <header>
+                      <h3>
+                        <span aria-hidden="true">{group.emoji}</span>
+                        {group.name}
+                      </h3>
+                      <small>
+                        {picked}/{members.length}
+                      </small>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSetup({
+                            ...setup,
+                            categoryIds: all
+                              ? setup.categoryIds.filter(
+                                  (id) => !group.ids.includes(id),
+                                )
+                              : [
+                                  ...new Set([
+                                    ...setup.categoryIds,
+                                    ...members.map((c) => c.id),
+                                  ]),
+                                ],
+                          })
+                        }
+                      >
+                        {all ? "Fravælg" : "Vælg alle"}
+                      </button>
+                    </header>
+                    <div className="category-grid">
+                      {members.map(renderCategory)}
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
+          )}
           <p className="mt-4 text-sm text-muted-foreground">
             {setup.categoryIds.length} kategorier valgt · favoritter optræder
             oftere
@@ -1476,20 +1558,27 @@ function Setup({
               </div>
             </CardHeader>
             <CardContent>
-              <div className="mb-3 flex items-end justify-between">
-                <b className="text-4xl">{setup.difficulty}</b>
-                <span className="max-w-52 text-right text-sm text-muted-foreground">
-                  {DIFFICULTY_LABELS[setup.difficulty]}
-                </span>
+              <div
+                className="level-picker"
+                role="radiogroup"
+                aria-label="Sværhedsgrad"
+              >
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    role="radio"
+                    aria-checked={setup.difficulty === level}
+                    className={`level-option ${setup.difficulty === level ? "selected" : ""}`}
+                    onClick={() => setSetup({ ...setup, difficulty: level })}
+                  >
+                    <span aria-hidden="true">{"●".repeat(level)}</span>
+                    <b>{DIFFICULTY_LABELS[level]}</b>
+                  </button>
+                ))}
               </div>
-              <Slider
-                min={1}
-                max={5}
-                step={1}
-                value={[setup.difficulty]}
-                onValueChange={([n]) => setSetup({ ...setup, difficulty: n })}
-              />
-              <div className="mt-8 grid grid-cols-3 gap-2">
+              <p className="level-hint">{LEVEL_HINTS[setup.difficulty]}</p>
+              <div className="mt-5 grid grid-cols-3 gap-2">
                 {difficultyModes.map((option) => (
                   <Button
                     size="sm"
@@ -1951,15 +2040,22 @@ function Play({
             const selected = given?.optionId === o.id,
               correct = o.id === q.correctOptionId,
               orderIndex = order.indexOf(o.id);
-            const state = !given
-              ? q.type === "ordering" && orderIndex >= 0
-                ? "picked"
-                : ""
-              : correct
-                ? "correct"
-                : selected
-                  ? "wrong"
-                  : "dim";
+            const state =
+              q.type === "ordering"
+                ? given
+                  ? given.correct
+                    ? "correct"
+                    : "wrong"
+                  : orderIndex >= 0
+                    ? "picked"
+                    : ""
+                : !given
+                  ? ""
+                  : correct
+                    ? "correct"
+                    : selected
+                      ? "wrong"
+                      : "dim";
             return (
               <Button
                 key={o.id}
@@ -1985,10 +2081,10 @@ function Play({
                 <b>
                   <QuizOptionText prompt={q.prompt}>{o.text}</QuizOptionText>
                 </b>
-                {given && correct && <Check className="answer-mark ml-auto" />}
-                {given && selected && !correct && (
-                  <X className="answer-mark ml-auto" />
+                {state === "correct" && (
+                  <Check className="answer-mark ml-auto" />
                 )}
+                {state === "wrong" && <X className="answer-mark ml-auto" />}
               </Button>
             );
           })}
@@ -2228,7 +2324,7 @@ function Results({
   const winnerRate = winner.correct / Math.max(1, winner.answers);
   const [soloTitle, soloText] = soloVerdict(winnerRate);
   const summary = sharedWin
-    ? `${winnerNames} deler sejren efter en helt lige kamp.`
+    ? "Helt lige kamp – en revanche må afgøre det."
     : winnerRate >= 0.8
       ? `${winner.name} leverede en vaskeægte quizmester-præstation.`
       : winner.longestStreak >= 4
@@ -2337,7 +2433,7 @@ function Results({
                 className={`standing ${rank === 1 ? "winner-card" : ""}`}
                 style={{ "--i": index } as React.CSSProperties}
               >
-                <CardContent className="relative flex items-center gap-4 p-4">
+                <CardContent className="flex items-center gap-4 p-4">
                   <i
                     className="standing-bar"
                     style={
