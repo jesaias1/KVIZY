@@ -153,7 +153,13 @@ const globalLengthOutliers = fourOptionQuestions.filter((question) => {
       .filter((option) => option.id !== question.correctOptionId)
       .map((option) => option.text.length),
   );
-  return Boolean(correct && correct.text.length > longestDistractor * 1.25);
+  if (!correct || correct.text.length <= longestDistractor * 1.25) return false;
+  // Samme regel som i banken: for de håndskrevne spørgsmål afslører få tegns
+  // forskel mellem korte navne ikke svaret.
+  return !(
+    question.id.startsWith("kz-") &&
+    correct.text.length - longestDistractor < 12
+  );
 });
 const retiredLookupQuestions = SEED_QUESTIONS.filter((question) =>
   question.tags.some((tag) =>

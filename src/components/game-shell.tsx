@@ -16,6 +16,7 @@ import {
   Copy,
   Download,
   Flag,
+  Flame,
   Gamepad2,
   Heart,
   History,
@@ -32,6 +33,7 @@ import {
   VolumeX as SoundOff,
   Trophy,
   X,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-lockup";
@@ -84,6 +86,7 @@ import {
   hasUsefulExplanation,
   questionOptionSetKey,
 } from "@/lib/question-quality";
+import { playCue } from "@/lib/sound";
 
 type View =
   | "home"
@@ -94,6 +97,8 @@ type View =
   | "help"
   | "settings"
   | "review";
+type BestScore = { correct: number; total: number; score: number; at: string };
+type RecordInfo = { previous?: BestScore; isRecord: boolean } | null;
 const defaults: AppSettings = {
   theme: "dark",
   sound: true,
@@ -255,21 +260,7 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
     lifelines: saved.lifelines ?? false,
   };
 }
-function tone(kind: "tap" | "correct" | "wrong" | "win", enabled: boolean) {
-  if (!enabled) return;
-  try {
-    const C = window.AudioContext || window.webkitAudioContext;
-    const c = new C(),
-      o = c.createOscillator(),
-      g = c.createGain();
-    o.frequency.value = { tap: 360, correct: 720, wrong: 150, win: 900 }[kind];
-    g.gain.setValueAtTime(0.05, c.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.14);
-    o.connect(g).connect(c.destination);
-    o.start();
-    o.stop(c.currentTime + 0.15);
-  } catch {}
-}
+const tone = playCue;
 declare global {
   interface Window {
     webkitAudioContext: typeof AudioContext;
@@ -299,6 +290,8 @@ export function GameShell() {
     }),
     [settings, setSettings] = useState(defaults),
     [startError, setStartError] = useState<string | null>(null),
+    [record, setRecord] = useState<RecordInfo>(null),
+    [bests, setBests] = useState<Record<string, BestScore>>({}),
     [hydrated, setHydrated] = useState(false);
   const startBusy = useRef(false);
   const { setTheme } = useTheme();
@@ -325,6 +318,7 @@ export function GameShell() {
       }
       setGame(storedGame);
       setHistory(storedHistory);
+      setBests(load<Record<string, BestScore>>(APP_CONFIG.bestKey, {}));
       setSetup(
         restoreSetup(
           load<Partial<GameSetup> | null>(APP_CONFIG.setupKey, null),
@@ -414,6 +408,10 @@ export function GameShell() {
     document.documentElement.classList.toggle(
       "contrast",
       settings.highContrast,
+    );
+    document.documentElement.classList.toggle(
+      "reduce-motion",
+      settings.reducedMotion,
     );
   }, [settings, hydrated, setTheme]);
   useEffect(() => {
@@ -533,6 +531,7 @@ export function GameShell() {
         hiddenOptionIds: [],
       };
       setGame(g);
+      setRecord(null);
       safeSet(APP_CONFIG.gameKey, JSON.stringify(g));
       safeSet(
         APP_CONFIG.seenKey,
@@ -564,14 +563,64 @@ export function GameShell() {
     safeRemove(APP_CONFIG.gameKey);
     trackEvent("game_completed", g.setup.categoryIds);
     setGame({ ...g, completedAt: r.playedAt });
-    tone("win", settings.sound);
-    confetti({
-      particleCount: 90,
-      spread: 65,
-      origin: { y: 0.7 },
-      colors: ["#ff6b35", "#35c2a6", "#fff"],
+    const leader = rankPlayers(g.setup.players)[0].player;
+    const rate = leader.correct / Math.max(1, leader.answers);
+    const soloRound = g.setup.players.length === 1;
+    let isRecord = false;
+    if (soloRound) {
+      const key = `solo-${g.questions.length}`;
+      const previous = bests[key];
+      const better =
+        !previous ||
+        leader.correct > previous.correct ||
+        (leader.correct === previous.correct && leader.score > previous.score);
+      isRecord = Boolean(previous) && better;
+      if (better) {
+        const updated = {
+          ...bests,
+          [key]: {
+            correct: leader.correct,
+            total: g.questions.length,
+            score: leader.score,
+            at: r.playedAt,
+          },
+        };
+        setBests(updated);
+        safeSet(APP_CONFIG.bestKey, JSON.stringify(updated));
+      }
+      setRecord({ previous, isRecord });
+    } else setRecord(null);
+    // En svag solorunde skal ikke fejres med konfetti.
+    const celebrate = !soloRound || rate >= 0.6 || isRecord;
+    tone(celebrate ? "win" : "done", settings.sound);
+    if (celebrate && !settings.reducedMotion)
+      confetti({
+        particleCount: isRecord || rate >= 0.9 ? 160 : 90,
+        spread: 70,
+        origin: { y: 0.65 },
+        colors: ["#ff6b35", "#35c2a6", "#e6b84b", "#fff"],
+        disableForReducedMotion: true,
+      });
+    setView("results");
+    window.scrollTo({ top: 0 });
+  };
+  const quick = () => {
+    // Ét tryk fra forsiden: ti blandede spørgsmål med de senest valgte
+    // kategorier og det senest valgte niveau.
+    void start({
+      ...setup,
+      mode: "quick",
+      players: [setup.players[0] ?? newPlayer("Spiller 1", 0)],
+      questionCount: 10,
+      categoryIds: setup.categoryIds.length
+        ? setup.categoryIds
+        : DEFAULT_CATEGORIES.map((category) => category.id),
+      timer: false,
+      timeBonus: false,
+      minusPoints: false,
+      finale: false,
+      lifelines: false,
     });
-    go("results");
   };
   const answer = (optionId: string, responseMs: number) => {
     if (
@@ -647,7 +696,10 @@ export function GameShell() {
         },
       ]),
     );
-    tone(correct ? "correct" : "wrong", settings.sound);
+    tone(
+      correct ? (p.streak + 1 >= 3 ? "streak" : "correct") : "wrong",
+      settings.sound,
+    );
     if (settings.haptics) navigator.vibrate?.(correct ? 30 : [40, 30, 40]);
   };
   const reportQuestion = async (
@@ -786,6 +838,9 @@ export function GameShell() {
         history={history}
         reducedMotion={settings.reducedMotion}
         go={go}
+        quick={quick}
+        busy={questionBankLoading}
+        best={bests["solo-10"]}
       />
     ) : view === "setup" ? (
       <Setup
@@ -814,7 +869,14 @@ export function GameShell() {
         }}
       />
     ) : view === "results" && game ? (
-      <Results game={game} go={go} replay={() => start(game.setup)} />
+      <Results
+        key={game.id}
+        game={game}
+        go={go}
+        replay={() => start(game.setup)}
+        record={record}
+        busy={questionBankLoading}
+      />
     ) : view === "history" ? (
       <HistoryView items={history} go={go} />
     ) : view === "settings" ? (
@@ -864,8 +926,13 @@ export function GameShell() {
       )}
       <motion.div
         key={view}
-        initial={settings.reducedMotion ? false : { opacity: 0, y: 10 }}
+        // Forsiden vises straks ved første indlæsning; kun skift mellem
+        // skærme får en kort overgang.
+        initial={
+          settings.reducedMotion || !hydrated ? false : { opacity: 0, y: 8 }
+        }
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
         className={`relative z-10 w-full px-4 pb-12 pt-4 sm:px-6 ${
           view === "home" ? "" : "mx-auto max-w-5xl"
         } ${view === "play" ? "quiz-shell" : ""}`}
@@ -959,11 +1026,17 @@ function Home({
   history,
   reducedMotion,
   go,
+  quick,
+  busy,
+  best,
 }: {
   game: Game | null;
   history: GameResult[];
   reducedMotion: boolean;
   go: (v: View) => void;
+  quick: () => void;
+  busy: boolean;
+  best?: BestScore;
 }) {
   return (
     <div className="home-grid">
@@ -982,7 +1055,7 @@ function Home({
           <strong className="text-foreground">{APP_CONFIG.tagline}.</strong>{" "}
           Dansk multiplayer quiz på én skærm.
         </p>
-        <div className="mt-9 grid gap-3 sm:max-w-md">
+        <div className="home-actions mt-9 grid gap-3 sm:max-w-md">
           <Button
             size="lg"
             className="h-14 text-base"
@@ -1005,6 +1078,16 @@ function Home({
           )}
           <Button
             size="lg"
+            variant="secondary"
+            className="h-14 text-base"
+            disabled={busy}
+            onClick={quick}
+          >
+            <Zap />
+            {busy ? "Finder spørgsmål…" : "Hurtigt spil · 10 spørgsmål"}
+          </Button>
+          <Button
+            size="lg"
             variant="ghost"
             className="h-12"
             onClick={() => go("help")}
@@ -1013,6 +1096,22 @@ function Home({
             Sådan spiller I
           </Button>
         </div>
+        {(best || history.length > 0) && (
+          <p className="home-stats">
+            {best && (
+              <span>
+                <Trophy aria-hidden="true" />
+                Rekord i hurtigt spil: {best.correct} af {best.total}
+              </span>
+            )}
+            {history.length > 0 && (
+              <span>
+                <History aria-hidden="true" />
+                {history.length} spil spillet
+              </span>
+            )}
+          </p>
+        )}
       </section>
       <aside className="relative z-10 hidden min-h-[520px] items-center justify-center lg:flex">
         <div className="hero-orbit">
@@ -1094,7 +1193,7 @@ function Setup({
       )}
       <Progress value={((step + 1) / 3) * 100} className="mb-7" />
       {step === 0 && (
-        <div className="space-y-8">
+        <div className="step-enter space-y-8">
           <section>
             <Label className="mb-3 block text-base">Spilleform</Label>
             <div
@@ -1235,7 +1334,7 @@ function Setup({
         </div>
       )}
       {step === 1 && (
-        <div>
+        <div className="step-enter">
           <div className="mb-4 flex flex-wrap gap-2">
             <Button
               size="sm"
@@ -1288,6 +1387,7 @@ function Setup({
                   className={`category-card ${selected ? "selected" : ""}`}
                 >
                   <button
+                    aria-pressed={selected}
                     onClick={() =>
                       setSetup({
                         ...setup,
@@ -1300,6 +1400,11 @@ function Setup({
                     <span>{c.emoji}</span>
                     <b>{c.name}</b>
                     {c.niche && <small>Nichekategori · vælg selv</small>}
+                    {selected && (
+                      <i className="category-check" aria-hidden="true">
+                        <Check />
+                      </i>
+                    )}
                   </button>
                   <button
                     className={`fav ${fav ? "active" : ""}`}
@@ -1326,7 +1431,7 @@ function Setup({
         </div>
       )}
       {step === 2 && (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="step-enter grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>Antal spørgsmål</CardTitle>
@@ -1491,6 +1596,67 @@ function Setup({
     </>
   );
 }
+function AnimatedNumber({
+  value,
+  from,
+  duration = 520,
+  suffix = "",
+}: {
+  value: number;
+  from?: number;
+  duration?: number;
+  suffix?: string;
+}) {
+  const node = useRef<HTMLSpanElement>(null);
+  const shown = useRef(from ?? value);
+  useEffect(() => {
+    const element = node.current;
+    if (!element) return;
+    const start = shown.current;
+    const format = (n: number) =>
+      `${Math.round(n).toLocaleString("da-DK")}${suffix}`;
+    const reduced =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      document.documentElement.classList.contains("reduce-motion");
+    if (start === value || reduced) {
+      shown.current = value;
+      element.textContent = format(value);
+      return;
+    }
+    const began = performance.now();
+    let frame = 0;
+    const step = (now: number) => {
+      const t = Math.min(1, (now - began) / duration);
+      const eased = 1 - (1 - t) ** 3;
+      shown.current = start + (value - start) * eased;
+      element.textContent = format(shown.current);
+      if (t < 1) frame = requestAnimationFrame(step);
+      else shown.current = value;
+    };
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [value, duration, suffix]);
+  return (
+    <span ref={node} className="tabular-nums">
+      {Math.round(from ?? value).toLocaleString("da-DK")}
+      {suffix}
+    </span>
+  );
+}
+const CORRECT_LINES = [
+  "Rigtigt!",
+  "Sådan!",
+  "Lige i øjet!",
+  "Præcis!",
+  "Helt rigtigt!",
+  "Flot klaret!",
+];
+const WRONG_LINES = ["Ikke helt", "Tæt på", "Desværre", "Den drillede"];
+function lineFor(lines: string[], seed: string) {
+  let hash = 0;
+  for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return lines[hash % lines.length];
+}
 function Play({
   game,
   answer,
@@ -1515,6 +1681,13 @@ function Play({
   const q = game.questions[game.index],
     p = game.setup.players[game.activePlayerIndex],
     given = game.answers.find((a) => a.questionId === q.id);
+  const total = game.questions.length;
+  const solo = game.setup.players.length === 1;
+  const isLast = game.index === total - 1;
+  const nextPlayer =
+    game.setup.players[
+      (game.activePlayerIndex + 1) % game.setup.players.length
+    ];
   const hiddenOptionIds = new Set(game.hiddenOptionIds ?? []);
   const visibleOptions = q.options.filter(
     (option) => !hiddenOptionIds.has(option.id),
@@ -1529,6 +1702,9 @@ function Play({
     q.options.length === 4 &&
     Boolean(q.correctOptionId);
   const started = useRef(0);
+  const nextButton = useRef<HTMLButtonElement>(null);
+  const feedback = useRef<HTMLDivElement>(null);
+  const [scoreAtMount] = useState(() => p.score - (given?.points ?? 0));
   const [order, setOrder] = useState<string[]>([]),
     [reportOpen, setReportOpen] = useState(false),
     [reportReason, setReportReason] = useState<QuestionReportReason>("unclear"),
@@ -1548,30 +1724,129 @@ function Play({
     }, 250);
     return () => window.clearInterval(interval);
   }, [game.setup.timer, game.setup.timeBonus, given]);
+  const answered = Boolean(given);
+  useEffect(() => {
+    if (!answered) return;
+    // Fokus på Videre gør, at Enter og mellemrum fører direkte videre, og på
+    // små skærme rulles forklaringen ind i billedet.
+    nextButton.current?.focus({ preventScroll: true });
+    feedback.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [answered]);
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (event.metaKey || event.ctrlKey || event.altKey || event.repeat)
+        return;
+      if (
+        target &&
+        (["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) ||
+          target.isContentEditable)
+      )
+        return;
+      if (given) {
+        // Knapper håndterer selv Enter og mellemrum.
+        const onButton = Boolean(target?.closest("button, a"));
+        if (
+          event.key === "ArrowRight" ||
+          (!onButton && (event.key === "Enter" || event.key === " "))
+        ) {
+          event.preventDefault();
+          next();
+        }
+        return;
+      }
+      if (q.type === "ordering") return;
+      const key = event.key.toLowerCase();
+      const index =
+        "1234".indexOf(key) >= 0 ? "1234".indexOf(key) : "abcd".indexOf(key);
+      const option = key.length === 1 ? visibleOptions[index] : undefined;
+      if (!option) return;
+      event.preventDefault();
+      answer(option.id, Date.now() - started.current);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
   const cat = categoryById(q.categoryId);
+  const correctOption = q.options.find(
+    (option) => option.id === q.correctOptionId,
+  );
+  const results = game.questions.map(
+    (question) =>
+      game.answers.find((item) => item.questionId === question.id)?.correct,
+  );
+  const modeTitle =
+    modes.find((mode) => mode.id === game.setup.mode)?.title ?? "Quiz";
   return (
     <div className="quiz-screen mx-auto max-w-3xl">
       <div className="quiz-heading mb-4 flex items-center justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <small className="text-muted-foreground">
-            Spørgsmål {game.index + 1} af {game.questions.length}
+            {solo ? modeTitle : `Spørgsmål ${game.index + 1} af ${total}`}
           </small>
-          <h2 className="text-lg font-bold">
-            {p.avatar} {p.name}s tur
+          <h2 className="truncate text-lg font-bold">
+            {solo
+              ? `Spørgsmål ${game.index + 1} af ${total}`
+              : `${p.avatar} ${p.name}s tur`}
           </h2>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          {p.streak >= 2 && (
+            <span
+              key={p.streak}
+              className="streak-chip"
+              role="status"
+              aria-label={`${p.streak} rigtige i træk`}
+            >
+              <Flame aria-hidden="true" />
+              {p.streak} i træk
+            </span>
+          )}
           <div
-            className="score-pill active"
+            className={`score-pill active ${given ? (given.points > 0 ? "gain" : given.points < 0 ? "loss" : "") : ""}`}
             role="status"
             aria-label={`${p.name}s point`}
           >
             <span>{p.avatar}</span>
-            <b>{p.score.toLocaleString("da-DK")}</b>
+            <b>
+              <AnimatedNumber value={p.score} from={scoreAtMount} />
+            </b>
+            {given && given.points !== 0 && (
+              <i className="points-pop" aria-hidden="true">
+                {given.points > 0 ? "+" : ""}
+                {given.points.toLocaleString("da-DK")}
+              </i>
+            )}
           </div>
         </div>
       </div>
-      <Progress value={((game.index + 1) / game.questions.length) * 100} />
+      {total <= 20 ? (
+        <div
+          className="progress-dots"
+          role="progressbar"
+          aria-label="Fremdrift"
+          aria-valuemin={1}
+          aria-valuemax={total}
+          aria-valuenow={game.index + 1}
+        >
+          {results.map((correct, index) => (
+            <span
+              key={game.questions[index].id}
+              className={
+                correct === true
+                  ? "right"
+                  : correct === false
+                    ? "miss"
+                    : index === game.index
+                      ? "now"
+                      : ""
+              }
+            />
+          ))}
+        </div>
+      ) : (
+        <Progress value={((game.index + 1) / total) * 100} />
+      )}
       {(game.setup.timer || game.setup.timeBonus) && !given && (
         <div className="mt-4" aria-live="polite">
           <div className="mb-2 flex items-center justify-between text-sm">
@@ -1583,7 +1858,7 @@ function Play({
                   : "Tid tilbage"
                 : "Tiden er gået – svar stadig"}
             </span>
-            <b className={secondsLeft <= 5 ? "text-destructive" : ""}>
+            <b className={secondsLeft <= 5 ? "timer-urgent" : ""}>
               {secondsLeft} sek.
             </b>
           </div>
@@ -1629,7 +1904,7 @@ function Play({
           </Button>
         </div>
       )}
-      <Card className="question-card mt-6">
+      <Card className="question-card mt-5">
         <CardHeader>
           <div className="flex flex-wrap items-center gap-2">
             <Badge style={{ borderColor: cat?.color }} variant="outline">
@@ -1637,7 +1912,9 @@ function Play({
                 ? "🎁 Mystery Mix"
                 : `${cat?.emoji} ${cat?.name}`}
             </Badge>
-            <Badge variant="secondary">Niveau {q.difficulty}</Badge>
+            <Badge variant="secondary">
+              {DIFFICULTY_LABELS[q.difficulty] ?? `Niveau ${q.difficulty}`}
+            </Badge>
             {typeLabels[q.type] && (
               <Badge className="quiz-type-badge" variant="outline">
                 {typeLabels[q.type]}
@@ -1665,7 +1942,7 @@ function Play({
               Der er ikke et andet ubrugt spørgsmål i den valgte pulje.
             </small>
           )}
-          <CardTitle className="pt-4 text-2xl leading-tight sm:text-4xl">
+          <CardTitle className="question-title pt-4 text-2xl leading-tight sm:text-[2rem]">
             <QuizText>{q.prompt}</QuizText>
           </CardTitle>
         </CardHeader>
@@ -1674,11 +1951,21 @@ function Play({
             const selected = given?.optionId === o.id,
               correct = o.id === q.correctOptionId,
               orderIndex = order.indexOf(o.id);
+            const state = !given
+              ? q.type === "ordering" && orderIndex >= 0
+                ? "picked"
+                : ""
+              : correct
+                ? "correct"
+                : selected
+                  ? "wrong"
+                  : "dim";
             return (
               <Button
                 key={o.id}
                 variant="outline"
                 disabled={!!given}
+                style={{ "--i": i } as React.CSSProperties}
                 onClick={() =>
                   q.type === "ordering"
                     ? setOrder((current) =>
@@ -1688,7 +1975,7 @@ function Play({
                       )
                     : answer(o.id, Date.now() - started.current)
                 }
-                className={`answer-button ${given && correct ? "correct" : ""} ${given && selected && !correct ? "wrong" : ""}`}
+                className={`answer-button ${state}`}
               >
                 <span>
                   {q.type === "ordering" && orderIndex >= 0
@@ -1698,8 +1985,10 @@ function Play({
                 <b>
                   <QuizOptionText prompt={q.prompt}>{o.text}</QuizOptionText>
                 </b>
-                {given && correct && <Check className="ml-auto" />}
-                {given && selected && !correct && <X className="ml-auto" />}
+                {given && correct && <Check className="answer-mark ml-auto" />}
+                {given && selected && !correct && (
+                  <X className="answer-mark ml-auto" />
+                )}
               </Button>
             );
           })}
@@ -1722,26 +2011,34 @@ function Play({
         </CardContent>
       </Card>
       {given && (
-        <motion.div
+        <div
+          ref={feedback}
           role="status"
           aria-live="polite"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
           className={`feedback ${given.correct ? "good" : "bad"}`}
         >
-          <div>
-            <b className="text-lg">
-              {given.correct ? "Rigtigt!" : "Ikke helt"} ·{" "}
-              {given.points > 0 ? "+" : ""}
-              {given.points.toLocaleString("da-DK")} point
+          <div className="min-w-0">
+            <b className="feedback-title">
+              {lineFor(given.correct ? CORRECT_LINES : WRONG_LINES, q.id)}
+              {given.points !== 0 && (
+                <span>
+                  {given.points > 0 ? "+" : ""}
+                  {given.points.toLocaleString("da-DK")} point
+                </span>
+              )}
             </b>
-            {hasUsefulExplanation(q.explanation) && (
-              <p>
-                <QuizText>{q.explanation}</QuizText>
+            {!given.correct && correctOption && q.type !== "ordering" && (
+              <p className="feedback-answer">
+                Svaret er{" "}
+                <strong>
+                  <QuizOptionText prompt={q.prompt}>
+                    {correctOption.text}
+                  </QuizOptionText>
+                </strong>
               </p>
             )}
             {q.type === "ordering" && q.correctOrder && (
-              <p>
+              <p className="feedback-answer">
                 Korrekt rækkefølge:{" "}
                 {q.correctOrder
                   .map(
@@ -1750,10 +2047,24 @@ function Play({
                   .join(" → ")}
               </p>
             )}
+            {hasUsefulExplanation(q.explanation) && (
+              <p>
+                <QuizText>{q.explanation}</QuizText>
+              </p>
+            )}
           </div>
           <div className="feedback-actions grid gap-2">
-            <Button className="next-question-button" size="lg" onClick={next}>
-              Videre
+            <Button
+              ref={nextButton}
+              className="next-question-button"
+              size="lg"
+              onClick={next}
+            >
+              {isLast
+                ? "Se resultatet"
+                : solo
+                  ? "Næste spørgsmål"
+                  : `Videre til ${nextPlayer.name}`}
               <ArrowRight />
             </Button>
             <Button
@@ -1766,7 +2077,7 @@ function Play({
               {reportSent ? "Tak for hjælpen" : "Er der noget galt?"}
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
       {given && reportOpen && !reportSent && (
         <Card className="mt-3 border-amber-500/40">
@@ -1813,14 +2124,40 @@ function Play({
     </div>
   );
 }
+function soloVerdict(rate: number): [string, string] {
+  if (rate >= 1)
+    return [
+      "Fejlfri runde!",
+      "Ikke én eneste fejl. Der er vist en quizmester i huset.",
+    ];
+  if (rate >= 0.8)
+    return [
+      "Stærkt spillet!",
+      "Det her kunne godt bære en plads på holdet til pubquizzen.",
+    ];
+  if (rate >= 0.6)
+    return ["Godt gået!", "Solidt over middel – og med plads til en revanche."];
+  if (rate >= 0.4)
+    return [
+      "Halvvejs i mål",
+      "Nogle sad lige i skabet, andre drillede. Én runde mere?",
+    ];
+  if (rate >= 0.2)
+    return ["Den drillede", "Spørgsmålene vandt denne gang. Tag en omkamp."];
+  return ["Av for den", "Herfra kan det kun gå fremad. Prøv igen!"];
+}
 function Results({
   game,
   go,
   replay,
+  record,
+  busy,
 }: {
   game: Game;
   go: (v: View) => void;
   replay: () => void;
+  record: RecordInfo;
+  busy: boolean;
 }) {
   const standings = rankPlayers(game.setup.players),
     sorted = standings.map(({ player }) => player),
@@ -1830,6 +2167,8 @@ function Results({
     winner = winners[0],
     winnerNames = formatNames(winners.map((player) => player.name)),
     sharedWin = winners.length > 1;
+  const solo = game.setup.players.length === 1;
+  const total = game.answers.length;
   const categoryStats = [
     ...new Set(game.answers.map((answer) => answer.categoryId)),
   ]
@@ -1841,50 +2180,53 @@ function Results({
       return {
         categoryId,
         name: categoryById(categoryId)?.name ?? "Ukendt kategori",
+        emoji: categoryById(categoryId)?.emoji ?? "",
         correct,
         total: answers.length,
         rate: correct / Math.max(1, answers.length),
       };
     })
     .sort((a, b) => b.rate - a.rate || b.total - a.total);
-  const bestCategory = categoryStats[0];
-  const weakestCategory = [...categoryStats].sort(
-    (a, b) => a.rate - b.rate || b.total - a.total,
-  )[0];
+  const bestCategory = categoryStats.find((stat) => stat.correct > 0);
+  const weakestCategory = [...categoryStats]
+    .sort((a, b) => a.rate - b.rate || b.total - a.total)
+    .find((stat) => stat.correct < stat.total);
   const fastest = [...game.answers]
     .filter((answer) => answer.correct)
     .sort((a, b) => a.responseMs - b.responseMs)[0];
-  const hardestAnswer = [...game.answers].sort((a, b) => {
-    const aq = game.questions.find((question) => question.id === a.questionId);
-    const bq = game.questions.find((question) => question.id === b.questionId);
-    return (
-      Number(a.correct) - Number(b.correct) ||
-      (bq?.difficulty ?? 0) - (aq?.difficulty ?? 0)
-    );
-  })[0];
-  const hardestQuestion = game.questions.find(
-    (question) => question.id === hardestAnswer?.questionId,
-  );
-  const typeStats = [
-    ...new Set(game.questions.map((question) => question.type)),
-  ]
-    .map((type) => {
+  const questionFor = (id?: string) =>
+    game.questions.find((question) => question.id === id);
+  const hardestRight = [...game.answers]
+    .filter((answer) => answer.correct)
+    .sort(
+      (a, b) =>
+        (questionFor(b.questionId)?.difficulty ?? 0) -
+        (questionFor(a.questionId)?.difficulty ?? 0),
+    )[0];
+  const hardestRightQuestion = questionFor(hardestRight?.questionId);
+  const difficultyStats = [1, 2, 3, 4, 5]
+    .map((level) => {
       const ids = new Set(
         game.questions
-          .filter((question) => question.type === type)
+          .filter((question) => question.difficulty === level)
           .map((question) => question.id),
       );
       const answers = game.answers.filter((answer) =>
         ids.has(answer.questionId),
       );
       return {
-        type,
+        level,
         total: answers.length,
         correct: answers.filter((answer) => answer.correct).length,
       };
     })
     .filter((stat) => stat.total > 0);
+  const longestStreak = Math.max(
+    0,
+    ...game.setup.players.map((player) => player.longestStreak),
+  );
   const winnerRate = winner.correct / Math.max(1, winner.answers);
+  const [soloTitle, soloText] = soloVerdict(winnerRate);
   const summary = sharedWin
     ? `${winnerNames} deler sejren efter en helt lige kamp.`
     : winnerRate >= 0.8
@@ -1894,117 +2236,234 @@ function Results({
         : sorted.length > 1 && winner.score - sorted[1].score <= 100
           ? "Det blev afgjort på marginalerne – en revanche ligger lige for."
           : `${winner.name} holdt hovedet koldt og tog sejren.`;
+  const topScore = Math.max(1, ...sorted.map((player) => player.score));
+  const [copied, setCopied] = useState(false);
+  const replayButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    // Enter starter en ny runde med det samme, uden at siden ruller ned.
+    replayButton.current?.focus({ preventScroll: true });
+  }, []);
   const share = async () => {
-    const text = sharedWin
-      ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${winner.score.toLocaleString("da-DK")} point!`
-      : `${APP_CONFIG.name}: ${winner.name} vandt med ${winner.score.toLocaleString("da-DK")} point!`;
-    if (navigator.share)
-      await navigator.share({ title: APP_CONFIG.name, text });
-    else await navigator.clipboard.writeText(text);
+    const text = solo
+      ? `${APP_CONFIG.name}: ${winner.correct} af ${total} rigtige og ${winner.score.toLocaleString("da-DK")} point. Kan du slå det?`
+      : sharedWin
+        ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${winner.score.toLocaleString("da-DK")} point!`
+        : `${APP_CONFIG.name}: ${winner.name} vandt med ${winner.score.toLocaleString("da-DK")} point!`;
+    try {
+      if (navigator.share)
+        await navigator.share({ title: APP_CONFIG.name, text });
+      else {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+      }
+    } catch {
+      // Brugeren fortrød delingen, eller udklipsholderen er utilgængelig.
+    }
   };
+  const ring = 2 * Math.PI * 52;
   return (
-    <div className="mx-auto max-w-3xl text-center">
-      <div className="winner-crown">👑</div>
-      <Badge>Spillet er slut</Badge>
-      <h1 className="mt-4 text-4xl font-black sm:text-6xl">
-        {sharedWin ? `${winnerNames} deler sejren!` : `${winner.name} vinder!`}
-      </h1>
-      <p className="mt-2 text-xl text-muted-foreground">
-        {winner.score.toLocaleString("da-DK")} point
-        {!sharedWin && ` · ${winner.correct} rigtige`}
-      </p>
-      <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{summary}</p>
-      <div className="my-8 grid gap-3 text-left">
-        {standings.map(({ player: p, rank }) => (
-          <Card key={p.id} className={rank === 1 ? "winner-card" : ""}>
-            <CardContent className="flex items-center gap-4 p-4">
-              <b className="w-7 text-xl">{rank}.</b>
-              <span className="text-3xl">{p.avatar}</span>
-              <div className="flex-1">
-                <b>{p.name}</b>
-                <p className="text-sm text-muted-foreground">
-                  {Math.round((p.correct / Math.max(1, p.answers)) * 100)}%
-                  rigtige · længste streak {p.longestStreak}
-                </p>
-              </div>
-              <strong>{p.score.toLocaleString("da-DK")}</strong>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <div className="mb-8 grid gap-3 text-left sm:grid-cols-2">
+    <div className="results mx-auto max-w-3xl text-center">
+      {solo ? (
+        <>
+          <div
+            className="score-ring"
+            style={{ "--rate": winnerRate } as React.CSSProperties}
+          >
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="52" />
+              <circle
+                cx="60"
+                cy="60"
+                r="52"
+                strokeDasharray={ring}
+                strokeDashoffset={ring}
+              />
+            </svg>
+            <div>
+              <b>
+                <AnimatedNumber
+                  value={Math.round(winnerRate * 100)}
+                  from={0}
+                  duration={900}
+                  suffix="%"
+                />
+              </b>
+              <span>rigtige</span>
+            </div>
+          </div>
+          <h1 className="reveal mt-5 text-4xl font-black tracking-tight sm:text-5xl">
+            {soloTitle}
+          </h1>
+          <p className="reveal mt-3 text-xl">
+            <b>
+              {winner.correct} af {total}
+            </b>{" "}
+            <span className="text-muted-foreground">
+              · {winner.score.toLocaleString("da-DK")} point
+            </span>
+          </p>
+          <p className="reveal mx-auto mt-2 max-w-xl text-muted-foreground">
+            {soloText}
+          </p>
+          {record?.isRecord ? (
+            <p className="record-badge new">
+              <Trophy aria-hidden="true" />
+              Ny personlig rekord!
+            </p>
+          ) : record?.previous ? (
+            <p className="record-badge">
+              <Trophy aria-hidden="true" />
+              Din rekord på {record.previous.total} spørgsmål:{" "}
+              {record.previous.correct} rigtige
+            </p>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <div className="winner-crown">👑</div>
+          <Badge>Spillet er slut</Badge>
+          <h1 className="reveal mt-4 text-4xl font-black tracking-tight sm:text-6xl">
+            {sharedWin
+              ? `${winnerNames} deler sejren!`
+              : `${winner.name} vinder!`}
+          </h1>
+          <p className="reveal mx-auto mt-3 max-w-xl text-muted-foreground">
+            {summary}
+          </p>
+          <div className="my-7 grid gap-3 text-left">
+            {standings.map(({ player: p, rank }, index) => (
+              <Card
+                key={p.id}
+                className={`standing ${rank === 1 ? "winner-card" : ""}`}
+                style={{ "--i": index } as React.CSSProperties}
+              >
+                <CardContent className="relative flex items-center gap-4 p-4">
+                  <i
+                    className="standing-bar"
+                    style={
+                      {
+                        "--share": Math.max(0, p.score) / topScore,
+                      } as React.CSSProperties
+                    }
+                  />
+                  <b className="w-7 text-xl">{rank}.</b>
+                  <span className="text-3xl">{p.avatar}</span>
+                  <div className="min-w-0 flex-1">
+                    <b className="block truncate">{p.name}</b>
+                    <p className="text-sm text-muted-foreground">
+                      {p.correct} af {p.answers} rigtige · bedste stime{" "}
+                      {p.longestStreak}
+                    </p>
+                  </div>
+                  <strong className="text-lg">
+                    <AnimatedNumber value={p.score} from={0} duration={800} />
+                  </strong>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </>
+      )}
+      <div className="result-stats my-7 grid gap-3 text-left sm:grid-cols-2">
         <ResultStat
-          label="Bedste kategori"
+          index={0}
+          label="Længste stime"
+          value={
+            longestStreak > 1
+              ? `${longestStreak} rigtige i træk`
+              : "Ingen stime denne gang"
+          }
+        />
+        <ResultStat
+          index={1}
+          label="Stærkeste kategori"
           value={
             bestCategory
-              ? `${bestCategory.name} · ${Math.round(bestCategory.rate * 100)}%`
-              : "Ingen data"
+              ? `${bestCategory.emoji} ${bestCategory.name} · ${bestCategory.correct}/${bestCategory.total}`
+              : "Ingen rigtige svar"
           }
         />
         <ResultStat
-          label="Største udfordring"
+          index={2}
+          label={weakestCategory ? "Her er der noget at hente" : "Hurtigste svar"}
           value={
             weakestCategory
-              ? `${weakestCategory.name} · ${Math.round(weakestCategory.rate * 100)}%`
-              : "Ingen data"
+              ? `${weakestCategory.emoji} ${weakestCategory.name} · ${weakestCategory.correct}/${weakestCategory.total}`
+              : fastest
+                ? `${(fastest.responseMs / 1000).toFixed(1)} sek.`
+                : "Ingen rigtige svar"
           }
         />
         <ResultStat
-          label="Hurtigste korrekte svar"
+          index={3}
+          label="Flottest klaret"
           value={
-            fastest
-              ? `${(fastest.responseMs / 1000).toFixed(1)} sek.`
-              : "Ingen korrekte svar"
-          }
-        />
-        <ResultStat
-          label="Sværest i spillet"
-          value={
-            hardestQuestion
-              ? `Niveau ${hardestQuestion.difficulty} · ${hardestQuestion.prompt}`
-              : "Ingen data"
+            hardestRightQuestion
+              ? `${DIFFICULTY_LABELS[hardestRightQuestion.difficulty]}: ${hardestRightQuestion.prompt}`
+              : fastest
+                ? `Hurtigste svar: ${(fastest.responseMs / 1000).toFixed(1)} sek.`
+                : "Næste runde bliver bedre"
           }
         />
       </div>
-      <Card className="mb-8 text-left">
-        <CardHeader>
-          <CardTitle className="text-lg">
-            Præstation efter spørgsmålstype
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
-          {typeStats.map((stat) => (
-            <Badge key={stat.type} variant="secondary">
-              {typeLabels[stat.type] ?? "Klassisk"}: {stat.correct}/{stat.total}
+      {difficultyStats.length > 1 && (
+        <div className="mb-7 flex flex-wrap items-center justify-center gap-2">
+          {difficultyStats.map((stat) => (
+            <Badge key={stat.level} variant="secondary">
+              {DIFFICULTY_LABELS[stat.level]}: {stat.correct}/{stat.total}
             </Badge>
           ))}
-        </CardContent>
-      </Card>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Button size="lg" onClick={replay}>
+        </div>
+      )}
+      <div className="result-actions grid gap-3 sm:grid-cols-2">
+        <Button
+          size="lg"
+          className="h-14 text-base sm:col-span-2"
+          ref={replayButton}
+          disabled={busy}
+          onClick={replay}
+        >
           <RefreshCw />
-          Revanche
+          {busy ? "Finder nye spørgsmål…" : solo ? "Spil igen" : "Revanche"}
         </Button>
         <Button size="lg" variant="secondary" onClick={() => go("review")}>
           <BookOpen />
           Gennemgå svar
         </Button>
-        <Button variant="outline" onClick={share}>
-          Del resultat
+        <Button size="lg" variant="outline" onClick={share}>
+          <Share2 />
+          {copied ? "Kopieret" : "Del resultat"}
         </Button>
-        <Button variant="ghost" onClick={() => go("home")}>
+        <Button
+          variant="ghost"
+          className="sm:col-span-2"
+          onClick={() => go("home")}
+        >
           Til forsiden
         </Button>
       </div>
     </div>
   );
 }
-function ResultStat({ label, value }: { label: string; value: string }) {
+function ResultStat({
+  label,
+  value,
+  index,
+}: {
+  label: string;
+  value: string;
+  index: number;
+}) {
   return (
-    <Card>
-      <CardContent className="p-4">
+    <Card
+      className="result-stat py-0"
+      style={{ "--i": index } as React.CSSProperties}
+    >
+      <CardContent className="px-4 py-3">
         <small className="text-muted-foreground">{label}</small>
-        <p className="mt-1 font-bold">{value}</p>
+        <p className="mt-1 line-clamp-2 font-bold">
+          <QuizText>{value}</QuizText>
+        </p>
       </CardContent>
     </Card>
   );

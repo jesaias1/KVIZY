@@ -361,6 +361,15 @@ function matchesSelectedUmbrellaCategory(
   );
 }
 
+// De håndskrevne spørgsmål kan dele et emne, fx «matador» eller «em92».
+// To spørgsmål om samme emne i ét spil føles som en gentagelse, og det ene
+// kan desuden komme til at afsløre svaret på det andet.
+export function questionTopicKey(question: Question) {
+  if (!question.tags.includes("kurateret-2026")) return undefined;
+  const topic = question.tags[0];
+  return topic && topic !== "kurateret" ? topic : undefined;
+}
+
 const templateKeyCache = new WeakMap<Question, string | undefined>();
 
 export function questionTemplateKey(question: Question) {
@@ -761,6 +770,7 @@ export function selectQuestions(
   const pickedFingerprints = new Set<string>();
   const pickedFacts = new Set<string>();
   const pickedOptionSets = new Set<string>();
+  const pickedTopics = new Set<string>();
   const pickedOptionTexts = new Map<string, number>();
   const categoryCounts = new Map<string, number>();
   const templateCounts = new Map<string, number>();
@@ -887,6 +897,8 @@ export function selectQuestions(
           pickedFingerprints.has(question.fingerprint) ||
           (optionSetKey && pickedOptionSets.has(optionSetKey)) ||
           (!allowRepeatedFact && pickedFacts.has(factKey)) ||
+          (!allowRepeatedFact &&
+            pickedTopics.has(questionTopicKey(question) ?? "")) ||
           (templateKey === "country-lookup" &&
             (templateCounts.get(templateKey) ?? 0) >= countryLookupLimit) ||
           (!allowRepeatedTemplate &&
@@ -974,9 +986,9 @@ export function selectQuestions(
       if (!chosen)
         chooseFromPool(true, true, false, true, policy, difficultyPolicy);
     };
-    // GennemgÃ¥ hele historikprioriteten inden for Â±1 niveau, fÃ¸r banken
-    // overhovedet mÃ¥ udvide. Et Ã¦ldre niveau 3-spÃ¸rgsmÃ¥l er bedre end et
-    // helt nyt niveau 1-spÃ¸rgsmÃ¥l, nÃ¥r spilleren har valgt niveau 4.
+    // Gennemgå hele historikprioriteten inden for ±1 niveau, før banken
+    // overhovedet må udvide. Et ældre niveau 3-spørgsmål er bedre end et
+    // helt nyt niveau 1-spørgsmål, når spilleren har valgt niveau 4.
     chooseWithSeenPolicy("unseen", "selected-band");
     if (!chosen) chooseWithSeenPolicy("old", "selected-band");
     if (!chosen) chooseWithSeenPolicy("any", "selected-band");
@@ -990,6 +1002,8 @@ export function selectQuestions(
     pickedIds.add(chosen.id);
     pickedFingerprints.add(chosen.fingerprint);
     pickedFacts.add(questionFactKey(chosen));
+    const topicKey = questionTopicKey(chosen);
+    if (topicKey) pickedTopics.add(topicKey);
     const optionSetKey = questionOptionSetKey(chosen);
     if (optionSetKey) pickedOptionSets.add(optionSetKey);
     for (const key of optionTextKeys.get(chosen.id) ?? []) {
