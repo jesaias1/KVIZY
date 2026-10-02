@@ -1215,6 +1215,8 @@ html[data-phone-landscape] body {
   animation-delay: calc(var(--i, 0) * 70ms + 0.25s);
 }
 .standing {
+  position: relative;
+  isolation: isolate;
   overflow: hidden;
 }
 .standing-bar {
@@ -1224,10 +1226,8 @@ html[data-phone-landscape] body {
   background: color-mix(in oklab, var(--primary) 9%, transparent);
   transform-origin: left;
   animation: bar-grow 0.7s 0.3s var(--ease-out) both;
+  z-index: -1;
   pointer-events: none;
-}
-.standing > [data-slot="card-content"] > :not(.standing-bar) {
-  position: relative;
 }
 .result-actions {
   animation: rise-in 0.36s 0.45s var(--ease-out) both;
@@ -1406,4 +1406,78 @@ html[data-phone-landscape] body {
   .brand-loading-dots i {
     animation: none !important;
   }
+}
+
+/* Opsætning: kategorigrupper og sværhedsvalg */
+.category-group header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+.category-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+.category-group header small {
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.category-group header button {
+  margin-left: auto;
+  min-height: 2.25rem;
+  padding: 0 0.25rem;
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.category-group .category-card {
+  min-height: 96px;
+}
+.level-picker {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.4rem;
+}
+.level-option {
+  display: flex;
+  min-height: 4.5rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.2rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  text-align: center;
+  transition: transform 0.12s var(--ease-out), border-color 0.15s, background-color 0.15s;
+}
+.level-option:active {
+  transform: scale(0.96);
+}
+.level-option span {
+  color: var(--muted-foreground);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+}
+.level-option b {
+  font-size: 0.68rem;
+  line-height: 1.15;
+}
+.level-option.selected {
+  border-color: var(--primary);
+  background: color-mix(in oklab, var(--primary) 12%, var(--card));
+}
+.level-option.selected span {
+  color: var(--primary);
+}
+.level-hint {
+  min-height: 2.6em;
+  margin-top: 0.85rem;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
 }

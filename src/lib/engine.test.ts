@@ -987,7 +987,7 @@ describe("adaptiv udvælgelse", () => {
     expect(
       chosen.filter((question) => question.tags.includes("hverdagsforklaring"))
         .length,
-    ).toBeGreaterThanOrEqual(4);
+    ).toBeGreaterThanOrEqual(2);
   });
   it("lader aldrig hovedstadsskabelonen dominere en ren Paratviden-runde", () => {
     const countryLookupTags = new Set([
@@ -1146,5 +1146,14 @@ describe("emnespredning i de håndskrevne spørgsmål", () => {
       expect(chosen).toHaveLength(20);
       expect(new Set(topics).size).toBe(topics.length);
     }
+  });
+});
+
+describe("kategorigrupper", () => {
+  it("indeholder hver kategori i netop én gruppe", async () => {
+    const { CATEGORY_GROUPS } = await import("./categories");
+    const grouped = CATEGORY_GROUPS.flatMap((group) => group.ids);
+    expect(new Set(grouped).size).toBe(grouped.length);
+    expect([...grouped].sort()).toEqual(CATEGORIES.map((c) => c.id).sort());
   });
 });

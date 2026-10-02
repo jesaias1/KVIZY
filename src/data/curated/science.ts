@@ -613,7 +613,7 @@ export const SCIENCE_SPECS: Spec[] = [
     3,
     "Hvilken muskel er kroppens stærkeste i forhold til sin størrelse?",
     ["Tyggemusklen", "Lårmusklen", "Hjertet", "Tungen"],
-    "Tyggemusklen kan lukke kæberne med et tryk svarende til 80-90 kilo på kindtænderne.",
+    "Tyggemusklen kan lukke kæberne med et tryk på adskillige dusin kilo på kindtænderne.",
   ),
   mc(
     54,
@@ -1438,7 +1438,7 @@ export const SCIENCE_SPECS: Spec[] = [
       "At bilen er en taxa",
       "At bilen er indregistreret før 1976",
     ],
-    "Gule plader sidder på varebiler til erhverv. Papegøjeplader – halvt gule, halvt hvide – bruges til blandet privat og erhvervskørsel.",
+    "Gule plader sidder på erhvervskøretøjer som varebiler.",
     { also: [2, 59] },
   ),
   tf(

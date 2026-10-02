@@ -223,14 +223,6 @@ export const GENERAL_SPECS: Spec[] = [
   ),
   mc(
     2,
-    4,
-    "Hvilken ø er Danmarks næststørste, når man ser bort fra Grønland?",
-    ["Vendsyssel-Thy", "Fyn", "Lolland", "Bornholm"],
-    "En stormflod i 1825 brød igennem Agger Tange, og siden har Limfjorden skilt Nørrejyske Ø fra resten af Jylland. Den er godt halvanden gang så stor som Fyn.",
-    { also: [6, 48] },
-  ),
-  mc(
-    2,
     1,
     "I hvilken by ligger domkirken, hvor de fleste danske konger og dronninger er begravet?",
     ["Roskilde", "Ribe", "Viborg", "Odense"],
@@ -337,7 +329,7 @@ export const GENERAL_SPECS: Spec[] = [
     3,
     "Hvad er det mest almindelige efternavn i Danmark?",
     ["Nielsen", "Jensen", "Hansen", "Andersen"],
-    "Nielsen overhalede Jensen i 2016 efter mange år på andenpladsen. Hansen ligger nummer tre.",
+    "Nielsen har ligget øverst siden 2012. Jensen er nummer to og Hansen nummer tre.",
     { also: [38] },
   ),
   mc(
@@ -488,7 +480,7 @@ export const GENERAL_SPECS: Spec[] = [
   mc(
     3,
     3,
-    "Hvilket år sendte «jordskredsvalget» fem nye partier i Folketinget?",
+    "I hvilket valgår blev antallet af partier i Folketinget fordoblet fra fem til ti?",
     ["1973", "1968", "1981", "1990"],
     "Mere end hver tredje vælger skiftede parti, og Fremskridtspartiet blev på én gang Folketingets næststørste.",
     { also: [5], topic: "jordskredsvalget" },

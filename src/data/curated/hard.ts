@@ -10,8 +10,6 @@ export const HARD_SPECS: Spec[] = [
     "De 52 hvide tangenter er stamtonerne. De sorte ligger i grupper på to og tre.", { also: [21] }),
   mc(2, 4, "Hvor ligger Danmarks østligste punkt?", ["Ved Christiansø", "På Dueodde", "På Hammeren", "Ved Gedser"],
     "Klippeskæret Østerskær i øgruppen Ertholmene ligger 18 kilometer nordøst for Bornholm.", { also: [6] }),
-  mc(2, 4, "Hvilket år åbnede Danmarks første motorvej?", ["1956", "1936", "1947", "1966"],
-    "Det var en strækning af Hørsholmvejen nord for København, i dag en del af Helsingørmotorvejen.", { also: [57] }),
   mc(3, 5, "Hvem blev regeringsleder ved systemskiftet i 1901?", ["J.H. Deuntzer", "J.C. Christensen", "J.B.S. Estrup", "C.Th. Zahle"],
     "Juraprofessoren Deuntzer ledede den første Venstreregering. J.C. Christensen var regeringens stærke mand og overtog posten i 1905.", { also: [5], topic: "systemskiftet" }),
   mc(3, 4, "Hvilket princip slog igennem ved systemskiftet i 1901?", ["Parlamentarisme", "Almindelig valgret", "Etkammersystem", "Religionsfrihed"],
@@ -262,6 +260,6 @@ export const HARD_SPECS: Spec[] = [
     "Programmet gav den amerikanske efterretningstjeneste NSA adgang til data fra de store techfirmaer.", { also: [10, 4] }),
   mc(53, 4, "Hvad kaldes EU's lov om kunstig intelligens, der blev vedtaget i 2024?", ["AI-forordningen", "Persondataforordningen", "Loven om digitale tjenester", "Chipforordningen"],
     "Loven deler systemerne ind efter risiko og forbyder blandt andet social pointgivning af borgere.", { also: [4, 9] }),
-  tf(48, 4, "Dyreparken i Edinburgh har en pingvin, der har rang af general i den norske garde.", true,
-    "Kongepingvinen Sir Nils Olav er maskot for Hans Majestet Kongens Garde og er blevet forfremmet flere gange siden 1972.", { also: [47, 28] }),
+  tf(48, 4, "En pingvin i Edinburghs zoo er blevet slået til ridder af den norske kongelige garde.", true,
+    "Kongepingvinen Sir Nils Olav er maskot for Hans Majestæt Kongens Garde og er blevet forfremmet flere gange siden 1972.", { also: [47, 28] }),
 ];
