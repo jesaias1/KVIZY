@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import {
   ArrowLeft,
   ArrowRight,
+  BarChart3,
   BookOpen,
   CalendarCheck,
   Check,
@@ -32,6 +33,7 @@ import {
   Shuffle,
   Volume2 as Sound2,
   VolumeX as SoundOff,
+  Target,
   Trophy,
   X,
   Zap,
@@ -101,6 +103,7 @@ import {
   questionOptionSetKey,
 } from "@/lib/question-quality";
 import { playCue } from "@/lib/sound";
+import { computeStats, weakestCategories, type Stats } from "@/lib/stats";
 
 type View =
   | "home"
@@ -108,6 +111,7 @@ type View =
   | "play"
   | "results"
   | "history"
+  | "stats"
   | "help"
   | "settings"
   | "review";
@@ -233,10 +237,24 @@ function trackEvent(
 // Konfetti uden web worker: sidens indholdspolitik tillader ikke blob-workers.
 let confettiCannon: ReturnType<typeof confetti.create> | null = null;
 function fireConfetti(options: Parameters<typeof confetti>[0]) {
-  confettiCannon ??= confetti.create(undefined, {
-    resize: true,
-    useWorker: false,
-  });
+  if (!confettiCannon) {
+    // Eget lærred, så det kan skjules for skærmlæsere og ikke fanger tryk.
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("aria-hidden", "true");
+    Object.assign(canvas.style, {
+      position: "fixed",
+      inset: "0",
+      width: "100%",
+      height: "100%",
+      pointerEvents: "none",
+      zIndex: "100",
+    });
+    document.body.appendChild(canvas);
+    confettiCannon = confetti.create(canvas, {
+      resize: true,
+      useWorker: false,
+    });
+  }
   void confettiCannon(options);
 }
 function formatNames(names: string[]) {
@@ -684,7 +702,7 @@ export function GameShell() {
     setSetup((current) => ({ ...current, difficulty: level }));
     void start({ ...game.setup, difficulty: level });
   };
-  const quick = () => {
+  const quick = (categoryIds?: string[]) => {
     // Ét tryk fra forsiden: ti blandede spørgsmål med de senest valgte
     // kategorier og det senest valgte niveau.
     void start({
@@ -692,9 +710,12 @@ export function GameShell() {
       mode: "quick",
       players: [setup.players[0] ?? newPlayer("Spiller 1", 0)],
       questionCount: 10,
-      categoryIds: setup.categoryIds.length
-        ? setup.categoryIds
-        : DEFAULT_CATEGORIES.map((category) => category.id),
+      categoryIds:
+        categoryIds && categoryIds.length
+          ? categoryIds
+          : setup.categoryIds.length
+            ? setup.categoryIds
+            : DEFAULT_CATEGORIES.map((category) => category.id),
       timer: false,
       timeBonus: false,
       minusPoints: false,
@@ -965,6 +986,13 @@ export function GameShell() {
       />
     ) : view === "history" ? (
       <HistoryView items={history} go={go} />
+    ) : view === "stats" ? (
+      <StatsView
+        history={history}
+        go={go}
+        busy={questionBankLoading}
+        train={(ids) => quick(ids)}
+      />
     ) : view === "settings" ? (
       <SettingsView
         value={settings}
@@ -1075,30 +1103,46 @@ function TopBar({
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <nav className="mt-8 grid gap-2">
-                <Button
-                  variant="ghost"
-                  className="justify-start"
-                  onClick={() => go("history")}
-                >
-                  <History />
-                  Historik
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="justify-start"
-                  onClick={() => go("help")}
-                >
-                  <BookOpen />
-                  Sådan spiller I
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="justify-start"
-                  onClick={() => go("settings")}
-                >
-                  <Settings />
-                  Indstillinger
-                </Button>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => go("stats")}
+                  >
+                    <BarChart3 />
+                    Statistik
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => go("history")}
+                  >
+                    <History />
+                    Historik
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => go("help")}
+                  >
+                    <BookOpen />
+                    Sådan spiller I
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => go("settings")}
+                  >
+                    <Settings />
+                    Indstillinger
+                  </Button>
+                </SheetClose>
               </nav>
             </SheetContent>
           </Sheet>
@@ -1132,9 +1176,7 @@ function DailyButton({
       {done
         ? `Dagens quiz klaret · ${done.correct}/${done.total}`
         : "Dagens quiz"}
-      {!done && (
-        <small className="daily-sub">samme ti til alle</small>
-      )}
+      {!done && <small className="daily-sub">samme ti til alle</small>}
       {streak > 0 && (
         <span className="daily-streak" aria-label={`${streak} dage i træk`}>
           <Flame aria-hidden="true" />
@@ -1218,7 +1260,7 @@ function Home({
             variant="secondary"
             className="h-14 text-base"
             disabled={busy}
-            onClick={quick}
+            onClick={() => quick()}
           >
             <Zap />
             {busy ? "Finder spørgsmål…" : "Hurtigt spil · 10 spørgsmål"}
@@ -1303,10 +1345,7 @@ function Setup({
     const selected = setup.categoryIds.includes(c.id),
       fav = setup.favorites.includes(c.id);
     return (
-      <div
-        key={c.id}
-        className={`category-card ${selected ? "selected" : ""}`}
-      >
+      <div key={c.id} className={`category-card ${selected ? "selected" : ""}`}>
         <button
           aria-pressed={selected}
           onClick={() =>
@@ -1373,7 +1412,11 @@ function Setup({
           <p className="mt-1 text-muted-foreground">{startError}</p>
         </div>
       )}
-      <Progress value={((step + 1) / 3) * 100} className="mb-7" />
+      <Progress
+        value={((step + 1) / 3) * 100}
+        className="mb-7"
+        aria-label={`Trin ${step + 1} af 3`}
+      />
       {step === 0 && (
         <div className="step-enter space-y-8">
           <section>
@@ -1392,14 +1435,23 @@ function Setup({
                   className={`mode-card ${setup.mode === m.id ? "selected" : ""}`}
                   onClick={() => {
                     const solo = m.id === "solo";
+                    // Standardnavne følger spilleformen: Hold 1 / Spiller 1.
+                    const [from, to] =
+                      m.id === "teams"
+                        ? [/^Spiller (\d+)$/, "Hold"]
+                        : [/^Hold (\d+)$/, "Spiller"];
+                    const named = (
+                      setup.players.length < 2 && !solo
+                        ? [...setup.players, newPlayer("Spiller 2", 1)]
+                        : setup.players
+                    ).map((player) => ({
+                      ...player,
+                      name: player.name.replace(from, `${to} $1`),
+                    }));
                     setSetup({
                       ...setup,
                       mode: m.id,
-                      players: solo
-                        ? [setup.players[0]]
-                        : setup.players.length < 2
-                          ? [...setup.players, newPlayer("Spiller 2", 1)]
-                          : setup.players,
+                      players: solo ? [named[0]] : named,
                     });
                   }}
                 >
@@ -1569,9 +1621,7 @@ function Setup({
             />
           </div>
           {search.trim() ? (
-            <div className="category-grid">
-              {filtered.map(renderCategory)}
-            </div>
+            <div className="category-grid">{filtered.map(renderCategory)}</div>
           ) : (
             <div className="grid gap-7">
               {CATEGORY_GROUPS.map((group) => {
@@ -1585,10 +1635,10 @@ function Setup({
                 return (
                   <section key={group.name} className="category-group">
                     <header>
-                      <h3>
+                      <h2>
                         <span aria-hidden="true">{group.emoji}</span>
                         {group.name}
-                      </h3>
+                      </h2>
                       <small>
                         {picked}/{members.length}
                       </small>
@@ -1855,7 +1905,9 @@ const CORRECT_LINES = [
   "Helt rigtigt!",
   "Flot klaret!",
 ];
-const WRONG_LINES = ["Ikke helt", "Tæt på", "Desværre", "Den drillede"];
+const WRONG_LINES = ["Ikke helt", "Desværre", "Den drillede", "Åh nej"];
+// Point uden fuldt rigtigt svar: fx «nærmest vinder»-spørgsmål.
+const PARTIAL_LINES = ["Tæt på!", "Næsten!"];
 function lineFor(lines: string[], seed: string) {
   let hash = 0;
   for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
@@ -1995,11 +2047,11 @@ function Play({
           <small className="text-muted-foreground">
             {solo ? modeTitle : `Spørgsmål ${game.index + 1} af ${total}`}
           </small>
-          <h2 className="truncate text-lg font-bold">
+          <h1 className="truncate text-lg font-bold">
             {solo
               ? `Spørgsmål ${game.index + 1} af ${total}`
               : `${p.avatar} ${p.name}s tur`}
-          </h2>
+          </h1>
         </div>
         <div className="flex items-center gap-2">
           {p.streak >= 2 && (
@@ -2056,7 +2108,10 @@ function Play({
           ))}
         </div>
       ) : (
-        <Progress value={((game.index + 1) / total) * 100} />
+        <Progress
+          value={((game.index + 1) / total) * 100}
+          aria-label="Fremdrift"
+        />
       )}
       {(game.setup.timer || game.setup.timeBonus) && !given && (
         <div className="mt-4" aria-live="polite">
@@ -2137,7 +2192,7 @@ function Play({
             {!given && (
               <Button
                 aria-label="Byt et spørgsmål, I allerede har set"
-                className="ml-auto h-8 min-h-8 gap-1 px-2 text-xs text-muted-foreground opacity-55 hover:opacity-100"
+                className="ml-auto h-8 min-h-8 gap-1 px-2 text-xs text-muted-foreground opacity-85 hover:opacity-100"
                 size="sm"
                 title="Behold turen og få et nyt spørgsmål"
                 variant="ghost"
@@ -2242,7 +2297,14 @@ function Play({
         >
           <div className="min-w-0">
             <b className="feedback-title">
-              {lineFor(given.correct ? CORRECT_LINES : WRONG_LINES, q.id)}
+              {lineFor(
+                given.correct
+                  ? CORRECT_LINES
+                  : given.points > 0
+                    ? PARTIAL_LINES
+                    : WRONG_LINES,
+                q.id,
+              )}
               {given.points !== 0 && (
                 <span>
                   {given.points > 0 ? "+" : ""}
@@ -2649,7 +2711,9 @@ function Results({
         />
         <ResultStat
           index={2}
-          label={weakestCategory ? "Her er der noget at hente" : "Hurtigste svar"}
+          label={
+            weakestCategory ? "Her er der noget at hente" : "Hurtigste svar"
+          }
           value={
             weakestCategory
               ? `${weakestCategory.emoji} ${weakestCategory.name} · ${weakestCategory.correct}/${weakestCategory.total}`
@@ -2763,7 +2827,11 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
   return (
     <>
       <PageHead title="Gennemgang" onBack={() => go("results")} />
-      <div className="mb-4 flex flex-wrap gap-2" role="group" aria-label="Filter">
+      <div
+        className="mb-4 flex flex-wrap gap-2"
+        role="group"
+        aria-label="Filter"
+      >
         <Button
           size="sm"
           variant={onlyWrong ? "outline" : "default"}
@@ -2813,9 +2881,9 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                     {a?.correct ? "Rigtigt" : "Forkert"}
                   </span>
                 </div>
-                <h3 className="mt-3 font-bold">
+                <h2 className="mt-3 font-bold">
                   <QuizText>{q.prompt}</QuizText>
-                </h3>
+                </h2>
                 {player && game.setup.players.length > 1 && (
                   <p className="mt-2 text-sm font-semibold">
                     {player.avatar} {player.name}
@@ -2862,6 +2930,120 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
           );
         })}
       </div>
+    </>
+  );
+}
+function StatsView({
+  history,
+  go,
+  busy,
+  train,
+}: {
+  history: GameResult[];
+  go: (v: View) => void;
+  busy: boolean;
+  train: (categoryIds: string[]) => void;
+}) {
+  const stats: Stats = computeStats(history);
+  const weakest = weakestCategories(stats);
+  const sorted = [...stats.categories]
+    .filter((category) => category.total >= 2)
+    .sort((a, b) => a.rate - b.rate || b.total - a.total);
+  return (
+    <>
+      <PageHead title="Statistik" onBack={() => go("home")} />
+      {stats.games === 0 ? (
+        <Empty
+          icon="📊"
+          title="Ingen statistik endnu"
+          text="Spil et par runder, så dukker dine stærke og svage sider op her."
+        />
+      ) : (
+        <div className="stats">
+          <p className="mb-4 text-sm text-muted-foreground">
+            {stats.soloOnly
+              ? "Bygger på dine solospil blandt de seneste 30 spil."
+              : "Bygger på de seneste 30 spil."}
+          </p>
+          <div className="stat-tiles">
+            {[
+              [String(stats.games), "spil"],
+              [String(stats.answers), "svar"],
+              [`${Math.round(stats.rate * 100)} %`, "rigtige"],
+              [String(stats.bestStreak), "længste stime"],
+            ].map(([value, label], index) => (
+              <Card
+                key={label}
+                className="py-0"
+                style={{ "--i": index } as React.CSSProperties}
+              >
+                <CardContent className="px-4 py-3 text-center">
+                  <b className="block text-2xl">{value}</b>
+                  <small className="text-muted-foreground">{label}</small>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          {weakest.length > 0 && (
+            <div className="level-nudge mt-5">
+              <p>
+                Dine svageste emner:{" "}
+                {weakest
+                  .map((id) => categoryById(id)?.name)
+                  .filter(Boolean)
+                  .join(", ")}
+              </p>
+              <Button disabled={busy} onClick={() => train(weakest)}>
+                <Target />
+                Træn dem · 10 spørgsmål
+              </Button>
+            </div>
+          )}
+          <h2 className="mb-3 mt-7 font-bold">Efter kategori</h2>
+          <div className="grid gap-2">
+            {sorted.map((category, index) => {
+              const meta = categoryById(category.categoryId);
+              return (
+                <div
+                  key={category.categoryId}
+                  className="stat-row"
+                  style={{ "--i": index } as React.CSSProperties}
+                >
+                  <span className="truncate">
+                    {meta?.emoji} {meta?.name ?? "Ukendt"}
+                  </span>
+                  <i className="stat-bar" aria-hidden="true">
+                    <b
+                      style={{ width: `${Math.round(category.rate * 100)}%` }}
+                    />
+                  </i>
+                  <small>
+                    {category.correct}/{category.total}
+                  </small>
+                </div>
+              );
+            })}
+            {sorted.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Spil lidt mere, så vises kategorierne her.
+              </p>
+            )}
+          </div>
+          {stats.levels.length > 0 && (
+            <>
+              <h2 className="mb-3 mt-7 font-bold">Efter niveau</h2>
+              <div className="flex flex-wrap gap-2">
+                {stats.levels.map((level) => (
+                  <Badge key={level.level} variant="secondary">
+                    {DIFFICULTY_LABELS[level.level]}: {level.correct}/
+                    {level.total}
+                  </Badge>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </>
   );
 }

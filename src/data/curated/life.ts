@@ -49,7 +49,7 @@ export const LIFE_SPECS: Spec[] = [
 
   // ── Dansk sport ────────────────────────────────────────────
   mc(26, 2, "Hvor mange VM-titler i træk vandt de danske håndboldherrer fra 2019 til 2025?", ["4", "2", "3", "5"],
-    "Intet andet land har vundet mere end to i træk.", { topic: "håndbold-herrer" }),
+    "Danmark vandt i 2019, 2021, 2023 og 2025.", { topic: "håndbold-herrer" }),
   mc(26, 2, "Hvilket land erstattede Danmark ved EM i fodbold i 1992?", ["Jugoslavien", "Sovjetunionen", "Tjekkoslovakiet", "Østtyskland"],
     "Jugoslavien blev udelukket på grund af krigen, ti dage før slutrunden begyndte.", { also: [27, 50], topic: "em92" }),
   mc(26, 3, "Hvem scorede Danmarks mål i EM-finalen mod Tyskland i 1992?", ["John Jensen og Kim Vilfort", "Brian Laudrup og Flemming Povlsen", "Henrik Larsen og Lars Elstrup", "Preben Elkjær og Michael Laudrup"],
