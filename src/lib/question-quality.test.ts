@@ -245,21 +245,18 @@ describe("automatisk spørgsmålskvalitet", () => {
     const redGroed = SEED_QUESTIONS.find(
       (q) => q.id === "wikiculture-food-origin-Q493749",
     );
-    expect(redGroed?.options.map((option) => option.text)).toEqual([
-      "Danmark",
-      "Sverige",
-      "Norge",
-      "Finland",
-    ]);
+    // Udgik ved gennemgangen i 2026: svaret gav sig selv for danske spillere.
+    expect(redGroed).toBeUndefined();
 
     const trueFalse = SEED_QUESTIONS.filter((q) => q.type === "true_false");
     const truthCounts = Object.groupBy(
       trueFalse,
       (q) => q.correctOptionId ?? "none",
     );
-    expect(
-      Math.abs((truthCounts.o1?.length ?? 0) - (truthCounts.o2?.length ?? 0)),
-    ).toBeLessThanOrEqual(1);
+    // Hverken sandt eller falsk må være så hyppigt, at man kan gætte sig frem.
+    const trueShare = (truthCounts.o1?.length ?? 0) / trueFalse.length;
+    expect(trueShare).toBeGreaterThan(0.4);
+    expect(trueShare).toBeLessThan(0.6);
   });
 
   it("udelukker maskinelle skabeloner med systematiske kvalitetsfejl", () => {
@@ -382,8 +379,8 @@ describe("automatisk spørgsmålskvalitet", () => {
     expect(budapest?.options.map((option) => option.text)).toEqual([
       "Donau",
       "Rhinen",
-      "Seinen",
-      "Themsen",
+      "Elben",
+      "Dnepr",
     ]);
 
     const albums = SEED_QUESTIONS.find((question) =>
@@ -403,12 +400,6 @@ describe("automatisk spørgsmålskvalitet", () => {
         "Kasuarfuglen",
         "Nanduen",
       ],
-      "Hvilken onlineencyklopædi blev lanceret i 2001?": [
-        "Wikipedia",
-        "Britannica Online",
-        "Encarta",
-        "Citizendium",
-      ],
     };
     for (const [prompt, options] of Object.entries(expectedOptions)) {
       expect(
@@ -425,12 +416,12 @@ describe("automatisk spørgsmålskvalitet", () => {
         /slaget ved\s+slaget ved/i.test(question.prompt),
       ),
     ).toBe(false);
-    const gettysburg = SEED_QUESTIONS.find((question) =>
-      question.prompt.includes("Gettysburg"),
-    );
-    expect(gettysburg?.prompt).toBe(
-      "I hvilket land fandt slaget ved Gettysburg sted?",
-    );
+    // Slag-skabelonen udgik helt ved gennemgangen i 2026.
+    expect(
+      SEED_QUESTIONS.some((question) =>
+        question.id.startsWith("wikithin-battle-country-"),
+      ),
+    ).toBe(false);
   });
 
   it("fastholder rettelserne fra mobilrapporterne 18. juli", () => {
@@ -468,14 +459,10 @@ describe("automatisk spørgsmålskvalitet", () => {
         "Hvad skaber illusionen af, at et hjul på film drejer baglæns?",
       "curiosity-expansion-075":
         "Hvordan kan et publikum spontant begynde at klappe i samme takt?",
-      "matrix-cat-58-architecture-force-2":
-        "Hvorfor består et fagværk ofte af trekanter?",
       "depth-029":
         "Hvad gør Ratatosk i fortællingerne om verdenstræet Yggdrasil?",
       "format-depth-047":
         "Hvilken del af kroppen analyserer de duftpartikler, en slange samler med tungen?",
-      "matrix-cat-4-intpol-decision-6":
-        "Hvad er en central opgave for Verdenshandelsorganisationen, WTO?",
     };
     for (const [id, prompt] of Object.entries(expectedPrompts)) {
       const question = SEED_QUESTIONS.find((candidate) => candidate.id === id);

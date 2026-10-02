@@ -21,6 +21,8 @@ import { DECADE_QUALITY_QUESTIONS } from "./decade-quality-questions";
 import { PHILOSOPHY_QUESTIONS } from "./philosophy-questions";
 import { EDITORIAL_FILL_QUESTIONS } from "./editorial-fill-questions";
 import { seedSpecs } from "./seed-spec";
+import { CURATED_2026_QUESTIONS } from "./curated";
+import { applyQualityReview, isRetiredByReview } from "./quality-review";
 
 const created = "2026-07-15T00:00:00.000Z";
 const rows = seedSpecs.flatMap((spec) =>
@@ -2003,7 +2005,7 @@ const retainedRepetitiveRelationIds = new Set(
 const repetitiveRelationTags = new Set(
   repetitiveRelationLimits.flatMap(({ tags }) => tags),
 );
-const BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
+const LEGACY_BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
   const countryRelation = ["capital", "currency", "continent", "language"].find(
     (relation) => question.tags.includes(relation),
   );
@@ -2014,6 +2016,15 @@ const BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
   );
   return !repetitiveRelation || retainedRepetitiveRelationIds.has(question.id);
 });
+
+// Den redaktionelle gennemgang i 2026 fjerner svage spørgsmål, retter de
+// beholdte og tilføjer de håndskrevne spørgsmål.
+const BASE_QUESTIONS: Question[] = [
+  ...LEGACY_BASE_QUESTIONS.filter(
+    (question) => !isRetiredByReview(question.id),
+  ).map(applyQualityReview),
+  ...CURATED_2026_QUESTIONS,
+];
 
 const categoryLinks: Record<string, string[]> = {
   "cat-11": ["cat-14"],
@@ -2375,5 +2386,11 @@ export const SEED_QUESTIONS: Question[] = [
       .filter((option) => option.id !== question.correctOptionId)
       .map((option) => option.text.length),
   );
-  return correct.text.length <= longestDistractor * 1.25;
+  if (correct.text.length <= longestDistractor * 1.25) return true;
+  // For de håndskrevne spørgsmål afslører få tegns forskel mellem korte navne
+  // ikke svaret. Kun tydeligt længere svar sorteres fra.
+  return (
+    question.id.startsWith("kz-") &&
+    correct.text.length - longestDistractor < 12
+  );
 });

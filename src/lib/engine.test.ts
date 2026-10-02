@@ -11,6 +11,7 @@ import {
   isGeneralKnowledgeQuestion,
   isNearDuplicate,
   newPlayer,
+  questionTopicKey,
   normalizeText,
   rankPlayers,
   recoverSeenFromHistory,
@@ -142,10 +143,10 @@ describe("sværhedsgrad", () => {
       SEED_QUESTIONS.find((question) =>
         question.prompt.includes("vands kemiske formel"),
       )?.difficulty,
-    ).toBe(2);
+    ).toBe(1);
     expect(
       SEED_QUESTIONS.find((question) =>
-        question.prompt.includes("religionsfrihed"),
+        question.prompt.includes("Finderup Lade"),
       )?.difficulty,
     ).toBe(4);
   });
@@ -188,11 +189,19 @@ describe("seedbank og Zod", () => {
       SEED_QUESTIONS.length,
     );
   });
-  it("har plausible talmuligheder til sekskanten", () => {
+  it("har plausible talmuligheder til Folketingets størrelse", () => {
     const q = SEED_QUESTIONS.find((x) =>
-      x.prompt.includes("regulær sekskant"),
+      x.prompt.includes("medlemmer har Folketinget"),
     )!;
-    expect(q.options.map((o) => o.text)).toEqual(["6", "5", "7", "8"]);
+    expect(q.options.map((o) => o.text)).toEqual(["179", "175", "169", "199"]);
+  });
+  it("har fjernet de barnlige spørgsmål i den redaktionelle gennemgang", () => {
+    expect(
+      SEED_QUESTIONS.some((x) => x.prompt.includes("regulær sekskant")),
+    ).toBe(false);
+    expect(SEED_QUESTIONS.some((x) => x.id.startsWith("matrix-cat-3-"))).toBe(
+      false,
+    );
   });
   it("holder nichekategorier ude af standard- og tilfældigpuljen", () => {
     for (const categoryId of [
@@ -241,7 +250,7 @@ describe("seedbank og Zod", () => {
     const thinQuestions = SEED_QUESTIONS.filter((question) =>
       question.id.startsWith("wikithin-"),
     );
-    expect(thinQuestions.length).toBeGreaterThanOrEqual(55);
+    expect(thinQuestions.length).toBeGreaterThanOrEqual(25);
     expect(
       thinQuestions.every(
         (question) =>
@@ -337,7 +346,7 @@ describe("adaptiv udvælgelse", () => {
 
   it("nedprioriterer også en svarpulje, der blev set i et tidligere spil", () => {
     const first = SEED_QUESTIONS.find(
-      (question) => question.id === "matrix-cat-20-tv-debut-1",
+      (question) => question.id === "decade-quality-053",
     )!;
     const repeatedKey = questionOptionSetKey(first);
     const chosen = selectQuestions(
@@ -1109,5 +1118,33 @@ describe("specialspørgsmål", () => {
     expect(exact).toBe(100);
     expect(other).toBeLessThan(exact);
     expect(other).toBeGreaterThan(0);
+  });
+});
+
+describe("emnespredning i de håndskrevne spørgsmål", () => {
+  it("vælger ikke to spørgsmål om samme emne i ét spil", () => {
+    const players = [newPlayer("A", 0)];
+    for (let simulation = 0; simulation < 8; simulation++) {
+      const chosen = selectQuestions(SEED_QUESTIONS, {
+        mode: "solo",
+        players,
+        questionCount: 20,
+        difficulty: 3,
+        difficultyMode: "mixed",
+        categoryIds: ["cat-20", "cat-26", "cat-27", "cat-18"],
+        favorites: [],
+        timer: false,
+        timeBonus: false,
+        streakBonus: false,
+        minusPoints: false,
+        finale: false,
+        lifelines: false,
+      });
+      const topics = chosen
+        .map(questionTopicKey)
+        .filter((topic): topic is string => Boolean(topic));
+      expect(chosen).toHaveLength(20);
+      expect(new Set(topics).size).toBe(topics.length);
+    }
   });
 });

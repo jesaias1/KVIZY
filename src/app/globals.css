@@ -848,6 +848,479 @@ html[data-phone-landscape] body {
   --border: oklch(0.8 0 0);
   --muted-foreground: oklch(0.82 0 0);
 }
+
+/* ── Spilfølelse ─────────────────────────────────────────────
+   Korte, målrettede bevægelser: intet varer over 0,4 sekund, og intet
+   forsinker spillerens næste tryk. */
+:root {
+  --good: #35c28b;
+  --bad: #ef5555;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+[data-slot="button"] {
+  transition:
+    transform 0.12s var(--ease-out),
+    background-color 0.15s,
+    border-color 0.15s,
+    opacity 0.15s,
+    box-shadow 0.15s;
+}
+[data-slot="button"]:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.mode-card:active,
+.category-card > button:first-child:active {
+  transform: scale(0.98);
+}
+.category-card {
+  transition:
+    border-color 0.15s,
+    background-color 0.15s,
+    transform 0.15s var(--ease-out);
+}
+.category-card > button:first-child {
+  transition: transform 0.12s var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .category-card:hover {
+    border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+  }
+}
+.category-check {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  animation: pop-in 0.22s var(--ease-pop);
+}
+.category-check svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  stroke-width: 3;
+}
+.step-enter {
+  animation: rise-in 0.24s var(--ease-out);
+}
+.home-actions > * {
+  animation: rise-in 0.36s var(--ease-out) both;
+}
+.home-actions > :nth-child(2) {
+  animation-delay: 0.05s;
+}
+.home-actions > :nth-child(3) {
+  animation-delay: 0.1s;
+}
+.home-actions > :nth-child(4) {
+  animation-delay: 0.15s;
+}
+.home-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-top: 1.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+  animation: rise-in 0.4s 0.2s var(--ease-out) both;
+}
+.home-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.home-stats svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: var(--primary);
+}
+
+/* Fremdrift: én prik pr. spørgsmål, farvet efter udfaldet. */
+.progress-dots {
+  display: flex;
+  gap: 0.3rem;
+}
+.progress-dots span {
+  flex: 1;
+  height: 0.38rem;
+  border-radius: 999px;
+  background: var(--secondary);
+  transition:
+    background-color 0.25s,
+    transform 0.25s var(--ease-pop);
+}
+.progress-dots .now {
+  background: color-mix(in oklab, var(--primary) 55%, var(--secondary));
+  animation: dot-now 1.6s ease-in-out infinite;
+}
+.progress-dots .right {
+  background: var(--good);
+}
+.progress-dots .miss {
+  background: var(--bad);
+}
+
+.streak-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 16%, transparent);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+  animation: pop-in 0.32s var(--ease-pop);
+}
+.streak-chip svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+.score-pill {
+  position: relative;
+  font-variant-numeric: tabular-nums;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.score-pill b {
+  font-size: 0.85rem;
+}
+.score-pill.gain {
+  border-color: var(--good);
+  animation: pill-bump 0.36s var(--ease-pop);
+}
+.score-pill.loss {
+  border-color: var(--bad);
+}
+.points-pop {
+  position: absolute;
+  right: 0.5rem;
+  top: -0.2rem;
+  color: var(--good);
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 800;
+  pointer-events: none;
+  animation: float-up 0.9s var(--ease-out) forwards;
+}
+.score-pill.loss .points-pop {
+  color: var(--bad);
+}
+
+.timer-progress [data-slot="progress-indicator"] {
+  transition: transform 0.3s linear;
+}
+.timer-urgent {
+  color: var(--destructive);
+  animation: pulse-soft 1s ease-in-out infinite;
+}
+
+/* Spørgsmålet glider ind, og svarene følger lige efter hinanden. */
+.question-card {
+  animation: card-in 0.28s var(--ease-out);
+}
+.question-title {
+  text-wrap: balance;
+}
+.answer-button {
+  position: relative;
+  border-width: 1.5px;
+  animation: rise-in 0.26s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 60ms);
+  transition:
+    transform 0.14s var(--ease-out),
+    border-color 0.16s,
+    background-color 0.16s,
+    opacity 0.2s,
+    box-shadow 0.16s;
+}
+.answer-button > span:first-child {
+  transition:
+    background-color 0.16s,
+    color 0.16s;
+}
+.answer-button:disabled {
+  opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .answer-button:not(:disabled):hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--primary) 70%, var(--border));
+    background: color-mix(in oklab, var(--primary) 7%, var(--card));
+    box-shadow: 0 8px 22px #0003;
+  }
+  .answer-button:not(:disabled):hover > span:first-child {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+.answer-button:not(:disabled):active {
+  transform: scale(0.985);
+}
+.answer-button.picked {
+  border-color: var(--primary);
+  background: color-mix(in oklab, var(--primary) 10%, var(--card));
+}
+.answer-button.picked > span:first-child {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.answer-button.correct {
+  border-color: var(--good);
+  background: color-mix(in oklab, var(--good) 14%, var(--card));
+  animation: answer-right 0.42s var(--ease-pop);
+}
+.answer-button.correct > span:first-child {
+  background: var(--good);
+  color: #06281b;
+}
+.answer-button.wrong {
+  border-color: var(--bad);
+  background: color-mix(in oklab, var(--bad) 13%, var(--card));
+  animation: answer-wrong 0.36s ease-in-out;
+}
+.answer-button.wrong > span:first-child {
+  background: var(--bad);
+  color: #fff;
+}
+.answer-button.dim {
+  opacity: 0.45;
+  animation: none;
+}
+.answer-mark {
+  flex: none;
+  animation: pop-in 0.3s var(--ease-pop);
+}
+.answer-button.correct .answer-mark {
+  color: var(--good);
+}
+.answer-button.wrong .answer-mark {
+  color: var(--bad);
+}
+
+.feedback {
+  scroll-margin-block: 6rem 1.25rem;
+  animation: rise-in 0.22s var(--ease-out);
+}
+.feedback-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+  font-size: 1.15rem;
+}
+.feedback-title span {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.feedback.good .feedback-title {
+  color: var(--good);
+}
+.feedback.bad .feedback-title {
+  color: var(--bad);
+}
+.feedback .feedback-answer {
+  color: var(--foreground);
+}
+.next-question-button {
+  min-width: 11rem;
+}
+
+/* Resultat */
+.results .reveal {
+  animation: rise-in 0.4s var(--ease-out) both;
+}
+.results h1.reveal {
+  animation-delay: 0.12s;
+}
+.results p.reveal {
+  animation-delay: 0.2s;
+}
+.score-ring {
+  position: relative;
+  width: 9.5rem;
+  height: 9.5rem;
+  margin: 1.5rem auto 0;
+  animation: pop-in 0.4s var(--ease-pop);
+}
+.score-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.score-ring circle {
+  fill: none;
+  stroke: var(--secondary);
+  stroke-width: 9;
+}
+.score-ring circle + circle {
+  stroke: var(--primary);
+  stroke-linecap: round;
+  animation: ring-fill 0.95s 0.1s var(--ease-out) forwards;
+}
+.score-ring > div {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  line-height: 1.05;
+}
+.score-ring b {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+.score-ring span {
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+}
+.record-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+  animation: rise-in 0.4s 0.35s var(--ease-out) both;
+}
+.record-badge svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--primary);
+}
+.record-badge.new {
+  border-color: var(--primary);
+  background: color-mix(in oklab, var(--primary) 14%, transparent);
+  color: var(--foreground);
+  font-weight: 800;
+  animation: pop-in 0.45s 0.5s var(--ease-pop) both;
+}
+.winner-crown {
+  animation: pop-in 0.45s var(--ease-pop);
+}
+.standing,
+.result-stat {
+  animation: rise-in 0.36s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 0.25s);
+}
+.standing {
+  overflow: hidden;
+}
+.standing-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--share, 0) * 100%);
+  background: color-mix(in oklab, var(--primary) 9%, transparent);
+  transform-origin: left;
+  animation: bar-grow 0.7s 0.3s var(--ease-out) both;
+  pointer-events: none;
+}
+.standing > [data-slot="card-content"] > :not(.standing-bar) {
+  position: relative;
+}
+.result-actions {
+  animation: rise-in 0.36s 0.45s var(--ease-out) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+@keyframes answer-right {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.022);
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--good) 22%, transparent);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+@keyframes answer-wrong {
+  20% {
+    transform: translateX(-5px);
+  }
+  45% {
+    transform: translateX(4px);
+  }
+  70% {
+    transform: translateX(-2px);
+  }
+}
+@keyframes pill-bump {
+  40% {
+    transform: scale(1.1);
+  }
+}
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-1.5rem);
+  }
+}
+@keyframes dot-now {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes pulse-soft {
+  50% {
+    opacity: 0.55;
+  }
+}
+@keyframes ring-fill {
+  to {
+    stroke-dashoffset: calc(326.73px * (1 - var(--rate, 0)));
+  }
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.reduce-motion *,
+.reduce-motion *:before,
+.reduce-motion *:after {
+  animation-duration: 0.01ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
 @media (max-width: 640px) {
   .playing header > div {
     height: 3.5rem;
