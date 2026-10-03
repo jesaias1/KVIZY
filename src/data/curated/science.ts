@@ -277,7 +277,7 @@ export const SCIENCE_SPECS: Spec[] = [
     4,
     "Hvad er solsystemets højeste bjerg?",
     ["Olympus Mons på Mars", "Maxwell Montes på Venus", "Mount Everest", "Mauna Kea"],
-    "Vulkanen rager omkring 22 kilometer op – næsten tre gange så højt som Mount Everest.",
+    "Vulkanen rager omkring 22 kilometer op – mere end dobbelt så højt som Mount Everest.",
     { also: [48] },
   ),
   mc(

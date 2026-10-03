@@ -1242,7 +1242,7 @@ export const GENERAL_SPECS: Spec[] = [
     3,
     "Hvad er verdens største ørken?",
     ["Antarktis", "Sahara", "Gobi", "Den Arabiske Ørken"],
-    "En ørken defineres af, hvor lidt nedbør der falder – ikke af varme. Antarktis er næsten dobbelt så stor som Sahara.",
+    "En ørken defineres af, hvor lidt nedbør der falder – ikke af varme. Antarktis er halvanden gang så stor som Sahara.",
     { also: [48, 56] },
   ),
   mc(

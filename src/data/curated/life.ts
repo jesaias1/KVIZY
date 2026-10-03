@@ -19,7 +19,7 @@ export const LIFE_SPECS: Spec[] = [
   mc(25, 1, "Hvilken af de fire Grand Slam-turneringer i tennis spilles på græs?", ["Wimbledon", "French Open", "US Open", "Australian Open"],
     "French Open spilles på grus, de to andre på hardcourt. I Wimbledon skal spillerne desuden gå i hvidt."),
   mc(25, 1, "Hvem siges at «svæve som en sommerfugl og stikke som en bi»?", ["Muhammad Ali", "Joe Frazier", "George Foreman", "Mike Tyson"],
-    "Ali blev verdensmester i sværvægt tre gange og mistede titlen i fire år, fordi han nægtede at kæmpe i Vietnam.", { also: [40] }),
+    "Ali blev verdensmester i sværvægt tre gange og mistede titlen i over tre år, fordi han nægtede at kæmpe i Vietnam.", { also: [40] }),
   mc(25, 1, "Hvem satte i 2009 verdensrekord på 100 meter med 9,58 sekunder?", ["Usain Bolt", "Carl Lewis", "Tyson Gay", "Asafa Powell"],
     "På sit hurtigste stykke løb Bolt næsten 45 kilometer i timen."),
   mc(25, 1, "Hvilken svømmer har vundet 23 olympiske guldmedaljer – flest af alle?", ["Michael Phelps", "Mark Spitz", "Ian Thorpe", "Ryan Lochte"],

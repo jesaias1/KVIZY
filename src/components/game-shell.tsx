@@ -348,6 +348,7 @@ export function GameShell() {
     [todayKey, setTodayKey] = useState(""),
     [hydrated, setHydrated] = useState(false);
   const startBusy = useRef(false);
+  const finishing = useRef(false);
   const { setTheme } = useTheme();
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -573,8 +574,10 @@ export function GameShell() {
         setView("setup");
         return;
       }
-      const selectedPlayers = s.mode === "solo" ? [s.players[0]] : s.players;
-      const requestedCount = s.mode === "quick" ? 10 : s.questionCount;
+      const selectedPlayers =
+        s.mode === "solo" || s.mode === "blitz" ? [s.players[0]] : s.players;
+      const requestedCount =
+        s.mode === "quick" ? 10 : s.mode === "blitz" ? 30 : s.questionCount;
       const normalized = {
         ...s,
         questionCount: options?.practice
@@ -629,6 +632,7 @@ export function GameShell() {
         dailyKey: options?.daily,
         practice: Boolean(options?.practice),
       };
+      finishing.current = false;
       setGame(g);
       setRecord(null);
       safeSet(APP_CONFIG.gameKey, JSON.stringify(g));
@@ -655,6 +659,8 @@ export function GameShell() {
     }
   };
   const finish = (g: Game) => {
+    if (finishing.current) return;
+    finishing.current = true;
     const r = buildResult({ ...g, completedAt: new Date().toISOString() });
     const next = [r, ...history].slice(0, 30);
     setHistory(next);
@@ -676,7 +682,8 @@ export function GameShell() {
       safeSet(APP_CONFIG.dailyKey, JSON.stringify(updated));
       setRecord(null);
     } else if (soloRound && !g.practice) {
-      const key = `solo-${g.questions.length}`;
+      const key =
+        g.setup.mode === "blitz" ? "blitz" : `solo-${g.questions.length}`;
       const previous = bests[key];
       const better =
         !previous ||
@@ -688,7 +695,8 @@ export function GameShell() {
           ...bests,
           [key]: {
             correct: leader.correct,
-            total: g.questions.length,
+            total:
+              g.setup.mode === "blitz" ? g.answers.length : g.questions.length,
             score: leader.score,
             at: r.playedAt,
           },
@@ -760,6 +768,25 @@ export function GameShell() {
     if (!game) return;
     setSetup((current) => ({ ...current, difficulty: level }));
     void start({ ...game.setup, difficulty: level });
+  };
+  const playBlitz = () => {
+    // Lynrunde: 60 sekunder, så mange rigtige som muligt.
+    void start({
+      ...setup,
+      mode: "blitz",
+      players: [setup.players[0] ?? newPlayer("Spiller 1", 0)],
+      questionCount: 30,
+      difficulty: 2,
+      difficultyMode: "mixed",
+      categoryIds: setup.categoryIds.length
+        ? setup.categoryIds
+        : DEFAULT_CATEGORIES.map((category) => category.id),
+      timer: false,
+      timeBonus: false,
+      minusPoints: false,
+      finale: false,
+      lifelines: false,
+    });
   };
   const quick = (categoryIds?: string[]) => {
     // Ét tryk fra forsiden: ti blandede spørgsmål med de senest valgte
@@ -999,6 +1026,7 @@ export function GameShell() {
         reducedMotion={settings.reducedMotion}
         go={go}
         quick={quick}
+        playBlitz={playBlitz}
         playDaily={playDaily}
         daily={daily}
         todayKey={todayKey}
@@ -1027,6 +1055,7 @@ export function GameShell() {
         next={nextQuestion}
         report={reportQuestion}
         skip={skipSeenQuestion}
+        timeUp={() => finish(game)}
         useLifeline={useLifeline}
         setRisk={(n) => {
           const g = { ...game, riskMultiplier: n };
@@ -1387,6 +1416,7 @@ function Home({
   reducedMotion,
   go,
   quick,
+  playBlitz,
   playDaily,
   daily,
   todayKey,
@@ -1398,6 +1428,7 @@ function Home({
   reducedMotion: boolean;
   go: (v: View) => void;
   quick: () => void;
+  playBlitz: () => void;
   playDaily: () => void;
   daily: DailyProgress | null;
   todayKey: string;
@@ -1495,6 +1526,9 @@ function Home({
             </div>
           </div>
           <div className="home-links">
+            <button type="button" disabled={busy} onClick={playBlitz}>
+              <Zap /> Lynrunde
+            </button>
             <button type="button" onClick={() => go("help")}>
               <BookOpen /> Sådan spiller I
             </button>
@@ -1540,6 +1574,9 @@ function Home({
           <dd>og ingen login</dd>
         </div>
       </dl>
+      <p className="home-legal">
+        <a href="/privatliv">Privatliv og data</a>
+      </p>
     </div>
   );
 }
@@ -2157,6 +2194,7 @@ function Play({
   setRisk,
   report,
   skip,
+  timeUp,
   useLifeline,
 }: {
   game: Game;
@@ -2166,6 +2204,7 @@ function Play({
   answer: (id: string, ms: number) => void;
   next: () => void;
   skip: () => boolean;
+  timeUp: () => void;
   setRisk: (n: number) => void;
   useLifeline: () => void;
   report: (
@@ -2228,6 +2267,38 @@ function Play({
     if (secondsLeft > 0 && secondsLeft <= 5) tone("tick", sound);
   }, [secondsLeft, game.setup.timer, game.setup.timeBonus, given, sound]);
   const answered = Boolean(given);
+  const blitz = game.setup.mode === "blitz";
+  const [blitzLeft, setBlitzLeft] = useState<number>(APP_CONFIG.blitzSeconds);
+  const timeUpRef = useRef(timeUp);
+  const nextRef = useRef(next);
+  useEffect(() => {
+    timeUpRef.current = timeUp;
+    nextRef.current = next;
+  });
+  useEffect(() => {
+    if (!blitz) return;
+    const startedAt = Date.parse(game.startedAt);
+    const tick = () => {
+      const left = Math.max(
+        0,
+        APP_CONFIG.blitzSeconds - (Date.now() - startedAt) / 1000,
+      );
+      setBlitzLeft(Math.ceil(left));
+      if (left <= 0) {
+        window.clearInterval(interval);
+        timeUpRef.current();
+      }
+    };
+    const interval = window.setInterval(tick, 200);
+    tick();
+    return () => window.clearInterval(interval);
+  }, [blitz, game.startedAt]);
+  useEffect(() => {
+    // I lynrunden går det videre af sig selv efter et kort blik på svaret.
+    if (!blitz || !answered) return;
+    const id = window.setTimeout(() => nextRef.current(), 650);
+    return () => window.clearTimeout(id);
+  }, [blitz, answered]);
   useEffect(() => {
     if (!answered) return;
     // Fokus på Videre gør, at Enter og mellemrum fører direkte videre, og på
@@ -2313,12 +2384,18 @@ function Play({
       <div className="quiz-heading mb-4 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <small className="text-muted-foreground">
-            {solo ? modeTitle : `Spørgsmål ${game.index + 1} af ${total}`}
+            {blitz
+              ? "Lynrunde"
+              : solo
+                ? modeTitle
+                : `Spørgsmål ${game.index + 1} af ${total}`}
           </small>
           <h1 className="truncate text-lg font-bold">
-            {solo
-              ? `Spørgsmål ${game.index + 1} af ${total}`
-              : `${p.avatar} ${p.name}s tur`}
+            {blitz
+              ? `${p.correct} rigtige`
+              : solo
+                ? `Spørgsmål ${game.index + 1} af ${total}`
+                : `${p.avatar} ${p.name}s tur`}
           </h1>
         </div>
         <div className="flex items-center gap-2">
@@ -2351,7 +2428,7 @@ function Play({
           </div>
         </div>
       </div>
-      {total <= 20 ? (
+      {blitz ? null : total <= 20 ? (
         <div
           className="progress-dots"
           role="progressbar"
@@ -2401,6 +2478,20 @@ function Play({
             value={(secondsLeft / 30) * 100}
             aria-label="Resterende svartid"
           />
+        </div>
+      )}
+      {blitz && (
+        <div
+          className={`blitz-bar ${blitzLeft <= 10 ? "hurry" : ""}`}
+          role="timer"
+          aria-label={`${blitzLeft} sekunder tilbage`}
+        >
+          <i
+            style={{
+              width: `${(blitzLeft / APP_CONFIG.blitzSeconds) * 100}%`,
+            }}
+          />
+          <b>{blitzLeft}</b>
         </div>
       )}
       {game.setup.mode === "risk" && !given && (
@@ -2457,7 +2548,7 @@ function Play({
             {(q.finale || q.type === "finale") && (
               <Badge>Finale · dobbelt point</Badge>
             )}
-            {!given && (
+            {!given && !blitz && (
               <Button
                 aria-label="Byt et spørgsmål, I allerede har set"
                 className="ml-auto h-8 min-h-8 gap-1 px-2 text-xs text-muted-foreground opacity-85 hover:opacity-100"
@@ -2573,12 +2664,12 @@ function Play({
           )}
         </CardContent>
       </Card>
-      {q.type !== "ordering" && (
+      {q.type !== "ordering" && !blitz && (
         <p className="key-hint" aria-hidden="true">
           Tryk 1–4 for at svare · Enter for næste spørgsmål
         </p>
       )}
-      {given && (
+      {given && !blitz && (
         <div
           ref={feedback}
           role="status"
@@ -2750,6 +2841,7 @@ function Results({
     winnerNames = formatNames(winners.map((player) => player.name)),
     sharedWin = winners.length > 1;
   const solo = game.setup.players.length === 1;
+  const isBlitz = game.setup.mode === "blitz";
   const awards = computeAwards(game);
   const missedCount = game.questions.filter(
     (question) =>
@@ -2835,6 +2927,7 @@ function Results({
       const given = game.answers.find((a) => a.questionId === question.id);
       return given ? (given.correct ? "🟩" : "🟥") : "⬜";
     });
+    if (isBlitz) marks.splice(game.answers.length);
     const rows: string[] = [];
     for (let i = 0; i < marks.length; i += 10)
       rows.push(marks.slice(i, i + 10).join(""));
@@ -2862,11 +2955,13 @@ function Results({
     const [, month, day] = (game.dailyKey ?? "").split("-");
     const text = isDaily
       ? `${APP_CONFIG.name} Dagens quiz ${Number(day)}/${Number(month)}\n${winner.correct}/${total} · ${score} point${streak > 1 ? ` · ${streak} dage i træk` : ""}\n${grid}\nwww.kvizy.dk`
-      : solo
-        ? `${APP_CONFIG.name} · ${winner.correct}/${total} · ${score} point\n${grid}\nKan du slå det? www.kvizy.dk`
-        : sharedWin
-          ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${score} point!`
-          : `${APP_CONFIG.name}: ${winner.name} vandt med ${score} point!`;
+      : isBlitz
+        ? `${APP_CONFIG.name} Lynrunde · ${winner.correct} rigtige på ${APP_CONFIG.blitzSeconds} sek.\n${grid}\nKan du slå det? www.kvizy.dk`
+        : solo
+          ? `${APP_CONFIG.name} · ${winner.correct}/${total} · ${score} point\n${grid}\nKan du slå det? www.kvizy.dk`
+          : sharedWin
+            ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${score} point!`
+            : `${APP_CONFIG.name}: ${winner.name} vandt med ${score} point!`;
     try {
       if (navigator.share)
         await navigator.share({ title: APP_CONFIG.name, text });
@@ -2936,8 +3031,9 @@ function Results({
           ) : record?.previous ? (
             <p className="record-badge">
               <Trophy aria-hidden="true" />
-              Din rekord på {record.previous.total} spørgsmål:{" "}
-              {record.previous.correct} rigtige
+              {isBlitz
+                ? `Din rekord i lynrunden: ${record.previous.correct} rigtige`
+                : `Din rekord på ${record.previous.total} spørgsmål: ${record.previous.correct} rigtige`}
             </p>
           ) : null}
         </>
@@ -3061,6 +3157,7 @@ function Results({
       )}
       {solo &&
         !isDaily &&
+        !isBlitz &&
         !game.practice &&
         missedCount > 0 &&
         missedCount < total && (

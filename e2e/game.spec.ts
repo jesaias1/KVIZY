@@ -131,3 +131,25 @@ test("læs-op-tilstand skjuler svarene, til værten viser dem", async ({
   await page.getByRole("button", { name: "Vis svarmuligheder" }).click();
   await expect(page.locator(".answer-button").first()).toBeVisible();
 });
+
+test("lynrunde går videre af sig selv og slutter, når tiden er gået", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/");
+  await page.getByRole("button", { name: /Lynrunde/ }).click();
+  await expect(page.getByRole("timer")).toBeVisible();
+  await page.locator(".answer-button").first().click();
+  await page.clock.runFor(1_000);
+  await expect(
+    page.locator(".answer-button.correct, .answer-button.wrong"),
+  ).toHaveCount(0);
+  await page.clock.fastForward(62_000);
+  await expect(page.getByRole("button", { name: /Spil igen/ })).toBeVisible();
+});
+
+test("privatlivssiden findes og kan nås fra forsiden", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: /Privatliv/ }).click();
+  await expect(page.getByRole("heading", { name: "Privatliv" })).toBeVisible();
+});

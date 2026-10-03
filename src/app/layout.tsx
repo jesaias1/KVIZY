@@ -24,20 +24,11 @@ export const metadata: Metadata = {
     siteName: APP_CONFIG.name,
     title: `${APP_CONFIG.name} – ${APP_CONFIG.tagline}`,
     description: "Dansk multiplayer quiz på én skærm.",
-    images: [
-      {
-        url: "/brand/kvizy-app-icon.png",
-        width: 1200,
-        height: 1200,
-        alt: "KVIZY-logo",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${APP_CONFIG.name} – ${APP_CONFIG.tagline}`,
     description: "Dansk multiplayer quiz på én skærm.",
-    images: ["/brand/kvizy-app-icon.png"],
   },
   category: "games",
   manifest: "/manifest.webmanifest",
