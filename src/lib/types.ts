@@ -77,7 +77,7 @@ export type Category = {
   niche?: boolean;
 };
 export type GameMode =
-  "classic" | "teams" | "solo" | "quick" | "risk" | "mystery";
+  "classic" | "teams" | "solo" | "quick" | "risk" | "mystery" | "blitz";
 export type DifficultyMode = "fixed" | "mixed" | "rising";
 export type GamePlayer = {
   id: string;

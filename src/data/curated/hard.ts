@@ -105,7 +105,7 @@ export const HARD_SPECS: Spec[] = [
   mc(20, 3, "Hvem instruerede «Matador»?", ["Erik Balling", "Bille August", "Sven Methling", "Gabriel Axel"],
     "Balling stod også bag Olsen-banden og «Huset på Christianshavn». Lise Nørgaard fik idéen og skrev mange af afsnittene.", { topic: "matador" }),
   mc(20, 4, "Hvad hedder Mads Skjerns bror, der også slår sig ned i Korsbæk?", ["Kristen", "Daniel", "Ulrik", "Jørgen"],
-    "Kristen Skjern leder Omegnsbanken. Daniel er Mads' søn, Ulrik hans stedsøn, og Jørgen er en Varnæs.", { topic: "matador" }),
+    "Kristen Skjern leder Omegnsbanken. Daniel er Mads' søn, og Ulrik er søn af bankdirektør Varnæs.", { topic: "matador" }),
 
   // Musik
   mc(21, 3, "Hvem komponerede operacyklussen «Nibelungens ring»?", ["Richard Wagner", "Giuseppe Verdi", "Richard Strauss", "Gustav Mahler"],
