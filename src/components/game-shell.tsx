@@ -2309,7 +2309,7 @@ function Play({
   const modeTitle =
     modes.find((mode) => mode.id === game.setup.mode)?.title ?? "Quiz";
   return (
-    <div className="quiz-screen mx-auto max-w-3xl">
+    <div className="quiz-screen mx-auto max-w-3xl lg:max-w-4xl">
       <div className="quiz-heading mb-4 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <small className="text-muted-foreground">
@@ -3720,7 +3720,7 @@ function PageHead({
   kicker?: string;
 }) {
   return (
-    <div className="mb-6 flex items-center gap-4">
+    <div className="mb-5 flex items-center gap-2 sm:gap-4">
       <Button size="icon" variant="ghost" onClick={onBack} aria-label="Tilbage">
         <ArrowLeft />
       </Button>

@@ -2289,3 +2289,39 @@ html[data-phone-landscape] body {
     display: none;
   }
 }
+
+/* Fluebenet må ikke dække kategorinavnet */
+.category-card.selected b {
+  padding-right: 1.7rem;
+  overflow-wrap: anywhere;
+}
+
+/* Gennemgangskort: mindre luft, så flere spørgsmål er synlige */
+.review-card {
+  gap: 0.5rem;
+  padding-block: 0.9rem;
+}
+.review-card [data-slot="card-content"],
+.review-card [data-slot="card-header"] {
+  padding-block: 0;
+}
+
+/* Store skærme (tv og laptop): større spørgsmål, så hele rummet kan læse med */
+@media (min-width: 1024px) and (min-height: 700px) {
+  .quiz-screen .question-title {
+    font-size: 2.6rem;
+    line-height: 1.15;
+  }
+  .quiz-screen .answer-button {
+    min-height: 5rem;
+    padding-inline: 1.1rem;
+    font-size: 1.3rem;
+  }
+  .quiz-screen .answer-button b {
+    font-size: 1.3rem;
+  }
+  .quiz-screen .answer-button > span:first-child {
+    min-width: 2.75rem;
+    height: 2.75rem;
+  }
+}
