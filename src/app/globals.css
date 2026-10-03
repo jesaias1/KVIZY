@@ -2254,3 +2254,38 @@ html[data-phone-landscape] body {
 .large-text .answer-button {
   min-height: 4.5rem;
 }
+
+/* Topbjælke: på forsiden svæver knapperne i hjørnet uden egen bjælke */
+.app-topbar.floating {
+  pointer-events: none;
+}
+.app-topbar.floating > div {
+  height: auto;
+  padding-top: 0.75rem;
+}
+.app-topbar.floating button {
+  pointer-events: auto;
+}
+.app-topbar.floating [data-slot="button"] {
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--background) 65%, transparent);
+  backdrop-filter: blur(10px);
+}
+@media (max-width: 640px) {
+  .app-topbar:not(.floating) .brand-mark {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+  .app-topbar:not(.floating) .brand-wordmark {
+    width: 6.5rem;
+  }
+  .home-shell {
+    padding-top: 0.25rem;
+  }
+}
+@media (max-width: 640px) {
+  .app-topbar:not(.floating) .brand-copy small {
+    display: none;
+  }
+}

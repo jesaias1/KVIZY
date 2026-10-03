@@ -1131,9 +1131,15 @@ function TopBar({
   go: (v: View) => void;
 }) {
   return (
-    <header className="app-topbar sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
+    <header
+      className={`app-topbar ${
+        view === "home"
+          ? "floating absolute inset-x-0 top-0 z-40"
+          : "z-40 border-b sm:sticky sm:top-0 border-border/60 bg-background/90 backdrop-blur"
+      }`}
+    >
       <div
-        className={`mx-auto flex h-20 max-w-5xl items-center px-4 sm:px-6 ${
+        className={`mx-auto flex h-14 max-w-5xl sm:h-20 items-center px-4 sm:px-6 ${
           view === "home" ? "justify-end" : "justify-between"
         }`}
       >
