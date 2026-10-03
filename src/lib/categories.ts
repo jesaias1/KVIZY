@@ -69,7 +69,7 @@ const names = [
 ];
 const emojis = [
   "🧠",
-  "🇩🇰",
+  "🏰",
   "🏛️",
   "🌍",
   "⌛",
@@ -160,7 +160,7 @@ const ids = (...numbers: number[]) => numbers.map((n) => `cat-${n}`);
 // Kategorierne vises i emnegrupper i opsætningen. Hver kategori indgår i
 // netop én gruppe.
 export const CATEGORY_GROUPS: CategoryGroup[] = [
-  { name: "Danmark og samfund", emoji: "🇩🇰", ids: ids(2, 3, 4, 5, 6) },
+  { name: "Danmark og samfund", emoji: "🏰", ids: ids(2, 3, 4, 5, 6) },
   {
     name: "Videnskab og teknologi",
     emoji: "🔬",

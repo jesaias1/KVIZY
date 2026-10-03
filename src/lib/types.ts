@@ -128,6 +128,8 @@ export type Game = {
   hiddenOptionIds?: string[];
   /** Datonøgle (åååå-mm-dd), hvis spillet er dagens quiz. */
   dailyKey?: string;
+  /** Øvelsesrunde med tidligere fejl: tæller ikke som rekord. */
+  practice?: boolean;
 };
 export type GameResult = {
   id: string;
@@ -174,4 +176,7 @@ export type AppSettings = {
   haptics: boolean;
   reducedMotion: boolean;
   highContrast: boolean;
+  largeText?: boolean;
+  confirmAnswers?: boolean;
+  readAloud?: boolean;
 };

@@ -227,7 +227,7 @@ if (
   report.retiredLookupQuestions > 0 ||
   report.retainedCountryLookups > 65 ||
   report.excessiveRepetitiveTemplates > 0 ||
-  report.longestOption > 70 ||
+  report.longestOption > 45 ||
   report.thinCategories.length > 0
 ) {
   process.exitCode = 1;

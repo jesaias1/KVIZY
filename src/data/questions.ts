@@ -23,6 +23,7 @@ import { EDITORIAL_FILL_QUESTIONS } from "./editorial-fill-questions";
 import { seedSpecs } from "./seed-spec";
 import { CURATED_2026_QUESTIONS } from "./curated";
 import { applyQualityReview, isRetiredByReview } from "./quality-review";
+import { applyShortAnswers } from "./short-answers";
 
 const created = "2026-07-15T00:00:00.000Z";
 const rows = seedSpecs.flatMap((spec) =>
@@ -2024,7 +2025,7 @@ const BASE_QUESTIONS: Question[] = [
     (question) => !isRetiredByReview(question.id),
   ).map(applyQualityReview),
   ...CURATED_2026_QUESTIONS,
-];
+].map(applyShortAnswers);
 
 const categoryLinks: Record<string, string[]> = {
   "cat-11": ["cat-14"],
@@ -2240,10 +2241,10 @@ const legacyOptionOverrides: Record<string, [string, string, string, string]> =
     ],
     "q-cat-52-3": ["New Horizons", "Cassini-Huygens", "Voyager 2", "Dawn"],
     "q-cat-53-3": [
-      "Medie manipuleret med generativ teknologi",
-      "Data skjult med moderne kryptering",
-      "Video sendt gennem et anonymt netværk",
-      "Indhold mærket med en digital signatur",
+      "Medie manipuleret med AI",
+      "Data skjult med kryptering",
+      "Video sendt via anonymt net",
+      "Indhold med digital signatur",
     ],
     "expansion-174": [
       "Login med kryptografiske nøgler",

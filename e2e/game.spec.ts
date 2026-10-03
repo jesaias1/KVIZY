@@ -30,7 +30,7 @@ test("start, spillere, kategorier, quiz, refresh, resultat og revanche", async (
   await page.getByRole("button", { name: /Start quizzen/ }).click();
   await expect(page.getByText(/Spørgsmål 1 af 10/)).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: /Fortsæt spil/ }).click();
+  await page.getByRole("button", { name: /Fortsæt dit spil/ }).click();
   await expect(page.getByText(/Spørgsmål 1 af 10/)).toBeVisible();
   for (let i = 0; i < 10; i++) await answerAndContinue(page);
   await expect(page.getByText(/vinder!|deler sejren!/i)).toBeVisible();
@@ -57,14 +57,18 @@ test("dagens quiz kan kun spilles én gang pr. dag og giver en stime", async ({
   for (let i = 0; i < 10; i++) await answerAndContinue(page);
   await expect(page.getByText(/Dagens quiz/).first()).toBeVisible();
   await page.getByRole("button", { name: /Gennemgå svar/ }).click();
-  await expect(page.getByRole("button", { name: /Kun forkerte/ })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Kun forkerte/ }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Tilbage" }).click();
   await page.getByRole("button", { name: /Til forsiden/ }).click();
-  const done = page.getByRole("button", { name: /Dagens quiz klaret/ });
+  const done = page.getByRole("button", { name: /Dagens quiz.*Klaret/ });
   await expect(done).toBeVisible();
   await expect(done).toBeDisabled();
 });
-test("statistik vises efter et spil og kan starte træning", async ({ page }) => {
+test("statistik vises efter et spil og kan starte træning", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.getByRole("button", { name: /Hurtigt spil/ }).click();
   for (let i = 0; i < 10; i++) await answerAndContinue(page);
@@ -111,4 +115,19 @@ test("admin kræver hemmelighed", async ({ page }) => {
   await page.goto("/admin");
   await expect(page.getByText("KVIZY administration")).toBeVisible();
   await expect(page.getByRole("button", { name: "Log ind" })).toBeVisible();
+});
+
+test("læs-op-tilstand skjuler svarene, til værten viser dem", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Åbn menu" }).click();
+  await page.getByRole("button", { name: "Indstillinger" }).click();
+  await page.getByRole("switch", { name: /Læs-op/ }).click();
+  await page.getByRole("button", { name: "Tilbage" }).click();
+  await page.getByRole("button", { name: /Hurtigt spil/ }).click();
+  await expect(page.getByText(/Spørgsmål 1 af 10/)).toBeVisible();
+  await expect(page.locator(".answer-button")).toHaveCount(0);
+  await page.getByRole("button", { name: "Vis svarmuligheder" }).click();
+  await expect(page.locator(".answer-button").first()).toBeVisible();
 });
