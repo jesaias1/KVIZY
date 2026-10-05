@@ -2790,3 +2790,27 @@ button.room-tile:not(:disabled):active {
 .room-code-input {
   letter-spacing: 0.2em;
 }
+
+/* Rum: emner i lobbyen */
+.room-topics {
+  display: grid;
+  gap: 0.5rem;
+}
+.room-topics > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.room-topics button {
+  min-height: 2.5rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.room-topics button.on {
+  border-color: var(--primary);
+  background: color-mix(in oklab, var(--primary) 15%, var(--card));
+}

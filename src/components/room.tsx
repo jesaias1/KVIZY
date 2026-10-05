@@ -6,9 +6,22 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, Copy, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ANIMAL_AVATARS } from "@/lib/config";
-import { categoryById } from "@/lib/categories";
+import {
+  CATEGORY_GROUPS,
+  DANISH_CATEGORY_IDS,
+  DEFAULT_CATEGORIES,
+  categoryById,
+} from "@/lib/categories";
 import { playCue } from "@/lib/sound";
-import { clearResume, readResume, saveResume } from "@/lib/room-session";
+import {
+  clearHostSession,
+  clearResume,
+  readHostSession,
+  readResume,
+  saveHostSession,
+  saveResume,
+} from "@/lib/room-session";
+import { peerOptions } from "@/lib/room-net";
 import {
   addPlayer,
   allAnswered,
@@ -33,6 +46,7 @@ import {
   sanitizeRoomName,
   type HostMessage,
   type RoomPublicPlayer,
+  type RoomBuildOptions,
   type RoomQuestionPayload,
   type RoomStanding,
 } from "@/lib/room-protocol";
@@ -43,6 +57,16 @@ const PID_KEY = "kvizy-room-pid-v1";
 
 const COUNTS = [10, 15, 20, 30];
 const LETTERS = ["A", "B", "C", "D"];
+const LEVELS = [
+  { value: 2, label: "Let" },
+  { value: 3, label: "Almindelig" },
+  { value: 4, label: "Svær" },
+];
+const allIds = DEFAULT_CATEGORIES.map((c) => c.id);
+const sameIds = (a: readonly string[], b: readonly string[]) =>
+  a.length === b.length && a.every((id) => b.includes(id));
+const sleep = (ms: number) =>
+  new Promise((resolve) => window.setTimeout(resolve, ms));
 
 /** Skærmen må ikke gå i hvile, mens et rum er i gang. */
 function useWakeLock(active: boolean) {
@@ -160,15 +184,23 @@ export function RoomHost({
   sound,
   onExit,
 }: {
-  buildQuestions: (count: number) => Promise<Question[]>;
+  buildQuestions: (options: RoomBuildOptions) => Promise<Question[]>;
   sound: boolean;
   onExit: () => void;
 }) {
   const [code, setCode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const [state, setState] = useState<RoomState>(emptyRoom);
+  const [session] = useState(readHostSession);
+  const [state, setState] = useState<RoomState>(
+    () => session?.state ?? emptyRoom(),
+  );
   const [count, setCount] = useState(15);
+  const [level, setLevel] = useState(3);
+  const [categoryIds, setCategoryIds] = useState<string[]>(() =>
+    DEFAULT_CATEGORIES.map((category) => category.id),
+  );
+  const codeRef = useRef<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [qr, setQr] = useState("");
   const [copied, setCopied] = useState(false);
@@ -187,6 +219,7 @@ export function RoomHost({
     const next = fn(stateRef.current);
     stateRef.current = next;
     setState(next);
+    if (codeRef.current) saveHostSession(codeRef.current, next);
     return next;
   }, []);
 
@@ -345,11 +378,17 @@ export function RoomHost({
     const connections = conns.current;
     void (async () => {
       const { Peer: PeerCtor } = await import("peerjs");
-      for (let attempt = 0; attempt < 6 && !cancelled; attempt++) {
-        const candidate = makeRoomCode();
+      const wanted = session?.code ?? null;
+      for (let attempt = 0; attempt < 14 && !cancelled; attempt++) {
+        // Efter en genindlæsning prøver vi først at få den samme kode igen.
+        // Mødeserveren kan bruge et øjeblik på at give den fri.
+        const resuming = wanted !== null && attempt < 8;
+        if (resuming && attempt > 0) await sleep(1500);
+        if (cancelled) return;
+        const candidate = resuming ? wanted : makeRoomCode();
         const peer = await new Promise<Peer | null>((resolve) => {
           let settled = false;
-          const p = new PeerCtor(roomPeerId(candidate));
+          const p = new PeerCtor(roomPeerId(candidate), peerOptions());
           p.on("open", () => {
             settled = true;
             resolve(p);
@@ -368,6 +407,13 @@ export function RoomHost({
         }
         created = peer;
         peerRef.current = peer;
+        if (wanted && candidate !== wanted) {
+          // Den gamle kode kunne ikke genbruges: start et nyt, tomt rum.
+          stateRef.current = emptyRoom();
+          setState(stateRef.current);
+        }
+        codeRef.current = candidate;
+        saveHostSession(candidate, stateRef.current);
         peer.on("connection", (conn) => {
           conn.on("data", (data) => handleData(conn, data));
           conn.on("close", () => handleClose(conn));
@@ -383,6 +429,16 @@ export function RoomHost({
         peer.on("open", () => setNotice(null));
         peer.on("error", () => undefined);
         setCode(candidate);
+        if (wanted && candidate === wanted) {
+          setNotice(
+            "Rummet er genoprettet. Spillerne forbinder igen af sig selv.",
+          );
+          const s = stateRef.current;
+          if (s.phase === "question") {
+            if (remainingMs(s, Date.now()) <= 0) doReveal();
+            else armTimer();
+          }
+        }
         return;
       }
       if (!cancelled)
@@ -402,6 +458,9 @@ export function RoomHost({
       }
       created?.destroy();
       peerRef.current = null;
+      // Forlader værten rummet med vilje, er det slut. En genindlæsning når
+      // aldrig hertil, så rummet kan genoprettes.
+      clearHostSession();
     };
     // handleData og handleClose bruger kun refs og stabile funktioner.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -427,10 +486,14 @@ export function RoomHost({
   }, [joinUrl]);
 
   const start = async () => {
-    if (busy || state.players.length === 0) return;
+    if (busy || state.players.length === 0 || categoryIds.length === 0) return;
     setBusy(true);
     try {
-      const questions = await buildQuestions(count);
+      const questions = await buildQuestions({
+        count,
+        categoryIds,
+        difficulty: level,
+      });
       if (questions.length === 0) {
         setNotice("Der kunne ikke findes spørgsmål. Prøv igen om lidt.");
         return;
@@ -526,7 +589,6 @@ export function RoomHost({
 
   const q = state.questions[state.index];
   const board = standings(state);
-  const connectedCount = state.players.filter((p) => p.connected).length;
 
   return (
     <div className="room-host mx-auto max-w-5xl">
@@ -606,10 +668,70 @@ export function RoomHost({
                 ))}
               </div>
             </div>
+            <div className="room-settings">
+              <span id="room-level-label">Niveau</span>
+              <div role="radiogroup" aria-labelledby="room-level-label">
+                {LEVELS.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={level === item.value}
+                    className={level === item.value ? "on" : ""}
+                    onClick={() => setLevel(item.value)}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="room-topics">
+              <span id="room-topics-label">Emner</span>
+              <div role="group" aria-labelledby="room-topics-label">
+                <button
+                  type="button"
+                  className={sameIds(categoryIds, allIds) ? "on" : ""}
+                  onClick={() => setCategoryIds(allIds)}
+                >
+                  Alle
+                </button>
+                <button
+                  type="button"
+                  className={
+                    sameIds(categoryIds, DANISH_CATEGORY_IDS) ? "on" : ""
+                  }
+                  onClick={() => setCategoryIds([...DANISH_CATEGORY_IDS])}
+                >
+                  Kun dansk
+                </button>
+                {CATEGORY_GROUPS.map((group) => {
+                  const on = group.ids.every((id) => categoryIds.includes(id));
+                  return (
+                    <button
+                      key={group.name}
+                      type="button"
+                      aria-pressed={on}
+                      className={on ? "on" : ""}
+                      onClick={() =>
+                        setCategoryIds((current) =>
+                          on
+                            ? current.filter((id) => !group.ids.includes(id))
+                            : [...new Set([...current, ...group.ids])],
+                        )
+                      }
+                    >
+                      {group.emoji} {group.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <Button
               size="lg"
               className="mt-4 h-14 w-full text-base"
-              disabled={busy || state.players.length === 0}
+              disabled={
+                busy || state.players.length === 0 || categoryIds.length === 0
+              }
               onClick={start}
             >
               {busy ? "Finder spørgsmål…" : "Start quizzen"}
@@ -629,7 +751,8 @@ export function RoomHost({
               Spørgsmål {state.index + 1} af {state.questions.length}
             </span>
             <span>
-              {Object.keys(state.answers).length} af {connectedCount} har svaret
+              {Object.keys(state.answers).length} af {state.players.length} har
+              svaret
             </span>
           </div>
           <div
@@ -786,7 +909,7 @@ export function RoomPlayer({
   const [me, setMe] = useState<RoomPublicPlayer | null>(null);
   const [roster, setRoster] = useState<RoomPublicPlayer[]>([]);
   const [picked, setPicked] = useState<string | null>(null);
-  const [reconnecting, setReconnecting] = useState(false);
+  const [reconnecting, setReconnecting] = useState(Boolean(resume));
   const peerRef = useRef<Peer | null>(null);
   const connRef = useRef<DataConnection | null>(null);
   const activeRef = useRef(false);
@@ -871,12 +994,12 @@ export function RoomPlayer({
     if (!activeRef.current) return;
     let peer = peerRef.current;
     if (!peer || peer.destroyed) {
-      peer = new PeerCtor();
+      peer = new PeerCtor(peerOptions());
       peerRef.current = peer;
       peer.on("error", (err) => {
         if (!activeRef.current) return;
         const type = (err as { type?: string }).type;
-        if (type === "peer-unavailable")
+        if (type === "peer-unavailable" && attempts.current === 0)
           setView({
             phase: "problem",
             text: "Rummet blev ikke fundet. Tjek koden – eller bed værten oprette et nyt.",
@@ -894,13 +1017,19 @@ export function RoomPlayer({
         reliable: true,
       });
       connRef.current = conn;
-      const timeout = window.setTimeout(() => {
-        if (!conn.open && activeRef.current && attempts.current === 0)
-          setView({
-            phase: "problem",
-            text: "Det tog for lang tid at få kontakt. Prøv igen, eller tjek at koden er rigtig.",
-          });
-      }, 12_000);
+      const timeout = window.setTimeout(
+        () => {
+          if (conn.open || !activeRef.current || connRef.current !== conn)
+            return;
+          if (attempts.current === 0)
+            setView({
+              phase: "problem",
+              text: "Det tog for lang tid at få kontakt. Prøv igen, tjek at koden er rigtig, eller brug samme Wi-Fi som værten.",
+            });
+          else lost();
+        },
+        attempts.current === 0 ? 14_000 : 8_000,
+      );
       conn.on("open", () => {
         window.clearTimeout(timeout);
         conn.send({
@@ -914,10 +1043,10 @@ export function RoomPlayer({
         if (data && typeof data === "object" && "t" in data)
           handleHost(data as HostMessage);
       });
-      const lost = () => {
+      function lost() {
         window.clearTimeout(timeout);
         if (!activeRef.current || connRef.current !== conn) return;
-        if (attempts.current >= 10) {
+        if (attempts.current >= 40) {
           setView({
             phase: "problem",
             text: "Forbindelsen til værten blev tabt.",
@@ -930,8 +1059,8 @@ export function RoomPlayer({
           if (!activeRef.current) return;
           if (peer?.disconnected) peer.reconnect();
           dial();
-        }, 1500);
-      };
+        }, 2000);
+      }
       conn.on("close", lost);
       conn.on("error", lost);
     };
@@ -976,7 +1105,9 @@ export function RoomPlayer({
     };
     codeRef.current = resume.code;
     pidRef.current = playerId();
-    attempts.current = 0;
+    // En genindlæst telefon er ikke et nyt forsøg: værten kan også være ved
+    // at genindlæse, så vi bliver ved med at prøve i et stykke tid.
+    attempts.current = 1;
     activeRef.current = true;
     void connect();
   }, [resume, connect]);
@@ -1086,6 +1217,9 @@ export function RoomPlayer({
         <div className="room-wait" role="status">
           <div className="room-spinner" aria-hidden="true" />
           <h1>Forbinder…</h1>
+          <Button variant="ghost" onClick={leave}>
+            Annuller
+          </Button>
         </div>
       )}
 
