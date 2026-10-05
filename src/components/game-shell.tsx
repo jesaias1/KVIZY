@@ -102,6 +102,9 @@ import {
   hasUsefulExplanation,
   questionOptionSetKey,
 } from "@/lib/question-quality";
+import dynamic from "next/dynamic";
+import { normalizeRoomCode } from "@/lib/room-protocol";
+import { readResume } from "@/lib/room-session";
 import { computeAwards } from "@/lib/awards";
 import {
   ACHIEVEMENTS,
@@ -123,7 +126,9 @@ type View =
   | "stats"
   | "help"
   | "settings"
-  | "review";
+  | "review"
+  | "room-host"
+  | "room-join";
 type BestScore = { correct: number; total: number; score: number; at: string };
 type RecordInfo = { previous?: BestScore; isRecord: boolean } | null;
 const defaults: AppSettings = {
@@ -320,6 +325,14 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
     lifelines: saved.lifelines ?? false,
   };
 }
+const RoomHost = dynamic(
+  () => import("@/components/room").then((m) => m.RoomHost),
+  { ssr: false },
+);
+const RoomPlayer = dynamic(
+  () => import("@/components/room").then((m) => m.RoomPlayer),
+  { ssr: false },
+);
 const tone = playCue;
 declare global {
   interface Window {
@@ -357,6 +370,7 @@ export function GameShell() {
     [hydrated, setHydrated] = useState(false);
   const startBusy = useRef(false);
   const finishing = useRef(false);
+  const [roomCode, setRoomCode] = useState("");
   const [achievements, setAchievements] = useState<AchievementState>(
     emptyAchievementState,
   );
@@ -401,6 +415,21 @@ export function GameShell() {
       const s = load(APP_CONFIG.settingsKey, defaults);
       setSettings({ ...defaults, ...s });
       setTheme(s.theme);
+      // Et delt link som /?rum=ABCD åbner direkte i «Join rum».
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const code = normalizeRoomCode(params.get("rum") ?? "");
+        if (code) {
+          setRoomCode(code);
+          setView("room-join");
+          window.history.replaceState(null, "", window.location.pathname);
+        } else if (readResume()) {
+          // En telefon, der blev genindlæst midt i et rum, går tilbage til det.
+          setView("room-join");
+        }
+      } catch {
+        // Ingen adresselinje at læse.
+      }
       setHydrated(true);
     }, 0);
     return () => window.clearTimeout(id);
@@ -793,6 +822,45 @@ export function GameShell() {
     setSetup((current) => ({ ...current, difficulty: level }));
     void start({ ...game.setup, difficulty: level });
   };
+  const buildRoomQuestions = async (count: number) => {
+    // Rum bruger de seneste kategorier og det senest valgte niveau. Rækkefølge-
+    // spørgsmål udelades, fordi de ikke kan besvares med ét tryk på en telefon.
+    const categoryIds = setup.categoryIds.length
+      ? setup.categoryIds
+      : DEFAULT_CATEGORIES.map((category) => category.id);
+    const bank = await loadQuestionBank(categoryIds);
+    if (bank.length === 0) return [];
+    const seenHistory = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
+    const picked = selectQuestions(
+      bank,
+      {
+        ...setup,
+        mode: "classic",
+        players: [setup.players[0] ?? newPlayer("Vært", 0)],
+        questionCount: Math.min(90, count + 12),
+        categoryIds,
+        finale: false,
+        lifelines: false,
+        timer: false,
+        timeBonus: false,
+      },
+      seenHistory,
+    )
+      .filter((question) => question.type !== "ordering")
+      .slice(0, count);
+    safeSet(
+      APP_CONFIG.seenKey,
+      JSON.stringify(
+        reserveSeenQuestions(
+          seenHistory,
+          picked.map((question) => question.id),
+          new Date().toISOString(),
+          picked,
+        ),
+      ),
+    );
+    return picked;
+  };
   const playBlitz = () => {
     // Lynrunde: 60 sekunder, så mange rigtige som muligt.
     void start({
@@ -1099,6 +1167,21 @@ export function GameShell() {
         record={record}
         streak={daily ? activeDailyStreak(daily, game.dailyKey ?? todayKey) : 0}
         busy={questionBankLoading}
+      />
+    ) : view === "room-host" ? (
+      <RoomHost
+        buildQuestions={buildRoomQuestions}
+        sound={settings.sound}
+        onExit={() => go("home")}
+      />
+    ) : view === "room-join" ? (
+      <RoomPlayer
+        initialCode={roomCode}
+        haptics={settings.haptics}
+        onExit={() => {
+          setRoomCode("");
+          go("home");
+        }}
       />
     ) : view === "history" ? (
       <HistoryView items={history} go={go} />
@@ -1554,6 +1637,12 @@ function Home({
           <div className="home-links">
             <button type="button" disabled={busy} onClick={playBlitz}>
               <Zap /> Lynrunde
+            </button>
+            <button type="button" onClick={() => go("room-host")}>
+              <Smartphone /> Opret rum
+            </button>
+            <button type="button" onClick={() => go("room-join")}>
+              <KeyRound /> Join rum
             </button>
             <button type="button" onClick={() => go("help")}>
               <BookOpen /> Sådan spiller I
@@ -3644,6 +3733,19 @@ function Help({
           </Card>
         ))}
       </div>
+      <Card className="mt-6">
+        <CardContent className="p-6">
+          <h2 className="font-bold">Rum: alle svarer på deres egen telefon</h2>
+          <p className="mt-2 text-muted-foreground">
+            Vælg «Opret rum» på forsiden på en laptop eller et tv. Alle andre
+            går ind på kvizy.dk, vælger «Join rum» og taster koden – eller
+            scanner QR-koden. Alle svarer samtidig, og jo hurtigere man svarer
+            rigtigt, jo flere point (600–1.000). Rummet kører på værtens enhed,
+            så værten skal holde siden åben. Virker det ikke på mobildata, så
+            prøv at lade alle bruge samme Wi-Fi.
+          </p>
+        </CardContent>
+      </Card>
       <Card className="mt-6">
         <CardContent className="p-6">
           <h2 className="font-bold">Point der er nemme at forstå</h2>

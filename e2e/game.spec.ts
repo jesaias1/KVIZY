@@ -155,3 +155,33 @@ test("privatlivssiden findes og kan nås fra forsiden", async ({ page }) => {
   await page.getByRole("link", { name: /Privatliv/ }).click();
   await expect(page.getByRole("heading", { name: "Privatliv" })).toBeVisible();
 });
+
+test("rum: en telefon kan joine værten og svare på et spørgsmål", async ({
+  browser,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Kører kun én gang.");
+  test.setTimeout(120_000);
+  const reachable = await fetch("https://0.peerjs.com/")
+    .then((r) => r.ok)
+    .catch(() => false);
+  test.skip(!reachable, "Mødeserveren kan ikke nås fra denne maskine.");
+  const hostPage = await (await browser.newContext()).newPage();
+  const phone = await (await browser.newContext()).newPage();
+  await hostPage.goto("/");
+  await hostPage.getByRole("button", { name: /Opret rum/ }).click();
+  await hostPage.waitForSelector(".room-code span", { timeout: 30_000 });
+  const code = (
+    await hostPage.locator(".room-code span").allTextContents()
+  ).join("");
+  await phone.goto(`/?rum=${code}`);
+  await phone.getByPlaceholder("Fx Mette").fill("Mette");
+  await phone.getByRole("button", { name: /^Join/ }).click();
+  await expect(phone.getByText(/Du er med/)).toBeVisible({ timeout: 30_000 });
+  await expect(hostPage.getByText(/1 spiller med/)).toBeVisible();
+  await hostPage.getByRole("button", { name: /Start quizzen/ }).click();
+  await phone.locator(".room-tile").first().click();
+  await expect(
+    hostPage.getByRole("button", { name: /Næste spørgsmål/ }),
+  ).toBeVisible({ timeout: 15_000 });
+  await expect(phone.getByText(/Du er nr\./)).toBeVisible();
+});
