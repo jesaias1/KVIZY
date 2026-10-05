@@ -103,8 +103,8 @@ import {
   questionOptionSetKey,
 } from "@/lib/question-quality";
 import dynamic from "next/dynamic";
-import { normalizeRoomCode } from "@/lib/room-protocol";
-import { readResume } from "@/lib/room-session";
+import { normalizeRoomCode, type RoomBuildOptions } from "@/lib/room-protocol";
+import { readHostSession, readResume } from "@/lib/room-session";
 import { computeAwards } from "@/lib/awards";
 import {
   ACHIEVEMENTS,
@@ -423,6 +423,9 @@ export function GameShell() {
           setRoomCode(code);
           setView("room-join");
           window.history.replaceState(null, "", window.location.pathname);
+        } else if (readHostSession()) {
+          // En vært, der genindlæste siden, går tilbage til sit rum.
+          setView("room-host");
         } else if (readResume()) {
           // En telefon, der blev genindlæst midt i et rum, går tilbage til det.
           setView("room-join");
@@ -822,12 +825,13 @@ export function GameShell() {
     setSetup((current) => ({ ...current, difficulty: level }));
     void start({ ...game.setup, difficulty: level });
   };
-  const buildRoomQuestions = async (count: number) => {
+  const buildRoomQuestions = async ({
+    count,
+    categoryIds,
+    difficulty,
+  }: RoomBuildOptions) => {
     // Rum bruger de seneste kategorier og det senest valgte niveau. Rækkefølge-
     // spørgsmål udelades, fordi de ikke kan besvares med ét tryk på en telefon.
-    const categoryIds = setup.categoryIds.length
-      ? setup.categoryIds
-      : DEFAULT_CATEGORIES.map((category) => category.id);
     const bank = await loadQuestionBank(categoryIds);
     if (bank.length === 0) return [];
     const seenHistory = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
@@ -839,6 +843,8 @@ export function GameShell() {
         players: [setup.players[0] ?? newPlayer("Vært", 0)],
         questionCount: Math.min(90, count + 12),
         categoryIds,
+        difficulty,
+        difficultyMode: "mixed",
         finale: false,
         lifelines: false,
         timer: false,

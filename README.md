@@ -129,3 +129,7 @@ Manifest, service worker, safe areas og standalone/fullscreen-visning er inklude
 ## Senere realtime-multiplayer
 
 Den lokale `Game`-model og deterministiske `PlayerAnswer`-events kan flyttes til server-authoritative rooms. Tilføj rumkode, WebSocket/Realtime-transport og optimistic event reconciliation, mens den nuværende lokale reducer bevares som offline fallback. Login og profiler kan lægges ovenpå uden at ændre spørgsmålsbanken.
+
+## Rum og netværk
+
+Rum bruger WebRTC via den gratis PeerJS-mødeserver (0.peerjs.com), Googles STUN-servere og en åben TURN-relæ som sidste udvej. Vil du være uafhængig af dem, kan du sætte egne servere med miljøvariablerne `NEXT_PUBLIC_PEER_HOST`, `NEXT_PUBLIC_PEER_PORT`, `NEXT_PUBLIC_PEER_PATH` (egen PeerJS-server) og `NEXT_PUBLIC_TURN_URL`, `NEXT_PUBLIC_TURN_USER`, `NEXT_PUBLIC_TURN_CREDENTIAL` (egen TURN-server; flere adresser adskilles med komma). Værten kan genindlæse siden og få samme rumkode igen.

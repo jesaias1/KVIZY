@@ -98,3 +98,10 @@ export type HostMessage =
     }
   | { t: "full" }
   | { t: "closed" };
+
+/** Det, værten vælger i lobbyen, før spørgsmålene findes. */
+export type RoomBuildOptions = {
+  count: number;
+  categoryIds: string[];
+  difficulty: number;
+};
