@@ -2365,3 +2365,69 @@ html[data-phone-landscape] body {
   font-variant-numeric: tabular-nums;
   color: var(--primary-foreground);
 }
+
+/* Præstationer */
+.new-achievements {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.25rem 0 0;
+}
+.achievement-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 12%, var(--card));
+  text-align: left;
+  animation: pop-in 0.5s var(--ease-pop) both;
+}
+.achievement-toast > span {
+  font-size: 1.6rem;
+}
+.achievement-toast small {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+}
+.achievement-grid {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+}
+.achievement {
+  display: grid;
+  gap: 0.15rem;
+  align-content: start;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--card);
+  opacity: 0.55;
+}
+.achievement.done {
+  opacity: 1;
+  border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+}
+.achievement > span {
+  font-size: 1.6rem;
+  filter: grayscale(1);
+}
+.achievement.done > span {
+  filter: none;
+}
+.achievement small {
+  color: var(--muted-foreground);
+  line-height: 1.3;
+}
+.achievement em {
+  font-style: normal;
+  font-size: 0.75rem;
+  color: var(--primary);
+}

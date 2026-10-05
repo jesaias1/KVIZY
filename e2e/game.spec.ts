@@ -78,6 +78,8 @@ test("statistik vises efter et spil og kan starte træning", async ({
   await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
   await expect(page.getByText("Efter kategori")).toBeVisible();
   await expect(page.getByText("længste stime")).toBeVisible();
+  await expect(page.getByText(/Præstationer/)).toBeVisible();
+  await expect(page.getByText("Første runde")).toBeVisible();
 });
 test("holdkamp giver holdnavne i stedet for spillernavne", async ({ page }) => {
   await page.goto("/");

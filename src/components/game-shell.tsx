@@ -103,6 +103,14 @@ import {
   questionOptionSetKey,
 } from "@/lib/question-quality";
 import { computeAwards } from "@/lib/awards";
+import {
+  ACHIEVEMENTS,
+  applyGame,
+  emptyAchievementState,
+  sanitizeAchievementState,
+  type Achievement,
+  type AchievementState,
+} from "@/lib/achievements";
 import { playCue } from "@/lib/sound";
 import { computeStats, weakestCategories, type Stats } from "@/lib/stats";
 
@@ -349,6 +357,10 @@ export function GameShell() {
     [hydrated, setHydrated] = useState(false);
   const startBusy = useRef(false);
   const finishing = useRef(false);
+  const [achievements, setAchievements] = useState<AchievementState>(
+    emptyAchievementState,
+  );
+  const [freshAchievements, setFreshAchievements] = useState<Achievement[]>([]);
   const { setTheme } = useTheme();
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -374,6 +386,11 @@ export function GameShell() {
       setGame(storedGame);
       setHistory(storedHistory);
       setBests(load<Record<string, BestScore>>(APP_CONFIG.bestKey, {}));
+      setAchievements(
+        sanitizeAchievementState(
+          load<unknown>(APP_CONFIG.achievementsKey, null),
+        ),
+      );
       setDaily(load<DailyProgress>(APP_CONFIG.dailyKey, emptyDailyProgress()));
       setTodayKey(localDateKey());
       setSetup(
@@ -633,6 +650,7 @@ export function GameShell() {
         practice: Boolean(options?.practice),
       };
       finishing.current = false;
+      setFreshAchievements([]);
       setGame(g);
       setRecord(null);
       safeSet(APP_CONFIG.gameKey, JSON.stringify(g));
@@ -672,6 +690,7 @@ export function GameShell() {
     const rate = leader.correct / Math.max(1, leader.answers);
     const soloRound = g.setup.players.length === 1;
     let isRecord = false;
+    let dailyStreak = 0;
     if (g.dailyKey) {
       const updated = recordDaily(daily ?? emptyDailyProgress(), g.dailyKey, {
         correct: leader.correct,
@@ -680,6 +699,7 @@ export function GameShell() {
       });
       setDaily(updated);
       safeSet(APP_CONFIG.dailyKey, JSON.stringify(updated));
+      dailyStreak = activeDailyStreak(updated, g.dailyKey);
       setRecord(null);
     } else if (soloRound && !g.practice) {
       const key =
@@ -706,6 +726,10 @@ export function GameShell() {
       }
       setRecord({ previous, isRecord });
     } else setRecord(null);
+    const unlocked = applyGame(achievements, g, { dailyStreak });
+    setAchievements(unlocked.state);
+    safeSet(APP_CONFIG.achievementsKey, JSON.stringify(unlocked.state));
+    setFreshAchievements(unlocked.newlyUnlocked);
     // En svag solorunde skal ikke fejres med konfetti.
     const celebrate = !soloRound || rate >= 0.6 || isRecord;
     tone(celebrate ? "win" : "done", settings.sound);
@@ -1071,6 +1095,7 @@ export function GameShell() {
         replay={() => (game.dailyKey ? quick() : void start(game.setup))}
         playLevel={playLevel}
         practiceMissed={practiceMissed}
+        newAchievements={freshAchievements}
         record={record}
         streak={daily ? activeDailyStreak(daily, game.dailyKey ?? todayKey) : 0}
         busy={questionBankLoading}
@@ -1080,6 +1105,7 @@ export function GameShell() {
     ) : view === "stats" ? (
       <StatsView
         history={history}
+        achievements={achievements}
         go={go}
         busy={questionBankLoading}
         train={(ids) => quick(ids)}
@@ -2818,6 +2844,7 @@ function Results({
   replay,
   playLevel,
   practiceMissed,
+  newAchievements,
   record,
   streak,
   busy,
@@ -2827,6 +2854,7 @@ function Results({
   replay: () => void;
   playLevel: (level: number) => void;
   practiceMissed: () => void;
+  newAchievements: Achievement[];
   record: RecordInfo;
   streak: number;
   busy: boolean;
@@ -3082,6 +3110,19 @@ function Results({
             ))}
           </div>
         </>
+      )}
+      {newAchievements.length > 0 && (
+        <div className="new-achievements" role="status">
+          {newAchievements.map((achievement) => (
+            <div key={achievement.id} className="achievement-toast">
+              <span aria-hidden="true">{achievement.emoji}</span>
+              <div>
+                <small>Ny præstation</small>
+                <b>{achievement.title}</b>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
       {awards.length > 0 && (
         <div className="awards" aria-label="Titler fra runden">
@@ -3369,11 +3410,13 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
 }
 function StatsView({
   history,
+  achievements,
   go,
   busy,
   train,
 }: {
   history: GameResult[];
+  achievements: AchievementState;
   go: (v: View) => void;
   busy: boolean;
   train: (categoryIds: string[]) => void;
@@ -3417,6 +3460,34 @@ function StatsView({
                 </CardContent>
               </Card>
             ))}
+          </div>
+          <h2 className="mt-7 text-lg font-bold">
+            Præstationer · {Object.keys(achievements.unlocked).length}/
+            {ACHIEVEMENTS.length}
+          </h2>
+          <div className="achievement-grid">
+            {ACHIEVEMENTS.map((achievement) => {
+              const done = Boolean(achievements.unlocked[achievement.id]);
+              const value = Math.min(
+                achievement.goal,
+                achievement.value(achievements.counters),
+              );
+              return (
+                <div
+                  key={achievement.id}
+                  className={`achievement ${done ? "done" : ""}`}
+                >
+                  <span aria-hidden="true">{achievement.emoji}</span>
+                  <b>{achievement.title}</b>
+                  <small>{achievement.text}</small>
+                  {!done && achievement.goal > 1 && (
+                    <em>
+                      {value}/{achievement.goal}
+                    </em>
+                  )}
+                </div>
+              );
+            })}
           </div>
           {weakest.length > 0 && (
             <div className="level-nudge mt-5">
