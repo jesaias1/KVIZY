@@ -34,6 +34,13 @@ const sections: { title: string; body: string[] }[] = [
     ],
   },
   {
+    title: "Rum (spil på flere telefoner)",
+    body: [
+      "Et rum forbinder spillernes telefoner direkte med værtens enhed. Værten kan se navnene og dyrene, spillerne vælger, og de svar, de giver. Intet af det gemmes hos os, og rummet findes kun, så længe værten har siden åben.",
+      "For at enhederne kan finde hinanden bruger vi den gratis mødeserver PeerJS (0.peerjs.com). Den kan se rumkoden og enhedernes IP-adresser, men hverken navne eller svar. I en direkte forbindelse kan enhederne teknisk set se hinandens IP-adresser, som i de fleste andre onlinespil og videoopkald.",
+    ],
+  },
+  {
     title: "Backup af seneste spørgsmål",
     body: [
       "Hvis du opretter en backup, gemmer vi listen over sete spørgsmål og jeres seneste opsætning, herunder de navne, I har skrevet, under en tilfældig kode. Koden udløber efter ét år. Har du ikke koden, kan ingen hente backuppen.",

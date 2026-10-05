@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: `default-src 'self'; ${scriptPolicy}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.vercel.app https://*.neon.tech; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'`,
+            value: `default-src 'self'; ${scriptPolicy}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.vercel.app https://*.neon.tech https://0.peerjs.com wss://0.peerjs.com; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'`,
           },
         ],
       },

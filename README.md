@@ -4,6 +4,7 @@
 
 ## Produktflow
 
+0. **Rum:** Opret et rum på en laptop eller et tv, og lad alle joine med en firebogstavskode eller QR-kode og svare på deres egen telefon. Rummet kører direkte mellem enhederne (WebRTC via den gratis PeerJS-mødeserver), så det kræver ingen konto eller server. Værten skal holde siden åben. Der er også Lynrunde (60 sek.) og Dagens quiz.
 0. Tryk på Dagens quiz for ti ens spørgsmål til alle spillere hver dag, med stime-tæller og delbart emoji-resultat.
 1. Vælg Alle mod alle, Holdkamp, Solo, Hurtig quiz, Risiko eller Mystery Mix.
 2. Tilføj 1–12 spillere eller 2–6 hold, og vælg mellem 65 søgbare kategorier.
