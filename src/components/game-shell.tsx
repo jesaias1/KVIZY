@@ -37,6 +37,7 @@ import {
   Trophy,
   X,
   Zap,
+  Languages,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-lockup";
@@ -106,6 +107,23 @@ import dynamic from "next/dynamic";
 import { normalizeRoomCode, type RoomBuildOptions } from "@/lib/room-protocol";
 import { readHostSession, readResume } from "@/lib/room-session";
 import { computeAwards } from "@/lib/awards";
+import { useLang } from "@/components/lang-provider";
+import { EN_SKIP_IDS } from "@/lib/i18n/en-skip";
+import {
+  ENGLISH_PACK_URL,
+  localizeQuestion,
+  localizeQuestions,
+  type EnglishPack,
+} from "@/lib/i18n/questions";
+import type { Lang } from "@/lib/i18n";
+import {
+  getLang,
+  locale,
+  playerName,
+  retitleDefaultName,
+  t,
+  teamName,
+} from "@/lib/i18n";
 import {
   ACHIEVEMENTS,
   applyGame,
@@ -204,7 +222,7 @@ const difficultyModes = [
 ] as const;
 const emptySetup = (): GameSetup => ({
   mode: "classic",
-  players: [newPlayer("Spiller 1", 0), newPlayer("Spiller 2", 1)],
+  players: [newPlayer(playerName(1), 0), newPlayer(playerName(2), 1)],
   questionCount: 10,
   difficulty: 3,
   difficultyMode: "mixed",
@@ -275,8 +293,8 @@ function fireConfetti(options: Parameters<typeof confetti>[0]) {
   void confettiCannon(options);
 }
 function formatNames(names: string[]) {
-  if (names.length < 2) return names[0] ?? "Ingen";
-  return `${names.slice(0, -1).join(", ")} og ${names.at(-1)}`;
+  if (names.length < 2) return names[0] ?? t("Ingen");
+  return `${names.slice(0, -1).join(", ")} ${t("og")} ${names.at(-1)}`;
 }
 function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
   const fallback = emptySetup();
@@ -296,10 +314,14 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
     validSavedCategoryIds.length >= DEFAULT_CATEGORIES.length;
   const restoredPlayers = saved.players.slice(0, 12).map((player, index) => ({
     ...newPlayer(
-      typeof player.name === "string" ? player.name : `Spiller ${index + 1}`,
+      typeof player.name === "string" ? player.name : playerName(index + 1),
       index,
     ),
     ...player,
+    name:
+      typeof player.name === "string"
+        ? retitleDefaultName(player.name, getLang())
+        : playerName(index + 1),
     score: 0,
     correct: 0,
     answers: 0,
@@ -312,7 +334,7 @@ function restoreSetup(saved: Partial<GameSetup> | null): GameSetup {
     mode: "classic",
     players:
       restoredPlayers.length < 2
-        ? [...restoredPlayers, newPlayer("Spiller 2", 1)]
+        ? [...restoredPlayers, newPlayer(playerName(2), 1)]
         : restoredPlayers,
     categoryIds: looksLikeOldDefaultSelection
       ? validSavedCategoryIds.filter((id) => id !== "cat-13")
@@ -345,6 +367,8 @@ interface InstallPromptEvent extends Event {
 }
 
 export function GameShell() {
+  // Læser sproget, så hele spillet tegnes igen, når det skiftes.
+  const { lang, setLang } = useLang();
   const [view, setView] = useState<View>("home"),
     [setup, setSetup] = useState<GameSetup>(emptySetup),
     [step, setStep] = useState(0),
@@ -369,6 +393,22 @@ export function GameShell() {
     [todayKey, setTodayKey] = useState(""),
     [hydrated, setHydrated] = useState(false);
   const startBusy = useRef(false);
+  const englishPack = useRef<EnglishPack | null>(null);
+  /** Henter de engelske spørgsmål første gang, engelsk bruges. */
+  const ensureEnglish = async () => {
+    if (getLang() !== "en") return null;
+    if (englishPack.current) return englishPack.current;
+    try {
+      const response = await fetch(
+        `${ENGLISH_PACK_URL}?v=${APP_CONFIG.questionBankVersion}`,
+      );
+      if (response.ok)
+        englishPack.current = (await response.json()) as EnglishPack;
+    } catch {
+      // Uden forbindelse vises spørgsmålene på dansk i stedet.
+    }
+    return englishPack.current;
+  };
   const finishing = useRef(false);
   const [roomCode, setRoomCode] = useState("");
   const [achievements, setAchievements] = useState<AchievementState>(
@@ -450,7 +490,7 @@ export function GameShell() {
         );
         const data = response.ok ? await response.json() : null;
         if (!Array.isArray(data?.questions) || data.questions.length === 0)
-          throw new Error("Tom spørgsmålsbank");
+          throw new Error(t("Tom spørgsmålsbank"));
         const loaded = data.questions as Question[];
         setQuestionBank(loaded);
         setQuestionBankSignature(signature);
@@ -591,6 +631,23 @@ export function GameShell() {
     })();
     return () => controller.abort();
   }, [hydrated]);
+  const switchLang = (next: Lang) => setLang(next);
+  useEffect(() => {
+    // Standardnavne som «Spiller 1» skifter sprog med; selvvalgte navne bevares.
+    if (!hydrated) return;
+    const id = window.setTimeout(
+      () =>
+        setSetup((current) => ({
+          ...current,
+          players: current.players.map((player) => ({
+            ...player,
+            name: retitleDefaultName(player.name, lang),
+          })),
+        })),
+      0,
+    );
+    return () => window.clearTimeout(id);
+  }, [lang, hydrated]);
   const go = (v: View) => {
     tone("tap", settings.sound);
     if (v === "setup") {
@@ -599,7 +656,7 @@ export function GameShell() {
         mode: "classic",
         players:
           current.players.length < 2
-            ? [...current.players, newPlayer("Spiller 2", 1)]
+            ? [...current.players, newPlayer(playerName(2), 1)]
             : current.players,
       }));
     }
@@ -615,10 +672,18 @@ export function GameShell() {
     try {
       setStartError(null);
       const s = same ?? setup;
-      const availableQuestions = await loadQuestionBank(s.categoryIds);
+      const english = await ensureEnglish();
+      const bank = await loadQuestionBank(s.categoryIds);
+      // Spørgsmål om det danske sprog udelades på engelsk og i Dagens quiz.
+      const availableQuestions =
+        english || options?.daily
+          ? bank.filter((question) => !EN_SKIP_IDS.has(question.id))
+          : bank;
       if (availableQuestions.length === 0) {
         setStartError(
-          "Spørgsmålene kunne ikke hentes. Tjek forbindelsen, eller prøv den senest gemte kategoriopsætning.",
+          t(
+            "Spørgsmålene kunne ikke hentes. Tjek forbindelsen, eller prøv den senest gemte kategoriopsætning.",
+          ),
         );
         setView("setup");
         return;
@@ -636,7 +701,7 @@ export function GameShell() {
       };
       const seenHistory = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
       // Dagens quiz er ens for alle: fast seed og ingen personlig historik.
-      const questions = options?.practice
+      const picked = options?.practice
         ? options.practice
         : options?.daily
           ? selectQuestions(
@@ -646,11 +711,19 @@ export function GameShell() {
               mulberry32(dailySeed(options.daily)),
             )
           : selectQuestions(availableQuestions, normalized, seenHistory);
+      const questions = options?.practice
+        ? picked
+        : localizeQuestions(picked, english);
       if (questions.length < normalized.questionCount) {
         setStartError(
           questions.length === 0
-            ? "Der er ingen spørgsmål i de valgte kategorier. Vælg flere kategorier."
-            : `Der er kun ${questions.length} forskellige spørgsmål til denne opsætning. Vælg flere kategorier eller et kortere spil.`,
+            ? t(
+                "Der er ingen spørgsmål i de valgte kategorier. Vælg flere kategorier.",
+              )
+            : t(
+                "Der er kun {length} forskellige spørgsmål til denne opsætning. Vælg flere kategorier eller et kortere spil.",
+                { length: questions.length },
+              ),
         );
         setView("setup");
         return;
@@ -693,7 +766,7 @@ export function GameShell() {
             seenHistory,
             questions.map((question) => question.id),
             g.startedAt,
-            questions,
+            picked,
           ),
         ),
       );
@@ -701,7 +774,7 @@ export function GameShell() {
       go("play");
     } catch {
       setStartError(
-        "Spillet kunne ikke startes. Opsætningen er bevaret – prøv igen.",
+        t("Spillet kunne ikke startes. Opsætningen er bevaret – prøv igen."),
       );
       setView("setup");
     } finally {
@@ -783,7 +856,7 @@ export function GameShell() {
       {
         ...setup,
         mode: "solo",
-        players: [setup.players[0] ?? newPlayer("Spiller 1", 0)],
+        players: [setup.players[0] ?? newPlayer(playerName(1), 0)],
         questionCount: 10,
         difficulty: 3,
         difficultyMode: "rising",
@@ -832,7 +905,11 @@ export function GameShell() {
   }: RoomBuildOptions) => {
     // Rum bruger de seneste kategorier og det senest valgte niveau. Rækkefølge-
     // spørgsmål udelades, fordi de ikke kan besvares med ét tryk på en telefon.
-    const bank = await loadQuestionBank(categoryIds);
+    const english = await ensureEnglish();
+    const all = await loadQuestionBank(categoryIds);
+    const bank = english
+      ? all.filter((question) => !EN_SKIP_IDS.has(question.id))
+      : all;
     if (bank.length === 0) return [];
     const seenHistory = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
     const picked = selectQuestions(
@@ -840,7 +917,7 @@ export function GameShell() {
       {
         ...setup,
         mode: "classic",
-        players: [setup.players[0] ?? newPlayer("Vært", 0)],
+        players: [setup.players[0] ?? newPlayer(t("Vært"), 0)],
         questionCount: Math.min(90, count + 12),
         categoryIds,
         difficulty,
@@ -865,14 +942,14 @@ export function GameShell() {
         ),
       ),
     );
-    return picked;
+    return localizeQuestions(picked, english);
   };
   const playBlitz = () => {
     // Lynrunde: 60 sekunder, så mange rigtige som muligt.
     void start({
       ...setup,
       mode: "blitz",
-      players: [setup.players[0] ?? newPlayer("Spiller 1", 0)],
+      players: [setup.players[0] ?? newPlayer(playerName(1), 0)],
       questionCount: 30,
       difficulty: 2,
       difficultyMode: "mixed",
@@ -892,7 +969,7 @@ export function GameShell() {
     void start({
       ...setup,
       mode: "quick",
-      players: [setup.players[0] ?? newPlayer("Spiller 1", 0)],
+      players: [setup.players[0] ?? newPlayer(playerName(1), 0)],
       questionCount: 10,
       categoryIds:
         categoryIds && categoryIds.length
@@ -1055,7 +1132,9 @@ export function GameShell() {
       return false;
     const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
     const replacement = selectReplacementQuestion(
-      questionBank,
+      getLang() === "en"
+        ? questionBank.filter((question) => !EN_SKIP_IDS.has(question.id))
+        : questionBank,
       game.questions,
       game.setup,
       seen,
@@ -1063,7 +1142,9 @@ export function GameShell() {
     if (!replacement) return false;
     const questions = [...game.questions];
     questions[game.index] = {
-      ...replacement,
+      ...(getLang() === "en"
+        ? localizeQuestion(replacement, englishPack.current)
+        : replacement),
       finale: currentQuestion.finale,
     };
     const next = { ...game, questions, hiddenOptionIds: [] };
@@ -1202,6 +1283,8 @@ export function GameShell() {
     ) : view === "settings" ? (
       <SettingsView
         value={settings}
+        lang={lang}
+        onLang={switchLang}
         onChange={setSettings}
         setup={setup}
         onRestore={(payload) => {
@@ -1236,6 +1319,8 @@ export function GameShell() {
         settings={settings}
         setSettings={setSettings}
         go={go}
+        lang={lang}
+        onLang={switchLang}
       />
       {view === "home" && (
         <div className="home-ambient" aria-hidden="true">
@@ -1263,16 +1348,47 @@ export function GameShell() {
   );
 }
 
+/** Knap til at skifte mellem dansk og engelsk. */
+function LangSwitch({
+  lang,
+  onChange,
+}: {
+  lang: Lang;
+  onChange: (lang: Lang) => void;
+}) {
+  const next: Lang = lang === "da" ? "en" : "da";
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="lang-switch"
+      lang={next}
+      aria-label={next === "en" ? "Switch to English" : "Skift til dansk"}
+      onClick={() => onChange(next)}
+    >
+      <Languages aria-hidden="true" className="lang-icon" />
+      <span className="lang-full">{next === "en" ? "English" : "Dansk"}</span>
+      <span className="lang-short" aria-hidden="true">
+        {next === "en" ? "EN" : "DA"}
+      </span>
+    </Button>
+  );
+}
+
 function TopBar({
   view,
   settings,
   setSettings,
   go,
+  lang,
+  onLang,
 }: {
   view: View;
   settings: AppSettings;
   setSettings: (s: AppSettings) => void;
   go: (v: View) => void;
+  lang: Lang;
+  onLang: (lang: Lang) => void;
 }) {
   return (
     <header
@@ -1296,23 +1412,24 @@ function TopBar({
           </button>
         )}
         <div className="flex items-center gap-1">
+          <LangSwitch lang={lang} onChange={onLang} />
           <Button
             size="icon"
             variant="ghost"
-            aria-label={settings.sound ? "Slå lyd fra" : "Slå lyd til"}
+            aria-label={settings.sound ? t("Slå lyd fra") : t("Slå lyd til")}
             onClick={() => setSettings({ ...settings, sound: !settings.sound })}
           >
             {settings.sound ? <Sound2 /> : <SoundOff />}
           </Button>
           <Sheet>
             <SheetTrigger asChild>
-              <Button size="icon" variant="ghost" aria-label="Åbn menu">
+              <Button size="icon" variant="ghost" aria-label={t("Åbn menu")}>
                 <Menu />
               </Button>
             </SheetTrigger>
             <SheetContent className="border-border/25">
               <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
+                <SheetTitle>{t("Menu")}</SheetTitle>
               </SheetHeader>
               <nav className="mt-8 grid gap-2">
                 <SheetClose asChild>
@@ -1322,7 +1439,7 @@ function TopBar({
                     onClick={() => go("stats")}
                   >
                     <BarChart3 />
-                    Statistik
+                    {t("Statistik")}
                   </Button>
                 </SheetClose>
                 <SheetClose asChild>
@@ -1332,7 +1449,7 @@ function TopBar({
                     onClick={() => go("history")}
                   >
                     <History />
-                    Historik
+                    {t("Historik")}
                   </Button>
                 </SheetClose>
                 <SheetClose asChild>
@@ -1342,7 +1459,7 @@ function TopBar({
                     onClick={() => go("help")}
                   >
                     <BookOpen />
-                    Sådan spiller I
+                    {t("Sådan spiller I")}
                   </Button>
                 </SheetClose>
                 <SheetClose asChild>
@@ -1352,7 +1469,7 @@ function TopBar({
                     onClick={() => go("settings")}
                   >
                     <Settings />
-                    Indstillinger
+                    {t("Indstillinger")}
                   </Button>
                 </SheetClose>
               </nav>
@@ -1426,19 +1543,19 @@ function QuizShowcase({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <div className="showcase" aria-hidden="true">
       <span className="float-chip a">
-        <Flame /> 5 i træk
+        <Flame /> {t("5 i træk")}
       </span>
       <span className="float-chip b">
-        <Trophy /> Ny rekord
+        <Trophy /> {t("Ny rekord")}
       </span>
       <div className="showcase-back" />
       <div key={index} className="showcase-card">
         <div className="showcase-top">
-          <span className="pill">{item.cat}</span>
-          <span className="pill muted">{item.level}</span>
+          <span className="pill">{t(item.cat)}</span>
+          <span className="pill muted">{t(item.level)}</span>
           <b className="showcase-score">+100</b>
         </div>
-        <p className="showcase-q">{item.q}</p>
+        <p className="showcase-q">{t(item.q)}</p>
         <div className="showcase-answers">
           {item.options.map((text, i) => (
             <div
@@ -1447,7 +1564,7 @@ function QuizShowcase({ reducedMotion }: { reducedMotion: boolean }) {
               style={{ "--i": i } as React.CSSProperties}
             >
               <span>{"ABCD"[i]}</span>
-              <b>{text}</b>
+              <b>{t(text)}</b>
               {i === item.correct && <Check />}
             </div>
           ))}
@@ -1508,15 +1625,21 @@ function DailyTile({
     >
       <span className="icon">{done ? <Check /> : <CalendarCheck />}</span>
       <span className="text">
-        <b>Dagens quiz</b>
+        <b>{t("Dagens quiz")}</b>
         <small>
           {done
-            ? `Klaret · ${done.correct}/${done.total}`
-            : "Samme ti til alle"}
+            ? t("Klaret · {correct}/{total}", {
+                correct: done.correct,
+                total: done.total,
+              })
+            : t("Samme ti til alle")}
         </small>
       </span>
       {streak > 0 && (
-        <span className="daily-streak" aria-label={`${streak} dage i træk`}>
+        <span
+          className="daily-streak"
+          aria-label={t("{streak} dage i træk", { streak })}
+        >
           <Flame aria-hidden="true" />
           {streak}
         </span>
@@ -1559,15 +1682,16 @@ function Home({
             <BrandLockup />
           </div>
           <p className="home-eyebrow">
-            <i className="live-dot" aria-hidden="true" /> Dansk quiz til venner,
-            fest og pubquiz
+            <i className="live-dot" aria-hidden="true" />{" "}
+            {t("Dansk quiz til venner, fest og pubquiz")}
           </p>
           <h1 className="home-title">
-            Quiz-aftenen starter <span>her.</span>
+            {t("Quiz-aftenen starter")} <span>{t("her.")}</span>
           </h1>
           <p className="home-sub">
-            Giv telefonen rundt og find ud af, hvem der ved mest. Ingen login,
-            ingen download.
+            {t(
+              "Giv telefonen rundt og find ud af, hvem der ved mest. Ingen login, ingen download.",
+            )}
           </p>
           <div className="action-stack">
             {resume && (
@@ -1580,9 +1704,12 @@ function Home({
                   <RefreshCw />
                 </span>
                 <span className="text">
-                  <b>Fortsæt dit spil</b>
+                  <b>{t("Fortsæt dit spil")}</b>
                   <small>
-                    Spørgsmål {resume.index + 1} af {resume.questions.length}
+                    {t("Spørgsmål {n} af {total}", {
+                      n: resume.index + 1,
+                      total: resume.questions.length,
+                    })}
                   </small>
                   <i
                     className="resume-bar"
@@ -1605,8 +1732,8 @@ function Home({
                 <Gamepad2 />
               </span>
               <span className="text">
-                <b>Start nyt spil</b>
-                <small>Venner, hold eller solo</small>
+                <b>{t("Start nyt spil")}</b>
+                <small>{t("Venner, hold eller solo")}</small>
               </span>
               <ArrowRight />
             </button>
@@ -1634,27 +1761,27 @@ function Home({
                   <Zap />
                 </span>
                 <span className="text">
-                  <b>{busy ? "Finder…" : "Hurtigt spil"}</b>
-                  <small>10 spørgsmål · ca. 3 min</small>
+                  <b>{busy ? t("Finder…") : t("Hurtigt spil")}</b>
+                  <small>{t("10 spørgsmål · ca. 3 min")}</small>
                 </span>
               </button>
             </div>
           </div>
           <div className="home-links">
             <button type="button" disabled={busy} onClick={playBlitz}>
-              <Zap /> Lynrunde
+              <Zap /> {t("Lynrunde")}
             </button>
             <button type="button" onClick={() => go("room-host")}>
-              <Smartphone /> Opret rum
+              <Smartphone /> {t("Opret rum")}
             </button>
             <button type="button" onClick={() => go("room-join")}>
-              <KeyRound /> Join rum
+              <KeyRound /> {t("Join rum")}
             </button>
             <button type="button" onClick={() => go("help")}>
-              <BookOpen /> Sådan spiller I
+              <BookOpen /> {t("Sådan spiller I")}
             </button>
             <button type="button" onClick={() => go("stats")}>
-              <BarChart3 /> Statistik
+              <BarChart3 /> {t("Statistik")}
             </button>
           </div>
           {(best || history.length > 0) && (
@@ -1662,13 +1789,16 @@ function Home({
               {best && (
                 <span>
                   <Trophy aria-hidden="true" />
-                  Rekord: {best.correct} af {best.total}
+                  {t("Rekord: {correct} af {total}", {
+                    correct: best.correct,
+                    total: best.total,
+                  })}
                 </span>
               )}
               {history.length > 0 && (
                 <span>
                   <History aria-hidden="true" />
-                  {history.length} spil spillet
+                  {t("{n} spil spillet", { n: history.length })}
                 </span>
               )}
             </p>
@@ -1679,24 +1809,26 @@ function Home({
       <CategoryTicker />
       <dl className="home-facts">
         <div>
-          <dt>2.000+</dt>
-          <dd>spørgsmål</dd>
+          <dt>{t("2.000+")}</dt>
+          <dd>{t("spørgsmål")}</dd>
         </div>
         <div>
           <dt>65</dt>
-          <dd>kategorier</dd>
+          <dd>{t("kategorier")}</dd>
         </div>
         <div>
           <dt>1–12</dt>
-          <dd>spillere</dd>
+          <dd>{t("spillere")}</dd>
         </div>
         <div>
-          <dt>0 kr.</dt>
-          <dd>og ingen login</dd>
+          <dt>{t("0 kr.")}</dt>
+          <dd>{t("og ingen login")}</dd>
         </div>
       </dl>
       <p className="home-legal">
-        <a href="/privatliv">Privatliv og data</a>
+        <a href={getLang() === "en" ? "/privacy" : "/privatliv"}>
+          {t("Privatliv og data")}
+        </a>
       </p>
     </div>
   );
@@ -1722,7 +1854,9 @@ function Setup({
 }) {
   const [search, setSearch] = useState("");
   const filtered = CATEGORIES.filter((c) =>
-    c.name.toLocaleLowerCase("da").includes(search.toLocaleLowerCase("da")),
+    c.name
+      .toLocaleLowerCase(locale())
+      .includes(search.toLocaleLowerCase(locale())),
   );
   const questionCounts = fairQuestionCounts(setup.players.length);
   const displayedQuestionCount = closestFairQuestionCount(
@@ -1751,7 +1885,7 @@ function Setup({
         >
           <span>{c.emoji}</span>
           <b>{c.name}</b>
-          {c.niche && <small>Nichekategori · vælg selv</small>}
+          {c.niche && <small>{t("Nichekategori · vælg selv")}</small>}
           {selected && (
             <i className="category-check" aria-hidden="true">
               <Check />
@@ -1760,7 +1894,7 @@ function Setup({
         </button>
         <button
           className={`fav ${fav ? "active" : ""}`}
-          aria-label={`Favorit: ${c.name}`}
+          aria-label={t("Favorit: {name}", { name: c.name })}
           onClick={() =>
             setSetup({
               ...setup,
@@ -1782,8 +1916,8 @@ function Setup({
         ...setup.players,
         newPlayer(
           setup.mode === "teams"
-            ? `Hold ${setup.players.length + 1}`
-            : `Spiller ${setup.players.length + 1}`,
+            ? teamName(setup.players.length + 1)
+            : playerName(setup.players.length + 1),
           setup.players.length,
         ),
       ],
@@ -1791,32 +1925,32 @@ function Setup({
   return (
     <>
       <PageHead
-        title="Opret spil"
+        title={t("Opret spil")}
         onBack={() => (step ? setStep(step - 1) : go("home"))}
-        kicker={`Trin ${step + 1} af 3`}
+        kicker={t("Trin {n} af 3", { n: step + 1 })}
       />
       {startError && (
         <div
           role="alert"
           className="mb-5 rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm"
         >
-          <b>Kunne ikke starte quizzen</b>
+          <b>{t("Kunne ikke starte quizzen")}</b>
           <p className="mt-1 text-muted-foreground">{startError}</p>
         </div>
       )}
       <Progress
         value={((step + 1) / 3) * 100}
         className="mb-7"
-        aria-label={`Trin ${step + 1} af 3`}
+        aria-label={t("Trin {n} af 3", { n: step + 1 })}
       />
       {step === 0 && (
         <div className="step-enter space-y-8">
           <section>
-            <Label className="mb-3 block text-base">Spilleform</Label>
+            <Label className="mb-3 block text-base">{t("Spilleform")}</Label>
             <div
               className="mode-grid"
               role="radiogroup"
-              aria-label="Spilleform"
+              aria-label={t("Spilleform")}
             >
               {modes.map((m) => (
                 <button
@@ -1830,11 +1964,17 @@ function Setup({
                     // Standardnavne følger spilleformen: Hold 1 / Spiller 1.
                     const [from, to] =
                       m.id === "teams"
-                        ? [/^Spiller (\d+)$/, "Hold"]
-                        : [/^Hold (\d+)$/, "Spiller"];
+                        ? [
+                            /^(?:Spiller|Player) (\d+)$/,
+                            getLang() === "en" ? "Team" : "Hold",
+                          ]
+                        : [
+                            /^(?:Hold|Team) (\d+)$/,
+                            getLang() === "en" ? "Player" : "Spiller",
+                          ];
                     const named = (
                       setup.players.length < 2 && !solo
-                        ? [...setup.players, newPlayer("Spiller 2", 1)]
+                        ? [...setup.players, newPlayer(playerName(2), 1)]
                         : setup.players
                     ).map((player) => ({
                       ...player,
@@ -1848,8 +1988,8 @@ function Setup({
                   }}
                 >
                   <span>{m.icon}</span>
-                  <b>{m.title}</b>
-                  <small>{m.text}</small>
+                  <b>{t(m.title)}</b>
+                  <small>{t(m.text)}</small>
                 </button>
               ))}
             </div>
@@ -1857,7 +1997,7 @@ function Setup({
           <section>
             <div className="mb-3 flex items-center justify-between">
               <Label className="text-base">
-                {setup.mode === "teams" ? "Hold" : "Spillere"}
+                {setup.mode === "teams" ? t("Hold") : t("Spillere")}
               </Label>
               <Button
                 variant="outline"
@@ -1867,7 +2007,7 @@ function Setup({
                 }
               >
                 <Shuffle />
-                Bland rækkefølge
+                {t("Bland rækkefølge")}
               </Button>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -1878,7 +2018,9 @@ function Setup({
                       <SheetTrigger asChild>
                         <button
                           className="avatar-button"
-                          aria-label={`Vælg dyr for ${p.name}`}
+                          aria-label={t("Vælg dyr for {name}", {
+                            name: p.name,
+                          })}
                         >
                           {p.avatar}
                         </button>
@@ -1888,14 +2030,16 @@ function Setup({
                         className="pb-[max(1.25rem,env(safe-area-inset-bottom))]"
                       >
                         <SheetHeader>
-                          <SheetTitle>Vælg dyr til {p.name}</SheetTitle>
+                          <SheetTitle>
+                            {t("Vælg dyr til {name}", { name: p.name })}
+                          </SheetTitle>
                         </SheetHeader>
                         <div className="grid grid-cols-6 gap-2 px-4 pb-5 sm:grid-cols-8 md:grid-cols-12">
                           {ANIMAL_AVATARS.map((avatar) => (
                             <SheetClose asChild key={avatar}>
                               <button
                                 className={`grid aspect-square min-h-11 min-w-11 place-items-center rounded-xl text-2xl transition hover:bg-muted ${p.avatar === avatar ? "bg-primary/15 ring-2 ring-primary" : "bg-secondary"}`}
-                                aria-label={`Vælg ${avatar}`}
+                                aria-label={t("Vælg {avatar}", { avatar })}
                                 aria-pressed={p.avatar === avatar}
                                 onClick={() =>
                                   setSetup({
@@ -1916,7 +2060,7 @@ function Setup({
                       </SheetContent>
                     </Sheet>
                     <Input
-                      aria-label={`Navn på ${i + 1}`}
+                      aria-label={t("Navn på {v0}", { v0: i + 1 })}
                       value={p.name}
                       onChange={(e) =>
                         setSetup({
@@ -1931,7 +2075,7 @@ function Setup({
                       <Button
                         size="icon"
                         variant="ghost"
-                        aria-label="Fjern"
+                        aria-label={t("Fjern")}
                         onClick={() =>
                           setSetup({
                             ...setup,
@@ -1953,7 +2097,9 @@ function Setup({
                   className="mt-3 w-full"
                   onClick={add}
                 >
-                  + Tilføj {setup.mode === "teams" ? "hold" : "spiller"}
+                  {setup.mode === "teams"
+                    ? t("+ Tilføj hold")
+                    : t("+ Tilføj spiller")}
                 </Button>
               )}
           </section>
@@ -1969,14 +2115,14 @@ function Setup({
                 setSetup({ ...setup, categoryIds: CATEGORIES.map((c) => c.id) })
               }
             >
-              Vælg alle
+              {t("Vælg alle")}
             </Button>
             <Button
               size="sm"
               variant="ghost"
               onClick={() => setSetup({ ...setup, categoryIds: [] })}
             >
-              Fravælg alle
+              {t("Fravælg alle")}
             </Button>
             <Button
               size="sm"
@@ -1991,7 +2137,7 @@ function Setup({
               }
             >
               <Shuffle />
-              Tilfældig blanding
+              {t("Tilfældig blanding")}
             </Button>
             <Button
               size="sm"
@@ -2000,14 +2146,14 @@ function Setup({
                 setSetup({ ...setup, categoryIds: DANISH_CATEGORY_IDS })
               }
             >
-              Kun dansk
+              {t("Kun dansk")}
             </Button>
           </div>
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="pl-10"
-              placeholder="Søg i kategorier"
+              placeholder={t("Søg i kategorier")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -2052,7 +2198,7 @@ function Setup({
                           })
                         }
                       >
-                        {all ? "Fravælg" : "Vælg alle"}
+                        {all ? t("Fravælg") : t("Vælg alle")}
                       </button>
                     </header>
                     <div className="category-grid">
@@ -2064,8 +2210,9 @@ function Setup({
             </div>
           )}
           <p className="mt-4 text-sm text-muted-foreground">
-            {setup.categoryIds.length} kategorier valgt · favoritter optræder
-            oftere
+            {t("{n} kategorier valgt · favoritter optræder oftere", {
+              n: setup.categoryIds.length,
+            })}
           </p>
         </div>
       )}
@@ -2073,18 +2220,23 @@ function Setup({
         <div className="step-enter grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Antal spørgsmål</CardTitle>
+              <CardTitle>{t("Antal spørgsmål")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="mb-3 flex items-end justify-between gap-4">
                 <b className="text-4xl">{displayedQuestionCount}</b>
                 <span className="text-right text-sm text-muted-foreground">
-                  {displayedQuestionCount / setup.players.length} spørgsmål pr.{" "}
-                  {setup.mode === "teams" ? "hold" : "spiller"}
+                  {setup.mode === "teams"
+                    ? t("{n} spørgsmål pr. hold", {
+                        n: displayedQuestionCount / setup.players.length,
+                      })
+                    : t("{n} spørgsmål pr. spiller", {
+                        n: displayedQuestionCount / setup.players.length,
+                      })}
                 </span>
               </div>
               <Slider
-                aria-label="Antal spørgsmål"
+                aria-label={t("Antal spørgsmål")}
                 min={0}
                 max={Math.max(0, questionCounts.length - 1)}
                 step={1}
@@ -2107,10 +2259,12 @@ function Setup({
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Sværhedsgrad</CardTitle>
+                <CardTitle>{t("Sværhedsgrad")}</CardTitle>
                 <InfoHint
-                  label="Om sværhedsforløb"
-                  text="Fast holder samme niveau. Blandet varierer mellem niveauet lige under, det valgte niveau og niveauet lige over. Stigende starter lidt lettere og bliver gradvist sværere."
+                  label={t("Om sværhedsforløb")}
+                  text={t(
+                    "Fast holder samme niveau. Blandet varierer mellem niveauet lige under, det valgte niveau og niveauet lige over. Stigende starter lidt lettere og bliver gradvist sværere.",
+                  )}
                 />
               </div>
             </CardHeader>
@@ -2118,7 +2272,7 @@ function Setup({
               <div
                 className="level-picker"
                 role="radiogroup"
-                aria-label="Sværhedsgrad"
+                aria-label={t("Sværhedsgrad")}
               >
                 {[1, 2, 3, 4, 5].map((level) => (
                   <button
@@ -2130,11 +2284,11 @@ function Setup({
                     onClick={() => setSetup({ ...setup, difficulty: level })}
                   >
                     <span aria-hidden="true">{"●".repeat(level)}</span>
-                    <b>{DIFFICULTY_LABELS[level]}</b>
+                    <b>{t(DIFFICULTY_LABELS[level])}</b>
                   </button>
                 ))}
               </div>
-              <p className="level-hint">{LEVEL_HINTS[setup.difficulty]}</p>
+              <p className="level-hint">{t(LEVEL_HINTS[setup.difficulty])}</p>
               <div className="mt-5 grid grid-cols-3 gap-2">
                 {difficultyModes.map((option) => (
                   <Button
@@ -2148,7 +2302,7 @@ function Setup({
                       setSetup({ ...setup, difficultyMode: option.id })
                     }
                   >
-                    {option.label}
+                    {t(option.label)}
                   </Button>
                 ))}
               </div>
@@ -2156,12 +2310,14 @@ function Setup({
           </Card>
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle>Tilføjelser</CardTitle>
+              <CardTitle>{t("Tilføjelser")}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-5 p-5 pt-0 sm:grid-cols-2 lg:grid-cols-3">
               <Toggle
-                label="Vis 30 sek. timer"
-                info="Viser en nedtælling. Tiden giver ikke ekstra point, medmindre Tidsbonus også slås til."
+                label={t("Vis 30 sek. timer")}
+                info={t(
+                  "Viser en nedtælling. Tiden giver ikke ekstra point, medmindre Tidsbonus også slås til.",
+                )}
                 checked={setup.timer}
                 on={(v) =>
                   setSetup({
@@ -2172,34 +2328,44 @@ function Setup({
                 }
               />
               <Toggle
-                label="Tidsbonus"
-                info="Giver op til 50 ekstra point for et hurtigt korrekt svar og slår automatisk timeren til."
+                label={t("Tidsbonus")}
+                info={t(
+                  "Giver op til 50 ekstra point for et hurtigt korrekt svar og slår automatisk timeren til.",
+                )}
                 checked={setup.timeBonus}
                 on={(v) =>
                   setSetup({ ...setup, timeBonus: v, timer: v || setup.timer })
                 }
               />
               <Toggle
-                label="Streakbonus"
-                info="Giver 25 ekstra point pr. svar i den aktuelle sejrsrække, op til 75 bonuspoint."
+                label={t("Streakbonus")}
+                info={t(
+                  "Giver 25 ekstra point pr. svar i den aktuelle sejrsrække, op til 75 bonuspoint.",
+                )}
                 checked={setup.streakBonus}
                 on={(v) => setSetup({ ...setup, streakBonus: v })}
               />
               <Toggle
-                label="Minuspoint"
-                info="Forkerte svar kan koste point. Risiko med 2× eller 3× kan stadig koste point efter sine egne regler."
+                label={t("Minuspoint")}
+                info={t(
+                  "Forkerte svar kan koste point. Risiko med 2× eller 3× kan stadig koste point efter sine egne regler.",
+                )}
                 checked={setup.minusPoints}
                 on={(v) => setSetup({ ...setup, minusPoints: v })}
               />
               <Toggle
-                label="Finale Dobbelt Point"
-                info="Hver spiller eller hvert hold får dobbelt point på sit sidste spørgsmål."
+                label={t("Finale Dobbelt Point")}
+                info={t(
+                  "Hver spiller eller hvert hold får dobbelt point på sit sidste spørgsmål.",
+                )}
                 checked={setup.finale}
                 on={(v) => setSetup({ ...setup, finale: v })}
               />
               <Toggle
-                label="3 livslinjer"
-                info="Hver spiller eller hvert hold får tre 50/50-livslinjer, som fjerner to forkerte svar."
+                label={t("3 livslinjer")}
+                info={t(
+                  "Hver spiller eller hvert hold får tre 50/50-livslinjer, som fjerner to forkerte svar.",
+                )}
                 checked={setup.lifelines}
                 on={(v) => setSetup({ ...setup, lifelines: v })}
               />
@@ -2213,7 +2379,7 @@ function Setup({
           onClick={() => (step ? setStep(step - 1) : go("home"))}
         >
           <ArrowLeft />
-          Tilbage
+          {t("Tilbage")}
         </Button>
         {step < 2 ? (
           <Button
@@ -2221,7 +2387,7 @@ function Setup({
             disabled={step === 1 && !setup.categoryIds.length}
             onClick={() => setStep(step + 1)}
           >
-            Fortsæt
+            {t("Fortsæt")}
             <ArrowRight />
           </Button>
         ) : (
@@ -2234,7 +2400,7 @@ function Setup({
             }
             onClick={() => start()}
           >
-            {questionsReady ? "Start quizzen" : "Gør spørgsmål klar…"}
+            {questionsReady ? t("Start quizzen") : t("Gør spørgsmål klar…")}
             <ArrowRight />
           </Button>
         )}
@@ -2260,7 +2426,7 @@ function AnimatedNumber({
     if (!element) return;
     const start = shown.current;
     const format = (n: number) =>
-      `${Math.round(n).toLocaleString("da-DK")}${suffix}`;
+      `${Math.round(n).toLocaleString(locale())}${suffix}`;
     const reduced =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       document.documentElement.classList.contains("reduce-motion");
@@ -2284,7 +2450,7 @@ function AnimatedNumber({
   }, [value, duration, suffix]);
   return (
     <span ref={node} className="tabular-nums">
-      {Math.round(from ?? value).toLocaleString("da-DK")}
+      {Math.round(from ?? value).toLocaleString(locale())}
       {suffix}
     </span>
   );
@@ -2303,7 +2469,7 @@ const PARTIAL_LINES = ["Tæt på!", "Næsten!"];
 function lineFor(lines: string[], seed: string) {
   let hash = 0;
   for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-  return lines[hash % lines.length];
+  return t(lines[hash % lines.length]);
 }
 function Play({
   game,
@@ -2498,25 +2664,26 @@ function Play({
     (question) =>
       game.answers.find((item) => item.questionId === question.id)?.correct,
   );
-  const modeTitle =
-    modes.find((mode) => mode.id === game.setup.mode)?.title ?? "Quiz";
+  const modeTitle = t(
+    modes.find((mode) => mode.id === game.setup.mode)?.title ?? "Quiz",
+  );
   return (
     <div className="quiz-screen mx-auto max-w-3xl lg:max-w-4xl">
       <div className="quiz-heading mb-4 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <small className="text-muted-foreground">
             {blitz
-              ? "Lynrunde"
+              ? t("Lynrunde")
               : solo
                 ? modeTitle
-                : `Spørgsmål ${game.index + 1} af ${total}`}
+                : t("Spørgsmål {n} af {total}", { n: game.index + 1, total })}
           </small>
           <h1 className="truncate text-lg font-bold">
             {blitz
-              ? `${p.correct} rigtige`
+              ? t("{correct} rigtige", { correct: p.correct })
               : solo
-                ? `Spørgsmål ${game.index + 1} af ${total}`
-                : `${p.avatar} ${p.name}s tur`}
+                ? t("Spørgsmål {n} af {total}", { n: game.index + 1, total })
+                : t("{avatar} {name}s tur", { avatar: p.avatar, name: p.name })}
           </h1>
         </div>
         <div className="flex items-center gap-2">
@@ -2525,16 +2692,16 @@ function Play({
               key={p.streak}
               className="streak-chip"
               role="status"
-              aria-label={`${p.streak} rigtige i træk`}
+              aria-label={t("{streak} rigtige i træk", { streak: p.streak })}
             >
               <Flame aria-hidden="true" />
-              {p.streak} i træk
+              {t("{n} i træk", { n: p.streak })}
             </span>
           )}
           <div
             className={`score-pill active ${given ? (given.points > 0 ? "gain" : given.points < 0 ? "loss" : "") : ""}`}
             role="status"
-            aria-label={`${p.name}s point`}
+            aria-label={t("{name}s point", { name: p.name })}
           >
             <span>{p.avatar}</span>
             <b>
@@ -2543,7 +2710,7 @@ function Play({
             {given && given.points !== 0 && (
               <i className="points-pop" aria-hidden="true">
                 {given.points > 0 ? "+" : ""}
-                {given.points.toLocaleString("da-DK")}
+                {given.points.toLocaleString(locale())}
               </i>
             )}
           </div>
@@ -2553,7 +2720,7 @@ function Play({
         <div
           className="progress-dots"
           role="progressbar"
-          aria-label="Fremdrift"
+          aria-label={t("Fremdrift")}
           aria-valuemin={1}
           aria-valuemax={total}
           aria-valuenow={game.index + 1}
@@ -2576,7 +2743,7 @@ function Play({
       ) : (
         <Progress
           value={((game.index + 1) / total) * 100}
-          aria-label="Fremdrift"
+          aria-label={t("Fremdrift")}
         />
       )}
       {(game.setup.timer || game.setup.timeBonus) && !given && (
@@ -2586,9 +2753,9 @@ function Play({
               <Clock3 className="size-4" />
               {secondsLeft > 0
                 ? game.setup.timeBonus
-                  ? "Tid til bonus"
-                  : "Tid tilbage"
-                : "Tiden er gået – svar stadig"}
+                  ? t("Tid til bonus")
+                  : t("Tid tilbage")
+                : t("Tiden er gået – svar stadig")}
             </span>
             <b className={secondsLeft <= 5 ? "timer-urgent" : ""}>
               {secondsLeft} sek.
@@ -2597,7 +2764,7 @@ function Play({
           <Progress
             className="timer-progress"
             value={(secondsLeft / 30) * 100}
-            aria-label="Resterende svartid"
+            aria-label={t("Resterende svartid")}
           />
         </div>
       )}
@@ -2605,7 +2772,7 @@ function Play({
         <div
           className={`blitz-bar ${blitzLeft <= 10 ? "hurry" : ""}`}
           role="timer"
-          aria-label={`${blitzLeft} sekunder tilbage`}
+          aria-label={t("{blitzLeft} sekunder tilbage", { blitzLeft })}
         >
           <i
             style={{
@@ -2617,7 +2784,9 @@ function Play({
       )}
       {game.setup.mode === "risk" && !given && (
         <div className="my-5 flex items-center justify-center gap-2">
-          <span className="text-sm text-muted-foreground">Vælg risiko:</span>
+          <span className="text-sm text-muted-foreground">
+            {t("Vælg risiko:")}
+          </span>
           {[1, 2, 3].map((n) => (
             <Button
               key={n}
@@ -2639,10 +2808,10 @@ function Play({
             onClick={useLifeline}
             title={
               canUseLifeline
-                ? "Fjern to forkerte svar"
+                ? t("Fjern to forkerte svar")
                 : lifelinesLeft < 1
-                  ? "Ingen livslinjer tilbage"
-                  : "50/50 kan ikke bruges på denne spørgsmålstype"
+                  ? t("Ingen livslinjer tilbage")
+                  : t("50/50 kan ikke bruges på denne spørgsmålstype")
             }
           >
             <LifeBuoy />
@@ -2655,37 +2824,39 @@ function Play({
           <div className="flex flex-wrap items-center gap-2">
             <Badge style={{ borderColor: cat?.color }} variant="outline">
               {game.setup.mode === "mystery" && !given
-                ? "🎁 Mystery Mix"
+                ? t("🎁 Mystery Mix")
                 : `${cat?.emoji} ${cat?.name}`}
             </Badge>
             <Badge variant="secondary">
-              {DIFFICULTY_LABELS[q.difficulty] ?? `Niveau ${q.difficulty}`}
+              {DIFFICULTY_LABELS[q.difficulty]
+                ? t(DIFFICULTY_LABELS[q.difficulty])
+                : t("Niveau {n}", { n: q.difficulty })}
             </Badge>
             {typeLabels[q.type] && (
               <Badge className="quiz-type-badge" variant="outline">
-                {typeLabels[q.type]}
+                {t(typeLabels[q.type] ?? "")}
               </Badge>
             )}
             {(q.finale || q.type === "finale") && (
-              <Badge>Finale · dobbelt point</Badge>
+              <Badge>{t("Finale · dobbelt point")}</Badge>
             )}
             {!given && !blitz && (
               <Button
-                aria-label="Byt et spørgsmål, I allerede har set"
+                aria-label={t("Byt et spørgsmål, I allerede har set")}
                 className="ml-auto h-8 min-h-8 gap-1 px-2 text-xs text-muted-foreground opacity-85 hover:opacity-100"
                 size="sm"
-                title="Behold turen og få et nyt spørgsmål"
+                title={t("Behold turen og få et nyt spørgsmål")}
                 variant="ghost"
                 onClick={() => setSkipUnavailable(!skip())}
               >
                 <RefreshCw className="size-3" />
-                Set før? Byt
+                {t("Set før? Byt")}
               </Button>
             )}
           </div>
           {skipUnavailable && (
             <small className="text-right text-muted-foreground" role="status">
-              Der er ikke et andet ubrugt spørgsmål i den valgte pulje.
+              {t("Der er ikke et andet ubrugt spørgsmål i den valgte pulje.")}
             </small>
           )}
           <CardTitle className="question-title pt-4 text-2xl leading-tight sm:text-[2rem]">
@@ -2695,7 +2866,7 @@ function Play({
         <CardContent className="grid gap-3">
           {hideOptions && (
             <Button className="h-16 text-lg" onClick={reveal}>
-              Vis svarmuligheder
+              {t("Vis svarmuligheder")}
             </Button>
           )}
           {!hideOptions &&
@@ -2764,7 +2935,7 @@ function Play({
                   pendingId && answer(pendingId, Date.now() - started.current)
                 }
               >
-                {pendingId ? "Lås svar" : "Vælg et svar"}
+                {pendingId ? t("Lås svar") : t("Vælg et svar")}
               </Button>
             )}
           {q.type === "ordering" && !given && !hideOptions && (
@@ -2776,10 +2947,10 @@ function Play({
                   answer(order.join("|"), Date.now() - started.current)
                 }
               >
-                Lås rækkefølgen
+                {t("Lås rækkefølgen")}
               </Button>
               <Button variant="ghost" onClick={() => setOrder([])}>
-                Nulstil
+                {t("Nulstil")}
               </Button>
             </div>
           )}
@@ -2787,7 +2958,7 @@ function Play({
       </Card>
       {q.type !== "ordering" && !blitz && (
         <p className="key-hint" aria-hidden="true">
-          Tryk 1–4 for at svare · Enter for næste spørgsmål
+          {t("Tryk 1–4 for at svare · Enter for næste spørgsmål")}
         </p>
       )}
       {given && !blitz && (
@@ -2810,13 +2981,13 @@ function Play({
               {given.points !== 0 && (
                 <span>
                   {given.points > 0 ? "+" : ""}
-                  {given.points.toLocaleString("da-DK")} point
+                  {given.points.toLocaleString(locale())} point
                 </span>
               )}
             </b>
             {!given.correct && correctOption && q.type !== "ordering" && (
               <p className="feedback-answer">
-                Svaret er{" "}
+                {t("Svaret er")}{" "}
                 <strong>
                   <QuizOptionText prompt={q.prompt}>
                     {correctOption.text}
@@ -2826,7 +2997,7 @@ function Play({
             )}
             {q.type === "ordering" && q.correctOrder && (
               <p className="feedback-answer">
-                Korrekt rækkefølge:{" "}
+                {t("Korrekt rækkefølge:")}{" "}
                 {q.correctOrder
                   .map(
                     (id) => q.options.find((option) => option.id === id)?.text,
@@ -2848,10 +3019,10 @@ function Play({
               onClick={next}
             >
               {isLast
-                ? "Se resultatet"
+                ? t("Se resultatet")
                 : solo
-                  ? "Næste spørgsmål"
-                  : `Videre til ${nextPlayer.name}`}
+                  ? t("Næste spørgsmål")
+                  : t("Videre til {name}", { name: nextPlayer.name })}
               <ArrowRight />
             </Button>
             <Button
@@ -2861,7 +3032,7 @@ function Play({
               onClick={() => setReportOpen((value) => !value)}
             >
               <Flag />
-              {reportSent ? "Tak for hjælpen" : "Er der noget galt?"}
+              {reportSent ? t("Tak for hjælpen") : t("Er der noget galt?")}
             </Button>
           </div>
         </div>
@@ -2869,15 +3040,15 @@ function Play({
       {given && reportOpen && !reportSent && (
         <Card className="mt-3 border-amber-500/40">
           <CardContent className="grid gap-3 p-4">
-            <b>Hvad bør vi se på?</b>
+            <b>{t("Hvad bør vi se på?")}</b>
             <div className="flex flex-wrap gap-2">
               {(
                 [
-                  ["wrong_answer", "Forkert svar"],
-                  ["unclear", "Uklart spørgsmål"],
-                  ["difficulty", "Forkert niveau"],
-                  ["bad_options", "Dårlige svarmuligheder"],
-                  ["outdated", "Forældet information"],
+                  ["wrong_answer", t("Forkert svar")],
+                  ["unclear", t("Uklart spørgsmål")],
+                  ["difficulty", t("Forkert niveau")],
+                  ["bad_options", t("Dårlige svarmuligheder")],
+                  ["outdated", t("Forældet information")],
                 ] as const
               ).map(([value, label]) => (
                 <Button
@@ -2893,7 +3064,7 @@ function Play({
             <Input
               value={reportNote}
               maxLength={240}
-              placeholder="Valgfri kort kommentar"
+              placeholder={t("Valgfri kort kommentar")}
               onChange={(event) => setReportNote(event.target.value)}
             />
             <Button
@@ -2903,7 +3074,7 @@ function Play({
                 setReportOpen(false);
               }}
             >
-              Send rapport
+              {t("Send rapport")}
             </Button>
           </CardContent>
         </Card>
@@ -2914,24 +3085,30 @@ function Play({
 function soloVerdict(rate: number): [string, string] {
   if (rate >= 1)
     return [
-      "Fejlfri runde!",
-      "Ikke én eneste fejl. Der er vist en quizmester i huset.",
+      t("Fejlfri runde!"),
+      t("Ikke én eneste fejl. Der er vist en quizmester i huset."),
     ];
   if (rate >= 0.8)
     return [
-      "Stærkt spillet!",
-      "Det her kunne godt bære en plads på holdet til pubquizzen.",
+      t("Stærkt spillet!"),
+      t("Det her kunne godt bære en plads på holdet til pubquizzen."),
     ];
   if (rate >= 0.6)
-    return ["Godt gået!", "Solidt over middel – og med plads til en revanche."];
+    return [
+      t("Godt gået!"),
+      t("Solidt over middel – og med plads til en revanche."),
+    ];
   if (rate >= 0.4)
     return [
-      "Halvvejs i mål",
-      "Nogle sad lige i skabet, andre drillede. Én runde mere?",
+      t("Halvvejs i mål"),
+      t("Nogle sad lige i skabet, andre drillede. Én runde mere?"),
     ];
   if (rate >= 0.2)
-    return ["Den drillede", "Spørgsmålene vandt denne gang. Tag en omkamp."];
-  return ["Av for den", "Herfra kan det kun gå fremad. Prøv igen!"];
+    return [
+      t("Den drillede"),
+      t("Spørgsmålene vandt denne gang. Tag en omkamp."),
+    ];
+  return [t("Av for den"), t("Herfra kan det kun gå fremad. Prøv igen!")];
 }
 function Results({
   game,
@@ -2981,7 +3158,7 @@ function Results({
       const correct = answers.filter((answer) => answer.correct).length;
       return {
         categoryId,
-        name: categoryById(categoryId)?.name ?? "Ukendt kategori",
+        name: categoryById(categoryId)?.name ?? t("Ukendt kategori"),
         emoji: categoryById(categoryId)?.emoji ?? "",
         correct,
         total: answers.length,
@@ -3030,14 +3207,21 @@ function Results({
   const winnerRate = winner.correct / Math.max(1, winner.answers);
   const [soloTitle, soloText] = soloVerdict(winnerRate);
   const summary = sharedWin
-    ? "Helt lige kamp – en revanche må afgøre det."
+    ? t("Helt lige kamp – en revanche må afgøre det.")
     : winnerRate >= 0.8
-      ? `${winner.name} leverede en vaskeægte quizmester-præstation.`
+      ? t("{name} leverede en vaskeægte quizmester-præstation.", {
+          name: winner.name,
+        })
       : winner.longestStreak >= 4
-        ? `${winner.name} afgjorde kampen med en stærk stime på ${winner.longestStreak}.`
+        ? t("{name} afgjorde kampen med en stærk stime på {longestStreak}.", {
+            name: winner.name,
+            longestStreak: winner.longestStreak,
+          })
         : sorted.length > 1 && winner.score - sorted[1].score <= 100
-          ? "Det blev afgjort på marginalerne – en revanche ligger lige for."
-          : `${winner.name} holdt hovedet koldt og tog sejren.`;
+          ? t("Det blev afgjort på marginalerne – en revanche ligger lige for.")
+          : t("{name} holdt hovedet koldt og tog sejren.", {
+              name: winner.name,
+            });
   const topScore = Math.max(1, ...sorted.map((player) => player.score));
   const [copied, setCopied] = useState(false);
   const replayButton = useRef<HTMLButtonElement>(null);
@@ -3064,27 +3248,65 @@ function Results({
       ? overallRate >= 0.85 && level < 5
         ? {
             level: level + 1,
-            text: `${Math.round(overallRate * 100)} % rigtige – klar til noget sværere?`,
+            text: t("{v0} % rigtige – klar til noget sværere?", {
+              v0: Math.round(overallRate * 100),
+            }),
           }
         : overallRate <= 0.3 && level > 1
           ? {
               level: level - 1,
-              text: "Det var en hård omgang. Prøv et lidt lettere niveau?",
+              text: t("Det var en hård omgang. Prøv et lidt lettere niveau?"),
             }
           : null
       : null;
   const share = async () => {
-    const score = winner.score.toLocaleString("da-DK");
+    const score = winner.score.toLocaleString(locale());
     const [, month, day] = (game.dailyKey ?? "").split("-");
     const text = isDaily
-      ? `${APP_CONFIG.name} Dagens quiz ${Number(day)}/${Number(month)}\n${winner.correct}/${total} · ${score} point${streak > 1 ? ` · ${streak} dage i træk` : ""}\n${grid}\nwww.kvizy.dk`
+      ? t(
+          "{name} Dagens quiz {day}/{month}\n{correct}/{total} · {score} point{streak}\n{grid}\nwww.kvizy.dk",
+          {
+            name: APP_CONFIG.name,
+            day: Number(day),
+            month: Number(month),
+            correct: winner.correct,
+            total,
+            score,
+            streak: streak > 1 ? t(" · {streak} dage i træk", { streak }) : "",
+            grid,
+          },
+        )
       : isBlitz
-        ? `${APP_CONFIG.name} Lynrunde · ${winner.correct} rigtige på ${APP_CONFIG.blitzSeconds} sek.\n${grid}\nKan du slå det? www.kvizy.dk`
+        ? t(
+            "{name} Lynrunde · {correct} rigtige på {blitzSeconds} sek.\n{grid}\nKan du slå det? www.kvizy.dk",
+            {
+              name: APP_CONFIG.name,
+              correct: winner.correct,
+              blitzSeconds: APP_CONFIG.blitzSeconds,
+              grid,
+            },
+          )
         : solo
-          ? `${APP_CONFIG.name} · ${winner.correct}/${total} · ${score} point\n${grid}\nKan du slå det? www.kvizy.dk`
+          ? t(
+              "{name} · {correct}/{total} · {score} point\n{grid}\nKan du slå det? www.kvizy.dk",
+              {
+                name: APP_CONFIG.name,
+                correct: winner.correct,
+                total,
+                score,
+                grid,
+              },
+            )
           : sharedWin
-            ? `${APP_CONFIG.name}: ${winnerNames} delte førstepladsen med ${score} point!`
-            : `${APP_CONFIG.name}: ${winner.name} vandt med ${score} point!`;
+            ? t(
+                "{name}: {winnerNames} delte førstepladsen med {score} point!",
+                { name: APP_CONFIG.name, winnerNames, score },
+              )
+            : t("{name}: {winner} vandt med {score} point!", {
+                name: APP_CONFIG.name,
+                winner: winner.name,
+                score,
+              });
     try {
       if (navigator.share)
         await navigator.share({ title: APP_CONFIG.name, text });
@@ -3124,7 +3346,7 @@ function Results({
                   suffix="%"
                 />
               </b>
-              <span>rigtige</span>
+              <span>{t("rigtige")}</span>
             </div>
           </div>
           <h1 className="reveal mt-5 text-4xl font-black tracking-tight sm:text-5xl">
@@ -3132,10 +3354,16 @@ function Results({
           </h1>
           <p className="reveal mt-3 text-xl">
             <b>
-              {winner.correct} af {total}
+              {t("{correct} af {total}", {
+                correct: winner.correct,
+                total,
+              })}
             </b>{" "}
             <span className="text-muted-foreground">
-              · {winner.score.toLocaleString("da-DK")} point
+              ·{" "}
+              {t("{score} point", {
+                score: winner.score.toLocaleString(locale()),
+              })}
             </span>
           </p>
           <p className="reveal mx-auto mt-2 max-w-xl text-muted-foreground">
@@ -3144,30 +3372,37 @@ function Results({
           {isDaily ? (
             <p className="record-badge new">
               <Flame aria-hidden="true" />
-              Dagens quiz{streak > 1 ? ` · ${streak} dage i træk` : " klaret"}
+              {streak > 1
+                ? t("Dagens quiz · {streak} dage i træk", { streak })
+                : t("Dagens quiz klaret")}
             </p>
           ) : record?.isRecord ? (
             <p className="record-badge new">
               <Trophy aria-hidden="true" />
-              Ny personlig rekord!
+              {t("Ny personlig rekord!")}
             </p>
           ) : record?.previous ? (
             <p className="record-badge">
               <Trophy aria-hidden="true" />
               {isBlitz
-                ? `Din rekord i lynrunden: ${record.previous.correct} rigtige`
-                : `Din rekord på ${record.previous.total} spørgsmål: ${record.previous.correct} rigtige`}
+                ? t("Din rekord i lynrunden: {correct} rigtige", {
+                    correct: record.previous.correct,
+                  })
+                : t("Din rekord på {total} spørgsmål: {correct} rigtige", {
+                    total: record.previous.total,
+                    correct: record.previous.correct,
+                  })}
             </p>
           ) : null}
         </>
       ) : (
         <>
           <div className="winner-crown">👑</div>
-          <Badge>Spillet er slut</Badge>
+          <Badge>{t("Spillet er slut")}</Badge>
           <h1 className="reveal mt-4 text-4xl font-black tracking-tight sm:text-6xl">
             {sharedWin
-              ? `${winnerNames} deler sejren!`
-              : `${winner.name} vinder!`}
+              ? t("{winnerNames} deler sejren!", { winnerNames })
+              : t("{name} vinder!", { name: winner.name })}
           </h1>
           <p className="reveal mx-auto mt-3 max-w-xl text-muted-foreground">
             {summary}
@@ -3193,8 +3428,14 @@ function Results({
                   <div className="min-w-0 flex-1">
                     <b className="block truncate">{p.name}</b>
                     <p className="text-sm text-muted-foreground">
-                      {p.correct} af {p.answers} rigtige · bedste stime{" "}
-                      {p.longestStreak}
+                      {t(
+                        "{correct} af {answers} rigtige · bedste stime {streak}",
+                        {
+                          correct: p.correct,
+                          answers: p.answers,
+                          streak: p.longestStreak,
+                        },
+                      )}
                     </p>
                   </div>
                   <strong className="text-lg">
@@ -3212,15 +3453,15 @@ function Results({
             <div key={achievement.id} className="achievement-toast">
               <span aria-hidden="true">{achievement.emoji}</span>
               <div>
-                <small>Ny præstation</small>
-                <b>{achievement.title}</b>
+                <small>{t("Ny præstation")}</small>
+                <b>{t(achievement.title)}</b>
               </div>
             </div>
           ))}
         </div>
       )}
       {awards.length > 0 && (
-        <div className="awards" aria-label="Titler fra runden">
+        <div className="awards" aria-label={t("Titler fra runden")}>
           {awards.map((award) => {
             const holder = game.setup.players.find(
               (p) => p.id === award.playerId,
@@ -3241,44 +3482,48 @@ function Results({
       <div className="result-stats my-7 grid gap-3 text-left sm:grid-cols-2">
         <ResultStat
           index={0}
-          label="Længste stime"
+          label={t("Længste stime")}
           value={
             longestStreak > 1
-              ? `${longestStreak} rigtige i træk`
-              : "Ingen stime denne gang"
+              ? t("{longestStreak} rigtige i træk", { longestStreak })
+              : t("Ingen stime denne gang")
           }
         />
         <ResultStat
           index={1}
-          label="Stærkeste kategori"
+          label={t("Stærkeste kategori")}
           value={
             bestCategory
               ? `${bestCategory.emoji} ${bestCategory.name} · ${bestCategory.correct}/${bestCategory.total}`
-              : "Ingen rigtige svar"
+              : t("Ingen rigtige svar")
           }
         />
         <ResultStat
           index={2}
           label={
-            weakestCategory ? "Her er der noget at hente" : "Hurtigste svar"
+            weakestCategory
+              ? t("Her er der noget at hente")
+              : t("Hurtigste svar")
           }
           value={
             weakestCategory
               ? `${weakestCategory.emoji} ${weakestCategory.name} · ${weakestCategory.correct}/${weakestCategory.total}`
               : fastest
-                ? `${(fastest.responseMs / 1000).toFixed(1)} sek.`
-                : "Ingen rigtige svar"
+                ? t("{s} sek.", { s: (fastest.responseMs / 1000).toFixed(1) })
+                : t("Ingen rigtige svar")
           }
         />
         <ResultStat
           index={3}
-          label="Flottest klaret"
+          label={t("Flottest klaret")}
           value={
             hardestRightQuestion
-              ? `${DIFFICULTY_LABELS[hardestRightQuestion.difficulty]}: ${hardestRightQuestion.prompt}`
+              ? `${t(DIFFICULTY_LABELS[hardestRightQuestion.difficulty])}: ${hardestRightQuestion.prompt}`
               : fastest
-                ? `Hurtigste svar: ${(fastest.responseMs / 1000).toFixed(1)} sek.`
-                : "Næste runde bliver bedre"
+                ? t("Hurtigste svar: {s} sek.", {
+                    s: (fastest.responseMs / 1000).toFixed(1),
+                  })
+                : t("Næste runde bliver bedre")
           }
         />
       </div>
@@ -3286,7 +3531,7 @@ function Results({
         <div className="mb-7 flex flex-wrap items-center justify-center gap-2">
           {difficultyStats.map((stat) => (
             <Badge key={stat.level} variant="secondary">
-              {DIFFICULTY_LABELS[stat.level]}: {stat.correct}/{stat.total}
+              {t(DIFFICULTY_LABELS[stat.level])}: {stat.correct}/{stat.total}
             </Badge>
           ))}
         </div>
@@ -3300,8 +3545,11 @@ function Results({
           <div className="level-nudge">
             <p>
               {missedCount === 1
-                ? "Ét spørgsmål drillede. Tag det igen, mens det er friskt?"
-                : `${missedCount} spørgsmål drillede. Tag dem igen, mens de er friske?`}
+                ? t("Ét spørgsmål drillede. Tag det igen, mens det er friskt?")
+                : t(
+                    "{missedCount} spørgsmål drillede. Tag dem igen, mens de er friske?",
+                    { missedCount },
+                  )}
             </p>
             <Button
               size="sm"
@@ -3309,7 +3557,7 @@ function Results({
               disabled={busy}
               onClick={practiceMissed}
             >
-              Øv fejlene
+              {t("Øv fejlene")}
             </Button>
           </div>
         )}
@@ -3322,7 +3570,9 @@ function Results({
             disabled={busy}
             onClick={() => playLevel(nudge.level)}
           >
-            Prøv niveau «{DIFFICULTY_LABELS[nudge.level].toLowerCase()}»
+            {t("Prøv niveau «{level}»", {
+              level: t(DIFFICULTY_LABELS[nudge.level]).toLowerCase(),
+            })}
           </Button>
         </div>
       )}
@@ -3336,27 +3586,27 @@ function Results({
         >
           <RefreshCw />
           {busy
-            ? "Finder nye spørgsmål…"
+            ? t("Finder nye spørgsmål…")
             : isDaily
-              ? "Spil et hurtigt spil"
+              ? t("Spil et hurtigt spil")
               : solo
-                ? "Spil igen"
-                : "Revanche"}
+                ? t("Spil igen")
+                : t("Revanche")}
         </Button>
         <Button size="lg" variant="secondary" onClick={() => go("review")}>
           <BookOpen />
-          Gennemgå svar
+          {t("Gennemgå svar")}
         </Button>
         <Button size="lg" variant="outline" onClick={share}>
           <Share2 />
-          {copied ? "Kopieret" : "Del resultat"}
+          {copied ? t("Kopieret") : t("Del resultat")}
         </Button>
         <Button
           variant="ghost"
           className="sm:col-span-2"
           onClick={() => go("home")}
         >
-          Til forsiden
+          {t("Til forsiden")}
         </Button>
       </div>
     </div>
@@ -3396,18 +3646,18 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
   const shown = onlyWrong ? rows.filter(({ a }) => a?.correct === false) : rows;
   return (
     <>
-      <PageHead title="Gennemgang" onBack={() => go("results")} />
+      <PageHead title={t("Gennemgang")} onBack={() => go("results")} />
       <div
         className="mb-4 flex flex-wrap gap-2"
         role="group"
-        aria-label="Filter"
+        aria-label={t("Filter")}
       >
         <Button
           size="sm"
           variant={onlyWrong ? "outline" : "default"}
           onClick={() => setOnlyWrong(false)}
         >
-          Alle ({rows.length})
+          {t("Alle ({n})", { n: rows.length })}
         </Button>
         <Button
           size="sm"
@@ -3415,7 +3665,7 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
           disabled={wrongCount === 0}
           onClick={() => setOnlyWrong(true)}
         >
-          Kun forkerte ({wrongCount})
+          {t("Kun forkerte ({n})", { n: wrongCount })}
         </Button>
       </div>
       <div className="grid gap-3">
@@ -3442,13 +3692,13 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                     {category?.emoji} {category?.name}
                   </Badge>
                   <Badge variant="outline">
-                    {DIFFICULTY_LABELS[q.difficulty]}
+                    {t(DIFFICULTY_LABELS[q.difficulty])}
                   </Badge>
                   <span
                     className={`review-verdict ${a?.correct ? "good" : "bad"}`}
                   >
                     {a?.correct ? <Check /> : <X />}
-                    {a?.correct ? "Rigtigt" : "Forkert"}
+                    {a?.correct ? t("Rigtigt") : t("Forkert")}
                   </span>
                 </div>
                 <h2 className="mt-3 font-bold">
@@ -3461,7 +3711,7 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                 )}
                 {!a?.correct && selectedOption && (
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Dit svar:{" "}
+                    {t("Dit svar:")}{" "}
                     <QuizOptionText prompt={q.prompt}>
                       {selectedOption.text}
                     </QuizOptionText>
@@ -3469,7 +3719,7 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                 )}
                 {correctOption && (
                   <p className="mt-1 text-sm">
-                    Rigtigt svar:{" "}
+                    {t("Rigtigt svar:")}{" "}
                     <strong>
                       <QuizOptionText prompt={q.prompt}>
                         {correctOption.text}
@@ -3479,7 +3729,7 @@ function Review({ game, go }: { game: Game; go: (v: View) => void }) {
                 )}
                 {q.type === "ordering" && q.correctOrder && (
                   <p className="mt-1 text-sm">
-                    Rigtig rækkefølge:{" "}
+                    {t("Rigtig rækkefølge:")}{" "}
                     <strong>
                       {q.correctOrder
                         .map(
@@ -3523,26 +3773,28 @@ function StatsView({
     .sort((a, b) => a.rate - b.rate || b.total - a.total);
   return (
     <>
-      <PageHead title="Statistik" onBack={() => go("home")} />
+      <PageHead title={t("Statistik")} onBack={() => go("home")} />
       {stats.games === 0 ? (
         <Empty
           icon="📊"
-          title="Ingen statistik endnu"
-          text="Spil et par runder, så dukker dine stærke og svage sider op her."
+          title={t("Ingen statistik endnu")}
+          text={t(
+            "Spil et par runder, så dukker dine stærke og svage sider op her.",
+          )}
         />
       ) : (
         <div className="stats">
           <p className="mb-4 text-sm text-muted-foreground">
             {stats.soloOnly
-              ? "Bygger på dine solospil blandt de seneste 30 spil."
-              : "Bygger på de seneste 30 spil."}
+              ? t("Bygger på dine solospil blandt de seneste 30 spil.")
+              : t("Bygger på de seneste 30 spil.")}
           </p>
           <div className="stat-tiles">
             {[
-              [String(stats.games), "spil"],
-              [String(stats.answers), "svar"],
-              [`${Math.round(stats.rate * 100)} %`, "rigtige"],
-              [String(stats.bestStreak), "længste stime"],
+              [String(stats.games), t("spil")],
+              [String(stats.answers), t("svar")],
+              [`${Math.round(stats.rate * 100)} %`, t("rigtige")],
+              [String(stats.bestStreak), t("længste stime")],
             ].map(([value, label], index) => (
               <Card
                 key={label}
@@ -3557,8 +3809,10 @@ function StatsView({
             ))}
           </div>
           <h2 className="mt-7 text-lg font-bold">
-            Præstationer · {Object.keys(achievements.unlocked).length}/
-            {ACHIEVEMENTS.length}
+            {t("Præstationer · {n}/{total}", {
+              n: Object.keys(achievements.unlocked).length,
+              total: ACHIEVEMENTS.length,
+            })}
           </h2>
           <div className="achievement-grid">
             {ACHIEVEMENTS.map((achievement) => {
@@ -3573,8 +3827,8 @@ function StatsView({
                   className={`achievement ${done ? "done" : ""}`}
                 >
                   <span aria-hidden="true">{achievement.emoji}</span>
-                  <b>{achievement.title}</b>
-                  <small>{achievement.text}</small>
+                  <b>{t(achievement.title)}</b>
+                  <small>{t(achievement.text)}</small>
                   {!done && achievement.goal > 1 && (
                     <em>
                       {value}/{achievement.goal}
@@ -3587,7 +3841,7 @@ function StatsView({
           {weakest.length > 0 && (
             <div className="level-nudge mt-5">
               <p>
-                Dine svageste emner:{" "}
+                {t("Dine svageste emner:")}{" "}
                 {weakest
                   .map((id) => categoryById(id)?.name)
                   .filter(Boolean)
@@ -3595,11 +3849,11 @@ function StatsView({
               </p>
               <Button disabled={busy} onClick={() => train(weakest)}>
                 <Target />
-                Træn dem · 10 spørgsmål
+                {t("Træn dem · 10 spørgsmål")}
               </Button>
             </div>
           )}
-          <h2 className="mb-3 mt-7 font-bold">Efter kategori</h2>
+          <h2 className="mb-3 mt-7 font-bold">{t("Efter kategori")}</h2>
           <div className="grid gap-2">
             {sorted.map((category, index) => {
               const meta = categoryById(category.categoryId);
@@ -3610,7 +3864,7 @@ function StatsView({
                   style={{ "--i": index } as React.CSSProperties}
                 >
                   <span className="truncate">
-                    {meta?.emoji} {meta?.name ?? "Ukendt"}
+                    {meta?.emoji} {meta?.name ?? t("Ukendt")}
                   </span>
                   <i className="stat-bar" aria-hidden="true">
                     <b
@@ -3625,17 +3879,17 @@ function StatsView({
             })}
             {sorted.length === 0 && (
               <p className="text-sm text-muted-foreground">
-                Spil lidt mere, så vises kategorierne her.
+                {t("Spil lidt mere, så vises kategorierne her.")}
               </p>
             )}
           </div>
           {stats.levels.length > 0 && (
             <>
-              <h2 className="mb-3 mt-7 font-bold">Efter niveau</h2>
+              <h2 className="mb-3 mt-7 font-bold">{t("Efter niveau")}</h2>
               <div className="flex flex-wrap gap-2">
                 {stats.levels.map((level) => (
                   <Badge key={level.level} variant="secondary">
-                    {DIFFICULTY_LABELS[level.level]}: {level.correct}/
+                    {t(DIFFICULTY_LABELS[level.level])}: {level.correct}/
                     {level.total}
                   </Badge>
                 ))}
@@ -3656,7 +3910,7 @@ function HistoryView({
 }) {
   return (
     <>
-      <PageHead title="Spilhistorik" onBack={() => go("home")} />
+      <PageHead title={t("Spilhistorik")} onBack={() => go("home")} />
       {items.length ? (
         <div className="grid gap-3">
           {items.map((r) => {
@@ -3672,16 +3926,16 @@ function HistoryView({
                   <div className="flex-1">
                     <b>
                       {winners.length > 1
-                        ? `${names} delte førstepladsen`
-                        : `${names} vandt`}
+                        ? t("{names} delte førstepladsen", { names })
+                        : t("{names} vandt", { names })}
                     </b>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(r.playedAt).toLocaleDateString("da-DK")} ·{" "}
-                      {r.questions.length} spørgsmål
+                      {new Date(r.playedAt).toLocaleDateString(locale())} ·{" "}
+                      {t("{n} spørgsmål", { n: r.questions.length })}
                     </p>
                   </div>
                   <strong>
-                    {(winners[0]?.score ?? 0).toLocaleString("da-DK")}
+                    {(winners[0]?.score ?? 0).toLocaleString(locale())}
                   </strong>
                 </CardContent>
               </Card>
@@ -3691,8 +3945,8 @@ function HistoryView({
       ) : (
         <Empty
           icon="🏁"
-          title="Ingen spil endnu"
-          text="Dit første resultat dukker op her."
+          title={t("Ingen spil endnu")}
+          text={t("Dit første resultat dukker op her.")}
         />
       )}
     </>
@@ -3711,23 +3965,25 @@ function Help({
 }) {
   return (
     <>
-      <PageHead title="Sådan spiller I" onBack={() => go("home")} />
+      <PageHead title={t("Sådan spiller I")} onBack={() => go("home")} />
       <div className="grid gap-4 md:grid-cols-3">
         {[
           [
             "1",
-            "Vælg holdet",
-            "Tilføj spillere eller hold, kategorier og niveau.",
+            t("Vælg holdet"),
+            t("Tilføj spillere eller hold, kategorier og niveau."),
           ],
           [
             "2",
-            "Giv videre",
-            "Den aktive spiller svarer og giver enheden videre.",
+            t("Giv videre"),
+            t("Den aktive spiller svarer og giver enheden videre."),
           ],
           [
             "3",
-            "Tænk. Vind.",
-            "Et rigtigt svar giver 100 point. Ekstra point kræver et aktivt tilvalg.",
+            t("Tænk. Vind."),
+            t(
+              "Et rigtigt svar giver 100 point. Ekstra point kræver et aktivt tilvalg.",
+            ),
           ],
         ].map((x) => (
           <Card key={x[0]}>
@@ -3741,26 +3997,23 @@ function Help({
       </div>
       <Card className="mt-6">
         <CardContent className="p-6">
-          <h2 className="font-bold">Rum: alle svarer på deres egen telefon</h2>
+          <h2 className="font-bold">
+            {t("Rum: alle svarer på deres egen telefon")}
+          </h2>
           <p className="mt-2 text-muted-foreground">
-            Vælg «Opret rum» på forsiden på en laptop eller et tv. Alle andre
-            går ind på kvizy.dk, vælger «Join rum» og taster koden – eller
-            scanner QR-koden. Alle svarer samtidig, og jo hurtigere man svarer
-            rigtigt, jo flere point (600–1.000). Rummet kører på værtens enhed,
-            så værten skal holde siden åben. Virker det ikke på mobildata, så
-            prøv at lade alle bruge samme Wi-Fi.
+            {t(
+              "Vælg «Opret rum» på forsiden på en laptop eller et tv. Alle andre går ind på kvizy.dk, vælger «Join rum» og taster koden – eller scanner QR-koden. Alle svarer samtidig, og jo hurtigere man svarer rigtigt, jo flere point (600–1.000). Rummet kører på værtens enhed, så værten skal holde siden åben. Virker det ikke på mobildata, så prøv at lade alle bruge samme Wi-Fi.",
+            )}
           </p>
         </CardContent>
       </Card>
       <Card className="mt-6">
         <CardContent className="p-6">
-          <h2 className="font-bold">Point der er nemme at forstå</h2>
+          <h2 className="font-bold">{t("Point der er nemme at forstå")}</h2>
           <p className="mt-2 text-muted-foreground">
-            Et korrekt svar giver som standard altid 100 point, uanset svartid
-            og streak. Hvis I aktivt vælger Tidsbonus, kan et hurtigt svar give
-            op til 50 ekstra point. Streakbonus giver 25 ekstra point for hvert
-            tidligere svar i den aktuelle streak, højst 75. Risiko og Finale
-            ændrer kun pointene, når I selv vælger de spilindstillinger.
+            {t(
+              "Et korrekt svar giver som standard altid 100 point, uanset svartid og streak. Hvis I aktivt vælger Tidsbonus, kan et hurtigt svar give op til 50 ekstra point. Streakbonus giver 25 ekstra point for hvert tidligere svar i den aktuelle streak, højst 75. Risiko og Finale ændrer kun pointene, når I selv vælger de spilindstillinger.",
+            )}
           </p>
         </CardContent>
       </Card>
@@ -3772,29 +4025,31 @@ function Help({
                 <Smartphone />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="font-bold">Brug KVIZY som en app</h2>
+                <h2 className="font-bold">{t("Brug KVIZY som en app")}</h2>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Føj KVIZY til hjemmeskærmen. Så åbner spillet uden
-                  browserbjælke og kan bruges i fuldskærm.
+                  {t(
+                    "Føj KVIZY til hjemmeskærmen. Så åbner spillet uden browserbjælke og kan bruges i fuldskærm.",
+                  )}
                 </p>
                 {canInstall ? (
                   <Button className="mt-4 w-full" onClick={install}>
                     <Download />
-                    Installér KVIZY
+                    {t("Installér KVIZY")}
                   </Button>
                 ) : installContext.ios ? (
                   <ol className="mt-4 grid gap-2 text-sm">
                     <li className="flex gap-2">
                       <Share2 className="size-5 shrink-0 text-primary" />
-                      Tryk på Del i Safari.
+                      {t("Tryk på Del i Safari.")}
                     </li>
-                    <li>Vælg “Føj til hjemmeskærm”.</li>
-                    <li>Tryk “Tilføj”.</li>
+                    <li>{t("Vælg “Føj til hjemmeskærm”.")}</li>
+                    <li>{t("Tryk “Tilføj”.")}</li>
                   </ol>
                 ) : (
                   <p className="mt-4 text-sm">
-                    Åbn browsermenuen, og vælg “Installér app” eller “Føj til
-                    startskærm”.
+                    {t(
+                      "Åbn browsermenuen, og vælg “Installér app” eller “Føj til startskærm”.",
+                    )}
                   </p>
                 )}
               </div>
@@ -3807,12 +4062,16 @@ function Help({
 }
 function SettingsView({
   value,
+  lang,
+  onLang,
   onChange,
   setup,
   onRestore,
   go,
 }: {
   value: AppSettings;
+  lang: Lang;
+  onLang: (lang: Lang) => void;
   onChange: (s: AppSettings) => void;
   setup: GameSetup;
   onRestore: (payload: {
@@ -3843,10 +4102,12 @@ function SettingsView({
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
       setBackupCode(result.code);
-      setBackupStatus("Backupen er klar. Gem koden et sikkert sted.");
+      setBackupStatus(t("Backupen er klar. Gem koden et sikkert sted."));
     } catch (error) {
       setBackupStatus(
-        error instanceof Error ? error.message : "Backup kunne ikke oprettes.",
+        error instanceof Error
+          ? error.message
+          : t("Backup kunne ikke oprettes."),
       );
     } finally {
       setBackupBusy(false);
@@ -3864,14 +4125,19 @@ function SettingsView({
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
       if (!Array.isArray(result.payload?.seen) || !result.payload?.setup)
-        throw new Error("Backupen har et ukendt format.");
+        throw new Error(t("Backupen har et ukendt format."));
       onRestore(result.payload);
       setBackupStatus(
-        `Gendannet: ${result.payload.seen.length} tidligere spørgsmål og jeres seneste opsætning.`,
+        t(
+          "Gendannet: {length} tidligere spørgsmål og jeres seneste opsætning.",
+          { length: result.payload.seen.length },
+        ),
       );
     } catch (error) {
       setBackupStatus(
-        error instanceof Error ? error.message : "Backup kunne ikke gendannes.",
+        error instanceof Error
+          ? error.message
+          : t("Backup kunne ikke gendannes."),
       );
     } finally {
       setBackupBusy(false);
@@ -3879,17 +4145,17 @@ function SettingsView({
   };
   return (
     <>
-      <PageHead title="Indstillinger" onBack={() => go("home")} />
+      <PageHead title={t("Indstillinger")} onBack={() => go("home")} />
       <Card>
         <CardContent className="divide-y p-2">
           {[
-            ["Lydsignaler", "sound"],
-            ["Diskret vibration", "haptics"],
-            ["Reduceret bevægelse", "reducedMotion"],
-            ["Høj kontrast", "highContrast"],
-            ["Stor tekst (nem at læse op)", "largeText"],
-            ["Bekræft svar (tryk to gange)", "confirmAnswers"],
-            ["Læs-op: skjul svar, til værten viser dem", "readAloud"],
+            [t("Lydsignaler"), "sound"],
+            [t("Diskret vibration"), "haptics"],
+            [t("Reduceret bevægelse"), "reducedMotion"],
+            [t("Høj kontrast"), "highContrast"],
+            [t("Stor tekst (nem at læse op)"), "largeText"],
+            [t("Bekræft svar (tryk to gange)"), "confirmAnswers"],
+            [t("Læs-op: skjul svar, til værten viser dem"), "readAloud"],
           ].map(([label, key]) => (
             <div
               className="flex min-h-16 items-center justify-between p-3"
@@ -3904,9 +4170,13 @@ function SettingsView({
             </div>
           ))}
           <div className="flex min-h-16 items-center justify-between p-3">
-            <Label>Lyst tema</Label>
+            <Label>{t("Sprog")}</Label>
+            <LangSwitch lang={lang} onChange={onLang} />
+          </div>
+          <div className="flex min-h-16 items-center justify-between p-3">
+            <Label>{t("Lyst tema")}</Label>
             <Switch
-              aria-label="Lyst tema"
+              aria-label={t("Lyst tema")}
               checked={value.theme === "light"}
               onCheckedChange={(v) =>
                 onChange({ ...value, theme: v ? "light" : "dark" })
@@ -3917,11 +4187,11 @@ function SettingsView({
       </Card>
       <Card className="mt-6">
         <CardContent className="p-5">
-          <h2 className="font-bold">Backup af seneste spørgsmål</h2>
+          <h2 className="font-bold">{t("Backup af seneste spørgsmål")}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Gem historikken over sete spørgsmål og jeres seneste opsætning. Så
-            undgår I unødige gentagelser, selv efter en geninstallation. Koden
-            udløber efter ét år og indeholder ingen rapporter eller svar.
+            {t(
+              "Gem historikken over sete spørgsmål og jeres seneste opsætning. Så undgår I unødige gentagelser, selv efter en geninstallation. Koden udløber efter ét år og indeholder ingen rapporter eller svar.",
+            )}
           </p>
           <Button
             className="mt-4 w-full"
@@ -3930,15 +4200,19 @@ function SettingsView({
             onClick={createBackup}
           >
             <CloudUpload />
-            {backupBusy ? "Arbejder…" : "Opret backupkode"}
+            {backupBusy ? t("Arbejder…") : t("Opret backupkode")}
           </Button>
           {backupCode && (
             <div className="mt-4 flex gap-2">
-              <Input value={backupCode} readOnly aria-label="Din backupkode" />
+              <Input
+                value={backupCode}
+                readOnly
+                aria-label={t("Din backupkode")}
+              />
               <Button
                 size="icon"
                 variant="secondary"
-                aria-label="Kopiér backupkode"
+                aria-label={t("Kopiér backupkode")}
                 onClick={() => void navigator.clipboard.writeText(backupCode)}
               >
                 <Copy />
@@ -3946,7 +4220,7 @@ function SettingsView({
             </div>
           )}
           <div className="mt-6 border-t pt-5">
-            <Label htmlFor="backup-code">Gendan med backupkode</Label>
+            <Label htmlFor="backup-code">{t("Gendan med backupkode")}</Label>
             <Input
               id="backup-code"
               className="mt-2 uppercase"
@@ -3963,7 +4237,7 @@ function SettingsView({
               onClick={restoreBackup}
             >
               <CloudDownload />
-              Gendan backup
+              {t("Gendan backup")}
             </Button>
           </div>
           {backupStatus && (
@@ -3973,11 +4247,11 @@ function SettingsView({
           )}
         </CardContent>
       </Card>
-      <div className="mt-8 flex justify-center" aria-label="Admin-genvej">
+      <div className="mt-8 flex justify-center" aria-label={t("Admin-genvej")}>
         <Link
           href="/admin"
           prefetch={false}
-          aria-label="Åbn administration"
+          aria-label={t("Åbn administration")}
           className="flex size-11 items-center justify-center rounded-full text-muted-foreground/15 transition-colors hover:text-muted-foreground/35 focus-visible:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <KeyRound className="size-3" aria-hidden="true" />
@@ -3997,7 +4271,12 @@ function PageHead({
 }) {
   return (
     <div className="mb-5 flex items-center gap-2 sm:gap-4">
-      <Button size="icon" variant="ghost" onClick={onBack} aria-label="Tilbage">
+      <Button
+        size="icon"
+        variant="ghost"
+        onClick={onBack}
+        aria-label={t("Tilbage")}
+      >
         <ArrowLeft />
       </Button>
       <div>

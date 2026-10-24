@@ -51,6 +51,7 @@ import {
   type RoomStanding,
 } from "@/lib/room-protocol";
 import type { Question } from "@/lib/types";
+import { t } from "@/lib/i18n";
 
 const PROFILE_KEY = "kvizy-room-profile-v1";
 const PID_KEY = "kvizy-room-pid-v1";
@@ -422,7 +423,9 @@ export function RoomHost({
         peer.on("disconnected", () => {
           // Mødepunktet er væk, men eksisterende forbindelser lever videre.
           setNotice(
-            "Forbindelsen til mødeserveren blev afbrudt. Nye spillere kan midlertidigt ikke komme med.",
+            t(
+              "Forbindelsen til mødeserveren blev afbrudt. Nye spillere kan midlertidigt ikke komme med.",
+            ),
           );
           peer.reconnect();
         });
@@ -431,7 +434,7 @@ export function RoomHost({
         setCode(candidate);
         if (wanted && candidate === wanted) {
           setNotice(
-            "Rummet er genoprettet. Spillerne forbinder igen af sig selv.",
+            t("Rummet er genoprettet. Spillerne forbinder igen af sig selv."),
           );
           const s = stateRef.current;
           if (s.phase === "question") {
@@ -443,7 +446,9 @@ export function RoomHost({
       }
       if (!cancelled)
         setError(
-          "Kunne ikke oprette et rum. Tjek internetforbindelsen og prøv igen.",
+          t(
+            "Kunne ikke oprette et rum. Tjek internetforbindelsen og prøv igen.",
+          ),
         );
     })();
     return () => {
@@ -495,7 +500,7 @@ export function RoomHost({
         difficulty: level,
       });
       if (questions.length === 0) {
-        setNotice("Der kunne ikke findes spørgsmål. Prøv igen om lidt.");
+        setNotice(t("Der kunne ikke findes spørgsmål. Prøv igen om lidt."));
         return;
       }
       setNotice(null);
@@ -570,12 +575,16 @@ export function RoomHost({
   if (error)
     return (
       <div className="room-host mx-auto max-w-xl text-center">
-        <h1 className="text-3xl font-black">Rummet kunne ikke oprettes</h1>
+        <h1 className="text-3xl font-black">
+          {t("Rummet kunne ikke oprettes")}
+        </h1>
         <p className="mt-3 text-muted-foreground">{error}</p>
         <div className="mt-6 flex justify-center gap-3">
-          <Button onClick={() => window.location.reload()}>Prøv igen</Button>
+          <Button onClick={() => window.location.reload()}>
+            {t("Prøv igen")}
+          </Button>
           <Button variant="ghost" onClick={onExit}>
-            Til forsiden
+            {t("Til forsiden")}
           </Button>
         </div>
       </div>
@@ -583,7 +592,7 @@ export function RoomHost({
   if (!code)
     return (
       <div className="room-host mx-auto max-w-xl text-center" role="status">
-        <h1 className="text-3xl font-black">Opretter rum…</h1>
+        <h1 className="text-3xl font-black">{t("Opretter rum…")}</h1>
       </div>
     );
 
@@ -602,15 +611,17 @@ export function RoomHost({
         <div className="room-lobby">
           <div className="room-join">
             <p className="room-join-hint">
-              Gå ind på{" "}
-              <b>
-                {joinUrl.replace(/^https?:\/\//, "").replace(/\/\?rum=.*/, "")}
-              </b>{" "}
-              og tast koden
+              {t("Gå ind på {adresse} og tast koden", {
+                adresse: joinUrl
+                  .replace(/^https?:\/\//, "")
+                  .replace(/\/\?rum=.*/, ""),
+              })}
             </p>
             <div
               className="room-code"
-              aria-label={`Rumkode ${code.split("").join(" ")}`}
+              aria-label={t("Rumkode {kode}", {
+                kode: code.split("").join(" "),
+              })}
             >
               {code.split("").map((letter, index) => (
                 <span key={index}>{letter}</span>
@@ -620,21 +631,23 @@ export function RoomHost({
               <div
                 className="room-qr"
                 role="img"
-                aria-label="QR-kode til rummet"
+                aria-label={t("QR-kode til rummet")}
                 dangerouslySetInnerHTML={{ __html: qr }}
               />
             )}
             <Button variant="ghost" size="sm" onClick={copy}>
               {copied ? <Check /> : <Copy />}
-              {copied ? "Kopieret" : "Kopiér link"}
+              {copied ? t("Kopieret") : t("Kopiér link")}
             </Button>
           </div>
           <div className="room-players-panel">
             <h1 className="flex items-center gap-2 text-2xl font-black">
               <Users aria-hidden="true" />
               {state.players.length === 0
-                ? "Venter på spillere…"
-                : `${state.players.length} ${state.players.length === 1 ? "spiller" : "spillere"} med`}
+                ? t("Venter på spillere…")
+                : state.players.length === 1
+                  ? t("1 spiller med")
+                  : t("{n} spillere med", { n: state.players.length })}
             </h1>
             <ul className="room-chips" aria-live="polite">
               {state.players.map((p) => (
@@ -643,7 +656,7 @@ export function RoomHost({
                   {p.name}
                   <button
                     type="button"
-                    aria-label={`Fjern ${p.name}`}
+                    aria-label={t("Fjern {name}", { name: p.name })}
                     onClick={() => kick(p.id)}
                   >
                     <X />
@@ -652,7 +665,7 @@ export function RoomHost({
               ))}
             </ul>
             <div className="room-settings">
-              <span id="room-count-label">Antal spørgsmål</span>
+              <span id="room-count-label">{t("Antal spørgsmål")}</span>
               <div role="radiogroup" aria-labelledby="room-count-label">
                 {COUNTS.map((n) => (
                   <button
@@ -669,7 +682,7 @@ export function RoomHost({
               </div>
             </div>
             <div className="room-settings">
-              <span id="room-level-label">Niveau</span>
+              <span id="room-level-label">{t("Niveau")}</span>
               <div role="radiogroup" aria-labelledby="room-level-label">
                 {LEVELS.map((item) => (
                   <button
@@ -680,20 +693,20 @@ export function RoomHost({
                     className={level === item.value ? "on" : ""}
                     onClick={() => setLevel(item.value)}
                   >
-                    {item.label}
+                    {t(item.label)}
                   </button>
                 ))}
               </div>
             </div>
             <div className="room-topics">
-              <span id="room-topics-label">Emner</span>
+              <span id="room-topics-label">{t("Emner")}</span>
               <div role="group" aria-labelledby="room-topics-label">
                 <button
                   type="button"
                   className={sameIds(categoryIds, allIds) ? "on" : ""}
                   onClick={() => setCategoryIds(allIds)}
                 >
-                  Alle
+                  {t("Alle")}
                 </button>
                 <button
                   type="button"
@@ -702,7 +715,7 @@ export function RoomHost({
                   }
                   onClick={() => setCategoryIds([...DANISH_CATEGORY_IDS])}
                 >
-                  Kun dansk
+                  {t("Kun dansk")}
                 </button>
                 {CATEGORY_GROUPS.map((group) => {
                   const on = group.ids.every((id) => categoryIds.includes(id));
@@ -734,11 +747,11 @@ export function RoomHost({
               }
               onClick={start}
             >
-              {busy ? "Finder spørgsmål…" : "Start quizzen"}
+              {busy ? t("Finder spørgsmål…") : t("Start quizzen")}
               <ArrowRight />
             </Button>
             <Button variant="ghost" className="mt-2 w-full" onClick={onExit}>
-              Luk rummet
+              {t("Luk rummet")}
             </Button>
           </div>
         </div>
@@ -748,17 +761,22 @@ export function RoomHost({
         <div className="room-stage">
           <div className="room-meta">
             <span>
-              Spørgsmål {state.index + 1} af {state.questions.length}
+              {t("Spørgsmål {n} af {total}", {
+                n: state.index + 1,
+                total: state.questions.length,
+              })}
             </span>
             <span>
-              {Object.keys(state.answers).length} af {state.players.length} har
-              svaret
+              {t("{n} af {total} har svaret", {
+                n: Object.keys(state.answers).length,
+                total: state.players.length,
+              })}
             </span>
           </div>
           <div
             className={`blitz-bar ${secondsLeft <= 5 ? "hurry" : ""}`}
             role="timer"
-            aria-label={`${secondsLeft} sekunder tilbage`}
+            aria-label={t("{secondsLeft} sekunder tilbage", { secondsLeft })}
           >
             <i style={{ width: `${(left / state.limitMs) * 100}%` }} />
             <b>{secondsLeft}</b>
@@ -771,7 +789,7 @@ export function RoomHost({
           </div>
           <div className="room-actions">
             <Button variant="outline" onClick={doReveal}>
-              Vis svaret nu
+              {t("Vis svaret nu")}
             </Button>
           </div>
         </div>
@@ -781,11 +799,16 @@ export function RoomHost({
         <div className="room-stage">
           <div className="room-meta">
             <span>
-              Spørgsmål {state.index + 1} af {state.questions.length}
+              {t("Spørgsmål {n} af {total}", {
+                n: state.index + 1,
+                total: state.questions.length,
+              })}
             </span>
             <span>
-              {Object.values(state.results).filter((r) => r.correct).length} af{" "}
-              {state.players.length} svarede rigtigt
+              {t("{n} af {total} svarede rigtigt", {
+                n: Object.values(state.results).filter((r) => r.correct).length,
+                total: state.players.length,
+              })}
             </span>
           </div>
           <h1 className="room-prompt">{q.prompt}</h1>
@@ -811,8 +834,8 @@ export function RoomHost({
           <div className="room-actions">
             <Button size="lg" className="h-14 px-8 text-base" onClick={next}>
               {state.index >= state.questions.length - 1
-                ? "Se resultatet"
-                : "Næste spørgsmål"}
+                ? t("Se resultatet")
+                : t("Næste spørgsmål")}
               <ArrowRight />
             </Button>
           </div>
@@ -825,17 +848,20 @@ export function RoomHost({
           <h1 className="text-4xl font-black sm:text-5xl">
             {board[0]
               ? board.filter((b) => b.rank === 1).length > 1
-                ? "Delt sejr!"
-                : `${board[0].avatar} ${board[0].name} vinder!`
-              : "Spillet er slut"}
+                ? t("Delt sejr!")
+                : t("{avatar} {name} vinder!", {
+                    avatar: board[0].avatar,
+                    name: board[0].name,
+                  })
+              : t("Spillet er slut")}
           </h1>
           <Leaderboard rows={board} limit={10} />
           <div className="room-actions">
             <Button size="lg" className="h-14 px-8 text-base" onClick={again}>
-              Spil igen med samme hold
+              {t("Spil igen med samme hold")}
             </Button>
             <Button variant="ghost" onClick={onExit}>
-              Luk rummet
+              {t("Luk rummet")}
             </Button>
           </div>
         </div>
@@ -979,12 +1005,12 @@ export function RoomPlayer({
       case "full":
         activeRef.current = false;
         clearResume();
-        setView({ phase: "problem", text: "Rummet er fuldt." });
+        setView({ phase: "problem", text: t("Rummet er fuldt.") });
         break;
       case "closed":
         activeRef.current = false;
         clearResume();
-        setView({ phase: "problem", text: "Værten har lukket rummet." });
+        setView({ phase: "problem", text: t("Værten har lukket rummet.") });
         break;
     }
   }, []);
@@ -1002,12 +1028,16 @@ export function RoomPlayer({
         if (type === "peer-unavailable" && attempts.current === 0)
           setView({
             phase: "problem",
-            text: "Rummet blev ikke fundet. Tjek koden – eller bed værten oprette et nyt.",
+            text: t(
+              "Rummet blev ikke fundet. Tjek koden – eller bed værten oprette et nyt.",
+            ),
           });
         else if (attempts.current === 0)
           setView({
             phase: "problem",
-            text: "Kunne ikke oprette forbindelse. Tjek internettet og prøv igen.",
+            text: t(
+              "Kunne ikke oprette forbindelse. Tjek internettet og prøv igen.",
+            ),
           });
       });
     }
@@ -1024,7 +1054,9 @@ export function RoomPlayer({
           if (attempts.current === 0)
             setView({
               phase: "problem",
-              text: "Det tog for lang tid at få kontakt. Prøv igen, tjek at koden er rigtig, eller brug samme Wi-Fi som værten.",
+              text: t(
+                "Det tog for lang tid at få kontakt. Prøv igen, tjek at koden er rigtig, eller brug samme Wi-Fi som værten.",
+              ),
             });
           else lost();
         },
@@ -1049,7 +1081,7 @@ export function RoomPlayer({
         if (attempts.current >= 40) {
           setView({
             phase: "problem",
-            text: "Forbindelsen til værten blev tabt.",
+            text: t("Forbindelsen til værten blev tabt."),
           });
           return;
         }
@@ -1073,7 +1105,7 @@ export function RoomPlayer({
     if (!code) {
       setView({
         phase: "problem",
-        text: "Koden består af fire bogstaver, fx KFRT.",
+        text: t("Koden består af fire bogstaver, fx KFRT."),
       });
       return;
     }
@@ -1145,7 +1177,7 @@ export function RoomPlayer({
     <div className="room-player mx-auto max-w-md">
       {reconnecting && view.phase !== "problem" && (
         <p className="room-notice" role="status">
-          Forbinder igen…
+          {t("Forbinder igen…")}
         </p>
       )}
 
@@ -1157,9 +1189,9 @@ export function RoomPlayer({
             join();
           }}
         >
-          <h1 className="text-3xl font-black">Join et rum</h1>
+          <h1 className="text-3xl font-black">{t("Join et rum")}</h1>
           <label>
-            Rumkode
+            {t("Rumkode")}
             <input
               value={codeInput}
               onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
@@ -1173,17 +1205,17 @@ export function RoomPlayer({
             />
           </label>
           <label>
-            Dit navn
+            {t("Dit navn")}
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={16}
               autoComplete="nickname"
-              placeholder="Fx Mette"
+              placeholder={t("Fx Mette")}
             />
           </label>
           <fieldset>
-            <legend>Vælg et dyr</legend>
+            <legend>{t("Vælg et dyr")}</legend>
             <div className="room-avatars">
               {ANIMAL_AVATARS.slice(0, 15).map((a) => (
                 <button
@@ -1199,7 +1231,7 @@ export function RoomPlayer({
             </div>
           </fieldset>
           <Button size="lg" className="h-14 w-full text-base" type="submit">
-            Join
+            {t("Join")}
             <ArrowRight />
           </Button>
           <Button
@@ -1208,7 +1240,7 @@ export function RoomPlayer({
             type="button"
             onClick={leave}
           >
-            Tilbage
+            {t("Tilbage")}
           </Button>
         </form>
       )}
@@ -1216,9 +1248,9 @@ export function RoomPlayer({
       {view.phase === "connecting" && (
         <div className="room-wait" role="status">
           <div className="room-spinner" aria-hidden="true" />
-          <h1>Forbinder…</h1>
+          <h1>{t("Forbinder…")}</h1>
           <Button variant="ghost" onClick={leave}>
-            Annuller
+            {t("Annuller")}
           </Button>
         </div>
       )}
@@ -1228,13 +1260,19 @@ export function RoomPlayer({
           <span className="room-me" aria-hidden="true">
             {me?.avatar}
           </span>
-          <h1>Du er med, {me?.name}!</h1>
+          <h1>{t("Du er med, {name}!", { name: me?.name ?? "" })}</h1>
           <p>
-            {roster.length} {roster.length === 1 ? "spiller" : "spillere"} i
-            rummet. Vent på, at værten starter quizzen.
+            {roster.length === 1
+              ? t("1 spiller i rummet. Vent på, at værten starter quizzen.")
+              : t(
+                  "{n} spillere i rummet. Vent på, at værten starter quizzen.",
+                  {
+                    n: roster.length,
+                  },
+                )}
           </p>
           <Button variant="ghost" onClick={leave}>
-            Forlad rummet
+            {t("Forlad rummet")}
           </Button>
         </div>
       )}
@@ -1246,7 +1284,9 @@ export function RoomPlayer({
               {view.q.i + 1} / {view.q.total}
             </span>
             <span>{view.q.category}</span>
-            <span aria-label={`${secondsLeft} sekunder tilbage`}>
+            <span
+              aria-label={t("{secondsLeft} sekunder tilbage", { secondsLeft })}
+            >
               {secondsLeft} s
             </span>
           </div>
@@ -1269,7 +1309,7 @@ export function RoomPlayer({
           </div>
           {picked && (
             <p className="room-sent" role="status">
-              Svar modtaget – vent på de andre…
+              {t("Svar modtaget – vent på de andre…")}
             </p>
           )}
         </div>
@@ -1285,10 +1325,10 @@ export function RoomPlayer({
           </span>
           <h1>
             {view.you.correct
-              ? "Rigtigt!"
+              ? t("Rigtigt!")
               : view.you.answered
-                ? "Ikke helt"
-                : "Tiden løb ud"}
+                ? t("Ikke helt")
+                : t("Tiden løb ud")}
           </h1>
           {view.you.points > 0 && (
             <p className="room-points">+{view.you.points}</p>
@@ -1310,17 +1350,19 @@ export function RoomPlayer({
             {view.you.rank === 1 ? "🏆" : "🎉"}
           </span>
           <h1>
-            {view.you.rank === 1 ? "Du vandt!" : `Du blev nr. ${view.you.rank}`}
+            {view.you.rank === 1
+              ? t("Du vandt!")
+              : t("Du blev nr. {rank}", { rank: view.you.rank })}
           </h1>
           <p>
             <b>{view.you.score.toLocaleString("da-DK")}</b> point
           </p>
           <Leaderboard rows={view.standings} limit={5} />
           <p className="text-sm text-muted-foreground">
-            Bliv her, hvis værten starter en ny runde.
+            {t("Bliv her, hvis værten starter en ny runde.")}
           </p>
           <Button variant="ghost" onClick={leave}>
-            Forlad rummet
+            {t("Forlad rummet")}
           </Button>
         </div>
       )}
@@ -1330,7 +1372,7 @@ export function RoomPlayer({
           <span className="room-result-icon" aria-hidden="true">
             😕
           </span>
-          <h1>Det lykkedes ikke</h1>
+          <h1>{t("Det lykkedes ikke")}</h1>
           <p>{view.text}</p>
           <Button
             onClick={() => {
@@ -1339,10 +1381,10 @@ export function RoomPlayer({
               setView({ phase: "form" });
             }}
           >
-            Prøv igen
+            {t("Prøv igen")}
           </Button>
           <Button variant="ghost" onClick={leave}>
-            Til forsiden
+            {t("Til forsiden")}
           </Button>
         </div>
       )}

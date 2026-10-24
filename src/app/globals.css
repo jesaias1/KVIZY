@@ -2814,3 +2814,51 @@ button.room-tile:not(:disabled):active {
   border-color: var(--primary);
   background: color-mix(in oklab, var(--primary) 15%, var(--card));
 }
+
+/* Sprogvælger */
+.lang-switch {
+  gap: 0.35rem;
+  font-weight: 700;
+}
+.lang-switch svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.lang-switch .lang-short {
+  display: none;
+}
+@media (max-width: 640px) {
+  .lang-switch {
+    min-width: 2.5rem;
+    padding-inline: 0.55rem;
+  }
+  .lang-switch .lang-full,
+  .lang-switch .lang-icon {
+    display: none;
+  }
+  .lang-switch .lang-short {
+    display: inline;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* På smalle forsider skal de tre knapper ikke skubbe til logoet */
+@media (max-width: 640px) {
+  .app-topbar.floating [data-slot="button"] {
+    width: 2.4rem;
+    height: 2.4rem;
+    min-width: 2.4rem;
+    padding: 0;
+    font-size: 0.8rem;
+  }
+}
+@media (max-width: 640px) {
+  .home-brand .brand-mark {
+    width: 4rem;
+    height: 4rem;
+  }
+  .home-brand .brand-wordmark {
+    width: 8.5rem;
+  }
+}

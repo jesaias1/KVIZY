@@ -20,6 +20,8 @@ const GENERIC_EXPLANATIONS = [
   "det er den centrale sammenhæng, spørgsmålet tester",
   "det korrekte svar er",
   "svaret er",
+  "the correct answer is",
+  "the answer is",
 ];
 
 export function hasUsefulExplanation(explanation?: string) {

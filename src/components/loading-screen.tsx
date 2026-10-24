@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { APP_CONFIG } from "@/lib/config";
+import { t } from "@/lib/i18n";
 
 export function LoadingScreen({ overlay = false }: { overlay?: boolean }) {
   return (
@@ -7,7 +8,7 @@ export function LoadingScreen({ overlay = false }: { overlay?: boolean }) {
       className={`brand-loading-screen ${overlay ? "brand-loading-overlay" : ""}`}
       role="status"
       aria-live="polite"
-      aria-label="KVIZY indlæses"
+      aria-label={t("KVIZY indlæses")}
     >
       <div className="brand-loading-stage" aria-hidden="true">
         <div className="brand-loading-glow" />
@@ -45,7 +46,7 @@ export function LoadingScreen({ overlay = false }: { overlay?: boolean }) {
         <i />
         <i />
       </div>
-      <span className="sr-only">Spillet gøres klar</span>
+      <span className="sr-only">{t("Spillet gøres klar")}</span>
     </div>
   );
 }
