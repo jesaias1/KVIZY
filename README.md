@@ -1,4 +1,39 @@
-# KVIZY
+<p align="center"><img src="public/brand/kvizy-wordmark.png" alt="KVIZY" width="320"></p>
+<p align="center"><b>KVIK, KVIKKERE, KVIZY.</b> A Danish quiz game for one shared screen, made for real game nights.</p>
+
+<p align="center">
+  <a href="https://kvizy-two.vercel.app"><b>Play it now</b></a> &nbsp;|&nbsp; <a href="#dokumentation-dansk">Dansk dokumentation</a>
+</p>
+
+<p align="center">
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=nextdotjs&logoColor=white">
+  <img alt="React" src="https://img.shields.io/badge/React_19-20232a?style=flat-square&logo=react&logoColor=61dafb">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178c6?style=flat-square&logo=typescript&logoColor=white">
+  <img alt="PWA" src="https://img.shields.io/badge/PWA-offline_first-ff6a1a?style=flat-square">
+</p>
+
+![KVIZY start screen on desktop](docs/readme/home.webp)
+
+KVIZY is a mobile-first quiz in Danish for friends, families, parties, classrooms and pub quizzes. Hand the phone around, or open a room on a laptop or TV and let everyone join with a four-letter code or QR code and answer on their own phone. There is no login, no download and no AI key needed, and the core game keeps working without a connection.
+
+<p align="center"><img src="docs/readme/home-mobile.webp" alt="KVIZY on a phone" width="300"><br><sub>The same game on a phone, which is how it is meant to be played.</sub></p>
+
+## What it does
+
+- **Six ways to play:** everyone against everyone, team battle, solo, quick quiz, risk and mystery mix, for 1 to 12 players or 2 to 6 teams.
+- **Rooms without a server.** The room runs directly between devices over WebRTC (via the free PeerJS meeting server): no account, and the host just keeps the page open.
+- **Daily quiz and lightning round.** The same ten questions for everyone each day with a shareable emoji result, and a 60-second sprint.
+- **2,316 reviewed questions in 65 categories,** in 12 question types such as ordering, nearest-wins, statements and category crosses, with plausible answer options of the right type.
+- **Fair by construction.** An anti-repeat selector combines similarity hashing, play history and difficulty so a question or a near-duplicate never appears twice in a game.
+- **Installable and private.** PWA with offline play; usage statistics are daily counters only, with no tracking cookie or device profile.
+
+## How it is built
+
+Next.js 16 App Router, React 19 and strict TypeScript. Tailwind CSS 4, shadcn/ui and Motion for the interface. Drizzle with optional Neon PostgreSQL for the admin side, a Vercel AI SDK generator with Zod-validated output, and Vitest plus Playwright (mobile and desktop) for tests.
+
+---
+
+## Dokumentation (dansk)
 
 **KVIK, KVIKKERE, KVIZY.** KVIZY er et komplet dansk, mobil-first quizspil til venner, familier, fester, undervisning og pubquiz. Første version er lokal multiplayer på én enhed og virker uden login, database eller AI-nøgle.
 
