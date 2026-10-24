@@ -108,7 +108,11 @@ import { normalizeRoomCode, type RoomBuildOptions } from "@/lib/room-protocol";
 import { readHostSession, readResume } from "@/lib/room-session";
 import { computeAwards } from "@/lib/awards";
 import { useLang } from "@/components/lang-provider";
-import { EN_SKIP_IDS } from "@/lib/i18n/en-skip";
+import {
+  EN_HIDDEN_CATEGORY_IDS,
+  EN_SKIP_IDS,
+  isDanishOnly,
+} from "@/lib/i18n/en-skip";
 import {
   ENGLISH_PACK_URL,
   localizeQuestion,
@@ -675,8 +679,9 @@ export function GameShell() {
       const english = await ensureEnglish();
       const bank = await loadQuestionBank(s.categoryIds);
       // Spørgsmål om det danske sprog udelades på engelsk og i Dagens quiz.
-      const availableQuestions =
-        english || options?.daily
+      const availableQuestions = english
+        ? bank.filter((question) => !isDanishOnly(question))
+        : options?.daily
           ? bank.filter((question) => !EN_SKIP_IDS.has(question.id))
           : bank;
       if (availableQuestions.length === 0) {
@@ -908,7 +913,7 @@ export function GameShell() {
     const english = await ensureEnglish();
     const all = await loadQuestionBank(categoryIds);
     const bank = english
-      ? all.filter((question) => !EN_SKIP_IDS.has(question.id))
+      ? all.filter((question) => !isDanishOnly(question))
       : all;
     if (bank.length === 0) return [];
     const seenHistory = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
@@ -1133,7 +1138,7 @@ export function GameShell() {
     const seen = load<SeenQuestion[]>(APP_CONFIG.seenKey, []);
     const replacement = selectReplacementQuestion(
       getLang() === "en"
-        ? questionBank.filter((question) => !EN_SKIP_IDS.has(question.id))
+        ? questionBank.filter((question) => !isDanishOnly(question))
         : questionBank,
       game.questions,
       game.setup,
@@ -1853,7 +1858,9 @@ function Setup({
   go: (v: View) => void;
 }) {
   const [search, setSearch] = useState("");
-  const filtered = CATEGORIES.filter((c) =>
+  const hidden = (id: string) =>
+    getLang() === "en" && EN_HIDDEN_CATEGORY_IDS.has(id);
+  const filtered = CATEGORIES.filter((c) => !hidden(c.id)).filter((c) =>
     c.name
       .toLocaleLowerCase(locale())
       .includes(search.toLocaleLowerCase(locale())),
@@ -2164,8 +2171,10 @@ function Setup({
             <div className="grid gap-7">
               {CATEGORY_GROUPS.map((group) => {
                 const members = group.ids
+                  .filter((id) => !hidden(id))
                   .map((id) => CATEGORIES.find((c) => c.id === id))
                   .filter((c): c is NonNullable<typeof c> => Boolean(c));
+                if (members.length === 0) return null;
                 const picked = members.filter((c) =>
                   setup.categoryIds.includes(c.id),
                 ).length;
