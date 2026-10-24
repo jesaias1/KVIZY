@@ -30,6 +30,8 @@ const KEPT_FROM_RETIRED_SERIES = new Set([
 ]);
 
 const RETIRED_IDS = new Set([
+  // Kan ikke bekræftes (intet Thomas Helmig-album hedder «No. 1»).
+  "q-cat-22-6",
   // For barnlige eller uden egentlig tvivl.
   "q-cat-1-2",
   "q-cat-1-4",
@@ -181,6 +183,16 @@ type Patch = {
 };
 
 const PATCHES: Record<string, Patch> = {
+  // Rettet efter faktatjek (oktober 2026)
+  "kz-1dag0a1": {"e":"Nielsen har ligget øverst siden 2016. Jensen er nummer to og Hansen nummer tre."},
+  "kz-1xoyjlh": {"e":"Andromeda ligger 2,5 millioner lysår væk og er blandt de fjerneste ting, man kan se med det blotte øje."},
+  "kz-w6tw9g": {"p":"Hvad er Skandinaviens højeste bjerg?","e":"Galdhøpiggen i Norge er 2.469 meter. Kebnekaise er Sveriges højeste og Hvannadalshnúkur Islands."},
+  "kz-l3zy7l": {"p":"Hvem scorede flest mål ved VM-slutrunder til og med 2022?"},
+  "kz-9h9s7": {"p":"Hvilken møntenhed havde Danmark, før kronen blev indført i 1870'erne?","e":"Kronen blev indført i 1873 sammen med Sverige; Norge kom med i 1875. Det var Den Skandinaviske Møntunion."},
+  "kz-i6u6sl": {"p":"Hvilken fransk storklub spillede Mikkel Hansen for fra 2012 til 2022?"},
+  "kz-tku3lv": {"p":"Hvilken dansk virksomhed har installeret flest vindmøller i verden gennem tiden?"},
+  "kz-x3rn7g": {"p":"Hvilken dansk pengeseddel blev ugyldig i alle serier i 2025?"},
+  "theme-60-022": {"p":"Hvilken bog fortæller om Bilbos rejse og fundet af Ringen?"},
   // Paratviden og geografi
   "q-cat-2-1": { d: 1 },
   "q-cat-2-4": { d: 1 },
@@ -462,7 +474,7 @@ const PATCHES: Record<string, Patch> = {
   "q-cat-31-6": { d: 1 },
   "depth-013": { o: ["Styx", "Lethe", "Eridanos", "Skamander"], d: 2 },
   "depth-014": { o: ["Olympen", "Parnassos", "Ida", "Athos"], d: 1 },
-  "depth-015": { o: ["Kimæren", "Hydraen", "Sfinksen", "Mantikoren"], d: 4 },
+  "depth-015": { p: "Hvilket væsen havde løvehoved, et gedehoved på ryggen og en slangehale?", o: ["Kimæren", "Hydraen", "Sfinksen", "Mantikoren"], d: 4 },
   "depth-016": { o: ["Sfinksen", "Kimæren", "Medusa", "Minotauros"], d: 3 },
   "depth-017": { o: ["Kerberos", "Kimæren", "Hydraen", "Orthros"], d: 2 },
   "depth-018": {
