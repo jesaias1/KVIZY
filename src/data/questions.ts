@@ -2021,11 +2021,12 @@ const LEGACY_BASE_QUESTIONS = rawBaseQuestions.filter((question) => {
 // Den redaktionelle gennemgang i 2026 fjerner svage spørgsmål, retter de
 // beholdte og tilføjer de håndskrevne spørgsmål.
 const BASE_QUESTIONS: Question[] = [
-  ...LEGACY_BASE_QUESTIONS.filter(
-    (question) => !isRetiredByReview(question.id),
-  ).map(applyQualityReview),
+  ...LEGACY_BASE_QUESTIONS,
   ...CURATED_2026_QUESTIONS,
-].map(applyShortAnswers);
+]
+  .filter((question) => !isRetiredByReview(question.id))
+  .map(applyQualityReview)
+  .map(applyShortAnswers);
 
 const categoryLinks: Record<string, string[]> = {
   "cat-11": ["cat-14"],

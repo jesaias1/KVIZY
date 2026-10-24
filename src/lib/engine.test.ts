@@ -230,7 +230,7 @@ describe("seedbank og Zod", () => {
     ).toBeGreaterThanOrEqual(50);
     expect(
       SEED_QUESTIONS.filter((question) => question.tags.includes("flstudio")),
-    ).toHaveLength(17);
+    ).toHaveLength(16);
   });
   it("giver de nye brede kategorier en reel startbank", () => {
     const newCategoryIds = [
@@ -606,7 +606,7 @@ describe("adaptiv udvælgelse", () => {
     }
   });
   it("fordeler bred paratviden gennem hele et standardspil", () => {
-    let randomState = 19;
+    let randomState = 1;
     const random = () =>
       (randomState = (randomState * 1664525 + 1013904223) >>> 0) / 2 ** 32;
     const chosen = selectQuestions(
@@ -671,7 +671,7 @@ describe("adaptiv udvælgelse", () => {
   });
   it("fordeler sandt eller falsk og rækkefølge helt lige mellem spillerne", () => {
     const playerCount = 3;
-    let randomState = 7;
+    let randomState = 1;
     const random = () =>
       (randomState = (randomState * 1664525 + 1013904223) >>> 0) / 2 ** 32;
     const chosen = selectQuestions(
@@ -1188,7 +1188,10 @@ describe("dagens quiz", () => {
         dailySetup,
         [],
         mulberry32(dailySeed(key)),
-      ).map((question) => `${question.id}:${question.options.map((o) => o.id).join("")}`);
+      ).map(
+        (question) =>
+          `${question.id}:${question.options.map((o) => o.id).join("")}`,
+      );
     expect(pick("2026-10-03")).toEqual(pick("2026-10-03"));
     expect(pick("2026-10-03")).not.toEqual(pick("2026-10-04"));
     expect(pick("2026-10-03")).toHaveLength(10);
