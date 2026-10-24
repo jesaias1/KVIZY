@@ -30,6 +30,103 @@ const KEPT_FROM_RETIRED_SERIES = new Set([
 ]);
 
 const RETIRED_IDS = new Set([
+  // Sansgennemgang: useriøse svarmuligheder, for let, for obskure eller tvetydige.
+  "q-cat-32-3",
+  "q-cat-39-1",
+  "music-production-017",
+  "music-production-019",
+  "music-production-083",
+  "expansion-085",
+  "expansion-094",
+  "expansion-096",
+  "expansion-099",
+  "expansion-107",
+  "expansion-111",
+  "expansion-120",
+  "expansion-153",
+  "curiosity-028",
+  "curiosity-045",
+  "curiosity-046",
+  "curiosity-049",
+  "curiosity-expansion-040",
+  "curiosity-expansion-045",
+  "curiosity-expansion-048",
+  "curiosity-expansion-052",
+  "curiosity-round-3-065",
+  "curiosity-round-3-066",
+  "depth-013",
+  "depth-022",
+  "depth-066",
+  "depth-067",
+  "depth-068",
+  "format-depth-020",
+  "format-depth-064",
+  "wikithin-danish-series-creator-Q1782870",
+  "wikithin-danish-series-creator-Q1275157",
+  "variety-031",
+  "variety-048",
+  "variety-049",
+  "variety-051",
+  "variety-058",
+  "variety-114",
+  "theme-60-027",
+  "theme-61-031",
+  "theme-61-032",
+  "theme-61-033",
+  "theme-61-034",
+  "theme-61-035",
+  "theme-62-010",
+  "theme-62-011",
+  "theme-62-020",
+  "theme-63-022",
+  "theme-64-030",
+  "philosophy-quality-008",
+  "theme-65-042",
+  "kz-xxwkx1",
+  "kz-mjeqs",
+  "kz-1otnt8a",
+  "kz-c18ptf",
+  "kz-uu7a1j",
+  "kz-nmrc6a",
+  "kz-13c6zn6",
+  "kz-o9xrx7",
+  "kz-tv054s",
+  "kz-d5kphp",
+  "kz-dxjj6f",
+  "kz-ygrkn5",
+  "kz-ahafs7",
+  "kz-11j3bgb",
+  "kz-gev49u",
+  "kz-139ty43",
+  "kz-14iupbi",
+  "kz-17o3ebc",
+  "kz-1ygz3kj",
+  "kz-i0tt2k",
+  "kz-1r2gt4u",
+  "kz-7tz6q9",
+  "kz-1jt4u1b",
+  "kz-yh3tpd",
+  "kz-1e4b07z",
+  "kz-41ax9x",
+  "kz-1wlqdtg",
+  "kz-1ygy0gx",
+  "kz-1036xwc",
+  "kz-2lm4g2",
+  "kz-s6qir8",
+  "kz-x3k7bm",
+  "kz-za2i02",
+  "kz-1sei7nj",
+  "kz-qgpk2h",
+  "kz-rga5zv",
+  "kz-f2uhxr",
+  "kz-bbosno",
+  "kz-1kaonqh",
+  "kz-jf2l32",
+  "kz-6hu4b6",
+  "kz-1v7qqy6",
+  "kz-h5z4ne",
+  "kz-12q6e27",
+  "kz-8n01ty",
   // Kan ikke bekræftes (intet Thomas Helmig-album hedder «No. 1»).
   "q-cat-22-6",
   // For barnlige eller uden egentlig tvivl.
@@ -183,19 +280,75 @@ type Patch = {
 };
 
 const PATCHES: Record<string, Patch> = {
+  // Rettet efter sansgennemgang (oktober 2026)
+  "expansion-063": {
+    p: "Hvilket princip betyder, at en regering ikke må have et flertal imod sig i Folketinget?",
+  },
+  "curiosity-051": { p: "Hvad sker der under et almindeligt hik?" },
+  "variety-094": {
+    p: "Hvad kaldes brikkerne i Tetris, som hver består af fire felter?",
+  },
+  "kz-bexekg": {
+    e: "Valgretsalderen er sænket i flere omgange og blev sat ned til 18 år i 1978.",
+  },
+  "kz-144ecec": {
+    e: "FN har et stort europæisk kontor i Genève, men schweizerne stemte først ja til medlemskab ved en folkeafstemning i 2002.",
+  },
+  "kz-dpnkce": {
+    p: "Hvem er mor til Perseus – kvinden, Zeus besøgte som regn af guld?",
+  },
+  "theme-62-026": {
+    e: "Bambi er en lille hjortekalv, der vokser op i skoven.",
+  },
+  "kz-737rqi": {
+    e: "Excel er et regneark. Python, Java og Rust er programmeringssprog.",
+  },
+  "kz-1g43ilh": { e: "Rekorden har stået i over 30 år." },
+  "kz-1ayyc6m": { p: "Hvad hedder monsterjægeren i «The Witcher»?" },
+  "kz-1h8062f": { p: "Sandt eller falsk: Jordnødder er botanisk set nødder." },
+  "kz-2lzecr": {
+    e: "Den blå kube i Ørestad åbnede i 2009 og blev markant dyrere end planlagt.",
+  },
+  "kz-yf0qyq": {
+    e: "John Mogensen døde i 1977, kun 41 år gammel, men sangene synges stadig.",
+  },
+  "kz-199v9gf": { p: "Hvilket land har vundet flest VM i fodbold for herrer?" },
   // Rettet efter faktatjek (oktober 2026)
-  "kz-1dag0a1": {"e":"Nielsen har ligget øverst siden 2016. Jensen er nummer to og Hansen nummer tre."},
-  "kz-1xoyjlh": {"e":"Andromeda ligger 2,5 millioner lysår væk og er blandt de fjerneste ting, man kan se med det blotte øje."},
-  "kz-w6tw9g": {"p":"Hvad er Skandinaviens højeste bjerg?","e":"Galdhøpiggen i Norge er 2.469 meter. Kebnekaise er Sveriges højeste og Hvannadalshnúkur Islands."},
-  "kz-l3zy7l": {"p":"Hvem scorede flest mål ved VM-slutrunder til og med 2022?"},
-  "kz-9h9s7": {"p":"Hvilken møntenhed havde Danmark, før kronen blev indført i 1870'erne?","e":"Kronen blev indført i 1873 sammen med Sverige; Norge kom med i 1875. Det var Den Skandinaviske Møntunion."},
-  "kz-i6u6sl": {"p":"Hvilken fransk storklub spillede Mikkel Hansen for fra 2012 til 2022?"},
-  "kz-tku3lv": {"p":"Hvilken dansk virksomhed har installeret flest vindmøller i verden gennem tiden?"},
-  "kz-x3rn7g": {"p":"Hvilken dansk pengeseddel blev ugyldig i alle serier i 2025?"},
-  "theme-60-022": {"p":"Hvilken bog fortæller om Bilbos rejse og fundet af Ringen?"},
+  "kz-1dag0a1": {
+    e: "Nielsen har ligget øverst siden 2016. Jensen er nummer to og Hansen nummer tre.",
+  },
+  "kz-1xoyjlh": {
+    e: "Andromeda ligger 2,5 millioner lysår væk og er blandt de fjerneste ting, man kan se med det blotte øje.",
+  },
+  "kz-w6tw9g": {
+    p: "Hvad er Skandinaviens højeste bjerg?",
+    e: "Galdhøpiggen i Norge er 2.469 meter. Kebnekaise er Sveriges højeste og Hvannadalshnúkur Islands.",
+  },
+  "kz-l3zy7l": {
+    p: "Hvem scorede flest mål ved VM-slutrunder til og med 2022?",
+  },
+  "kz-9h9s7": {
+    p: "Hvilken møntenhed havde Danmark, før kronen blev indført i 1870'erne?",
+    e: "Kronen blev indført i 1873 sammen med Sverige; Norge kom med i 1875. Det var Den Skandinaviske Møntunion.",
+  },
+  "kz-i6u6sl": {
+    p: "Hvilken fransk storklub spillede Mikkel Hansen for fra 2012 til 2022?",
+  },
+  "kz-tku3lv": {
+    p: "Hvilken dansk virksomhed har installeret flest vindmøller i verden gennem tiden?",
+  },
+  "kz-x3rn7g": {
+    p: "Hvilken dansk pengeseddel blev ugyldig i alle serier i 2025?",
+  },
+  "theme-60-022": {
+    p: "Hvilken bog fortæller om Bilbos rejse og fundet af Ringen?",
+  },
   // Paratviden og geografi
   "q-cat-2-1": { d: 1 },
-  "q-cat-2-4": { d: 1 },
+  "q-cat-2-4": {
+    p: "Hvilken ø er den største i Danmark uden for Grønland og Færøerne?",
+    d: 1,
+  },
   "q-cat-3-1": { o: ["179", "175", "169", "199"] },
   "q-cat-3-2": { d: 3 },
   "q-cat-3-5": { d: 1 },
@@ -261,7 +414,12 @@ const PATCHES: Record<string, Patch> = {
   "q-cat-16-1": { d: 3 },
   "q-cat-16-4": { d: 3 },
   "wikithin-danish-literature-author-Q1192442": {
-    o: ["Søren Kierkegaard", "N.F.S. Grundtvig", "Georg Brandes", "K.E. Løgstrup"],
+    o: [
+      "Søren Kierkegaard",
+      "N.F.S. Grundtvig",
+      "Georg Brandes",
+      "K.E. Løgstrup",
+    ],
     d: 2,
   },
   "wikithin-danish-literature-author-Q1642629": {
@@ -330,7 +488,12 @@ const PATCHES: Record<string, Patch> = {
     d: 2,
   },
   "wikithin-danish-film-director-Q196103": {
-    o: ["Susanne Bier", "Lone Scherfig", "Annette K. Olesen", "Pernille Fischer Christensen"],
+    o: [
+      "Susanne Bier",
+      "Lone Scherfig",
+      "Annette K. Olesen",
+      "Pernille Fischer Christensen",
+    ],
     d: 3,
   },
   "wikithin-danish-film-director-Q1327845": {
@@ -338,7 +501,12 @@ const PATCHES: Record<string, Patch> = {
     d: 3,
   },
   "wikithin-danish-film-director-Q1326419": {
-    o: ["Nikolaj Arcel", "Per Fly", "Ole Christian Madsen", "Niels Arden Oplev"],
+    o: [
+      "Nikolaj Arcel",
+      "Per Fly",
+      "Ole Christian Madsen",
+      "Niels Arden Oplev",
+    ],
     d: 4,
   },
   "wikithin-danish-film-director-Q370707": {
@@ -401,7 +569,12 @@ const PATCHES: Record<string, Patch> = {
     d: 2,
   },
   "wikithin-danish-series-creator-Q1331994": {
-    o: ["Lars von Trier", "Ole Bornedal", "Søren Sveistrup", "Thomas Vinterberg"],
+    o: [
+      "Lars von Trier",
+      "Ole Bornedal",
+      "Søren Sveistrup",
+      "Thomas Vinterberg",
+    ],
     d: 2,
   },
   "wikithin-danish-series-creator-Q12333582": {
@@ -474,7 +647,11 @@ const PATCHES: Record<string, Patch> = {
   "q-cat-31-6": { d: 1 },
   "depth-013": { o: ["Styx", "Lethe", "Eridanos", "Skamander"], d: 2 },
   "depth-014": { o: ["Olympen", "Parnassos", "Ida", "Athos"], d: 1 },
-  "depth-015": { p: "Hvilket væsen havde løvehoved, et gedehoved på ryggen og en slangehale?", o: ["Kimæren", "Hydraen", "Sfinksen", "Mantikoren"], d: 4 },
+  "depth-015": {
+    p: "Hvilket væsen havde løvehoved, et gedehoved på ryggen og en slangehale?",
+    o: ["Kimæren", "Hydraen", "Sfinksen", "Mantikoren"],
+    d: 4,
+  },
   "depth-016": { o: ["Sfinksen", "Kimæren", "Medusa", "Minotauros"], d: 3 },
   "depth-017": { o: ["Kerberos", "Kimæren", "Hydraen", "Orthros"], d: 2 },
   "depth-018": {
@@ -527,6 +704,7 @@ const PATCHES: Record<string, Patch> = {
     o: ["Vindelhuset", "Muslingehytten", "Grumsted Plads", "Ligustervænget"],
   },
   "depth-054": {
+    p: "Hvilken genstand fordeler nye elever til Hogwarts' kollegier?",
     o: ["Fordelingshatten", "Flammernes Pokal", "Mindekarret", "Drømmespejlet"],
   },
   "depth-055": {
@@ -586,10 +764,19 @@ const PATCHES: Record<string, Patch> = {
   },
   "wd-Q228-language": {
     p: "Hvad er det eneste officielle sprog i Andorra?",
+    e: "Catalansk er Andorras eneste officielle sprog, selvom spansk, fransk og portugisisk også tales.",
     d: 4,
   },
-  "wd-Q794-language": { p: "Hvad er det officielle sprog i Iran?", d: 3 },
-  "wd-Q424-language": { p: "Hvad er det officielle sprog i Cambodja?", d: 3 },
+  "wd-Q794-language": {
+    p: "Hvad er det officielle sprog i Iran?",
+    e: "Persisk (farsi) er Irans officielle sprog.",
+    d: 3,
+  },
+  "wd-Q424-language": {
+    p: "Hvad er det officielle sprog i Cambodja?",
+    e: "Khmer er Cambodjas officielle sprog.",
+    d: 3,
+  },
   "wikithin-invention-inventor-Q143": { d: 4 },
   "wikithin-invention-inventor-Q144334": {
     p: "Hvem udviklede bogtrykket med løse metaltyper i Europa?",
