@@ -5,7 +5,12 @@ import type { Question } from "../types";
 // «set før»-historikken er ens på tværs af sprog); først derefter byttes
 // teksterne ud med de oversatte.
 
-export type EnglishQuestion = { p: string; o: string[]; e: string };
+/** o: engelsk tekst pr. svarmulighed-id, så rækkefølgen er ligegyldig. */
+export type EnglishQuestion = {
+  p: string;
+  o: Record<string, string>;
+  e: string;
+};
 export type EnglishPack = {
   v: string;
   skip: string[];
@@ -20,15 +25,18 @@ export function localizeQuestion(
   pack: EnglishPack | null,
 ): Question {
   const translated = pack?.q[question.id];
-  if (!translated || translated.o.length !== question.options.length)
+  if (!translated) return question;
+  // Alle svarmuligheder skal have en oversættelse; ellers beholdes dansk, så
+  // et svar aldrig kan få en anden betydning end det rigtige.
+  if (question.options.some((option) => !(option.id in translated.o)))
     return question;
   return {
     ...question,
     prompt: translated.p,
     explanation: translated.e,
-    options: question.options.map((option, index) => ({
+    options: question.options.map((option) => ({
       ...option,
-      text: translated.o[index],
+      text: translated.o[option.id],
     })),
   };
 }
