@@ -1,3 +1,4 @@
+import { t } from "./i18n";
 import type { Category } from "./types";
 
 const names = [
@@ -141,7 +142,10 @@ export const CATEGORIES: Category[] = names
     const id = `cat-${i + 1}`;
     return {
       id,
-      name,
+      // Navnet oversættes, hver gang det læses, så sprogskift virker straks.
+      get name() {
+        return t(name);
+      },
       emoji: emojis[i] ?? "❔",
       color: ["#ff6b35", "#35c2a6", "#7c6cff", "#e6b84b"][i % 4],
       niche: nicheIds.has(id),
@@ -159,7 +163,7 @@ const ids = (...numbers: number[]) => numbers.map((n) => `cat-${n}`);
 
 // Kategorierne vises i emnegrupper i opsætningen. Hver kategori indgår i
 // netop én gruppe.
-export const CATEGORY_GROUPS: CategoryGroup[] = [
+const RAW_CATEGORY_GROUPS: CategoryGroup[] = [
   { name: "Danmark og samfund", emoji: "🏰", ids: ids(2, 3, 4, 5, 6) },
   {
     name: "Videnskab og teknologi",
@@ -186,6 +190,16 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
   { name: "Universer og fans", emoji: "🪄", ids: ids(33, 60, 61, 62) },
   { name: "Quizformater", emoji: "🧩", ids: ids(1, 45, 46, 47, 48, 59) },
 ];
+
+export const CATEGORY_GROUPS: CategoryGroup[] = RAW_CATEGORY_GROUPS.map(
+  (group) => ({
+    get name() {
+      return t(group.name);
+    },
+    emoji: group.emoji,
+    ids: group.ids,
+  }),
+);
 
 /** Genvej i opsætningen: kategorier med dansk vinkel. */
 export const DANISH_CATEGORY_IDS = ids(2, 3, 16, 18, 20, 22, 26, 29, 41, 63);

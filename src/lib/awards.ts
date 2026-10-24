@@ -1,4 +1,5 @@
 import type { Game } from "./types";
+import { getLang, t } from "./i18n";
 
 export type Award = {
   id: string;
@@ -37,9 +38,13 @@ export function computeAwards(game: Game): Award[] {
     candidates.push({
       id: "fastest",
       emoji: "⚡",
-      title: "Hurtigste finger",
+      title: t("Hurtigste finger"),
       playerId: fastest.player.id,
-      detail: `${(fastest.avgMs / 1000).toFixed(1).replace(".", ",")} sek. i snit`,
+      detail: t("{sek} sek. i snit", {
+        sek: (fastest.avgMs / 1000)
+          .toFixed(1)
+          .replace(".", getLang() === "en" ? "." : ","),
+      }),
       value: 3,
     });
   const streaker = [...players].sort(
@@ -49,9 +54,11 @@ export function computeAwards(game: Game): Award[] {
     candidates.push({
       id: "streak",
       emoji: "🔥",
-      title: "Stime-kongen",
+      title: t("Stime-kongen"),
       playerId: streaker.id,
-      detail: `${streaker.longestStreak} rigtige i træk`,
+      detail: t("{longestStreak} rigtige i træk", {
+        longestStreak: streaker.longestStreak,
+      }),
       value: 2,
     });
   const brain = [...perPlayer].sort((a, b) => b.hard - a.hard)[0];
@@ -59,9 +66,9 @@ export function computeAwards(game: Game): Award[] {
     candidates.push({
       id: "brain",
       emoji: "🧠",
-      title: "Svære knaster",
+      title: t("Svære knaster"),
       playerId: brain.player.id,
-      detail: `${brain.hard} svære spørgsmål klaret`,
+      detail: t("{hard} svære spørgsmål klaret", { hard: brain.hard }),
       value: 1,
     });
   // Hver spiller får højst én titel – den mest sjældne først.

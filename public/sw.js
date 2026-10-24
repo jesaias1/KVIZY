@@ -1,4 +1,4 @@
-const CACHE = "kvizy-v33";
+const CACHE = "kvizy-v34";
 const CORE = [
   "/",
   "/manifest.webmanifest",
@@ -70,7 +70,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname !== "/api/question-bank") return;
+  if (
+    url.pathname !== "/api/question-bank" &&
+    url.pathname !== "/i18n/questions.en.json"
+  )
+    return;
   event.respondWith(
     fetch(event.request)
       .then((response) => {

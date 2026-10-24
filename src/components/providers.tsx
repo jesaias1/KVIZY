@@ -2,9 +2,21 @@
 
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { LangProvider, useLang } from "@/components/lang-provider";
 import { useEffect, useState } from "react";
+import { t } from "@/lib/i18n";
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <LangProvider>
+      <ProvidersInner>{children}</ProvidersInner>
+    </LangProvider>
+  );
+}
+
+function ProvidersInner({ children }: { children: React.ReactNode }) {
+  // Læser sproget, så vagten tegnes igen ved sprogskift.
+  useLang();
   const [showPortraitGuard, setShowPortraitGuard] = useState(false);
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -54,10 +66,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const enforcePortrait = () => {
       const blocked = landscapePhoneQuery.matches;
       setShowPortraitGuard(blocked);
-      document.documentElement.toggleAttribute(
-        "data-phone-landscape",
-        blocked,
-      );
+      document.documentElement.toggleAttribute("data-phone-landscape", blocked);
       lockPortrait();
     };
     enforcePortrait();
@@ -88,8 +97,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <div className="portrait-guard" role="status" aria-live="polite">
             <div>
               <span aria-hidden="true">📱</span>
-              <b>KVIZY spilles stående</b>
-              <p>Drej telefonen tilbage til stående visning.</p>
+              <b>{t("KVIZY spilles stående")}</b>
+              <p>{t("Drej telefonen tilbage til stående visning.")}</p>
             </div>
           </div>
         )}

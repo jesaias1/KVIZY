@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ANIMAL_AVATARS } from "./config";
+import { t } from "./i18n";
 
 // Fælles beskeder mellem værten (storskærmen) og spillernes telefoner. Værten
 // er autoriteten: telefonerne sender kun navn og svar, og værten svarer med
@@ -38,7 +39,7 @@ export function sanitizeRoomName(input: string): string {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, ROOM_NAME_MAX);
-  return clean || "Spiller";
+  return clean || t("Spiller");
 }
 
 export const safeRoomAvatar = (avatar: string) =>

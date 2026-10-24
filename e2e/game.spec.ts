@@ -185,3 +185,19 @@ test("rum: en telefon kan joine værten og svare på et spørgsmål", async ({
   ).toBeVisible({ timeout: 15_000 });
   await expect(phone.getByText(/Du er nr\./)).toBeVisible();
 });
+
+test("sproget kan skiftes til engelsk, huskes og skiftes tilbage", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Switch to English" }).click();
+  await expect(page.getByRole("heading", { name: /Quiz night/ })).toBeVisible();
+  await page.getByRole("button", { name: /Quick game/ }).click();
+  await expect(page.getByText(/Question 1 of 10/)).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("heading", { name: /Quiz night/ })).toBeVisible();
+  await page.getByRole("button", { name: "Skift til dansk" }).click();
+  await expect(
+    page.getByRole("heading", { name: /Quiz-aftenen/ }),
+  ).toBeVisible();
+});
