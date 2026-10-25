@@ -13,6 +13,22 @@ const reportSchema = z.object({
 });
 const attempts = new Map<string, { count: number; reset: number }>();
 
+/** Viser, om rapporter kan gemmes. Afslører intet om selve databasen. */
+export async function GET() {
+  if (!hasDatabase())
+    return NextResponse.json({ configured: false, ready: false });
+  try {
+    await ensureReportsTable();
+    return NextResponse.json({ configured: true, ready: true });
+  } catch (error) {
+    return NextResponse.json({
+      configured: true,
+      ready: false,
+      error: error instanceof Error ? error.name : "unknown",
+    });
+  }
+}
+
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0] ?? "local";
   const now = Date.now();
@@ -34,7 +50,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ugyldig rapport" }, { status: 400 });
   if (!hasDatabase())
     return NextResponse.json(
-      { accepted: true, stored: false },
+      { accepted: true, stored: false, reason: "no-database" },
       { status: 202 },
     );
   try {
