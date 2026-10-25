@@ -294,6 +294,28 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "kz-802g9j": {
+    e: "Af fem skibe og omkring 270 mand fuldførte kun ét skib, Victoria, rejsen. Det vendte hjem til Spanien i 1522 med 18 mand.",
+  },
+  "kz-1a323uv": {
+    p: "Hvem stod bag oprettelsen af Kalmarunionen i 1397?",
+    e: "Margrete 1. udtænkte unionen og styrede reelt alle tre riger, mens hendes plejesøn Erik af Pommern blev kronet til konge i Kalmar.",
+  },
+  "kz-5bl1jd": {
+    e: "Ørsted offentliggjorde i 1820, at en elektrisk strøm afbøjer en kompasnål – den første kobling mellem elektricitet og magnetisme. Opdagelsen er grundlaget for alt fra elmotorer til højttalere.",
+  },
+  "kz-x7abst": {
+    e: "Kulstof-14 har en halveringstid på cirka 5.700 år, hvilket gør det velegnet til at datere arkæologiske fund.",
+  },
+  "kz-18hsqp3": {
+    e: "Tolv amerikanske astronauter satte fødderne på Månen mellem 1969 og 1972. Ingen har betrådt den siden.",
+  },
+  "kz-16ee9ce": {
+    e: "Romanen fra 2006 følger Marstals sømænd gennem generationer, fra midten af 1800-tallet og ind i 1900-tallet.",
+  },
+  "kz-466gyj": {
+    e: "Skikken kom til Danmark fra Sverige i 1943. Lucia selv var en helgen fra Syracuse på Sicilien.",
+  },
   "format-depth-009": {
     e: "Alexander Graham Bells telefonpatent er fra 1876, før Edisons fonograf (opfundet 1877, patenteret 1878).",
   },
@@ -348,7 +370,10 @@ const PATCHES: Record<string, Patch> = {
   "kz-1ys3pum": {
     p: "Hvilket østat i Stillehavet ligger i alle fire halvkugler?",
   },
-  "kz-9jg030": { p: "Hvad er den højeste kendte vulkan i solsystemet?" },
+  "kz-9jg030": {
+    p: "Hvad er den højeste kendte vulkan i solsystemet?",
+    e: "Vulkanen rager godt 21 kilometer op – mere end dobbelt så højt som Mount Everest.",
+  },
   "kz-67xchq": {
     e: "Firmaet Magnavox – latin for stor stemme – fik sit gennembrud, da præsident Wilson talte gennem højttalerne i 1919.",
   },
