@@ -294,6 +294,12 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "kz-1o74r66": {
+    e: "Det første tyggegummi kom i handlen i USA i 1848. Tandpasta på tube kom først i slutningen af 1800-tallet.",
+  },
+  "kz-1b3o9si": {
+    e: "Enhjørningen har været brugt i det skotske rigsvåben siden 1300–1400-tallet som symbol på renhed og styrke.",
+  },
   "kz-802g9j": {
     e: "Af fem skibe og omkring 270 mand fuldførte kun ét skib, Victoria, rejsen. Det vendte hjem til Spanien i 1522 med 18 mand.",
   },
