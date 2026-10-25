@@ -297,7 +297,7 @@ describe("seedbank og Zod", () => {
   });
 });
 describe("adaptiv udvælgelse", () => {
-  it("bruger ældre spørgsmål inden for ±1 niveau før nye spørgsmål udenfor", () => {
+  it("tager nye spørgsmål udenfor niveauet før spørgsmål, spilleren har set", () => {
     const oldSeen: SeenQuestion[] = SEED_QUESTIONS.filter(
       (question) => question.difficulty >= 3 && question.difficulty <= 5,
     ).map((question) => ({
@@ -306,6 +306,7 @@ describe("adaptiv udvælgelse", () => {
       count: 1,
       correct: false,
     }));
+    const seenIds = new Set(oldSeen.map((item) => item.id));
     const chosen = selectQuestions(
       SEED_QUESTIONS,
       { ...setup, questionCount: 30, difficulty: 4, difficultyMode: "fixed" },
@@ -313,11 +314,27 @@ describe("adaptiv udvælgelse", () => {
     );
 
     expect(chosen).toHaveLength(30);
-    expect(
-      chosen.every(
-        (question) => question.difficulty >= 3 && question.difficulty <= 5,
-      ),
-    ).toBe(true);
+    expect(chosen.some((question) => seenIds.has(question.id))).toBe(false);
+  });
+
+  it("gentager først spørgsmål, når alle i de valgte kategorier er set", () => {
+    const category = "cat-5";
+    const inCategory = SEED_QUESTIONS.filter(
+      (question) => question.categoryId === category,
+    );
+    const seen: SeenQuestion[] = inCategory.map((question, index) => ({
+      id: question.id,
+      lastSeen: new Date(Date.now() - (index + 1) * 1_000).toISOString(),
+      count: 1,
+      correct: false,
+    }));
+    const chosen = selectQuestions(
+      SEED_QUESTIONS,
+      { ...setup, questionCount: 10, categoryIds: [category] },
+      seen,
+    );
+    expect(chosen).toHaveLength(10);
+    expect(new Set(chosen.map((question) => question.id)).size).toBe(10);
   });
 
   it("kan fylde en svær Hollywood-runde uden lette spørgsmål", () => {

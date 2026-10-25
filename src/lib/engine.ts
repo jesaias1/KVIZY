@@ -954,6 +954,7 @@ export function selectQuestions(
     const chooseWithSeenPolicy = (
       policy: "unseen" | "old" | "any",
       difficultyPolicy: "selected-band" | "fallback",
+      strictOnly: boolean,
     ) => {
       chooseFromPool(
         false,
@@ -963,6 +964,7 @@ export function selectQuestions(
         policy,
         difficultyPolicy,
       );
+      if (strictOnly) return;
       if (!chosen)
         chooseFromPool(
           true,
@@ -986,15 +988,24 @@ export function selectQuestions(
       if (!chosen)
         chooseFromPool(true, true, false, true, policy, difficultyPolicy);
     };
-    // Gennemgå hele historikprioriteten inden for ±1 niveau, før banken
-    // overhovedet må udvide. Et ældre niveau 3-spørgsmål er bedre end et
-    // helt nyt niveau 1-spørgsmål, når spilleren har valgt niveau 4.
-    chooseWithSeenPolicy("unseen", "selected-band");
-    if (!chosen) chooseWithSeenPolicy("old", "selected-band");
-    if (!chosen) chooseWithSeenPolicy("any", "selected-band");
-    if (!chosen) chooseWithSeenPolicy("unseen", "fallback");
-    if (!chosen) chooseWithSeenPolicy("old", "fallback");
-    if (!chosen) chooseWithSeenPolicy("any", "fallback");
+    // Et spørgsmål, spilleren allerede har set, må aldrig komme før et nyt:
+    // først udtømmes alle usete spørgsmål (også uden for det valgte niveau),
+    // og først derefter tages de ældst sete. Inden for hver gruppe kommer de
+    // strenge regler (ingen gentagne fakta eller skabeloner) før de lempede.
+    const attempts = [
+      ["unseen", "selected-band"],
+      ["unseen", "fallback"],
+      ["old", "selected-band"],
+      ["old", "fallback"],
+      ["any", "selected-band"],
+      ["any", "fallback"],
+    ] as const;
+    for (const strictOnly of [true, false]) {
+      for (const [policy, difficultyPolicy] of attempts) {
+        if (chosen) break;
+        chooseWithSeenPolicy(policy, difficultyPolicy, strictOnly);
+      }
+    }
     // Usete kommer altid først. Derefter vælges de ældst sete spørgsmål,
     // så en gennemspillet kategori fortsat kan bruges uden gentagelser i spillet.
     if (!chosen) break;
@@ -1253,7 +1264,8 @@ export function recordDaily(
   result: DailyResult,
 ): DailyProgress {
   if (progress.results[key]) return progress;
-  const streak = progress.lastKey === previousDateKey(key) ? progress.streak + 1 : 1;
+  const streak =
+    progress.lastKey === previousDateKey(key) ? progress.streak + 1 : 1;
   const keep = Object.keys(progress.results).sort().slice(-29);
   return {
     lastKey: key,

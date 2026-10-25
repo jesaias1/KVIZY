@@ -1287,6 +1287,7 @@ export function GameShell() {
       />
     ) : view === "settings" ? (
       <SettingsView
+        langLocked={Boolean(game && !game.completedAt)}
         value={settings}
         lang={lang}
         onLang={switchLang}
@@ -1321,6 +1322,7 @@ export function GameShell() {
     >
       <TopBar
         view={view}
+        langLocked={Boolean(game && !game.completedAt)}
         settings={settings}
         setSettings={setSettings}
         go={go}
@@ -1382,6 +1384,7 @@ function LangSwitch({
 
 function TopBar({
   view,
+  langLocked,
   settings,
   setSettings,
   go,
@@ -1389,6 +1392,7 @@ function TopBar({
   onLang,
 }: {
   view: View;
+  langLocked: boolean;
   settings: AppSettings;
   setSettings: (s: AppSettings) => void;
   go: (v: View) => void;
@@ -1417,7 +1421,9 @@ function TopBar({
           </button>
         )}
         <div className="flex items-center gap-1">
-          <LangSwitch lang={lang} onChange={onLang} />
+          {!langLocked && !view.startsWith("room") && view !== "play" && (
+            <LangSwitch lang={lang} onChange={onLang} />
+          )}
           <Button
             size="icon"
             variant="ghost"
@@ -4070,6 +4076,7 @@ function Help({
   );
 }
 function SettingsView({
+  langLocked,
   value,
   lang,
   onLang,
@@ -4078,6 +4085,7 @@ function SettingsView({
   onRestore,
   go,
 }: {
+  langLocked: boolean;
   value: AppSettings;
   lang: Lang;
   onLang: (lang: Lang) => void;
@@ -4178,10 +4186,12 @@ function SettingsView({
               />
             </div>
           ))}
-          <div className="flex min-h-16 items-center justify-between p-3">
-            <Label>{t("Sprog")}</Label>
-            <LangSwitch lang={lang} onChange={onLang} />
-          </div>
+          {!langLocked && (
+            <div className="flex min-h-16 items-center justify-between p-3">
+              <Label>{t("Sprog")}</Label>
+              <LangSwitch lang={lang} onChange={onLang} />
+            </div>
+          )}
           <div className="flex min-h-16 items-center justify-between p-3">
             <Label>{t("Lyst tema")}</Label>
             <Switch
