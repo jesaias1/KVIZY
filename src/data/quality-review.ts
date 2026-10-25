@@ -294,6 +294,9 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "kz-1ukmpf": {
+    e: "Den danske præst og forstander begyndte produktionen i 1870. Filosoffen Nietzsche skrev på en af dem.",
+  },
   "kz-yzhx2j": {
     e: "Nederlaget ved Dybbøl kostede Slesvig, Holsten og Lauenborg.",
   },
