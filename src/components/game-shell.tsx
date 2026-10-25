@@ -39,6 +39,7 @@ import {
   Zap,
   Languages,
   Sparkles,
+  PencilLine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-lockup";
@@ -60,6 +61,13 @@ import {
 } from "@/components/ui/sheet";
 import { canSpeak, questionSpeech, speak, stopSpeaking } from "@/lib/speech";
 import { ThemeSheet } from "@/components/theme-sheet";
+import { CustomQuizBuilder, CustomQuizInvite } from "@/components/custom-quiz";
+import {
+  customQuizFromHash,
+  customQuizQuestions,
+  decodeCustomQuiz,
+  type CustomQuiz,
+} from "@/lib/custom-quiz";
 import { InstallButton } from "@/components/install-button";
 import { ANIMAL_AVATARS, APP_CONFIG, DIFFICULTY_LABELS } from "@/lib/config";
 import {
@@ -155,7 +163,9 @@ type View =
   | "review"
   | "room-host"
   | "room-join"
-  | "room-screen";
+  | "room-screen"
+  | "custom"
+  | "custom-invite";
 type BestScore = { correct: number; total: number; score: number; at: string };
 type RecordInfo = { previous?: BestScore; isRecord: boolean } | null;
 const defaults: AppSettings = {
@@ -425,6 +435,7 @@ export function GameShell() {
   };
   const finishing = useRef(false);
   const [roomCode, setRoomCode] = useState("");
+  const [customQuiz, setCustomQuiz] = useState<CustomQuiz | null>(null);
   const [achievements, setAchievements] = useState<AchievementState>(
     emptyAchievementState,
   );
@@ -473,7 +484,16 @@ export function GameShell() {
       try {
         const params = new URLSearchParams(window.location.search);
         const code = normalizeRoomCode(params.get("rum") ?? "");
-        if (params.has("skaerm")) {
+        const quizCode = customQuizFromHash(window.location.hash);
+        if (quizCode) {
+          // Et delt link som /#quiz=… åbner en invitation til en egen quiz.
+          void decodeCustomQuiz(quizCode).then((quiz) => {
+            if (!quiz) return;
+            setCustomQuiz(quiz);
+            setView("custom-invite");
+            window.history.replaceState(null, "", window.location.pathname);
+          });
+        } else if (params.has("skaerm")) {
           // /?skaerm=ABCD gør enheden til en ren TV-skærm for rummet.
           setRoomCode(normalizeRoomCode(params.get("skaerm") ?? "") ?? "");
           setView("room-screen");
@@ -927,6 +947,25 @@ export function GameShell() {
       { practice: missed },
     );
   };
+  const playCustom = (quiz: CustomQuiz, playerCount: number) => {
+    const questions = customQuizQuestions(quiz);
+    const players = Array.from({ length: playerCount }, (_, index) =>
+      newPlayer(playerName(index + 1), index),
+    );
+    void start(
+      {
+        ...setup,
+        mode: playerCount === 1 ? "solo" : "classic",
+        players,
+        questionCount: questions.length,
+        timer: false,
+        timeBonus: false,
+        lifelines: false,
+        finale: false,
+      },
+      { practice: questions },
+    );
+  };
   const playLevel = (level: number) => {
     if (!game) return;
     setSetup((current) => ({ ...current, difficulty: level }));
@@ -1297,6 +1336,14 @@ export function GameShell() {
         sound={settings.sound}
         speak={Boolean(settings.speak)}
         onExit={() => go("home")}
+      />
+    ) : view === "custom" ? (
+      <CustomQuizBuilder onPlay={playCustom} onBack={() => go("home")} />
+    ) : view === "custom-invite" && customQuiz ? (
+      <CustomQuizInvite
+        quiz={customQuiz}
+        onPlay={playCustom}
+        onBack={() => go("home")}
       />
     ) : view === "room-screen" ? (
       <RoomDisplay
@@ -1834,6 +1881,9 @@ function Home({
                 </button>
               }
             />
+            <button type="button" onClick={() => go("custom")}>
+              <PencilLine /> {t("Lav din egen quiz")}
+            </button>
             <button type="button" onClick={() => go("room-host")}>
               <Smartphone /> {t("Opret rum")}
             </button>

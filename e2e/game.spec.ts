@@ -219,3 +219,28 @@ test("sproget kan skiftes til engelsk og huskes, men ikke midt i et spil", async
     page.getByRole("button", { name: "Skift til dansk" }),
   ).toHaveCount(0);
 });
+
+test("egen quiz: lav den, del den som link og spil den", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Lav din egen quiz" }).click();
+  await page.getByLabel("Navn på quizzen").fill("Mettes fødselsdag");
+  await page.getByLabel("Spørgsmål 1").fill("Hvad hedder Mettes hund?");
+  await page.getByLabel("Rigtigt svar").fill("Bjørn");
+  await page.getByLabel("Forkert svar 1").fill("Fido");
+  await page.getByRole("button", { name: "Del som link" }).click();
+  const link = await page.getByLabel("Link til quizzen").inputValue();
+  expect(link).toContain("#quiz=");
+  // Linket åbner en invitation, som kan spilles til ende.
+  await page.goto("/");
+  await page.goto(link);
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Mettes fødselsdag" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Spil quizzen" }).click();
+  await expect(page.getByText("Hvad hedder Mettes hund?")).toBeVisible();
+  await answerAndContinue(page);
+  await expect(
+    page.getByText(/vinder!|deler sejren!|af 1/i).first(),
+  ).toBeVisible();
+});
