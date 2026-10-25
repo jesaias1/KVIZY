@@ -3381,3 +3381,108 @@ button.room-tile:not(:disabled):active {
   color: var(--primary-foreground);
   font-weight: 800;
 }
+
+/* Egne quizzer */
+.cq {
+  display: grid;
+  gap: 1rem;
+  padding-bottom: 3rem;
+}
+.cq-head h1 {
+  margin-top: 0.5rem;
+  font-size: 2rem;
+  font-weight: 900;
+}
+.cq-head p {
+  margin-top: 0.4rem;
+  color: var(--muted-foreground);
+}
+.cq-field {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+.cq-list {
+  display: grid;
+  gap: 0.9rem;
+  list-style: none;
+}
+.cq-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1.2rem;
+  background: var(--card);
+}
+.cq-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.cq-card-head > b {
+  flex: none;
+}
+.cq-card-head > span {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+  font-size: 0.85rem;
+}
+.cq-card-head .ok {
+  color: var(--good);
+}
+.cq-card-head .ok svg {
+  width: 1rem;
+  height: 1rem;
+}
+.cq-card-head .warn {
+  color: var(--muted-foreground);
+}
+.cq-card-head > button {
+  margin-left: auto;
+}
+.cq-right {
+  border-color: color-mix(in oklab, var(--good) 60%, var(--border));
+}
+.cq-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.cq-actions > p {
+  color: var(--muted-foreground);
+  text-align: center;
+}
+.cq-players {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
+}
+.cq-players > div {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.cq-players b {
+  min-width: 1.5rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+.cq-link {
+  display: grid;
+  gap: 0.4rem;
+}
+.cq-link small {
+  color: var(--muted-foreground);
+}
+.cq-badge {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 4rem;
+}
+
