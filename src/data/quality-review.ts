@@ -294,6 +294,21 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "format-depth-009": {
+    e: "Alexander Graham Bells telefonpatent er fra 1876, før Edisons fonograf (opfundet 1877, patenteret 1878).",
+  },
+  "variety-009": {
+    e: "Danmarks areal er cirka 42.950 km², når Grønland og Færøerne ikke medregnes.",
+  },
+  "theme-60-009": {
+    p: "Hvilket væsen vækkede dværgene ved at grave for dybt under Moria?",
+  },
+  "kz-1x48fcv": {
+    e: "De fire operaer varer tilsammen omkring 15 timer og opføres jævnligt ved festspillene i Bayreuth.",
+  },
+  "kz-1sad8p3": {
+    e: "De, der ventede, fik to. Forsøget fra 1960’erne og 1970’erne handler om evnen til at udskyde behov.",
+  },
   "kz-1e2n3gv": {
     e: "Pilotafsnittet fra 2004 var det dyreste i ABC’s historie.",
   },
