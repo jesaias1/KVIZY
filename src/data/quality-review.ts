@@ -30,6 +30,7 @@ const KEPT_FROM_RETIRED_SERIES = new Set([
 ]);
 
 const RETIRED_IDS = new Set([
+  "kz-zz7ux7",
   // Dubletter af samme faktum.
   "kz-m887vn",
   "kz-13l9tfk",
@@ -292,6 +293,58 @@ type Patch = {
 };
 
 const PATCHES: Record<string, Patch> = {
+  // Rettet efter kildetjek (oktober 2026)
+  "kz-yzhx2j": {
+    e: "Nederlaget ved Dybbøl kostede Slesvig, Holsten og Lauenborg.",
+  },
+  "kz-zf56zl": {
+    e: "Struensee udstedte over tusind kabinetsordrer på cirka 13 måneder, fik et barn med dronningen og blev henrettet i 1772.",
+  },
+  "kz-1hqq11v": {
+    e: "Nigeria har mere end 220 millioner indbyggere og er Afrikas folkerigeste land.",
+  },
+  "kz-1ys3pum": {
+    p: "Hvilket østat i Stillehavet ligger i alle fire halvkugler?",
+  },
+  "kz-9jg030": { p: "Hvad er den højeste kendte vulkan i solsystemet?" },
+  "kz-67xchq": {
+    e: "Firmaet Magnavox – latin for stor stemme – fik sit gennembrud, da præsident Wilson talte gennem højttalerne i 1919.",
+  },
+  "kz-1t4ngdd": {
+    p: "Hvilken dansk færgerute var landets vigtigste, indtil broen åbnede i 1998?",
+  },
+  "kz-191ab7n": {
+    e: "Bogen er udkommet i mange udgaver og solgt i millionvis af eksemplarer.",
+  },
+  "kz-avlx36": { e: "Bogen udkom i 1967 og er blevet en dansk klassiker." },
+  "kz-gvdsso": {
+    e: "Grundtvig skrev flere hundrede salmer. Ingen har flere i Den Danske Salmebog.",
+  },
+  "kz-ka5oce": {
+    e: "«Onkel Danny» skrev omkring hundrede bøger, før han døde i 1993.",
+  },
+  "kz-1nf0izu": {
+    e: "Han skrev tusindvis af dem – og opfandt desuden superellipsen og spillet Hex.",
+  },
+  "kz-1xiy1dg": {
+    e: "Ingen dansk konge har sat større præg på København. Han var konge i 60 år (1588–1648).",
+  },
+  "kz-dr6tk8": {
+    e: "Tuborgs julebryg lanceres første fredag i november med sne og nissehuer – J-dag blev indført i 1990.",
+  },
+  "kz-eyp847": {
+    e: "Studiet blev grundlagt i 1984, men fik sit store gennembrud med «Crash Bandicoot» i 1996.",
+  },
+  "kz-10ckku0": {
+    e: "På den femte ekspedition tog han med hundeslæde fra Grønland til Stillehavet.",
+  },
+  "kz-zko1xc": {
+    e: "Saturn har overhalet Jupiter og har nu langt over hundrede bekræftede måner.",
+  },
+  "kz-njmcd1": {
+    e: "Projektet beskæftigede titusinder af mennesker. Niels Bohr bidrog som rådgiver efter flugten fra Danmark.",
+  },
+  "kz-779plf": { p: "Hvilket af disse sprog er finsk nærmest beslægtet med?" },
   // Rettet efter sansgennemgang (oktober 2026)
   "expansion-063": {
     p: "Hvilket princip betyder, at en regering ikke må have et flertal imod sig i Folketinget?",

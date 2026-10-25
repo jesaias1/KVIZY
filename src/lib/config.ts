@@ -8,7 +8,7 @@ export const APP_CONFIG = {
   settingsKey: "kvizy-settings-v1",
   setupKey: "kvizy-setup-v1",
   reportsKey: "kvizy-question-reports-v1",
-  questionBankVersion: "2026-10-25.2",
+  questionBankVersion: "2026-10-25.3",
   questionCacheKey: "kvizy-question-cache-v2",
   blitzSeconds: 60,
   achievementsKey: "kvizy-achievements-v1",
