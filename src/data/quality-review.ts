@@ -294,6 +294,30 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "kz-1e2n3gv": {
+    e: "Pilotafsnittet fra 2004 var det dyreste i ABC’s historie.",
+  },
+  "kz-7imz8x": {
+    e: "Hans album «Kind of Blue» fra 1959 er et af verdens mest solgte jazzalbum.",
+  },
+  "kz-18h79ok": { e: "Nephew blev dannet i Aarhus i 1996." },
+  "kz-bj9mns": {
+    e: "Mew blev dannet i Hellerup og er især kendt for albummet «Frengers» fra 2003.",
+  },
+  "kz-1rzf33h": {
+    p: "Hvad hedder Danmarks højeste naturlige punkt?",
+    e: "Møllehøj er 170,86 meter. Yding Skovhøj er højere (172,52 m), men det skyldes en gravhøj fra bronzealderen. Himmelbjerget er lavere.",
+  },
+  "kz-nvs2mj": {
+    e: "Filmen regnes for prototypen på den moderne sommerblockbuster.",
+  },
+  "kz-xczqv9": { p: "Hvem opfandt det luftfyldte cykeldæk i 1880’erne?" },
+  "kz-f8sitp": {
+    e: "Isen skubbede jord og sten foran sig og efterlod landskabet, da den smeltede for mere end ti tusinde år siden.",
+  },
+  "kz-uk7hfo": {
+    p: "Hvilket programmeringssprog skabte Rasmus Lerdorf i 1990’erne?",
+  },
   "kz-1ukmpf": {
     e: "Den danske præst og forstander begyndte produktionen i 1870. Filosoffen Nietzsche skrev på en af dem.",
   },
