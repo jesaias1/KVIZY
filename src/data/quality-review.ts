@@ -30,6 +30,18 @@ const KEPT_FROM_RETIRED_SERIES = new Set([
 ]);
 
 const RETIRED_IDS = new Set([
+  // Dubletter af samme faktum.
+  "kz-m887vn",
+  "kz-13l9tfk",
+  "kz-1vcnag1",
+  "kz-f3ft3o",
+  "kz-13lfn66",
+  "kz-16qy31e",
+  "kz-53pmku",
+  "kz-1r8wdf5",
+  "kz-1lotrb6",
+  "kz-ataoaj",
+  "kz-j97j7h",
   // Sansgennemgang: useriøse svarmuligheder, for let, for obskure eller tvetydige.
   "q-cat-32-3",
   "q-cat-39-1",

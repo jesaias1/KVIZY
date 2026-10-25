@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq, sql } from "drizzle-orm";
 import { SEED_QUESTIONS } from "@/data/questions";
-import { getDb, hasDatabase } from "@/lib/db";
+import { ensureReportsTable, getDb, hasDatabase } from "@/lib/db";
 import { questionReports, questions } from "@/lib/db/schema";
 import { questionReportReasons } from "@/lib/types";
 
@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       { status: 202 },
     );
   try {
+    await ensureReportsTable();
     await getDb()
       .insert(questionReports)
       .values({
@@ -46,14 +47,19 @@ export async function POST(request: Request) {
           ? `${parsed.data.reason}:${parsed.data.note}`
           : parsed.data.reason,
       });
-    await getDb()
-      .update(questions)
-      .set({
-        reportCount: sql`${questions.reportCount} + 1`,
-        status: sql`CASE WHEN ${questions.reportCount} + 1 >= 3 THEN 'reported' ELSE ${questions.status} END`,
-        updatedAt: new Date(),
-      })
-      .where(eq(questions.id, parsed.data.questionId));
+    // Tælleren på spørgsmålstabellen er en bonus; rapporten er allerede gemt.
+    try {
+      await getDb()
+        .update(questions)
+        .set({
+          reportCount: sql`${questions.reportCount} + 1`,
+          status: sql`CASE WHEN ${questions.reportCount} + 1 >= 3 THEN 'reported' ELSE ${questions.status} END`,
+          updatedAt: new Date(),
+        })
+        .where(eq(questions.id, parsed.data.questionId));
+    } catch {
+      // Tabellen findes ikke i en ny database.
+    }
     return NextResponse.json({ accepted: true, stored: true });
   } catch {
     return NextResponse.json(
