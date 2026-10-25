@@ -1,7 +1,7 @@
 import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { requestIsAdmin } from "@/lib/admin-auth";
-import { getDb, hasDatabase } from "@/lib/db";
+import { ensureReportsTable, getDb, hasDatabase } from "@/lib/db";
 import { questionReports } from "@/lib/db/schema";
 
 export async function GET(request: Request) {
@@ -9,6 +9,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Ikke autoriseret" }, { status: 401 });
   if (!hasDatabase()) return NextResponse.json({ reports: [] });
   try {
+    await ensureReportsTable();
     const reports = await getDb()
       .select()
       .from(questionReports)
