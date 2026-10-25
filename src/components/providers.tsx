@@ -18,17 +18,16 @@ function ProvidersInner({ children }: { children: React.ReactNode }) {
   // Læser sproget, så vagten tegnes igen ved sprogskift.
   useLang();
   const [showPortraitGuard, setShowPortraitGuard] = useState(false);
+  const [updateReady, setUpdateReady] = useState(false);
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
     const hadControllerAtStartup = Boolean(navigator.serviceWorker.controller);
-    let reloading = false;
     const useNewVersion = () => {
       // En førstegangsinstallation overtager siden via clients.claim(). Det er
-      // ikke en opdatering og må derfor ikke ligne en ekstra genindlæsning.
+      // ikke en opdatering. En rigtig opdatering afbryder ikke et spil: en lille
+      // besked tilbyder at hente de nye spørgsmål, når det passer spillerne.
       if (!hadControllerAtStartup) return;
-      if (reloading) return;
-      reloading = true;
-      window.location.reload();
+      setUpdateReady(true);
     };
     navigator.serviceWorker.addEventListener("controllerchange", useNewVersion);
     void navigator.serviceWorker
@@ -93,6 +92,14 @@ function ProvidersInner({ children }: { children: React.ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <TooltipProvider>
         {children}
+        {updateReady && (
+          <div className="update-banner" role="status">
+            <span>{t("Nye spørgsmål og rettelser er klar")}</span>
+            <button type="button" onClick={() => window.location.reload()}>
+              {t("Opdater")}
+            </button>
+          </div>
+        )}
         {showPortraitGuard && (
           <div className="portrait-guard" role="status" aria-live="polite">
             <div>

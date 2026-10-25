@@ -1,17 +1,36 @@
 "use client";
 
 import type { DataConnection, Peer } from "peerjs";
-import QRCode from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, Check, Copy, Users, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ANIMAL_AVATARS } from "@/lib/config";
 import {
-  CATEGORY_GROUPS,
-  DANISH_CATEGORY_IDS,
-  DEFAULT_CATEGORIES,
-  categoryById,
-} from "@/lib/categories";
+  ArrowRight,
+  Cast,
+  Check,
+  Copy,
+  Maximize2,
+  Settings2,
+  Tv,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  AnswerTile,
+  Leaderboard,
+  Podium,
+  RoomScreen,
+  useNow,
+} from "@/components/room-screen";
+import { RoomSettingsSheet } from "@/components/room-settings-sheet";
+import { ANIMAL_AVATARS } from "@/lib/config";
+import { categoryById } from "@/lib/categories";
+import { locale, t } from "@/lib/i18n";
 import { playCue } from "@/lib/sound";
 import {
   clearHostSession,
@@ -25,7 +44,6 @@ import { peerOptions } from "@/lib/room-net";
 import {
   addPlayer,
   allAnswered,
-  answerCounts,
   backToLobby,
   emptyRoom,
   nextQuestion,
@@ -45,27 +63,23 @@ import {
   roomPeerId,
   sanitizeRoomName,
   type HostMessage,
-  type RoomPublicPlayer,
   type RoomBuildOptions,
+  type RoomPublicPlayer,
   type RoomQuestionPayload,
   type RoomStanding,
 } from "@/lib/room-protocol";
+import { buildScreenModel, isScreenModel } from "@/lib/room-screen";
+import type { ScreenModel } from "@/lib/room-screen";
+import {
+  loadRoomSettings,
+  saveRoomSettings,
+  type RoomSettings,
+} from "@/lib/room-settings";
 import type { Question } from "@/lib/types";
-import { t } from "@/lib/i18n";
 
 const PROFILE_KEY = "kvizy-room-profile-v1";
 const PID_KEY = "kvizy-room-pid-v1";
 
-const COUNTS = [10, 15, 20, 30];
-const LETTERS = ["A", "B", "C", "D"];
-const LEVELS = [
-  { value: 2, label: "Let" },
-  { value: 3, label: "Almindelig" },
-  { value: 4, label: "Svær" },
-];
-const allIds = DEFAULT_CATEGORIES.map((c) => c.id);
-const sameIds = (a: readonly string[], b: readonly string[]) =>
-  a.length === b.length && a.every((id) => b.includes(id));
 const sleep = (ms: number) =>
   new Promise((resolve) => window.setTimeout(resolve, ms));
 
@@ -96,16 +110,6 @@ function useWakeLock(active: boolean) {
   }, [active]);
 }
 
-function useNow(active: boolean, every = 200) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!active) return;
-    const id = window.setInterval(() => setNow(Date.now()), every);
-    return () => window.clearInterval(id);
-  }, [active, every]);
-  return now;
-}
-
 function questionPayload(state: RoomState, now: number): RoomQuestionPayload {
   const q = state.questions[state.index];
   return {
@@ -120,73 +124,140 @@ function questionPayload(state: RoomState, now: number): RoomQuestionPayload {
   };
 }
 
+const screenContext = (code: string, settings: RoomSettings) => ({
+  code,
+  joinUrl: `${window.location.origin}/?rum=${code}`,
+  summary: {
+    count: settings.count,
+    limitSec: settings.limitSec,
+    level: settings.level,
+    topics: settings.categoryIds.length,
+  },
+  categoryName: (id: string) => categoryById(id)?.name ?? "",
+});
+
 const publicPlayers = (state: RoomState): RoomPublicPlayer[] =>
   state.players.map(({ id, name, avatar }) => ({ id, name, avatar }));
 
-function AnswerTile({
-  index,
-  text,
-  state,
-  count,
-  onClick,
-  disabled,
-}: {
-  index: number;
-  text: string;
-  state?: "correct" | "wrong" | "dim" | "picked";
-  count?: number;
-  onClick?: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      className={`room-tile opt-${index} ${state ?? ""}`}
-      onClick={onClick}
-      disabled={disabled || !onClick}
-    >
-      <span aria-hidden="true">{LETTERS[index]}</span>
-      <b>{text}</b>
-      {typeof count === "number" && <i>{count}</i>}
-      {state === "correct" && <Check className="answer-mark" />}
-    </button>
-  );
-}
+// ════════════════════════════════════════════════════════════
+// Vis på TV: åbn /?skaerm=KODE på en anden skærm eller send den med Cast
+// ════════════════════════════════════════════════════════════
+type PresentationRequestLike = {
+  start: () => Promise<{ terminate?: () => void }>;
+};
+type PresentationCtor = new (urls: string[]) => PresentationRequestLike;
 
-function Leaderboard({
-  rows,
-  gained,
-  limit,
+function TvSheet({
+  code,
+  trigger,
 }: {
-  rows: (RoomStanding & { rank?: number })[];
-  gained?: Record<string, number>;
-  limit?: number;
+  code: string;
+  trigger: React.ReactNode;
 }) {
+  const [casting, setCasting] = useState<"idle" | "busy" | "on" | "error">(
+    "idle",
+  );
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const url = `${origin}/?skaerm=${code}`;
+  const Presentation =
+    typeof window !== "undefined"
+      ? (window as unknown as { PresentationRequest?: PresentationCtor })
+          .PresentationRequest
+      : undefined;
+  const cast = async () => {
+    if (!Presentation) return;
+    setCasting("busy");
+    try {
+      await new Presentation([url]).start();
+      setCasting("on");
+    } catch {
+      // Brugeren lukkede dialogen, eller ingen Cast-enhed blev fundet.
+      setCasting("error");
+    }
+  };
   return (
-    <ol className="room-board">
-      {rows.slice(0, limit ?? rows.length).map((row, index) => (
-        <li key={row.id} style={{ "--i": index } as React.CSSProperties}>
-          <b>{row.rank ?? index + 1}.</b>
-          <span aria-hidden="true">{row.avatar}</span>
-          <em>{row.name}</em>
-          {gained && gained[row.id] > 0 && <small>+{gained[row.id]}</small>}
-          <strong>{row.score.toLocaleString("da-DK")}</strong>
-        </li>
-      ))}
-    </ol>
+    <Sheet>
+      <SheetTrigger asChild>{trigger}</SheetTrigger>
+      <SheetContent
+        side="bottom"
+        className="max-h-[90dvh] overflow-y-auto pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+      >
+        <SheetHeader>
+          <SheetTitle>{t("Vis spillet på et TV")}</SheetTitle>
+          <SheetDescription>
+            {t(
+              "TV’et viser spørgsmålene. Telefonerne bruges til at svare, og du styrer det hele herfra.",
+            )}
+          </SheetDescription>
+        </SheetHeader>
+        <div className="tv-steps">
+          {Presentation && (
+            <div className="tv-step">
+              <Cast aria-hidden="true" />
+              <div>
+                <b>{t("Cast til et TV")}</b>
+                <p>
+                  {t(
+                    "Virker med Chromecast og Google TV, når du bruger Chrome.",
+                  )}
+                </p>
+                <Button onClick={cast} disabled={casting === "busy"}>
+                  {casting === "busy" ? t("Søger…") : t("Vælg TV")}
+                </Button>
+                {casting === "on" && (
+                  <p className="tv-ok">{t("Sendt til TV’et")}</p>
+                )}
+                {casting === "error" && (
+                  <p className="tv-bad">
+                    {t(
+                      "Der blev ikke fundet noget TV. Brug i stedet den anden mulighed.",
+                    )}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          <div className="tv-step">
+            <Tv aria-hidden="true" />
+            <div>
+              <b>{t("Åbn på TV’ets browser")}</b>
+              <p>
+                {t("Gå ind på {adresse} og tast koden {kode}.", {
+                  adresse: origin.replace(/^https?:\/\//, "") + "/?skaerm",
+                  kode: code,
+                })}
+              </p>
+            </div>
+          </div>
+          <div className="tv-step">
+            <Maximize2 aria-hidden="true" />
+            <div>
+              <b>{t("Spejl skærmen")}</b>
+              <p>
+                {t(
+                  "AirPlay, Miracast eller et HDMI-kabel virker også: tryk på Fuld skærm, når billedet er på TV’et.",
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
 // ════════════════════════════════════════════════════════════
-// Vært: storskærmen
+// Vært: styrer spillet og viser storskærmen
 // ════════════════════════════════════════════════════════════
 export function RoomHost({
   buildQuestions,
   sound,
+  speak,
   onExit,
 }: {
   buildQuestions: (options: RoomBuildOptions) => Promise<Question[]>;
   sound: boolean;
+  speak?: boolean;
   onExit: () => void;
 }) {
   const [code, setCode] = useState<string | null>(null);
@@ -196,24 +267,25 @@ export function RoomHost({
   const [state, setState] = useState<RoomState>(
     () => session?.state ?? emptyRoom(),
   );
-  const [count, setCount] = useState(15);
-  const [level, setLevel] = useState(3);
-  const [categoryIds, setCategoryIds] = useState<string[]>(() =>
-    DEFAULT_CATEGORIES.map((category) => category.id),
-  );
+  const [settings, setSettings] = useState<RoomSettings>(loadRoomSettings);
   const codeRef = useRef<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [qr, setQr] = useState("");
   const [copied, setCopied] = useState(false);
   const stateRef = useRef(state);
   const peerRef = useRef<Peer | null>(null);
   const conns = useRef(new Map<string, DataConnection>());
   const connPid = useRef(new Map<DataConnection, string>());
+  const displays = useRef(new Set<DataConnection>());
   const timer = useRef<number | null>(null);
   const soundRef = useRef(sound);
+  const settingsRef = useRef(settings);
   useEffect(() => {
     soundRef.current = sound;
   }, [sound]);
+  useEffect(() => {
+    settingsRef.current = settings;
+    saveRoomSettings(settings);
+  }, [settings]);
   useWakeLock(Boolean(code));
 
   const apply = useCallback((fn: (s: RoomState) => RoomState) => {
@@ -236,6 +308,35 @@ export function RoomHost({
   };
   const sendLobby = () =>
     broadcast({ t: "lobby", players: publicPlayers(stateRef.current) });
+
+  const joinUrl =
+    typeof window !== "undefined" && code
+      ? `${window.location.origin}/?rum=${code}`
+      : "";
+  const screenModel = (now: number): ScreenModel | null =>
+    codeRef.current
+      ? buildScreenModel(
+          stateRef.current,
+          screenContext(codeRef.current, settingsRef.current),
+          now,
+        )
+      : null;
+  const sendScreen = (conn: DataConnection) => {
+    const model = screenModel(Date.now());
+    if (!model) return;
+    try {
+      conn.send({ t: "screen", model } satisfies HostMessage);
+    } catch {
+      // Skærmen er væk.
+    }
+  };
+
+  // Ekstra skærme får ny model, hver gang noget ændrer sig.
+  useEffect(() => {
+    for (const conn of displays.current) sendScreen(conn);
+    // sendScreen bruger kun refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, settings, code]);
 
   const revealMessage = (s: RoomState, pid: string): HostMessage => {
     const board = standings(s);
@@ -320,6 +421,11 @@ export function RoomHost({
     const parsed = clientMessageSchema.safeParse(raw);
     if (!parsed.success) return;
     const message = parsed.data;
+    if (message.t === "display") {
+      displays.current.add(conn);
+      sendScreen(conn);
+      return;
+    }
     if (message.t === "hello") {
       const result = addPlayer(stateRef.current, {
         id: message.pid,
@@ -364,6 +470,7 @@ export function RoomHost({
   };
 
   const handleClose = (conn: DataConnection) => {
+    displays.current.delete(conn);
     const pid = connPid.current.get(conn);
     connPid.current.delete(conn);
     if (!pid || conns.current.get(pid) !== conn) return;
@@ -377,6 +484,7 @@ export function RoomHost({
     let cancelled = false;
     let created: Peer | null = null;
     const connections = conns.current;
+    const screens = displays.current;
     void (async () => {
       const { Peer: PeerCtor } = await import("peerjs");
       const wanted = session?.code ?? null;
@@ -461,6 +569,13 @@ export function RoomHost({
           // Lukker alligevel.
         }
       }
+      for (const conn of screens) {
+        try {
+          conn.send({ t: "closed" } satisfies HostMessage);
+        } catch {
+          // Lukker alligevel.
+        }
+      }
       created?.destroy();
       peerRef.current = null;
       // Forlader værten rummet med vilje, er det slut. En genindlæsning når
@@ -471,40 +586,23 @@ export function RoomHost({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const joinUrl =
-    typeof window !== "undefined" && code
-      ? `${window.location.origin}/?rum=${code}`
-      : "";
-  useEffect(() => {
-    if (!joinUrl) return;
-    let live = true;
-    void QRCode.toString(joinUrl, {
-      type: "svg",
-      margin: 1,
-      color: { dark: "#120d0a", light: "#ffffff" },
-    }).then((svg) => {
-      if (live) setQr(svg);
-    });
-    return () => {
-      live = false;
-    };
-  }, [joinUrl]);
-
   const start = async () => {
-    if (busy || state.players.length === 0 || categoryIds.length === 0) return;
+    if (busy || state.players.length === 0) return;
     setBusy(true);
     try {
       const questions = await buildQuestions({
-        count,
-        categoryIds,
-        difficulty: level,
+        count: settings.count,
+        categoryIds: settings.categoryIds,
+        difficulty: settings.level,
       });
       if (questions.length === 0) {
         setNotice(t("Der kunne ikke findes spørgsmål. Prøv igen om lidt."));
         return;
       }
       setNotice(null);
-      apply((s) => startGame(s, questions, Date.now()));
+      apply((s) =>
+        startGame(s, questions, Date.now(), settings.limitSec * 1000),
+      );
       broadcastQuestion();
     } finally {
       setBusy(false);
@@ -543,6 +641,11 @@ export function RoomHost({
       // Udklipsholderen er ikke tilgængelig.
     }
   };
+  const fullscreen = () => {
+    if (document.fullscreenElement) void document.exitFullscreen();
+    else
+      void document.documentElement.requestFullscreen().catch(() => undefined);
+  };
 
   // Enter eller mellemrum går videre efter et spørgsmål.
   useEffect(() => {
@@ -550,7 +653,7 @@ export function RoomHost({
       if (event.repeat || event.metaKey || event.ctrlKey || event.altKey)
         return;
       const target = event.target as HTMLElement | null;
-      if (target?.closest("button, input, a")) return;
+      if (target?.closest("button, input, a, [role=dialog]")) return;
       if (
         event.key === "Enter" ||
         event.key === " " ||
@@ -596,266 +699,112 @@ export function RoomHost({
       </div>
     );
 
-  const q = state.questions[state.index];
-  const board = standings(state);
+  const model = buildScreenModel(state, screenContext(code, settings), now);
+  const deadline = state.startedAt + state.limitMs;
+  const last = state.index >= state.questions.length - 1;
+
+  const barButton = (label: string, icon: React.ReactNode) => (
+    <Button variant="ghost" size="sm" aria-label={label} title={label}>
+      {icon}
+      <span className="hidden sm:inline">{label}</span>
+    </Button>
+  );
 
   return (
-    <div className="room-host mx-auto max-w-5xl">
+    <div className="room-host mx-auto max-w-6xl">
+      <div className="room-bar">
+        <span className="room-bar-code" aria-label={t("Rumkode")}>
+          {code}
+        </span>
+        <span className="room-bar-count">
+          {state.players.length === 1
+            ? t("1 spiller med")
+            : t("{n} spillere med", { n: state.players.length })}
+        </span>
+        <div className="room-bar-actions">
+          <TvSheet
+            code={code}
+            trigger={barButton(t("Vis på TV"), <Tv aria-hidden="true" />)}
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={fullscreen}
+            aria-label={t("Fuld skærm")}
+            title={t("Fuld skærm")}
+          >
+            <Maximize2 aria-hidden="true" />
+            <span className="hidden sm:inline">{t("Fuld skærm")}</span>
+          </Button>
+          {state.phase === "lobby" && (
+            <Button variant="ghost" size="sm" onClick={copy}>
+              {copied ? <Check /> : <Copy />}
+              <span className="hidden sm:inline">
+                {copied ? t("Kopieret") : t("Kopiér link")}
+              </span>
+            </Button>
+          )}
+        </div>
+      </div>
+
       {notice && (
         <p className="room-notice" role="status">
           {notice}
         </p>
       )}
 
-      {state.phase === "lobby" && (
-        <div className="room-lobby">
-          <div className="room-join">
-            <p className="room-join-hint">
-              {t("Gå ind på {adresse} og tast koden", {
-                adresse: joinUrl
-                  .replace(/^https?:\/\//, "")
-                  .replace(/\/\?rum=.*/, ""),
-              })}
-            </p>
-            <div
-              className="room-code"
-              aria-label={t("Rumkode {kode}", {
-                kode: code.split("").join(" "),
-              })}
-            >
-              {code.split("").map((letter, index) => (
-                <span key={index}>{letter}</span>
-              ))}
-            </div>
-            {qr && (
-              <div
-                className="room-qr"
-                role="img"
-                aria-label={t("QR-kode til rummet")}
-                dangerouslySetInnerHTML={{ __html: qr }}
-              />
-            )}
-            <Button variant="ghost" size="sm" onClick={copy}>
-              {copied ? <Check /> : <Copy />}
-              {copied ? t("Kopieret") : t("Kopiér link")}
-            </Button>
-          </div>
-          <div className="room-players-panel">
-            <h1 className="flex items-center gap-2 text-2xl font-black">
-              <Users aria-hidden="true" />
-              {state.players.length === 0
-                ? t("Venter på spillere…")
-                : state.players.length === 1
-                  ? t("1 spiller med")
-                  : t("{n} spillere med", { n: state.players.length })}
-            </h1>
-            <ul className="room-chips" aria-live="polite">
-              {state.players.map((p) => (
-                <li key={p.id} className={p.connected ? "" : "away"}>
-                  <span aria-hidden="true">{p.avatar}</span>
-                  {p.name}
-                  <button
-                    type="button"
-                    aria-label={t("Fjern {name}", { name: p.name })}
-                    onClick={() => kick(p.id)}
-                  >
-                    <X />
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <div className="room-settings">
-              <span id="room-count-label">{t("Antal spørgsmål")}</span>
-              <div role="radiogroup" aria-labelledby="room-count-label">
-                {COUNTS.map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    role="radio"
-                    aria-checked={count === n}
-                    className={count === n ? "on" : ""}
-                    onClick={() => setCount(n)}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="room-settings">
-              <span id="room-level-label">{t("Niveau")}</span>
-              <div role="radiogroup" aria-labelledby="room-level-label">
-                {LEVELS.map((item) => (
-                  <button
-                    key={item.value}
-                    type="button"
-                    role="radio"
-                    aria-checked={level === item.value}
-                    className={level === item.value ? "on" : ""}
-                    onClick={() => setLevel(item.value)}
-                  >
-                    {t(item.label)}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="room-topics">
-              <span id="room-topics-label">{t("Emner")}</span>
-              <div role="group" aria-labelledby="room-topics-label">
-                <button
-                  type="button"
-                  className={sameIds(categoryIds, allIds) ? "on" : ""}
-                  onClick={() => setCategoryIds(allIds)}
-                >
-                  {t("Alle")}
+      <RoomScreen
+        model={model}
+        deadline={deadline}
+        speakAloud={speak}
+        onKick={state.phase === "lobby" ? kick : undefined}
+        lobbyExtra={
+          <>
+            <RoomSettingsSheet
+              settings={settings}
+              onChange={setSettings}
+              trigger={
+                <button type="button" className="room-settings-card">
+                  <Settings2 aria-hidden="true" />
+                  <span>
+                    <b>{t("Spilindstillinger")}</b>
+                    <small>{t("Emner, antal spørgsmål, tid og niveau")}</small>
+                  </span>
+                  <em>{t("Ændr")}</em>
                 </button>
-                <button
-                  type="button"
-                  className={
-                    sameIds(categoryIds, DANISH_CATEGORY_IDS) ? "on" : ""
-                  }
-                  onClick={() => setCategoryIds([...DANISH_CATEGORY_IDS])}
-                >
-                  {t("Kun dansk")}
-                </button>
-                {CATEGORY_GROUPS.map((group) => {
-                  const on = group.ids.every((id) => categoryIds.includes(id));
-                  return (
-                    <button
-                      key={group.name}
-                      type="button"
-                      aria-pressed={on}
-                      className={on ? "on" : ""}
-                      onClick={() =>
-                        setCategoryIds((current) =>
-                          on
-                            ? current.filter((id) => !group.ids.includes(id))
-                            : [...new Set([...current, ...group.ids])],
-                        )
-                      }
-                    >
-                      {group.emoji} {group.name}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+              }
+            />
             <Button
               size="lg"
-              className="mt-4 h-14 w-full text-base"
-              disabled={
-                busy || state.players.length === 0 || categoryIds.length === 0
-              }
+              className="room-start"
+              disabled={busy || state.players.length === 0}
               onClick={start}
             >
               {busy ? t("Finder spørgsmål…") : t("Start quizzen")}
               <ArrowRight />
             </Button>
-            <Button variant="ghost" className="mt-2 w-full" onClick={onExit}>
+            <Button variant="ghost" className="w-full" onClick={onExit}>
               {t("Luk rummet")}
             </Button>
-          </div>
-        </div>
-      )}
-
-      {state.phase === "question" && q && (
-        <div className="room-stage">
-          <div className="room-meta">
-            <span>
-              {t("Spørgsmål {n} af {total}", {
-                n: state.index + 1,
-                total: state.questions.length,
-              })}
-            </span>
-            <span>
-              {t("{n} af {total} har svaret", {
-                n: Object.keys(state.answers).length,
-                total: state.players.length,
-              })}
-            </span>
-          </div>
-          <div
-            className={`blitz-bar ${secondsLeft <= 5 ? "hurry" : ""}`}
-            role="timer"
-            aria-label={t("{secondsLeft} sekunder tilbage", { secondsLeft })}
-          >
-            <i style={{ width: `${(left / state.limitMs) * 100}%` }} />
-            <b>{secondsLeft}</b>
-          </div>
-          <h1 className="room-prompt">{q.prompt}</h1>
-          <div className={`room-tiles ${q.options.length === 2 ? "two" : ""}`}>
-            {q.options.map((o, i) => (
-              <AnswerTile key={o.id} index={i} text={o.text} />
-            ))}
-          </div>
+          </>
+        }
+      >
+        {state.phase === "question" && (
           <div className="room-actions">
             <Button variant="outline" onClick={doReveal}>
               {t("Vis svaret nu")}
             </Button>
           </div>
-        </div>
-      )}
-
-      {state.phase === "reveal" && q && (
-        <div className="room-stage">
-          <div className="room-meta">
-            <span>
-              {t("Spørgsmål {n} af {total}", {
-                n: state.index + 1,
-                total: state.questions.length,
-              })}
-            </span>
-            <span>
-              {t("{n} af {total} svarede rigtigt", {
-                n: Object.values(state.results).filter((r) => r.correct).length,
-                total: state.players.length,
-              })}
-            </span>
-          </div>
-          <h1 className="room-prompt">{q.prompt}</h1>
-          <div className={`room-tiles ${q.options.length === 2 ? "two" : ""}`}>
-            {q.options.map((o, i) => (
-              <AnswerTile
-                key={o.id}
-                index={i}
-                text={o.text}
-                count={answerCounts(state)[o.id] ?? 0}
-                state={o.id === q.correctOptionId ? "correct" : "dim"}
-              />
-            ))}
-          </div>
-          {q.explanation && <p className="room-explanation">{q.explanation}</p>}
-          <Leaderboard
-            rows={board}
-            limit={5}
-            gained={Object.fromEntries(
-              Object.entries(state.results).map(([id, r]) => [id, r.points]),
-            )}
-          />
+        )}
+        {state.phase === "reveal" && (
           <div className="room-actions">
             <Button size="lg" className="h-14 px-8 text-base" onClick={next}>
-              {state.index >= state.questions.length - 1
-                ? t("Se resultatet")
-                : t("Næste spørgsmål")}
+              {last ? t("Se resultatet") : t("Næste spørgsmål")}
               <ArrowRight />
             </Button>
           </div>
-        </div>
-      )}
-
-      {state.phase === "end" && (
-        <div className="room-stage text-center">
-          <div className="winner-crown">👑</div>
-          <h1 className="text-4xl font-black sm:text-5xl">
-            {board[0]
-              ? board.filter((b) => b.rank === 1).length > 1
-                ? t("Delt sejr!")
-                : t("{avatar} {name} vinder!", {
-                    avatar: board[0].avatar,
-                    name: board[0].name,
-                  })
-              : t("Spillet er slut")}
-          </h1>
-          <Leaderboard rows={board} limit={10} />
+        )}
+        {state.phase === "end" && (
           <div className="room-actions">
             <Button size="lg" className="h-14 px-8 text-base" onClick={again}>
               {t("Spil igen med samme hold")}
@@ -864,6 +813,219 @@ export function RoomHost({
               {t("Luk rummet")}
             </Button>
           </div>
+        )}
+      </RoomScreen>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+// Skærm: et TV eller en anden enhed, der kun viser spillet
+// ════════════════════════════════════════════════════════════
+export function RoomDisplay({
+  initialCode,
+  speak,
+  onExit,
+}: {
+  initialCode: string;
+  speak?: boolean;
+  onExit: () => void;
+}) {
+  const [codeInput, setCodeInput] = useState(initialCode);
+  const [model, setModel] = useState<ScreenModel | null>(null);
+  const [deadline, setDeadline] = useState<number | undefined>();
+  const [status, setStatus] = useState<
+    "form" | "connecting" | "live" | "problem"
+  >(initialCode ? "connecting" : "form");
+  const [problem, setProblem] = useState("");
+  const peerRef = useRef<Peer | null>(null);
+  const connRef = useRef<DataConnection | null>(null);
+  const activeRef = useRef(false);
+  const codeRef = useRef("");
+  const attempts = useRef(0);
+  useWakeLock(status === "live");
+
+  const teardown = useCallback(() => {
+    activeRef.current = false;
+    connRef.current?.close();
+    peerRef.current?.destroy();
+    connRef.current = null;
+    peerRef.current = null;
+  }, []);
+  useEffect(() => teardown, [teardown]);
+
+  const connect = useCallback(async () => {
+    const { Peer: PeerCtor } = await import("peerjs");
+    if (!activeRef.current) return;
+    let peer = peerRef.current;
+    if (!peer || peer.destroyed) {
+      peer = new PeerCtor(peerOptions());
+      peerRef.current = peer;
+      peer.on("error", () => {
+        if (!activeRef.current || attempts.current > 0) return;
+        setProblem(
+          t(
+            "Rummet blev ikke fundet. Tjek koden – eller bed værten oprette et nyt.",
+          ),
+        );
+        setStatus("problem");
+      });
+    }
+    const dial = () => {
+      if (!activeRef.current || !peer) return;
+      const conn = peer.connect(roomPeerId(codeRef.current), {
+        reliable: true,
+      });
+      connRef.current = conn;
+      const lost = () => {
+        if (!activeRef.current || connRef.current !== conn) return;
+        if (attempts.current >= 60) {
+          setProblem(t("Forbindelsen til værten blev tabt."));
+          setStatus("problem");
+          return;
+        }
+        attempts.current += 1;
+        window.setTimeout(() => {
+          if (!activeRef.current) return;
+          if (peer?.disconnected) peer.reconnect();
+          dial();
+        }, 2000);
+      };
+      const timeout = window.setTimeout(() => {
+        if (!conn.open) lost();
+      }, 12_000);
+      conn.on("open", () => {
+        window.clearTimeout(timeout);
+        attempts.current = 0;
+        conn.send({ t: "display" });
+      });
+      conn.on("data", (data) => {
+        if (!data || typeof data !== "object") return;
+        const message = data as HostMessage;
+        if (message.t === "screen" && isScreenModel(message.model)) {
+          setStatus("live");
+          setModel(message.model);
+          setDeadline(
+            message.model.phase === "question"
+              ? Date.now() + message.model.remainingMs
+              : undefined,
+          );
+        } else if (message.t === "closed") {
+          activeRef.current = false;
+          setProblem(t("Værten har lukket rummet."));
+          setStatus("problem");
+        }
+      });
+      conn.on("close", lost);
+      conn.on("error", lost);
+    };
+    if (peer.open) dial();
+    else peer.once("open", dial);
+  }, []);
+
+  const join = useCallback(
+    (raw: string) => {
+      const normalized = normalizeRoomCode(raw);
+      if (!normalized) {
+        setProblem(t("Koden består af fire bogstaver, fx KFRT."));
+        setStatus("problem");
+        return;
+      }
+      codeRef.current = normalized;
+      attempts.current = 0;
+      activeRef.current = true;
+      setStatus("connecting");
+      void connect();
+    },
+    [connect],
+  );
+
+  // Et link som /?skaerm=ABCD går direkte i gang.
+  useEffect(() => {
+    if (!initialCode) return;
+    const id = window.setTimeout(() => join(initialCode), 0);
+    return () => window.clearTimeout(id);
+    // Kører kun én gang.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (status === "live" && model)
+    return (
+      <div className="room-host room-tv mx-auto max-w-7xl">
+        <RoomScreen model={model} deadline={deadline} speakAloud={speak} />
+      </div>
+    );
+
+  return (
+    <div className="room-player mx-auto max-w-md">
+      {status === "form" && (
+        <form
+          className="room-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            join(codeInput);
+          }}
+        >
+          <h1 className="text-3xl font-black">{t("Brug som TV-skærm")}</h1>
+          <p className="text-muted-foreground">
+            {t(
+              "Tast koden fra værten. Denne skærm viser spørgsmålene, men man kan ikke svare her.",
+            )}
+          </p>
+          <label>
+            {t("Rumkode")}
+            <input
+              value={codeInput}
+              onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
+              maxLength={6}
+              autoCapitalize="characters"
+              autoComplete="off"
+              spellCheck={false}
+              className="room-code-input"
+              placeholder="ABCD"
+            />
+          </label>
+          <Button size="lg" className="h-14 w-full text-base" type="submit">
+            {t("Vis spillet")}
+            <ArrowRight />
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full"
+            type="button"
+            onClick={onExit}
+          >
+            {t("Tilbage")}
+          </Button>
+        </form>
+      )}
+      {(status === "connecting" || (status === "live" && !model)) && (
+        <div className="room-wait" role="status">
+          <div className="room-spinner" aria-hidden="true" />
+          <h1>{t("Forbinder…")}</h1>
+          <Button variant="ghost" onClick={onExit}>
+            {t("Annuller")}
+          </Button>
+        </div>
+      )}
+      {status === "problem" && (
+        <div className="room-wait" role="alert">
+          <span className="room-result-icon" aria-hidden="true">
+            😕
+          </span>
+          <h1>{t("Det lykkedes ikke")}</h1>
+          <p>{problem}</p>
+          <Button
+            onClick={() => {
+              teardown();
+              setStatus("form");
+            }}
+          >
+            {t("Prøv igen")}
+          </Button>
+          <Button variant="ghost" onClick={onExit}>
+            {t("Til forsiden")}
+          </Button>
         </div>
       )}
     </div>
@@ -919,10 +1081,12 @@ export function RoomPlayer({
   initialCode,
   haptics,
   onExit,
+  onDisplay,
 }: {
   initialCode: string;
   haptics: boolean;
   onExit: () => void;
+  onDisplay?: () => void;
 }) {
   const [resume] = useState(() => (initialCode ? null : readResume()));
   const [view, setView] = useState<PlayerView>(
@@ -933,6 +1097,7 @@ export function RoomPlayer({
   const [name, setName] = useState(profile.name);
   const [avatar, setAvatar] = useState(profile.avatar);
   const [me, setMe] = useState<RoomPublicPlayer | null>(null);
+  const [score, setScore] = useState(0);
   const [roster, setRoster] = useState<RoomPublicPlayer[]>([]);
   const [picked, setPicked] = useState<string | null>(null);
   const [reconnecting, setReconnecting] = useState(Boolean(resume));
@@ -986,6 +1151,7 @@ export function RoomPlayer({
         });
         break;
       case "reveal":
+        setScore(message.you.score);
         setView({
           phase: "reveal",
           correctId: message.correctId,
@@ -996,6 +1162,7 @@ export function RoomPlayer({
           navigator.vibrate(message.you.correct ? [40] : [90, 60, 90]);
         break;
       case "end":
+        setScore(message.you.score);
         setView({
           phase: "end",
           standings: message.standings,
@@ -1172,6 +1339,11 @@ export function RoomPlayer({
           ),
         )
       : 0;
+  const inGame =
+    view.phase === "lobby" ||
+    view.phase === "question" ||
+    view.phase === "reveal" ||
+    view.phase === "end";
 
   return (
     <div className="room-player mx-auto max-w-md">
@@ -1179,6 +1351,16 @@ export function RoomPlayer({
         <p className="room-notice" role="status">
           {t("Forbinder igen…")}
         </p>
+      )}
+
+      {inGame && me && (
+        <div className="room-me-bar">
+          <span aria-hidden="true">{me.avatar}</span>
+          <b>{me.name}</b>
+          <em>
+            {score.toLocaleString(locale())} {t("point")}
+          </em>
+        </div>
       )}
 
       {view.phase === "form" && (
@@ -1234,6 +1416,20 @@ export function RoomPlayer({
             {t("Join")}
             <ArrowRight />
           </Button>
+          {onDisplay && (
+            <Button
+              variant="outline"
+              className="w-full"
+              type="button"
+              onClick={() => {
+                teardown();
+                onDisplay();
+              }}
+            >
+              <Tv aria-hidden="true" />
+              {t("Brug denne skærm som TV")}
+            </Button>
+          )}
           <Button
             variant="ghost"
             className="w-full"
@@ -1285,10 +1481,18 @@ export function RoomPlayer({
             </span>
             <span>{view.q.category}</span>
             <span
+              className={secondsLeft <= 5 ? "hurry" : ""}
               aria-label={t("{secondsLeft} sekunder tilbage", { secondsLeft })}
             >
               {secondsLeft} s
             </span>
+          </div>
+          <div className="room-progress" aria-hidden="true">
+            <i
+              style={{
+                width: `${Math.max(0, Math.min(100, ((view.deadline - now) / view.q.limitMs) * 100))}%`,
+              }}
+            />
           </div>
           <h1 className="room-phone-prompt">{view.q.prompt}</h1>
           <div
@@ -1334,13 +1538,15 @@ export function RoomPlayer({
             <p className="room-points">+{view.you.points}</p>
           )}
           {view.you.streak >= 2 && (
-            <p className="room-streak">🔥 {view.you.streak} i træk</p>
+            <p className="room-streak">
+              🔥 {t("{n} i træk", { n: view.you.streak })}
+            </p>
           )}
           <p>
-            Du er nr. <b>{view.you.rank}</b> med{" "}
-            <b>{view.you.score.toLocaleString("da-DK")}</b> point
+            {t("Du er nr.")} <b>{view.you.rank}</b> {t("med")}{" "}
+            <b>{view.you.score.toLocaleString(locale())}</b> {t("point")}
           </p>
-          <Leaderboard rows={view.leaders} />
+          <Leaderboard rows={view.leaders} highlight={me?.id} />
         </div>
       )}
 
@@ -1355,9 +1561,18 @@ export function RoomPlayer({
               : t("Du blev nr. {rank}", { rank: view.you.rank })}
           </h1>
           <p>
-            <b>{view.you.score.toLocaleString("da-DK")}</b> point
+            <b>{view.you.score.toLocaleString(locale())}</b> {t("point")}
           </p>
-          <Leaderboard rows={view.standings} limit={5} />
+          {view.standings.length >= 3 ? (
+            <Podium
+              rows={view.standings.map((row, index) => ({
+                ...row,
+                rank: index + 1,
+              }))}
+            />
+          ) : (
+            <Leaderboard rows={view.standings} limit={5} highlight={me?.id} />
+          )}
           <p className="text-sm text-muted-foreground">
             {t("Bliv her, hvis værten starter en ny runde.")}
           </p>

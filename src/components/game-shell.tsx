@@ -38,6 +38,7 @@ import {
   X,
   Zap,
   Languages,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-lockup";
@@ -57,6 +58,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { canSpeak, questionSpeech, speak, stopSpeaking } from "@/lib/speech";
+import { ThemeSheet } from "@/components/theme-sheet";
+import { InstallButton } from "@/components/install-button";
 import { ANIMAL_AVATARS, APP_CONFIG, DIFFICULTY_LABELS } from "@/lib/config";
 import {
   CATEGORIES,
@@ -150,7 +154,8 @@ type View =
   | "settings"
   | "review"
   | "room-host"
-  | "room-join";
+  | "room-join"
+  | "room-screen";
 type BestScore = { correct: number; total: number; score: number; at: string };
 type RecordInfo = { previous?: BestScore; isRecord: boolean } | null;
 const defaults: AppSettings = {
@@ -162,6 +167,7 @@ const defaults: AppSettings = {
   largeText: false,
   confirmAnswers: false,
   readAloud: false,
+  speak: false,
 };
 const modes: { id: GameMode; title: string; text: string; icon: string }[] = [
   {
@@ -359,6 +365,10 @@ const RoomPlayer = dynamic(
   () => import("@/components/room").then((m) => m.RoomPlayer),
   { ssr: false },
 );
+const RoomDisplay = dynamic(
+  () => import("@/components/room").then((m) => m.RoomDisplay),
+  { ssr: false },
+);
 const tone = playCue;
 declare global {
   interface Window {
@@ -463,7 +473,12 @@ export function GameShell() {
       try {
         const params = new URLSearchParams(window.location.search);
         const code = normalizeRoomCode(params.get("rum") ?? "");
-        if (code) {
+        if (params.has("skaerm")) {
+          // /?skaerm=ABCD gør enheden til en ren TV-skærm for rummet.
+          setRoomCode(normalizeRoomCode(params.get("skaerm") ?? "") ?? "");
+          setView("room-screen");
+          window.history.replaceState(null, "", window.location.pathname);
+        } else if (code) {
           setRoomCode(code);
           setView("room-join");
           window.history.replaceState(null, "", window.location.pathname);
@@ -652,6 +667,20 @@ export function GameShell() {
     );
     return () => window.clearTimeout(id);
   }, [lang, hydrated]);
+  const pickTheme = (categoryIds: string[]) => {
+    tone("tap", settings.sound);
+    setSetup((current) => ({
+      ...current,
+      mode: "classic",
+      categoryIds,
+      players:
+        current.players.length < 2
+          ? [...current.players, newPlayer(playerName(2), 1)]
+          : current.players,
+    }));
+    setStep(0);
+    setView("setup");
+  };
   const go = (v: View) => {
     tone("tap", settings.sound);
     if (v === "setup") {
@@ -1212,6 +1241,7 @@ export function GameShell() {
         quick={quick}
         playBlitz={playBlitz}
         playDaily={playDaily}
+        pickTheme={pickTheme}
         daily={daily}
         todayKey={todayKey}
         busy={questionBankLoading}
@@ -1235,6 +1265,7 @@ export function GameShell() {
         sound={settings.sound}
         confirmAnswers={Boolean(settings.confirmAnswers)}
         readAloud={Boolean(settings.readAloud)}
+        speakAloud={Boolean(settings.speak)}
         answer={answer}
         next={nextQuestion}
         report={reportQuestion}
@@ -1264,11 +1295,22 @@ export function GameShell() {
       <RoomHost
         buildQuestions={buildRoomQuestions}
         sound={settings.sound}
+        speak={Boolean(settings.speak)}
         onExit={() => go("home")}
+      />
+    ) : view === "room-screen" ? (
+      <RoomDisplay
+        initialCode={roomCode}
+        speak={Boolean(settings.speak)}
+        onExit={() => {
+          setRoomCode("");
+          go("home");
+        }}
       />
     ) : view === "room-join" ? (
       <RoomPlayer
         initialCode={roomCode}
+        onDisplay={() => setView("room-screen")}
         haptics={settings.haptics}
         onExit={() => {
           setRoomCode("");
@@ -1667,6 +1709,7 @@ function Home({
   quick,
   playBlitz,
   playDaily,
+  pickTheme,
   daily,
   todayKey,
   busy,
@@ -1679,6 +1722,7 @@ function Home({
   quick: () => void;
   playBlitz: () => void;
   playDaily: () => void;
+  pickTheme: (categoryIds: string[]) => void;
   daily: DailyProgress | null;
   todayKey: string;
   busy: boolean;
@@ -1782,6 +1826,14 @@ function Home({
             <button type="button" disabled={busy} onClick={playBlitz}>
               <Zap /> {t("Lynrunde")}
             </button>
+            <ThemeSheet
+              onPick={pickTheme}
+              trigger={
+                <button type="button">
+                  <Sparkles /> {t("Tema")}
+                </button>
+              }
+            />
             <button type="button" onClick={() => go("room-host")}>
               <Smartphone /> {t("Opret rum")}
             </button>
@@ -1795,6 +1847,7 @@ function Home({
               <BarChart3 /> {t("Statistik")}
             </button>
           </div>
+          <InstallButton />
           {(best || history.length > 0) && (
             <p className="home-stats">
               {best && (
@@ -2152,6 +2205,15 @@ function Setup({
               <Shuffle />
               {t("Tilfældig blanding")}
             </Button>
+            <ThemeSheet
+              onPick={(categoryIds) => setSetup({ ...setup, categoryIds })}
+              trigger={
+                <Button size="sm" variant="outline">
+                  <Sparkles />
+                  {t("Tema")}
+                </Button>
+              }
+            />
             <Button
               size="sm"
               variant="outline"
@@ -2491,6 +2553,7 @@ function Play({
   sound,
   confirmAnswers,
   readAloud,
+  speakAloud,
   answer,
   next,
   setRisk,
@@ -2503,6 +2566,7 @@ function Play({
   sound: boolean;
   confirmAnswers: boolean;
   readAloud: boolean;
+  speakAloud: boolean;
   answer: (id: string, ms: number) => void;
   next: () => void;
   skip: () => boolean;
@@ -2553,6 +2617,19 @@ function Play({
     [secondsLeft, setSecondsLeft] = useState(30);
   useEffect(() => {
     started.current = Date.now();
+  }, []);
+  useEffect(() => {
+    // Oplæsning med stemme: spørgsmålet læses, når det vises.
+    if (!speakAloud || given) return;
+    speak(
+      questionSpeech(
+        q.prompt,
+        q.options.map((option) => option.text),
+      ),
+    );
+    return stopSpeaking;
+    // Kører kun, når et nyt spørgsmål vises.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (!(game.setup.timer || game.setup.timeBonus) || given) return;
@@ -4173,6 +4250,7 @@ function SettingsView({
             [t("Stor tekst (nem at læse op)"), "largeText"],
             [t("Bekræft svar (tryk to gange)"), "confirmAnswers"],
             [t("Læs-op: skjul svar, til værten viser dem"), "readAloud"],
+            ...(canSpeak() ? [[t("Oplæs spørgsmål med stemme"), "speak"]] : []),
           ].map(([label, key]) => (
             <div
               className="flex min-h-16 items-center justify-between p-3"
