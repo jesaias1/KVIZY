@@ -124,11 +124,13 @@ export function startGame(
   state: RoomState,
   questions: Question[],
   now: number,
+  limitMs: number = state.limitMs,
 ) {
   return startQuestion(
     {
       ...state,
       questions,
+      limitMs,
       index: 0,
       players: state.players.map((p) => ({
         ...p,

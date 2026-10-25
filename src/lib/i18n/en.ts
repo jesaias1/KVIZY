@@ -81,7 +81,8 @@ export const EN: Record<string, string> = {
   Gudenåen: "Gudenåen",
   "Odense Å": "Odense Å",
   "🐾 Dyr": "🐾 Animals",
-  "Hvor mange hjerter har en blæksprutte?": "How many hearts does an octopus have?",
+  "Hvor mange hjerter har en blæksprutte?":
+    "How many hearts does an octopus have?",
   "🎨 Kunst": "🎨 Art",
   "Hvem malede «Skriget»?": "Who painted “The Scream”?",
   "Gustav Klimt": "Gustav Klimt",
@@ -102,7 +103,8 @@ export const EN: Record<string, string> = {
   "Klaret · {correct}/{total}": "Done · {correct}/{total}",
   "Samme ti til alle": "The same ten for everyone",
   "{streak} dage i træk": "{streak} days in a row",
-  "Dansk quiz til venner, fest og pubquiz": "A quiz for friends, parties and pub nights",
+  "Dansk quiz til venner, fest og pubquiz":
+    "A quiz for friends, parties and pub nights",
   "Quiz-aftenen starter": "Quiz night starts",
   "her.": "here.",
   "Giv telefonen rundt og find ud af, hvem der ved mest. Ingen login, ingen download.":
@@ -213,7 +215,8 @@ export const EN: Record<string, string> = {
   "🎁 Mystery Mix": "🎁 Mystery Mix",
   "Niveau {n}": "Level {n}",
   "Finale · dobbelt point": "Final · double points",
-  "Byt et spørgsmål, I allerede har set": "Swap a question you have already seen",
+  "Byt et spørgsmål, I allerede har set":
+    "Swap a question you have already seen",
   "Behold turen og få et nyt spørgsmål": "Keep the turn and get a new question",
   "Set før? Byt": "Seen it? Swap",
   "Der er ikke et andet ubrugt spørgsmål i den valgte pulje.":
@@ -256,7 +259,8 @@ export const EN: Record<string, string> = {
   "Spørgsmålene vandt denne gang. Tag en omkamp.":
     "The questions won this time. Go for a rematch.",
   "Av for den": "Ouch",
-  "Herfra kan det kun gå fremad. Prøv igen!": "It can only go up from here. Try again!",
+  "Herfra kan det kun gå fremad. Prøv igen!":
+    "It can only go up from here. Try again!",
   "Ukendt kategori": "Unknown category",
   "Helt lige kamp – en revanche må afgøre det.":
     "A dead heat – a rematch will have to decide it.",
@@ -266,7 +270,8 @@ export const EN: Record<string, string> = {
     "{name} decided the game with a strong streak of {longestStreak}.",
   "Det blev afgjort på marginalerne – en revanche ligger lige for.":
     "It was decided on the margins – a rematch is the obvious next step.",
-  "{name} holdt hovedet koldt og tog sejren.": "{name} kept a cool head and took the win.",
+  "{name} holdt hovedet koldt og tog sejren.":
+    "{name} kept a cool head and took the win.",
   "{v0} % rigtige – klar til noget sværere?":
     "{v0}% correct – ready for something harder?",
   "Det var en hård omgang. Prøv et lidt lettere niveau?":
@@ -280,14 +285,16 @@ export const EN: Record<string, string> = {
     "{name} · {correct}/{total} · {score} points\n{grid}\nCan you beat that? www.kvizy.dk",
   "{name}: {winnerNames} delte førstepladsen med {score} point!":
     "{name}: {winnerNames} shared first place with {score} points!",
-  "{name}: {winner} vandt med {score} point!": "{name}: {winner} won with {score} points!",
+  "{name}: {winner} vandt med {score} point!":
+    "{name}: {winner} won with {score} points!",
   rigtige: "correct",
   "{correct} af {total}": "{correct} of {total}",
   "{score} point": "{score} points",
   "Dagens quiz · {streak} dage i træk": "Daily quiz · {streak} days in a row",
   "Dagens quiz klaret": "Daily quiz done",
   "Ny personlig rekord!": "New personal record!",
-  "Din rekord i lynrunden: {correct} rigtige": "Your lightning round record: {correct} correct",
+  "Din rekord i lynrunden: {correct} rigtige":
+    "Your lightning round record: {correct} correct",
   "Din rekord på {total} spørgsmål: {correct} rigtige":
     "Your record over {total} questions: {correct} correct",
   "Spillet er slut": "The game is over",
@@ -346,7 +353,8 @@ export const EN: Record<string, string> = {
   "Træn dem · 10 spørgsmål": "Train them · 10 questions",
   "Efter kategori": "By category",
   Ukendt: "Unknown",
-  "Spil lidt mere, så vises kategorierne her.": "Play a little more and the categories will show up here.",
+  "Spil lidt mere, så vises kategorierne her.":
+    "Play a little more and the categories will show up here.",
   "Efter niveau": "By level",
   Spilhistorik: "Game history",
   "{names} delte førstepladsen": "{names} shared first place",
@@ -356,14 +364,16 @@ export const EN: Record<string, string> = {
   "Dit første resultat dukker op her.": "Your first result will show up here.",
   // Hjælp
   "Vælg holdet": "Pick the team",
-  "Tilføj spillere eller hold, kategorier og niveau.": "Add players or teams, categories and level.",
+  "Tilføj spillere eller hold, kategorier og niveau.":
+    "Add players or teams, categories and level.",
   "Giv videre": "Pass it on",
   "Den aktive spiller svarer og giver enheden videre.":
     "The active player answers and passes the device on.",
   "Tænk. Vind.": "Think. Win.",
   "Et rigtigt svar giver 100 point. Ekstra point kræver et aktivt tilvalg.":
     "A correct answer gives 100 points. Extra points need an extra you switch on.",
-  "Rum: alle svarer på deres egen telefon": "Rooms: everyone answers on their own phone",
+  "Rum: alle svarer på deres egen telefon":
+    "Rooms: everyone answers on their own phone",
   "Vælg «Opret rum» på forsiden på en laptop eller et tv. Alle andre går ind på kvizy.dk, vælger «Join rum» og taster koden – eller scanner QR-koden. Alle svarer samtidig, og jo hurtigere man svarer rigtigt, jo flere point (600–1.000). Rummet kører på værtens enhed, så værten skal holde siden åben. Virker det ikke på mobildata, så prøv at lade alle bruge samme Wi-Fi.":
     "Choose “Create room” on the home page on a laptop or a TV. Everyone else goes to kvizy.dk, chooses “Join room” and types the code – or scans the QR code. Everyone answers at the same time, and the faster you answer correctly, the more points you get (600–1,000). The room runs on the host's device, so the host has to keep the page open. If it does not work on mobile data, try getting everyone onto the same Wi-Fi.",
   "Point der er nemme at forstå": "Points that are easy to understand",
@@ -379,7 +389,8 @@ export const EN: Record<string, string> = {
   "Åbn browsermenuen, og vælg “Installér app” eller “Føj til startskærm”.":
     "Open the browser menu and choose “Install app” or “Add to home screen”.",
   // Indstillinger og backup
-  "Backupen er klar. Gem koden et sikkert sted.": "The backup is ready. Keep the code somewhere safe.",
+  "Backupen er klar. Gem koden et sikkert sted.":
+    "The backup is ready. Keep the code somewhere safe.",
   "Backup kunne ikke oprettes.": "The backup could not be created.",
   "Backupen har et ukendt format.": "The backup has an unknown format.",
   "Gendannet: {length} tidligere spørgsmål og jeres seneste opsætning.":
@@ -391,7 +402,8 @@ export const EN: Record<string, string> = {
   "Høj kontrast": "High contrast",
   "Stor tekst (nem at læse op)": "Large text (easy to read aloud)",
   "Bekræft svar (tryk to gange)": "Confirm answers (tap twice)",
-  "Læs-op: skjul svar, til værten viser dem": "Read-aloud: hide answers until the host shows them",
+  "Læs-op: skjul svar, til værten viser dem":
+    "Read-aloud: hide answers until the host shows them",
   "Lyst tema": "Light theme",
   "Backup af seneste spørgsmål": "Back up your recent questions",
   "Gem historikken over sete spørgsmål og jeres seneste opsætning. Så undgår I unødige gentagelser, selv efter en geninstallation. Koden udløber efter ét år og indeholder ingen rapporter eller svar.":
@@ -408,7 +420,8 @@ export const EN: Record<string, string> = {
   "KVIZY indlæses": "KVIZY is loading",
   "Spillet gøres klar": "Getting the game ready",
   "KVIZY spilles stående": "KVIZY is played in portrait",
-  "Drej telefonen tilbage til stående visning.": "Turn your phone back to portrait view.",
+  "Drej telefonen tilbage til stående visning.":
+    "Turn your phone back to portrait view.",
   // Rum
   "Forbindelsen til mødeserveren blev afbrudt. Nye spillere kan midlertidigt ikke komme med.":
     "The connection to the meeting server was lost. New players cannot join for the moment.",
@@ -450,7 +463,8 @@ export const EN: Record<string, string> = {
   "Det tog for lang tid at få kontakt. Prøv igen, tjek at koden er rigtig, eller brug samme Wi-Fi som værten.":
     "It took too long to make contact. Try again, check that the code is right, or use the same Wi-Fi as the host.",
   "Forbindelsen til værten blev tabt.": "The connection to the host was lost.",
-  "Koden består af fire bogstaver, fx KFRT.": "The code is four letters, e.g. KFRT.",
+  "Koden består af fire bogstaver, fx KFRT.":
+    "The code is four letters, e.g. KFRT.",
   "Forbinder igen…": "Reconnecting…",
   "Join et rum": "Join a room",
   Rumkode: "Room code",
@@ -470,7 +484,8 @@ export const EN: Record<string, string> = {
   "Tiden løb ud": "Time ran out",
   "Du vandt!": "You won!",
   "Du blev nr. {rank}": "You came {rank}",
-  "Bliv her, hvis værten starter en ny runde.": "Stay here if the host starts a new round.",
+  "Bliv her, hvis værten starter en ny runde.":
+    "Stay here if the host starts a new round.",
   "Det lykkedes ikke": "That did not work",
   Spiller: "Player",
   // Præstationer og titler
@@ -578,4 +593,82 @@ export const EN: Record<string, string> = {
   "Nostalgi og nutid": "Nostalgia and now",
   "Universer og fans": "Universes and fandoms",
   Quizformater: "Quiz formats",
+  Tema: "Theme",
+  "Spil efter tema": "Play by theme",
+  Julefrokost: "Christmas party",
+  "Lette og sjove spørgsmål til hele bordet":
+    "Easy, fun questions for the whole table",
+  Nytårsaften: "New Year’s Eve",
+  "Mærkelige fakta, historie og festmusik":
+    "Weird facts, history and party music",
+  Filmaften: "Movie night",
+  "Film, serier og Hollywood": "Films, series and Hollywood",
+  Retro: "Retro",
+  "80’erne, 90’erne og 00’erne": "The 80s, 90s and 00s",
+  Hyttetur: "Cabin trip",
+  "Natur, dyr, geografi og hverdagsviden":
+    "Nature, animals, geography and everyday knowledge",
+  "Familie og børn": "Family and kids",
+  "Spørgsmål hele familien kan være med på":
+    "Questions the whole family can join in on",
+  Musikquiz: "Music quiz",
+  "Musik gennem årtierne": "Music through the decades",
+  Hjernegymnastik: "Brain workout",
+  "Videnskab, rummet og tankenødder": "Science, space and brain teasers",
+  Sportsaften: "Sports night",
+  "Fodbold og sport": "Football and sport",
+  Madaften: "Food night",
+  "Mad, bagning og drikke": "Food, baking and drinks",
+  "Fantasy og fans": "Fantasy and fandoms",
+  "Ringenes Herre, Star Wars, Harry Potter og myter":
+    "Lord of the Rings, Star Wars, Harry Potter and myths",
+  "Gem KVIZY som app på din telefon": "Save KVIZY as an app on your phone",
+  "Læg KVIZY på hjemmeskærmen": "Add KVIZY to your home screen",
+  "Tryk på Del-knappen i Safari": "Tap the Share button in Safari",
+  "Vælg “Føj til hjemmeskærm”": "Choose “Add to Home Screen”",
+  "Tryk “Tilføj” – så åbner KVIZY som en rigtig app":
+    "Tap “Add” – KVIZY then opens like a real app",
+  "Scan koden med din telefon": "Scan the code with your phone",
+  "{count} spørgsmål · {sec} sek. · {topics} emner":
+    "{count} questions · {sec} sec. · {topics} topics",
+  Spilindstillinger: "Game settings",
+  "Vælg præcis de emner, I har lyst til. Der er ingen grænse.":
+    "Pick exactly the topics you feel like. There is no limit.",
+  "Tid pr. spørgsmål": "Time per question",
+  Standard: "Default",
+  "Fravælg gruppe": "Deselect group",
+  "Vælg gruppe": "Select group",
+  "Vis spillet på et TV": "Show the game on a TV",
+  "TV’et viser spørgsmålene. Telefonerne bruges til at svare, og du styrer det hele herfra.":
+    "The TV shows the questions. Phones are used to answer, and you control everything from here.",
+  "Cast til et TV": "Cast to a TV",
+  "Virker med Chromecast og Google TV, når du bruger Chrome.":
+    "Works with Chromecast and Google TV when you use Chrome.",
+  "Søger…": "Searching…",
+  "Vælg TV": "Choose TV",
+  "Sendt til TV’et": "Sent to the TV",
+  "Der blev ikke fundet noget TV. Brug i stedet den anden mulighed.":
+    "No TV was found. Use the other option instead.",
+  "Åbn på TV’ets browser": "Open in the TV’s browser",
+  "Gå ind på {adresse} og tast koden {kode}.":
+    "Go to {adresse} and enter the code {kode}.",
+  "Spejl skærmen": "Mirror the screen",
+  "AirPlay, Miracast eller et HDMI-kabel virker også: tryk på Fuld skærm, når billedet er på TV’et.":
+    "AirPlay, Miracast or an HDMI cable also work: press Full screen once the picture is on the TV.",
+  "Vis på TV": "Show on TV",
+  "Fuld skærm": "Full screen",
+  "Emner, antal spørgsmål, tid og niveau":
+    "Topics, number of questions, time and level",
+  Ændr: "Change",
+  "Brug som TV-skærm": "Use as TV screen",
+  "Tast koden fra værten. Denne skærm viser spørgsmålene, men man kan ikke svare her.":
+    "Enter the code from the host. This screen shows the questions, but you can’t answer here.",
+  "Vis spillet": "Show the game",
+  point: "points",
+  "Brug denne skærm som TV": "Use this screen as a TV",
+  "Du er nr.": "You are no.",
+  med: "with",
+  "Oplæs spørgsmål med stemme": "Read questions aloud with a voice",
+  "Nye spørgsmål og rettelser er klar": "New questions and fixes are ready",
+  Opdater: "Update",
 };

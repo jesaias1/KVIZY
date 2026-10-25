@@ -173,12 +173,21 @@ test("rum: en telefon kan joine værten og svare på et spørgsmål", async ({
   const code = (
     await hostPage.locator(".room-code span").allTextContents()
   ).join("");
+  // En ekstra skærm (TV) viser det samme som værten, men kan ikke svare.
+  const tv = await (await browser.newContext()).newPage();
+  await tv.goto(`/?skaerm=${code}`);
+  await expect(tv.locator(".room-code span").first()).toBeVisible({
+    timeout: 30_000,
+  });
   await phone.goto(`/?rum=${code}`);
   await phone.getByPlaceholder("Fx Mette").fill("Mette");
   await phone.getByRole("button", { name: /^Join/ }).click();
   await expect(phone.getByText(/Du er med/)).toBeVisible({ timeout: 30_000 });
-  await expect(hostPage.getByText(/1 spiller med/)).toBeVisible();
+  await expect(hostPage.getByText(/1 spiller med/).first()).toBeVisible();
   await hostPage.getByRole("button", { name: /Start quizzen/ }).click();
+  await expect(tv.locator(".room-tile").first()).toBeVisible({
+    timeout: 15_000,
+  });
   await phone.locator(".room-tile").first().click();
   await expect(
     hostPage.getByRole("button", { name: /Næste spørgsmål/ }),
@@ -186,18 +195,27 @@ test("rum: en telefon kan joine værten og svare på et spørgsmål", async ({
   await expect(phone.getByText(/Du er nr\./)).toBeVisible();
 });
 
-test("sproget kan skiftes til engelsk, huskes og skiftes tilbage", async ({
+test("sproget kan skiftes til engelsk og huskes, men ikke midt i et spil", async ({
   page,
 }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Switch to English" }).click();
   await expect(page.getByRole("heading", { name: /Quiz night/ })).toBeVisible();
-  await page.getByRole("button", { name: /Quick game/ }).click();
-  await expect(page.getByText(/Question 1 of 10/)).toBeVisible();
-  await page.reload();
-  await expect(page.getByRole("heading", { name: /Quiz night/ })).toBeVisible();
+  // Før et spil kan sproget skiftes frit tilbage og frem.
   await page.getByRole("button", { name: "Skift til dansk" }).click();
   await expect(
     page.getByRole("heading", { name: /Quiz-aftenen/ }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Switch to English" }).click();
+  await page.getByRole("button", { name: /Quick game/ }).click();
+  await expect(page.getByText(/Question 1 of 10/)).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Skift til dansk" }),
+  ).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByRole("heading", { name: /Quiz night/ })).toBeVisible();
+  // Midt i et spil er sprogvalget skjult.
+  await expect(
+    page.getByRole("button", { name: "Skift til dansk" }),
+  ).toHaveCount(0);
 });

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ANIMAL_AVATARS } from "./config";
 import { t } from "./i18n";
+import type { ScreenModel } from "./room-screen";
 
 // Fælles beskeder mellem værten (storskærmen) og spillernes telefoner. Værten
 // er autoriteten: telefonerne sender kun navn og svar, og værten svarer med
@@ -53,6 +54,8 @@ export const clientMessageSchema = z.discriminatedUnion("t", [
     name: z.string().max(60),
     avatar: z.string().max(16),
   }),
+  // En ekstra skærm (fx et TV) kan kun se med; den kan ikke svare.
+  z.object({ t: z.literal("display") }),
   z.object({
     t: z.literal("answer"),
     i: z.number().int().min(0).max(500),
@@ -97,6 +100,7 @@ export type HostMessage =
       standings: RoomStanding[];
       you: { rank: number; score: number };
     }
+  | { t: "screen"; model: ScreenModel }
   | { t: "full" }
   | { t: "closed" };
 
@@ -106,3 +110,6 @@ export type RoomBuildOptions = {
   categoryIds: string[];
   difficulty: number;
 };
+
+export const ROOM_COUNTS = [10, 15, 20, 30, 40] as const;
+export const ROOM_LIMITS_SEC = [10, 15, 20, 30] as const;

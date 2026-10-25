@@ -179,4 +179,5 @@ export type AppSettings = {
   largeText?: boolean;
   confirmAnswers?: boolean;
   readAloud?: boolean;
+  speak?: boolean;
 };
