@@ -1,4 +1,4 @@
-import { first, mc, tf, type Spec } from "./build";
+import { mc, tf, type Spec } from "./build";
 
 // Sjove spørgsmål: mærkelige fakta, myter, ord, dyr og popkultur.
 // prettier-ignore

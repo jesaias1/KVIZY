@@ -3486,3 +3486,55 @@ button.room-tile:not(:disabled):active {
   font-size: 4rem;
 }
 
+
+/* Svarfelter: lange svar skal altid kunne læses */
+.room-tile > b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+.room-phone-q .room-tiles {
+  grid-template-columns: 1fr;
+}
+.room-phone-q .room-tile {
+  min-height: 4rem;
+  font-size: 1.15rem;
+}
+.room-phone-q .room-tile > span {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+/* Værten spiller med */
+.room-hostplays {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1.1rem;
+  background: var(--card);
+  cursor: pointer;
+}
+.room-hostplays > span {
+  display: grid;
+  min-width: 0;
+}
+.room-hostplays small {
+  color: var(--muted-foreground);
+}
+.room-host-hint {
+  color: var(--muted-foreground);
+  text-align: center;
+}
+.room-host-result {
+  padding: 0.6rem 1rem;
+  border-radius: 1rem;
+  background: var(--secondary);
+  font-weight: 800;
+  text-align: center;
+}
+.room-host-result.good {
+  background: color-mix(in oklab, var(--good) 22%, var(--secondary));
+}

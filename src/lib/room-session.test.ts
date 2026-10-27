@@ -38,7 +38,9 @@ describe("genoprettelse af værtens rum", () => {
     expect(
       reviveRoomState({ ...emptyRoom(), phase: "question", questions: [] }),
     ).toBeNull();
-    expect(reviveRoomState({ ...emptyRoom(), limitMs: 0 })).toBeNull();
+    expect(reviveRoomState({ ...emptyRoom(), limitMs: -1 })).toBeNull();
+    // 0 betyder ingen tidsgrænse og er gyldigt.
+    expect(reviveRoomState({ ...emptyRoom(), limitMs: 0 })).not.toBeNull();
   });
 
   it("skræller ugyldige spillere væk", () => {

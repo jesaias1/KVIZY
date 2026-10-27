@@ -6,8 +6,11 @@ import { ROOM_COUNTS, ROOM_LIMITS_SEC } from "./room-protocol";
 
 export type RoomSettings = {
   count: number;
+  /** 0 = ingen tidsgrænse. */
   limitSec: number;
   level: number;
+  /** Værten spiller selv med på skærmen. */
+  hostPlays: boolean;
   categoryIds: string[];
 };
 
@@ -17,6 +20,7 @@ export const defaultRoomSettings = (): RoomSettings => ({
   count: 15,
   limitSec: 20,
   level: 3,
+  hostPlays: false,
   categoryIds: DEFAULT_CATEGORIES.map((category) => category.id),
 });
 
@@ -39,11 +43,12 @@ export function normalizeRoomSettings(raw: unknown): RoomSettings {
     count: (ROOM_COUNTS as readonly number[]).includes(value.count ?? 0)
       ? (value.count as number)
       : base.count,
-    limitSec: (ROOM_LIMITS_SEC as readonly number[]).includes(
-      value.limitSec ?? 0,
-    )
-      ? (value.limitSec as number)
-      : base.limitSec,
+    limitSec:
+      typeof value.limitSec === "number" &&
+      (ROOM_LIMITS_SEC as readonly number[]).includes(value.limitSec)
+        ? value.limitSec
+        : base.limitSec,
+    hostPlays: value.hostPlays === true,
     level:
       typeof value.level === "number" && value.level >= 1 && value.level <= 5
         ? Math.round(value.level)

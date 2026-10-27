@@ -120,7 +120,7 @@ export function RoomSettingsSheet({
             label={t("Tid pr. spørgsmål")}
             value={settings.limitSec}
             options={ROOM_LIMITS_SEC}
-            format={(n) => `${n} s`}
+            format={(n) => (n === 0 ? t("Ingen") : `${n} s`)}
             onChange={(limitSec) => onChange({ ...settings, limitSec })}
           />
           <Segmented

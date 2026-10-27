@@ -112,4 +112,5 @@ export type RoomBuildOptions = {
 };
 
 export const ROOM_COUNTS = [10, 15, 20, 30, 40] as const;
-export const ROOM_LIMITS_SEC = [10, 15, 20, 30] as const;
+/** 0 = ingen tidsgrænse. */
+export const ROOM_LIMITS_SEC = [10, 15, 20, 30, 0] as const;

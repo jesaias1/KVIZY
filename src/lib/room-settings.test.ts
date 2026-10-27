@@ -18,6 +18,7 @@ describe("rumindstillinger", () => {
       count: 30,
       limitSec: 10,
       level: 4,
+      hostPlays: false,
       categoryIds: ["cat-1", "cat-5"],
     });
   });
@@ -34,6 +35,13 @@ describe("rumindstillinger", () => {
     expect(result.count).toBe(15);
     expect(result.limitSec).toBe(20);
     expect(result.level).toBe(3);
+  });
+
+  it("tillader ingen tidsgrænse og at værten spiller med", () => {
+    const result = normalizeRoomSettings({ limitSec: 0, hostPlays: true });
+    expect(result.limitSec).toBe(0);
+    expect(result.hostPlays).toBe(true);
+    expect(normalizeRoomSettings({ hostPlays: "ja" }).hostPlays).toBe(false);
   });
 
   it("falder tilbage til standardkategorier, hvis ingen er gyldige", () => {

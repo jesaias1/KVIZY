@@ -12,6 +12,7 @@ import {
   Tv,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import {
   Sheet,
   SheetContent,
@@ -48,6 +49,8 @@ import {
   emptyRoom,
   nextQuestion,
   remainingMs,
+  hasTimeLimit,
+  ROOM_HOST_PID,
   removePlayer,
   revealQuestion,
   setConnected,
@@ -264,6 +267,7 @@ export function RoomHost({
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [session] = useState(readHostSession);
+  const [hostProfile] = useState(loadProfile);
   const [state, setState] = useState<RoomState>(
     () => session?.state ?? emptyRoom(),
   );
@@ -390,6 +394,7 @@ export function RoomHost({
   const armTimer = () => {
     if (timer.current) window.clearTimeout(timer.current);
     const s = stateRef.current;
+    if (!hasTimeLimit(s)) return;
     const index = s.index;
     timer.current = window.setTimeout(
       () => {
@@ -427,6 +432,8 @@ export function RoomHost({
       return;
     }
     if (message.t === "hello") {
+      // Værtens eget spillerid må ingen telefon låne.
+      if (message.pid === ROOM_HOST_PID) return;
       const result = addPlayer(stateRef.current, {
         id: message.pid,
         name: message.name,
@@ -546,7 +553,7 @@ export function RoomHost({
           );
           const s = stateRef.current;
           if (s.phase === "question") {
-            if (remainingMs(s, Date.now()) <= 0) doReveal();
+            if (hasTimeLimit(s) && remainingMs(s, Date.now()) <= 0) doReveal();
             else armTimer();
           }
         }
@@ -622,6 +629,10 @@ export function RoomHost({
     sendLobby();
   };
   const kick = (pid: string) => {
+    if (pid === ROOM_HOST_PID) {
+      setSettings((current) => ({ ...current, hostPlays: false }));
+      return;
+    }
     send(pid, { t: "closed" });
     const conn = conns.current.get(pid);
     conns.current.delete(pid);
@@ -641,6 +652,35 @@ export function RoomHost({
       // Udklipsholderen er ikke tilgængelig.
     }
   };
+  // Værten kan spille med på samme skærm som en almindelig spiller.
+  useEffect(() => {
+    if (!code) return;
+    const current = stateRef.current;
+    const present = current.players.some((p) => p.id === ROOM_HOST_PID);
+    if (current.phase !== "lobby") return;
+    if (settings.hostPlays && !present) {
+      apply(
+        (s) =>
+          addPlayer(s, {
+            id: ROOM_HOST_PID,
+            name: hostProfile.name || t("Vært"),
+            avatar: hostProfile.avatar,
+          }).state,
+      );
+      sendLobby();
+    } else if (!settings.hostPlays && present) {
+      apply((s) => removePlayer(s, ROOM_HOST_PID));
+      sendLobby();
+    }
+    // apply og sendLobby bruger kun refs og stabile funktioner.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.hostPlays, code]);
+  const hostAnswer = (optionId: string) => {
+    const s = apply((cur) =>
+      submitAnswer(cur, ROOM_HOST_PID, cur.index, optionId, Date.now()),
+    );
+    if (allAnswered(s)) doReveal();
+  };
   const fullscreen = () => {
     if (document.fullscreenElement) void document.exitFullscreen();
     else
@@ -654,6 +694,24 @@ export function RoomHost({
         return;
       const target = event.target as HTMLElement | null;
       if (target?.closest("button, input, a, [role=dialog]")) return;
+      if (
+        settings.hostPlays &&
+        state.phase === "question" &&
+        !state.answers[ROOM_HOST_PID]
+      ) {
+        const index =
+          "1234".indexOf(event.key) + 1 ||
+          "abcd".indexOf(event.key.toLowerCase()) + 1;
+        const option =
+          index > 0
+            ? state.questions[state.index]?.options[index - 1]
+            : undefined;
+        if (option) {
+          event.preventDefault();
+          hostAnswer(option.id);
+          return;
+        }
+      }
       if (
         event.key === "Enter" ||
         event.key === " " ||
@@ -700,7 +758,9 @@ export function RoomHost({
     );
 
   const model = buildScreenModel(state, screenContext(code, settings), now);
-  const deadline = state.startedAt + state.limitMs;
+  const deadline = hasTimeLimit(state)
+    ? state.startedAt + state.limitMs
+    : undefined;
   const last = state.index >= state.questions.length - 1;
 
   const barButton = (label: string, icon: React.ReactNode) => (
@@ -757,9 +817,34 @@ export function RoomHost({
         model={model}
         deadline={deadline}
         speakAloud={speak}
+        onAnswer={
+          settings.hostPlays && state.phase === "question"
+            ? hostAnswer
+            : undefined
+        }
+        pickedId={
+          settings.hostPlays
+            ? (state.answers[ROOM_HOST_PID]?.optionId ?? null)
+            : null
+        }
         onKick={state.phase === "lobby" ? kick : undefined}
         lobbyExtra={
           <>
+            <label className="room-hostplays">
+              <span>
+                <b>{t("Jeg spiller også")}</b>
+                <small>
+                  {t("Du svarer på denne skærm med mus eller tastatur")}
+                </small>
+              </span>
+              <Switch
+                aria-label={t("Jeg spiller også")}
+                checked={settings.hostPlays}
+                onCheckedChange={(hostPlays) =>
+                  setSettings((current) => ({ ...current, hostPlays }))
+                }
+              />
+            </label>
             <RoomSettingsSheet
               settings={settings}
               onChange={setSettings}
@@ -789,6 +874,26 @@ export function RoomHost({
           </>
         }
       >
+        {state.phase === "question" && settings.hostPlays && (
+          <p className="room-host-hint">
+            {state.answers[ROOM_HOST_PID]
+              ? t("Dit svar er afgivet – vent på de andre")
+              : t("Tryk på et svar, eller brug 1–4 / A–D på tastaturet")}
+          </p>
+        )}
+        {state.phase === "reveal" && settings.hostPlays && (
+          <p
+            className={`room-host-result ${state.results[ROOM_HOST_PID]?.correct ? "good" : ""}`}
+          >
+            {state.results[ROOM_HOST_PID]?.correct
+              ? t("Du svarede rigtigt! +{points}", {
+                  points: state.results[ROOM_HOST_PID].points,
+                })
+              : state.results[ROOM_HOST_PID]?.answered
+                ? t("Du svarede forkert")
+                : t("Du nåede ikke at svare")}
+          </p>
+        )}
         {state.phase === "question" && (
           <div className="room-actions">
             <Button variant="outline" onClick={doReveal}>
@@ -1329,6 +1434,7 @@ export function RoomPlayer({
   };
 
   const now = useNow(view.phase === "question", 250);
+  const limited = view.phase === "question" && view.q.limitMs > 0;
   const secondsLeft =
     view.phase === "question"
       ? Math.max(
@@ -1480,20 +1586,28 @@ export function RoomPlayer({
               {view.q.i + 1} / {view.q.total}
             </span>
             <span>{view.q.category}</span>
-            <span
-              className={secondsLeft <= 5 ? "hurry" : ""}
-              aria-label={t("{secondsLeft} sekunder tilbage", { secondsLeft })}
-            >
-              {secondsLeft} s
-            </span>
+            {limited ? (
+              <span
+                className={secondsLeft <= 5 ? "hurry" : ""}
+                aria-label={t("{secondsLeft} sekunder tilbage", {
+                  secondsLeft,
+                })}
+              >
+                {secondsLeft} s
+              </span>
+            ) : (
+              <span>{t("Ingen tidsgrænse")}</span>
+            )}
           </div>
-          <div className="room-progress" aria-hidden="true">
-            <i
-              style={{
-                width: `${Math.max(0, Math.min(100, ((view.deadline - now) / view.q.limitMs) * 100))}%`,
-              }}
-            />
-          </div>
+          {limited && (
+            <div className="room-progress" aria-hidden="true">
+              <i
+                style={{
+                  width: `${Math.max(0, Math.min(100, ((view.deadline - now) / view.q.limitMs) * 100))}%`,
+                }}
+              />
+            </div>
+          )}
           <h1 className="room-phone-prompt">{view.q.prompt}</h1>
           <div
             className={`room-tiles ${view.q.options.length === 2 ? "two" : ""}`}
@@ -1507,7 +1621,7 @@ export function RoomPlayer({
                   picked ? (picked === o.id ? "picked" : "dim") : undefined
                 }
                 onClick={() => answer(o.id)}
-                disabled={Boolean(picked) || secondsLeft === 0}
+                disabled={Boolean(picked) || (limited && secondsLeft === 0)}
               />
             ))}
           </div>
