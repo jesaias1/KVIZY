@@ -39,6 +39,13 @@ export type RoomState = {
 };
 
 export const ROOM_LIMIT_MS = 20_000;
+/** limitMs = 0 betyder, at spørgsmålene ikke har nogen tidsgrænse. */
+export const hasTimeLimit = (state: Pick<RoomState, "limitMs">) =>
+  state.limitMs > 0;
+/** Værten kan spille med; vedkommende er en spiller uden netværksforbindelse. */
+export const ROOM_HOST_PID = "host-local-player";
+/** Uden tidsgrænse regnes fartbonussen stadig ud fra en 20 sekunders vindue. */
+const SPEED_WINDOW_MS = 20_000;
 
 export const emptyRoom = (): RoomState => ({
   phase: "lobby",
@@ -59,7 +66,8 @@ export function roomPoints(
   streakBefore: number,
 ) {
   if (!correct) return 0;
-  const speed = Math.max(0, Math.min(1, 1 - elapsedMs / limitMs));
+  const window = limitMs > 0 ? limitMs : SPEED_WINDOW_MS;
+  const speed = Math.max(0, Math.min(1, 1 - elapsedMs / window));
   return 600 + Math.round(400 * speed) + Math.min(3, streakBefore) * 50;
 }
 
@@ -165,7 +173,8 @@ export function submitAnswer(
   if (state.answers[playerId]) return state;
   const question = state.questions[state.index];
   if (!question?.options.some((o) => o.id === optionId)) return state;
-  if (now - state.startedAt > state.limitMs + 1_500) return state;
+  if (hasTimeLimit(state) && now - state.startedAt > state.limitMs + 1_500)
+    return state;
   return {
     ...state,
     answers: { ...state.answers, [playerId]: { optionId, at: now } },
@@ -183,7 +192,9 @@ export const allAnswered = (state: RoomState) => {
 };
 
 export const remainingMs = (state: RoomState, now: number) =>
-  Math.max(0, state.limitMs - (now - state.startedAt));
+  hasTimeLimit(state)
+    ? Math.max(0, state.limitMs - (now - state.startedAt))
+    : 0;
 
 export function revealQuestion(state: RoomState): RoomState {
   if (state.phase !== "question") return state;

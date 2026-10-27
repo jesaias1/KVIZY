@@ -244,3 +244,32 @@ test("egen quiz: lav den, del den som link og spil den", async ({ page }) => {
     page.getByText(/vinder!|deler sejren!|af 1/i).first(),
   ).toBeVisible();
 });
+
+test("rum: værten kan spille med og vælge ingen tidsgrænse", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Kører kun én gang.");
+  test.setTimeout(120_000);
+  const reachable = await fetch("https://0.peerjs.com/")
+    .then((r) => r.ok)
+    .catch(() => false);
+  test.skip(!reachable, "Mødeserveren kan ikke nås fra denne maskine.");
+  await page.goto("/");
+  await page.getByRole("button", { name: /Opret rum/ }).click();
+  await page.waitForSelector(".room-code span", { timeout: 30_000 });
+  await page.getByRole("switch", { name: "Jeg spiller også" }).click();
+  await expect(page.getByText(/1 spiller med/).first()).toBeVisible();
+  await page.getByRole("button", { name: /Spilindstillinger/ }).click();
+  await page.getByRole("radio", { name: "Ingen" }).click();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: /Start quizzen/ }).click();
+  await expect(page.locator(".room-tile").first()).toBeVisible({
+    timeout: 30_000,
+  });
+  // Uden tidsgrænse er der ingen nedtælling.
+  await expect(page.getByRole("timer")).toHaveCount(0);
+  await page.locator(".room-tile").first().click();
+  await expect(page.getByText(/Du svarede|Du nåede/)).toBeVisible({
+    timeout: 15_000,
+  });
+});

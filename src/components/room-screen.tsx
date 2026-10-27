@@ -197,6 +197,8 @@ export function RoomScreen({
   lobbyExtra,
   onKick,
   speakAloud,
+  onAnswer,
+  pickedId,
   children,
 }: {
   model: ScreenModel;
@@ -207,6 +209,9 @@ export function RoomScreen({
   onKick?: (id: string) => void;
   /** Læs spørgsmålet højt, når det vises. */
   speakAloud?: boolean;
+  /** Gør svarfelterne til knapper, så værten kan spille med. */
+  onAnswer?: (optionId: string) => void;
+  pickedId?: string | null;
   children?: React.ReactNode;
 }) {
   const now = useNow(model.phase === "question");
@@ -262,11 +267,16 @@ export function RoomScreen({
             )}
           </ul>
           <p className="room-summary">
-            {t("{count} spørgsmål · {sec} sek. · {topics} emner", {
-              count: model.summary.count,
-              sec: model.summary.limitSec,
-              topics: model.summary.topics,
-            })}
+            {model.summary.limitSec > 0
+              ? t("{count} spørgsmål · {sec} sek. · {topics} emner", {
+                  count: model.summary.count,
+                  sec: model.summary.limitSec,
+                  topics: model.summary.topics,
+                })
+              : t("{count} spørgsmål · ingen tidsgrænse · {topics} emner", {
+                  count: model.summary.count,
+                  topics: model.summary.topics,
+                })}
           </p>
           {lobbyExtra}
         </section>
@@ -299,13 +309,22 @@ export function RoomScreen({
         </div>
         <div className="room-question-row">
           <h1 className="room-prompt">{model.prompt}</h1>
-          <TimerRing left={left} limit={model.limitMs} />
+          {model.limitMs > 0 && <TimerRing left={left} limit={model.limitMs} />}
         </div>
         <div
           className={`room-tiles ${model.options.length === 2 ? "two" : ""}`}
         >
           {model.options.map((o, i) => (
-            <AnswerTile key={o.id} index={i} text={o.text} />
+            <AnswerTile
+              key={o.id}
+              index={i}
+              text={o.text}
+              state={
+                pickedId ? (pickedId === o.id ? "picked" : "dim") : undefined
+              }
+              onClick={onAnswer ? () => onAnswer(o.id) : undefined}
+              disabled={Boolean(pickedId)}
+            />
           ))}
         </div>
         <ul className="room-answered" aria-hidden="true">

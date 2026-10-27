@@ -94,6 +94,8 @@ describe("rumpoint", () => {
     expect(roomPoints(true, 0, 20_000, 0)).toBe(1000);
     expect(roomPoints(true, 20_000, 20_000, 0)).toBe(600);
     expect(roomPoints(true, 10_000, 20_000, 0)).toBe(800);
+    // Uden tidsgrænse regnes fartbonussen ud fra et vindue på 20 sekunder.
+    expect(roomPoints(true, 10_000, 0, 0)).toBe(800);
   });
 
   it("giver stimebonus op til tre trin", () => {

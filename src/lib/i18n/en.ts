@@ -709,4 +709,17 @@ export const EN: Record<string, string> = {
   "Nogen har lavet en quiz med {n} spørgsmål til dig.":
     "Someone made a quiz with {n} questions for you.",
   "Spil quizzen": "Play the quiz",
+  "Jeg spiller også": "I’m playing too",
+  "Du svarer på denne skærm med mus eller tastatur":
+    "You answer on this screen with the mouse or keyboard",
+  "Dit svar er afgivet – vent på de andre":
+    "Your answer is in – wait for the others",
+  "Tryk på et svar, eller brug 1–4 / A–D på tastaturet":
+    "Click an answer, or use 1–4 / A–D on the keyboard",
+  "Du svarede rigtigt! +{points}": "You got it right! +{points}",
+  "Du svarede forkert": "You answered wrong",
+  "Du nåede ikke at svare": "You didn’t answer in time",
+  "Ingen tidsgrænse": "No time limit",
+  "{count} spørgsmål · ingen tidsgrænse · {topics} emner":
+    "{count} questions · no time limit · {topics} topics",
 };

@@ -55,7 +55,7 @@ export function reviveRoomState(raw: unknown): RoomState | null {
   if (!Array.isArray(s.players) || !Array.isArray(s.questions)) return null;
   if (typeof s.index !== "number" || typeof s.startedAt !== "number")
     return null;
-  if (typeof s.limitMs !== "number" || s.limitMs <= 0) return null;
+  if (typeof s.limitMs !== "number" || s.limitMs < 0) return null;
   if (s.phase !== "lobby" && !s.questions[s.index]) return null;
   const players = s.players
     .filter(
