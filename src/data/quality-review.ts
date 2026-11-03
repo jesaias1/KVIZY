@@ -294,6 +294,43 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "kz-1mmdxd0": {
+    e: "Regeringen bestod af politikere og modstandsfolk og sad til efter valget i oktober samme år (Buhl gik af 7. november 1945).",
+  },
+  "kz-jyumxw": {
+    e: "På sit højeste i 1200-tallet strakte det sig fra Stillehavet til Østeuropa. Det Britiske Imperium var større, men spredt over hele kloden.",
+  },
+  "kz-1hnmbj7": {
+    e: "Elbrus i Rusland er 5.642 meter. Mont Blanc er med cirka 4.800 meter det højeste i Alperne.",
+  },
+  "kz-rbffy1": {
+    e: "Det er det laveste sted på Jordens landoverflade – og søen synker omkring en meter om året, så bredden ligger nu tættere på 440 meter under havet.",
+  },
+  "kz-owbx6f": {
+    e: "Øen ligger over 3.500 kilometer fra Chiles kyst og er kendt for sine næsten 1.000 moai-statuer.",
+  },
+  "kz-1qd0uq8": {
+    e: "Med fjorde og øer løber den norske kyst op i over 80.000 kilometer – nok til at nå to gange rundt om Jorden.",
+  },
+  "kz-zuy3no": {
+    e: "Ringene er næsten helt af vandis: milliarder af klumper fra støvkorn til flere meters størrelse. De strækker sig over mere end hundrede tusinde kilometer, men mange steder er de kun ti meter tykke.",
+  },
+  "kz-15687fh": {
+    e: "Lyden er ufarlig. En læge knækkede kun fingrene på sin ene hånd i mere end 50 år og fandt ingen forskel på hænderne.",
+  },
+  "kz-11stif6": {
+    e: "Elge svømmer af og til over Øresund fra Sverige, og i Lille Vildmose blev der sat elge ud i 2016–17.",
+  },
+  "kz-1vbhb0q": {
+    p: "Hvilken nationalpark blev den første i Danmark (uden Grønland) i 2008?",
+    e: "Thy var den første, i 2008. Vadehavet er den største.",
+  },
+  "kz-1voe82b": {
+    e: "Kongeegen i Jægerspris Nordskov anslås at være op til 1.400 år gammel og er et af Danmarks ældste træer.",
+  },
+  "kz-1oy0ry2": {
+    e: "Ifølge en udbredt (men omdiskuteret) historie bragte en fransk avis ved en fejl hans nekrolog under overskriften «Dødens købmand er død», og det skulle have fået ham til at stifte Nobelprisen.",
+  },
   "kz-1o74r66": {
     e: "Det første tyggegummi kom i handlen i USA i 1848. Tandpasta på tube kom først i slutningen af 1800-tallet.",
   },
