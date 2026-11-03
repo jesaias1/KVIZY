@@ -294,6 +294,69 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "kz-1i8drf8": {
+    p: "Hvilken bil blev den første, der blev bygget på et bevægeligt samlebånd?",
+    e: "Fra 1913 kunne en Ford T samles på 93 minutter mod 12,5 time før. Prisen faldt til under en tredjedel.",
+  },
+  "kz-1bbioy3": {
+    e: "Japanske Yoshida Kōgyō Kabushikigaisha fremstiller omkring 45 procent af verdens lynlåse.",
+  },
+  "kz-tk389u": {
+    p: "Hvor mange gange kan man højst folde et almindeligt ark papir på midten?",
+    e: "Tykkelsen fordobles for hver foldning. Rekorden på 12 blev sat med 1,2 kilometer toiletpapir.",
+  },
+  "kz-1hsdedm": {
+    p: "Hvilken komedie fra 2000 handler om fire småforbrydere, der åbner restaurant i et forfaldent hus på landet?",
+  },
+  "kz-1clyrf2": {
+    e: "Over 1,3 millioner landminer lå langs den danske vestkyst efter krigen. Af de godt 2.000 tyske minerydere blev cirka 150–180 dræbt og cirka 330 såret.",
+  },
+  "kz-9zj6ev": {
+    e: "Skaberen David Simon var kriminalreporter på byens avis, Baltimore Sun, i 12 år.",
+  },
+  "kz-11ef0yh": {
+    e: "Hver sæson foregår i en sommer, og nogle spænder over to år. Den sidste dækker 1946–47.",
+  },
+  "kz-a59dl7": {
+    e: "Arrangørerne ventede 50.000 gæster. Der kom 400.000–500.000 til en mark i staten New York.",
+  },
+  "kz-dfetyi": {
+    e: "Antonio Stradivari byggede sine instrumenter i Cremona omkring år 1700. De dyreste er solgt for omkring 100 millioner kroner.",
+  },
+  "kz-yf0qyq": { e: "John Mogensen døde i 1977, men sangene synges stadig." },
+  "kz-1kky3g5": {
+    e: "Værket blev aldrig vist på udstillingen – og blev i 2004 kåret af britiske kunstfolk som 1900-tallets mest indflydelsesrige kunstværk.",
+  },
+  "kz-6237vt": {
+    e: "Den svungne stol blev tegnet i 1960’erne og sat i produktion i 1968. Den er støbt i ét stykke og har hverken ben eller samlinger.",
+  },
+  "kz-16catu3": {
+    e: "Undergrunden gav efter, da anden etage var nået. Byggeriet strakte sig over næsten 200 år.",
+  },
+  "kz-zxzox": {
+    p: "Hvilket dansk firma er en af verdens største smykkeproducenter?",
+    e: "Pandora begyndte som en lille guldsmedeforretning i København i 1982.",
+  },
+  "kz-arrqmv": {
+    e: "Poul Due Jensen grundlagde virksomheden i Bjerringbro i 1945.",
+  },
+  "kz-1suy295": { e: "Altså to almindelige flasker (0,75 liter hver)." },
+  "kz-1b3bsuy": {
+    e: "Gidslerne udviste sympati for røverne bagefter, og begrebet blev formuleret af psykiateren Nils Bejerot.",
+  },
+  "kz-1sad8p3": {
+    e: "De, der ventede, fik to. Forsøgene begyndte i 1970 og handler om evnen til at udskyde behov.",
+  },
+  "kz-jrh123": {
+    p: "Hvilket fredagsshow på TV 2 var Ole Stephensen vært på i 1990’erne?",
+    e: "Programmet kørte fra kanalens start i 1988 til 1996. Stephensen var med som vært 1991–1995.",
+  },
+  "kz-1v18mq0": {
+    e: "Aftalen i 1648 afsluttede Trediveårskrigen i Det Tysk-Romerske Rige og gav tre trosretninger – katolsk, luthersk og calvinsk – lov til at eksistere. Den bruges ofte som symbol på starten af det moderne statssystem.",
+  },
+  "kz-1u3bzis": {
+    e: "Romanen om Djævlens besøg i Moskva kunne først udkomme i 1966–67, over 25 år efter forfatterens død i 1940.",
+  },
   "kz-1mmdxd0": {
     e: "Regeringen bestod af politikere og modstandsfolk og sad til efter valget i oktober samme år (Buhl gik af 7. november 1945).",
   },
@@ -370,9 +433,6 @@ const PATCHES: Record<string, Patch> = {
   },
   "kz-1x48fcv": {
     e: "De fire operaer varer tilsammen omkring 15 timer og opføres jævnligt ved festspillene i Bayreuth.",
-  },
-  "kz-1sad8p3": {
-    e: "De, der ventede, fik to. Forsøget fra 1960’erne og 1970’erne handler om evnen til at udskyde behov.",
   },
   "kz-1e2n3gv": {
     e: "Pilotafsnittet fra 2004 var det dyreste i ABC’s historie.",
@@ -483,9 +543,6 @@ const PATCHES: Record<string, Patch> = {
   "kz-1h8062f": { p: "Sandt eller falsk: Jordnødder er botanisk set nødder." },
   "kz-2lzecr": {
     e: "Den blå kube i Ørestad åbnede i 2009 og blev markant dyrere end planlagt.",
-  },
-  "kz-yf0qyq": {
-    e: "John Mogensen døde i 1977, kun 41 år gammel, men sangene synges stadig.",
   },
   "kz-199v9gf": { p: "Hvilket land har vundet flest VM i fodbold for herrer?" },
   // Rettet efter faktatjek (oktober 2026)
