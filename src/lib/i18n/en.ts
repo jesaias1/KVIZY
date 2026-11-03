@@ -722,4 +722,10 @@ export const EN: Record<string, string> = {
   "Ingen tidsgrænse": "No time limit",
   "{count} spørgsmål · ingen tidsgrænse · {topics} emner":
     "{count} questions · no time limit · {topics} topics",
+  "Spil i et rum med venner": "Play in a room with friends",
+  "Uden navn": "Untitled",
+  "Egen quiz: {title} · {count} spørgsmål · {sec} sek.":
+    "Custom quiz: {title} · {count} questions · {sec} sec.",
+  "Egen quiz: {title} · {count} spørgsmål · ingen tidsgrænse":
+    "Custom quiz: {title} · {count} questions · no time limit",
 };

@@ -9,6 +9,7 @@ import {
   Play,
   Plus,
   Share2,
+  Smartphone,
   Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -112,9 +113,11 @@ function PlayerStepper({
 // ════════════════════════════════════════════════════════════
 export function CustomQuizBuilder({
   onPlay,
+  onRoom,
   onBack,
 }: {
   onPlay: (quiz: CustomQuiz, players: number) => void;
+  onRoom: (quiz: CustomQuiz) => void;
   onBack: () => void;
 }) {
   const [draft, setDraft] = useState<Draft>(loadDraft);
@@ -328,6 +331,16 @@ export function CustomQuizBuilder({
           variant="outline"
           className="h-14 w-full text-base"
           disabled={!quiz}
+          onClick={() => quiz && onRoom(quiz)}
+        >
+          <Smartphone aria-hidden="true" />
+          {t("Spil i et rum med venner")}
+        </Button>
+        <Button
+          size="lg"
+          variant="outline"
+          className="h-14 w-full text-base"
+          disabled={!quiz}
           onClick={() => void makeLink()}
         >
           {typeof navigator !== "undefined" && "share" in navigator ? (
@@ -375,10 +388,12 @@ export function CustomQuizBuilder({
 export function CustomQuizInvite({
   quiz,
   onPlay,
+  onRoom,
   onBack,
 }: {
   quiz: CustomQuiz;
   onPlay: (quiz: CustomQuiz, players: number) => void;
+  onRoom: (quiz: CustomQuiz) => void;
   onBack: () => void;
 }) {
   const [players, setPlayers] = useState(1);
@@ -404,6 +419,15 @@ export function CustomQuizInvite({
         >
           <Play aria-hidden="true" />
           {t("Spil quizzen")}
+        </Button>
+        <Button
+          size="lg"
+          variant="outline"
+          className="h-14 w-full text-base"
+          onClick={() => onRoom(quiz)}
+        >
+          <Smartphone aria-hidden="true" />
+          {t("Spil i et rum med venner")}
         </Button>
         <Button variant="ghost" className="w-full" onClick={onBack}>
           {t("Til forsiden")}

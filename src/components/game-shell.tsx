@@ -436,6 +436,8 @@ export function GameShell() {
   const finishing = useRef(false);
   const [roomCode, setRoomCode] = useState("");
   const [customQuiz, setCustomQuiz] = useState<CustomQuiz | null>(null);
+  // En egen quiz, der spilles i et rum (i stedet for spørgsmål fra banken).
+  const [roomQuiz, setRoomQuiz] = useState<CustomQuiz | null>(null);
   const [achievements, setAchievements] = useState<AchievementState>(
     emptyAchievementState,
   );
@@ -703,6 +705,8 @@ export function GameShell() {
   };
   const go = (v: View) => {
     tone("tap", settings.sound);
+    // Et almindeligt rum bruger spørgsmål fra banken, ikke en egen quiz.
+    if (v === "room-host") setRoomQuiz(null);
     if (v === "setup") {
       setSetup((current) => ({
         ...current,
@@ -966,6 +970,12 @@ export function GameShell() {
       { practice: questions },
     );
   };
+  const startCustomRoom = (quiz: CustomQuiz) => {
+    tone("tap", settings.sound);
+    setRoomQuiz(quiz);
+    setView("room-host");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const playLevel = (level: number) => {
     if (!game) return;
     setSetup((current) => ({ ...current, difficulty: level }));
@@ -976,6 +986,7 @@ export function GameShell() {
     categoryIds,
     difficulty,
   }: RoomBuildOptions) => {
+    if (roomQuiz) return customQuizQuestions(roomQuiz);
     // Rum bruger de seneste kategorier og det senest valgte niveau. Rækkefølge-
     // spørgsmål udelades, fordi de ikke kan besvares med ét tryk på en telefon.
     const english = await ensureEnglish();
@@ -1333,16 +1344,26 @@ export function GameShell() {
     ) : view === "room-host" ? (
       <RoomHost
         buildQuestions={buildRoomQuestions}
+        customQuiz={
+          roomQuiz
+            ? { title: roomQuiz.title, count: roomQuiz.items.length }
+            : null
+        }
         sound={settings.sound}
         speak={Boolean(settings.speak)}
         onExit={() => go("home")}
       />
     ) : view === "custom" ? (
-      <CustomQuizBuilder onPlay={playCustom} onBack={() => go("home")} />
+      <CustomQuizBuilder
+        onPlay={playCustom}
+        onRoom={startCustomRoom}
+        onBack={() => go("home")}
+      />
     ) : view === "custom-invite" && customQuiz ? (
       <CustomQuizInvite
         quiz={customQuiz}
         onPlay={playCustom}
+        onRoom={startCustomRoom}
         onBack={() => go("home")}
       />
     ) : view === "room-screen" ? (

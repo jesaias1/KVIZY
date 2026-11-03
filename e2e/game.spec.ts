@@ -273,3 +273,26 @@ test("rum: værten kan spille med og vælge ingen tidsgrænse", async ({
     timeout: 15_000,
   });
 });
+
+test("egen quiz kan spilles i et rum", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Kører kun én gang.");
+  test.setTimeout(120_000);
+  const reachable = await fetch("https://0.peerjs.com/")
+    .then((r) => r.ok)
+    .catch(() => false);
+  test.skip(!reachable, "Mødeserveren kan ikke nås fra denne maskine.");
+  await page.goto("/");
+  await page.getByRole("button", { name: "Lav din egen quiz" }).click();
+  await page.getByLabel("Navn på quizzen").fill("Mettes fødselsdag");
+  await page.getByLabel("Spørgsmål 1").fill("Hvad hedder Mettes hund?");
+  await page.getByLabel("Rigtigt svar").fill("Bjørn");
+  await page.getByLabel("Forkert svar 1").fill("Fido");
+  await page.getByRole("button", { name: "Spil i et rum med venner" }).click();
+  await page.waitForSelector(".room-code span", { timeout: 30_000 });
+  await expect(page.getByText(/Egen quiz: Mettes fødselsdag/)).toBeVisible();
+  await page.getByRole("switch", { name: "Jeg spiller også" }).click();
+  await page.getByRole("button", { name: /Start quizzen/ }).click();
+  await expect(page.getByText("Hvad hedder Mettes hund?")).toBeVisible({
+    timeout: 30_000,
+  });
+});

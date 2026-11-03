@@ -11,6 +11,8 @@ export type RoomSummary = {
   limitSec: number;
   level: number;
   topics: number;
+  /** Navnet på en egen quiz; så vises den i stedet for emner. */
+  title?: string;
 };
 
 export type ScreenOption = {

@@ -267,16 +267,30 @@ export function RoomScreen({
             )}
           </ul>
           <p className="room-summary">
-            {model.summary.limitSec > 0
-              ? t("{count} spørgsmål · {sec} sek. · {topics} emner", {
-                  count: model.summary.count,
-                  sec: model.summary.limitSec,
-                  topics: model.summary.topics,
-                })
-              : t("{count} spørgsmål · ingen tidsgrænse · {topics} emner", {
-                  count: model.summary.count,
-                  topics: model.summary.topics,
-                })}
+            {model.summary.title !== undefined
+              ? model.summary.limitSec > 0
+                ? t("Egen quiz: {title} · {count} spørgsmål · {sec} sek.", {
+                    title: model.summary.title || t("Uden navn"),
+                    count: model.summary.count,
+                    sec: model.summary.limitSec,
+                  })
+                : t(
+                    "Egen quiz: {title} · {count} spørgsmål · ingen tidsgrænse",
+                    {
+                      title: model.summary.title || t("Uden navn"),
+                      count: model.summary.count,
+                    },
+                  )
+              : model.summary.limitSec > 0
+                ? t("{count} spørgsmål · {sec} sek. · {topics} emner", {
+                    count: model.summary.count,
+                    sec: model.summary.limitSec,
+                    topics: model.summary.topics,
+                  })
+                : t("{count} spørgsmål · ingen tidsgrænse · {topics} emner", {
+                    count: model.summary.count,
+                    topics: model.summary.topics,
+                  })}
           </p>
           {lobbyExtra}
         </section>

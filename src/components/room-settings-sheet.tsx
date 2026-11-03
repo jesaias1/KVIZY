@@ -68,10 +68,13 @@ export function RoomSettingsSheet({
   settings,
   onChange,
   trigger,
+  quizMode,
 }: {
   settings: RoomSettings;
   onChange: (settings: RoomSettings) => void;
   trigger: React.ReactNode;
+  /** En egen quiz: spørgsmål og emner er allerede valgt. */
+  quizMode?: boolean;
 }) {
   const [search, setSearch] = useState("");
   const english = getLang() === "en";
@@ -109,13 +112,15 @@ export function RoomSettingsSheet({
           </SheetDescription>
         </SheetHeader>
         <div className="rs-body">
-          <Segmented
-            label={t("Antal spørgsmål")}
-            value={settings.count}
-            options={ROOM_COUNTS}
-            format={String}
-            onChange={(count) => onChange({ ...settings, count })}
-          />
+          {!quizMode && (
+            <Segmented
+              label={t("Antal spørgsmål")}
+              value={settings.count}
+              options={ROOM_COUNTS}
+              format={String}
+              onChange={(count) => onChange({ ...settings, count })}
+            />
+          )}
           <Segmented
             label={t("Tid pr. spørgsmål")}
             value={settings.limitSec}
@@ -123,111 +128,127 @@ export function RoomSettingsSheet({
             format={(n) => (n === 0 ? t("Ingen") : `${n} s`)}
             onChange={(limitSec) => onChange({ ...settings, limitSec })}
           />
-          <Segmented
-            label={t("Niveau")}
-            value={settings.level}
-            options={LEVELS.map((level) => level.value)}
-            format={(n) =>
-              t(LEVELS.find((level) => level.value === n)?.label ?? "")
-            }
-            onChange={(level) => onChange({ ...settings, level })}
-          />
-
-          <div className="rs-topics-head">
-            <span>
-              {t("Emner")} ·{" "}
-              {settings.categoryIds.filter((id) => availableIds.has(id)).length}
-              /{available.length}
-            </span>
-            <div>
-              <button
-                type="button"
-                onClick={() => set(available.map((c) => c.id))}
-              >
-                {t("Alle")}
-              </button>
-              <button type="button" onClick={() => set(defaultIds)}>
-                {t("Standard")}
-              </button>
-              {!english && (
-                <button type="button" onClick={() => set(DANISH_CATEGORY_IDS)}>
-                  {t("Kun dansk")}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="rs-themes" role="group" aria-label={t("Tema")}>
-            {THEMES.map((theme) => {
-              const ids = themeCategoryIds(theme.categoryIds);
-              if (ids.length < 2) return null;
-              return (
-                <button key={theme.id} type="button" onClick={() => set(ids)}>
-                  {theme.emoji} {t(theme.title)}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              className="pl-10"
-              placeholder={t("Søg i kategorier")}
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
+          {!quizMode && (
+            <Segmented
+              label={t("Niveau")}
+              value={settings.level}
+              options={LEVELS.map((level) => level.value)}
+              format={(n) =>
+                t(LEVELS.find((level) => level.value === n)?.label ?? "")
+              }
+              onChange={(level) => onChange({ ...settings, level })}
             />
-          </div>
+          )}
 
-          {CATEGORY_GROUPS.map((group) => {
-            const members = group.ids
-              .map((id) => CATEGORIES.find((c) => c.id === id))
-              .filter(
-                (c): c is NonNullable<typeof c> =>
-                  Boolean(c) && availableIds.has(c!.id) && matches(c!.name),
-              );
-            if (members.length === 0) return null;
-            const allOn = members.every((c) => selected.has(c.id));
-            return (
-              <section key={group.name} className="rs-group">
-                <header>
-                  <b>
-                    {group.emoji} {group.name}
-                  </b>
+          {!quizMode && (
+            <>
+              <div className="rs-topics-head">
+                <span>
+                  {t("Emner")} ·{" "}
+                  {
+                    settings.categoryIds.filter((id) => availableIds.has(id))
+                      .length
+                  }
+                  /{available.length}
+                </span>
+                <div>
                   <button
                     type="button"
-                    onClick={() =>
-                      set(
-                        allOn
-                          ? settings.categoryIds.filter(
-                              (id) => !members.some((c) => c.id === id),
-                            )
-                          : [
-                              ...settings.categoryIds,
-                              ...members.map((c) => c.id),
-                            ],
-                      )
-                    }
+                    onClick={() => set(available.map((c) => c.id))}
                   >
-                    {allOn ? t("Fravælg gruppe") : t("Vælg gruppe")}
+                    {t("Alle")}
                   </button>
-                </header>
-                <div>
-                  {members.map((c) => (
+                  <button type="button" onClick={() => set(defaultIds)}>
+                    {t("Standard")}
+                  </button>
+                  {!english && (
                     <button
-                      key={c.id}
                       type="button"
-                      aria-pressed={selected.has(c.id)}
-                      className={selected.has(c.id) ? "on" : ""}
-                      onClick={() => toggle(c.id)}
+                      onClick={() => set(DANISH_CATEGORY_IDS)}
                     >
-                      {c.emoji} {c.name}
+                      {t("Kun dansk")}
                     </button>
-                  ))}
+                  )}
                 </div>
-              </section>
-            );
-          })}
+              </div>
+
+              <div className="rs-themes" role="group" aria-label={t("Tema")}>
+                {THEMES.map((theme) => {
+                  const ids = themeCategoryIds(theme.categoryIds);
+                  if (ids.length < 2) return null;
+                  return (
+                    <button
+                      key={theme.id}
+                      type="button"
+                      onClick={() => set(ids)}
+                    >
+                      {theme.emoji} {t(theme.title)}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  className="pl-10"
+                  placeholder={t("Søg i kategorier")}
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </div>
+
+              {CATEGORY_GROUPS.map((group) => {
+                const members = group.ids
+                  .map((id) => CATEGORIES.find((c) => c.id === id))
+                  .filter(
+                    (c): c is NonNullable<typeof c> =>
+                      Boolean(c) && availableIds.has(c!.id) && matches(c!.name),
+                  );
+                if (members.length === 0) return null;
+                const allOn = members.every((c) => selected.has(c.id));
+                return (
+                  <section key={group.name} className="rs-group">
+                    <header>
+                      <b>
+                        {group.emoji} {group.name}
+                      </b>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          set(
+                            allOn
+                              ? settings.categoryIds.filter(
+                                  (id) => !members.some((c) => c.id === id),
+                                )
+                              : [
+                                  ...settings.categoryIds,
+                                  ...members.map((c) => c.id),
+                                ],
+                          )
+                        }
+                      >
+                        {allOn ? t("Fravælg gruppe") : t("Vælg gruppe")}
+                      </button>
+                    </header>
+                    <div>
+                      {members.map((c) => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          aria-pressed={selected.has(c.id)}
+                          className={selected.has(c.id) ? "on" : ""}
+                          onClick={() => toggle(c.id)}
+                        >
+                          {c.emoji} {c.name}
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+            </>
+          )}
         </div>
       </SheetContent>
     </Sheet>

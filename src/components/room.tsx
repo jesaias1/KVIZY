@@ -127,14 +127,19 @@ function questionPayload(state: RoomState, now: number): RoomQuestionPayload {
   };
 }
 
-const screenContext = (code: string, settings: RoomSettings) => ({
+const screenContext = (
+  code: string,
+  settings: RoomSettings,
+  quiz?: { title: string; count: number } | null,
+) => ({
   code,
   joinUrl: `${window.location.origin}/?rum=${code}`,
   summary: {
-    count: settings.count,
+    count: quiz ? quiz.count : settings.count,
     limitSec: settings.limitSec,
     level: settings.level,
     topics: settings.categoryIds.length,
+    ...(quiz ? { title: quiz.title } : {}),
   },
   categoryName: (id: string) => categoryById(id)?.name ?? "",
 });
@@ -256,11 +261,14 @@ export function RoomHost({
   buildQuestions,
   sound,
   speak,
+  customQuiz,
   onExit,
 }: {
   buildQuestions: (options: RoomBuildOptions) => Promise<Question[]>;
   sound: boolean;
   speak?: boolean;
+  /** En egen quiz, der spilles i stedet for spørgsmål fra banken. */
+  customQuiz?: { title: string; count: number } | null;
   onExit: () => void;
 }) {
   const [code, setCode] = useState<string | null>(null);
@@ -283,6 +291,10 @@ export function RoomHost({
   const timer = useRef<number | null>(null);
   const soundRef = useRef(sound);
   const settingsRef = useRef(settings);
+  const quizRef = useRef(customQuiz ?? null);
+  useEffect(() => {
+    quizRef.current = customQuiz ?? null;
+  }, [customQuiz]);
   useEffect(() => {
     soundRef.current = sound;
   }, [sound]);
@@ -321,7 +333,7 @@ export function RoomHost({
     codeRef.current
       ? buildScreenModel(
           stateRef.current,
-          screenContext(codeRef.current, settingsRef.current),
+          screenContext(codeRef.current, settingsRef.current, quizRef.current),
           now,
         )
       : null;
@@ -757,7 +769,11 @@ export function RoomHost({
       </div>
     );
 
-  const model = buildScreenModel(state, screenContext(code, settings), now);
+  const model = buildScreenModel(
+    state,
+    screenContext(code, settings, customQuiz),
+    now,
+  );
   const deadline = hasTimeLimit(state)
     ? state.startedAt + state.limitMs
     : undefined;
@@ -846,6 +862,7 @@ export function RoomHost({
               />
             </label>
             <RoomSettingsSheet
+              quizMode={Boolean(customQuiz)}
               settings={settings}
               onChange={setSettings}
               trigger={
