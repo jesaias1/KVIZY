@@ -294,6 +294,22 @@ type Patch = {
 
 const PATCHES: Record<string, Patch> = {
   // Rettet efter kildetjek (oktober 2026)
+  "kz-x9z77u": {
+    e: "Skibet lå i havnen i Auckland og skulle føre en protestflåde mod franske atomprøvesprængninger ved Mururoa. En fotograf blev dræbt.",
+  },
+  "kz-1d4e0vk": {
+    e: "Arresø i Nordsjælland dækker knap 40 kvadratkilometer, men er kun omkring tre meter dyb.",
+  },
+  "kz-1951ovs": {
+    p: "Hvilken englænder fremviste i 1878 en glødelampe, uafhængigt af Edison?",
+    e: "De to opfindere gik i 1883 sammen om firmaet Ediswan.",
+  },
+  "kz-1unhsf3": {
+    e: "Den blev grundlagt i 1818 og ligger ved Havnegade i København.",
+  },
+  "kz-1rzf33h": {
+    e: "Møllehøj er 170,86 meter. Yding Skovhøj er højere (172,54 m), men toppen er en gravhøj fra bronzealderen; uden gravhøjen er den 170,77 m. Himmelbjerget er lavere.",
+  },
   "kz-1i8drf8": {
     p: "Hvilken bil blev den første, der blev bygget på et bevægeligt samlebånd?",
     e: "Fra 1913 kunne en Ford T samles på 93 minutter mod 12,5 time før. Prisen faldt til under en tredjedel.",
@@ -443,10 +459,6 @@ const PATCHES: Record<string, Patch> = {
   "kz-18h79ok": { e: "Nephew blev dannet i Aarhus i 1996." },
   "kz-bj9mns": {
     e: "Mew blev dannet i Hellerup og er især kendt for albummet «Frengers» fra 2003.",
-  },
-  "kz-1rzf33h": {
-    p: "Hvad hedder Danmarks højeste naturlige punkt?",
-    e: "Møllehøj er 170,86 meter. Yding Skovhøj er højere (172,52 m), men det skyldes en gravhøj fra bronzealderen. Himmelbjerget er lavere.",
   },
   "kz-nvs2mj": {
     e: "Filmen regnes for prototypen på den moderne sommerblockbuster.",
